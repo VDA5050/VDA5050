@@ -1136,13 +1136,13 @@ The last will message is only sent by the broker if the connection is unexpected
 
 AGV wants to disconnect gracefully: 
 
-1. AGV sends „uagv/v2/manufacturer/SN/connection“ with connectionState = „offline“.
+1. AGV sends „uagv/v2/manufacturer/SN/connection“ with connectionState = „OFFLINE“.
 2. Disconnect the mqtt connection with a disconnect command.
 
 AGV comes online: 
 
-1. Set the lastwill to „uagv/v2/manufacturer/SN/connection“ with the field „connectionState“ = „connectionBroken“, when the mqtt connection is created.
-2. Send the topic „uagv/v2/manufacturer/SN/connection“ with connectionState = „online“.
+1. Set the lastwill to „uagv/v2/manufacturer/SN/connection“ with the field „connectionState“ = „CONNECTIONBROKEN“, when the mqtt connection is created.
+2. Send the topic „uagv/v2/manufacturer/SN/connection“ with connectionState = „ONLINE“.
 
 All messages of this topic should be send with a retained flag. 
 
