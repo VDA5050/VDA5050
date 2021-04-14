@@ -162,7 +162,7 @@ Document (Dokument) | Description
 ----------------------------------| ----------------
 VDI Guideline 2510 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | Compatibility of driverless transport systems (DTS) - DTS master control 
-DIN EN ISO 3691-4 | Industrial Trucks Safety Requirements and Verifiction-Part 4: Driverless trucks and their systems 
+DIN EN ISO 3691-4 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems 
 
 
 
@@ -222,13 +222,13 @@ This is also done using the MQTT message broker.
 Functions of the master control are: 
 
 - Assignment of orders to the AGV
-- Route calculation and guidance of the AGV (taking into account the limitations of the individual physical propertiesof each AGV, e.g. size, manouevrability, etc.)
+- Route calculation and guidance of the AGV (taking into account the limitations of the individual physical properties of each AGV, e.g. size, manouevrability, etc.)
 - Detection and resolution of blockages ("deadlocks")
-- Enery management: Load orders can interrupt tranfer orders
+- Energy management: Load orders can interrupt transfer orders
 - Traffic control: Buffer routes and waiting positions
-- (temporary) changes in the environment, such as freeing certain areas or changing the maximun speed
+- (temporary) changes in the environment, such as freeing certain areas or changing the maximum speed
 - Communication with peripheral systems such as doors, gates, elevators, etc. 
-- Detection and resolution of coomunication errors 
+- Detection and resolution of communication errors 
 
 Functions of the AGV are: 
 
@@ -289,7 +289,7 @@ If an AGV cannot process trajectories, master control shall not send a trajector
 
 
 
-#### <a name="Pcafl"></a> 6.1.2 Permitted characters and field lenghts
+#### <a name="Pcafl"></a> 6.1.2 Permitted characters and field lengths
 
 All communication is encoded in UTF-8 to enable international adaption of descriptions.
 The recommendation is that IDs should only use the following characters:
@@ -458,8 +458,6 @@ To communicate to the AGV what it will most likely have to do after reaching the
 
 - <u>Drive to the decision point "Base":</u> The "base" is the defined route that the AGV travels. All nodes and edges of the "Base" route have already been approved by the control panel for the vehicle. 
 - <u>Estimated journey from the decision point "Horizon":</u> The "Horizon" is the route that the AGV is likely to drive if there is no traffic jam. The "Horizon" route has not yet been approved by the control panel. However, the AGV will initially only travel to the last junction of the "Base" route.
-
-However, the AGV will initially only travel to the last junction of the "Base" route.
 
 Since MQTT is an asynchronous protocol and transmission via WLAN is not reliable, it is important to note that the "base" cannot be changed. 
 The master control can therefore assume that the "base" is executed by the AGV.
@@ -647,8 +645,8 @@ A positive rotation therefore is to be understood as a counterclockwise rotation
 The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing skywards. 
 This is in accordance with chapter 2.11 in DIN ISO 8855.
 
-![Figure 10 Coordinate system with sample agv and orientation](./assets/Figure10.png)
->Figure 10 Coordinate system with sample agv and orientation
+![Figure 10 Coordinate system with sample AGV and orientation](./assets/Figure10.png)
+>Figure 10 Coordinate system with sample AGV and orientation
 
 The X, Y and Z coordinates must be in meters. 
 The orientation must be in radians and must be within +Pi and –Pi.
@@ -664,7 +662,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 header |    | N/A | For header information see 6.4 
 orderId |  | string | Order identification.<br>This is to be used to identify multiple order messages that belong to the same order. 
-orderUpdateId |  | Integer | orderUpdate identification.<br>Is unique per orderId.<br>If an orderupdate is rejected, this field is to be passed in the rejection message
+orderUpdateId |  | Integer | orderUpdate identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message
 zoneSetId |  | string | Unique identifier of the zone set that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGVs do not understand zones.<br> Do not add to message if no zones are used. 
 **nodes [node]** |  | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
 **edges [edge]** |  | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
@@ -681,7 +679,7 @@ released |  | boolean | "true" indicates that the node is part of the base. <br>
 
 Object structure | Unit | Data type | Description 
 ---| --- |--- | ---
-**nodePosition** { |  | JSON-object | Defines the position on a map in a global projectspezific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
+**nodePosition** { |  | JSON-object | Defines the position on a map in a global project-specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
 x | m | Float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | Float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
@@ -716,7 +714,7 @@ endNodeId |  | string | nodeId of endNode
 *rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit if not set.
 *maxRotationSpeed* | rad/s | Float64| Maximum rotation speed<br><br><br>Optional:<br>No limit if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted if AGV cannot process trajectories or if AGV plans its own trajectory.
-*lenght* | m | Float64 | Lenght of the path from startNode to endNode<br><br>Optional:<br><br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
+*length* | m | Float64 | Length of the path from startNode to endNode<br><br>Optional:<br><br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -785,17 +783,17 @@ action | action states
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
-**startPause** | - | Activation of the mode is in preperation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode can not be activated for some reason (e.g. overriden by hardware switch).
-**stopPause** | - | Deactivation of the mode is in preperation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode can not be deactivated for some reason (e.g. overriden by hardware switch). 
+**startPause** | - | Activation of the mode is in preperation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode can not be activated for some reason (e.g. overridden by hardware switch).
+**stopPause** | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode can not be deactivated for some reason (e.g. overridden by hardware switch). 
 **startCharging** | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g. not aligned to charger). Charging problems should correspond with an error. 
 **stopCharging** | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g. not aligned to charger).<br> Charging problems should correspond with an error. 
-**initPosition** | - | Initialzing of the new pose in progres (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeID = lastNodeID | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
+**initPosition** | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
 **stateRequest** | - | - | - | The state has been communicated | - 
 **logReport** | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g. no space).
-**pick** | Initializing of the pick process, e.g. outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication wih station is running, etc.). | The pick process is being paused e.g. if a safety fiild is violated. <br>After removing the violation the pick process continues. | Pick is done. <br>Load has enetered the AGV and AGV reports new load state. | Pick failed, e.g. station is unexpected empty. <br> Failed pick operations should  correspond with an error.
-**drop** | Initializing of the drop process, e.g. outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication wih station is running, etc.). | The drop process is being paused e.g. if a safety fiild is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Srop failed, e.g. station is unexpected occupied.  <br>Failed drop operations should  correspond with an error. 
+**pick** | Initializing of the pick process, e.g. outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused e.g. if a safety field is violated. <br>After removing the violation the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g. station is unexpected empty. <br> Failed pick operations should  correspond with an error.
+**drop** | Initializing of the drop process, e.g. outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused e.g. if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g. station is unexpected occupied.  <br>Failed drop operations should  correspond with an error. 
 **detectObject** | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
-**finePositioning** | - | AGV positions itself exactly on a target. | The fine positioning process is being paused e.g. if a safety fiild is violated. <br>After removing the violation the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
+**finePositioning** | - | AGV positions itself exactly on a target. | The fine positioning process is being paused e.g. if a safety field is violated. <br>After removing the violation the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
 **waitForTrigger** | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails if order has been canceled. 
 **cancelOrder** | - | AGV is stopping or driving until it reaches the next node. | - | AGV stands still and has canceled the order. | - 
 
@@ -817,7 +815,7 @@ For additional information, see chapter 7 Best practices.
 Object structure | Data type | Description 
 ---|---|---
 header | N/A | For header information see 6.4
-instantActions [action] | array | Array of actions that need to be performed immedeiately and are not part of the regular order. 
+instantActions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order. 
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
@@ -839,7 +837,7 @@ Events that trigger the transmission of the state message are:
 - Errors or warnings 
 - Driving over a node 
 - Switching the operating mode 
-- Change in the "drivin" field 
+- Change in the "driving" field 
 - Change in the nodeStates, edgeStates or actionStates 
 
 There should be an effort to curb the amount of communication.
@@ -913,7 +911,7 @@ Errors can pass references that help with finding the cause of the error via the
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 header |  | N/A | For header information see 6.4 
-orderId|  | string | Unique order identifi¬cation of the current order or the previous finished order. <br>The orderId is kept until a new order is re¬ceived. <br>Empty string ("") if no previous orderId is avai¬lable. 
+orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string ("") if no previous orderId is available. 
 orderUpdateId |  | Uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
@@ -962,7 +960,7 @@ x | m | float64 | X-position on the map in reference to the map coordinate syste
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 theta |  | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV. 
 mapId |  | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates. <br>When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-*mapDiscripation*<br>} |  | string | Additional information on the map. 
+*mapDescription*<br>} |  | string | Additional information on the map. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -992,9 +990,9 @@ z |  | float 64 | z-coordinate of the point of reference.
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **loadDimensions** { |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-lenght | m | float64 | Absolute length of the load´s bounding box. 
+length | m | float64 | Absolute length of the load´s bounding box. 
 width | m | float64 | Absolute width of the load´s bounding box. 
-*height* <br><br><br><br>}| m | float64 | Absolute heigth of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
+*height* <br><br><br><br>}| m | float64 | Absolute height of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
 **actionState** { |  | JSON-object |  
 actionId |  |string  | action_ID
 actionType |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
@@ -1005,7 +1003,7 @@ actionStatus |  | string | Enum {waiting;<br>initializing;<br>running;<br>paused
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **batteryState** { |  | JSON-object |  
-batteryCharge | % | float64 | State of Carge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
+batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery Voltage 
 *batteryHealth* | % | int8 | Range: [0 .. 100]<br><br>State of Health 
 charging |  | boolean | “true”: charging in progress<br>“false”: AGV is currently not charging
@@ -1041,7 +1039,7 @@ fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":fie
 
 The following description lists the operatingMode of the topic "states".
 
-Identificator | Data type | Type | Description 
+Identifier | Data type | Type | Description 
 ---|---|---|---
 operatingMode | string | AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control
 |  | SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can’t exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
@@ -1165,7 +1163,7 @@ This can include the following information:
 - Topic (order or instantAction)
 - orderId and orderUpdateId if error was caused by an order update 
 - actionId if error was caused by an action
-- List of parameters if error was caused by erroneour action parameters 
+- List of parameters if error was caused by erroneous action parameters 
 
 If an action cannot be completed because of external factors (e.g. no load at expected position), the actionId should be referenced.
 
