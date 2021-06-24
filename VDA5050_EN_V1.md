@@ -917,7 +917,7 @@ orderId|  | string | Unique order identifi¬cation of the current order or the p
 orderUpdateId |  | Uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
-lastNodeSequenceId |  | Uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
+lastNodeSequenceId |  | integer | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 ***anyPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs.
@@ -979,7 +979,7 @@ Object structure | Unit | Data type | Description
 *loadPosition* |  | string | Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
 ***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
 ***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-*weight*<br><br>} | kg | uint32 | Range: [0.0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
+*weight*<br><br>} | kg | float64 | Range: [0.0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1009,7 +1009,7 @@ batteryCharge | % | float64 | State of Carge: <br> if AGV only provides values f
 *batteryVoltage* | V | float64 | Battery Voltage 
 *batteryHealth* | % | int8 | Range: [0 .. 100]<br><br>State of Health 
 charging |  | boolean | “true”: charging in progress<br>“false”: AGV is currently not charging
-*reach* <br><br>}| m | uint32 | Range: [0.0 ... ∞)<br><br>Estimated reach with current State of Charge
+*reach* <br><br>}| m | uint32 | Range: [0 ... ∞)<br><br>Estimated reach with current State of Charge 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
