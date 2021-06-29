@@ -1035,6 +1035,13 @@ infoLevel <br><br><br>}|  | string | Enum {DEBUG,INFO}<br><br>DEBUG: used fot de
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
+**infoReference** { |  | JSON-object |  
+referenceKey |  | string | References the type of reference (e. g. headerId, orderId, actionId, …).
+referenceValue <br>} |  | string | References the value, which belongs to the reference key.
+
+
+Object structure | Unit | Data type | Description 
+---|---|---|---
 **safetyState** { |  | JSON-object |  
 eStop |  | string | Enum {autoAck,manual,remote,none}<br>Acknowledge-Type of eStop:<br>autoAck: auto-acknowledgeable e-stop is activated e.g. by bumper or protective field<br>manual: e-stop hast to be acknowledged manually at the vehicle<br>remote: facility e-stop hast to be acknowledged remotely<br>none: no e-stop activated
 fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated
