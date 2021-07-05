@@ -730,7 +730,7 @@ Object structure | Unit | Data type | Description
 x |  | Float64 | X coordinate described in the world coordinate system. 
 y |  | Float64 | Y coordinate described in the world coordinate system.
 *orientation* | rad | Float64 | Range: [-Pi ... Pi]<br>Orientation of the AGV on this position of the curve. <br>The orientation is in world coordinates. <br>When not defined the orientation of the AGV will be tangential to the curve 
-weight<br><br>} |  | Float64 | Range: (0 ... ∞)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+*weight*<br><br>} |  | Float64 | Range: (0 ... ∞)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 
 
 
