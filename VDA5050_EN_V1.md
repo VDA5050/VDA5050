@@ -997,7 +997,7 @@ width | m | float64 | Absolute width of the load´s bounding box.
 actionId |  |string  | action_ID
 actionType |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
 *actionDescription* |  | string | Additional information on the current action. 
-actionStatus |  | string | Enum {waiting;<br>initializing;<br>running;<br>paused;<br>finished;<br>failed}<br>waiting. waiting for the trigger<br><br>(passing the mode, entering the edge)<br><br> Paused:paused by instantAction or external trigger<br><br>failed: action could not be performed. 
+actionStatus |  | string | Enum {WAITING;<br>INITIALIZING;<br>RUNNING;<br>PAUSED;<br>FINISHED;<br>FAILED}<br>WAITING: waiting for the trigger<br><br>(passing the mode, entering the edge)<br><br> PAUSED: paused by instantAction or external trigger<br><br>FAILED: action could not be performed. 
 *resultDescription*<br><br><br><br>} |  | string | Description of the result, e.g. the result of a RFID-read.<br><br>Errors will be transmitted in errors.<br><br>Examples for results are given in 6.5
 
 Object structure | Unit | Data type | Description 
@@ -1015,7 +1015,7 @@ Object structure | Unit | Data type | Description
 errorType |  | string | Type/name of error 
 ***errorReferences [errorReference]*** |  | array | Array of references to identify the source of the error (e. g. headerId, orderId, actionId, …).<br>For additional information see „Best practices“ chapter 7
 *errorDescription* |  | string | Error description 
-errorLevel <br><br> }|  | string | Enum {warning, fatal}<br>warning: AGV is ready to start (e.g. maintenance cycle expiration warning)<br>fatal: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated)
+errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning)<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated)
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1041,7 +1041,7 @@ referenceValue <br>} |  | string | References the value, which belongs to the re
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **safetyState** { |  | JSON-object |  
-eStop |  | string | Enum {autoAck,manual,remote,none}<br>Acknowledge-Type of eStop:<br>autoAck: auto-acknowledgeable e-stop is activated e.g. by bumper or protective field<br>manual: e-stop hast to be acknowledged manually at the vehicle<br>remote: facility e-stop hast to be acknowledged remotely<br>none: no e-stop activated
+eStop |  | string | Enum {AUTOACK,MANUAL,REMOTE,NONE}<br>Acknowledge-Type of eStop:<br>AUTOACK: auto-acknowledgeable e-stop is activated e.g. by bumper or protective field<br>MANUAL: e-stop hast to be acknowledged manually at the vehicle<br>REMOTE: facility e-stop hast to be acknowledged remotely<br>NONE: no e-stop activated
 fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated
 
 The following description lists the operatingMode of the topic "states".
