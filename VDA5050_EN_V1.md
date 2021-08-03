@@ -815,7 +815,8 @@ For additional information, see chapter 7 Best practices.
 Object structure | Data type | Description 
 ---|---|---
 header | N/A | For header information see 6.4
-instantActions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order. 
+actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order. 
+
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
