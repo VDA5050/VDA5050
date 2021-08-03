@@ -917,7 +917,7 @@ orderId|  | string | Unique order identifi¬cation of the current order or the p
 orderUpdateId |  | Uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
-lastNodeSequenceId |  | integer | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
+lastNodeSequenceId |  | Uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 ***anyPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs.
@@ -941,13 +941,13 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON-object |  |
 nodeId |  | string | Unique node identification 
-sequenceID |  | integer | sequenceId to discern multiple nodes with same nodeId.
+sequenceID |  | Uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node 
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 Optional:master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 released<br><br>}|  | bool | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
 **edgeState** { |  | JSON-object |  |
 edgeId |  | string | Unique edge identification
-sequenceId |  | integer | sequenceId to differentiate between multiple edges with the same edgeId
+sequenceId |  | Uint32 | sequenceId to differentiate between multiple edges with the same edgeId
 *edgeDescription* |  | string | Additional information on the edge 
 released |  | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
 ***trajectory*** <br><br>} |  | JSON-object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.4<br><br>Trajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed.
