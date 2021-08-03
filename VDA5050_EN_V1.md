@@ -1008,7 +1008,7 @@ batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values 
 *batteryVoltage* | V | float64 | Battery Voltage 
 *batteryHealth* | % | int8 | Range: [0 .. 100]<br><br>State of Health 
 charging |  | boolean | “true”: charging in progress<br>“false”: AGV is currently not charging
-*reach* <br><br>}| m | uint32 | Range: [0.0 ... ∞)<br><br>Estimated reach with current State of Charge
+*reach* <br><br>}| m | uint32 | Range: [0 ... ∞)<br><br>Estimated reach with current State of Charge 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
