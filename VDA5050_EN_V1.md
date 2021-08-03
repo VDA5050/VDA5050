@@ -927,7 +927,7 @@ driving |  | boolean | “true”: indicates that the AGV is driving and/or rota
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-*newBaseRequest* |  | bool | “true”: AGV is almost at the end of the base and will reduce speed if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
+*newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeIdId“. <br>Distance is in meters.
 **actionStates [actionState]** |  | array | Contains a list of the current actions and the actions which are yet to be finished. <br>This may include actions from previous nodes that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
 **batteryState** |  | JSON-object | Contains all battery-related information.
@@ -943,7 +943,7 @@ nodeId |  | string | Unique node identification
 sequenceID |  | integer | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node 
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 Optional:master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
-released<br><br>}|  | bool | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
 **edgeState** { |  | JSON-object |  |
 edgeId |  | string | Unique edge identification
 sequenceId |  | integer | sequenceId to differentiate between multiple edges with the same edgeId
