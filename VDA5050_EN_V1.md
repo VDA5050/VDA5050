@@ -978,7 +978,7 @@ Object structure | Unit | Data type | Description
 *loadPosition* |  | string | Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
 ***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
 ***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-*weight*<br><br>} | kg | uint32 | Range: [0.0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
+*weight*<br><br>} | kg | uint32 | Range: [0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
