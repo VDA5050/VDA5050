@@ -940,13 +940,13 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON-object |  |
 nodeId |  | string | Unique node identification 
-sequenceID |  | integer | sequenceId to discern multiple nodes with same nodeId.
+sequenceID |  | Uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node 
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 Optional:master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
 **edgeState** { |  | JSON-object |  |
 edgeId |  | string | Unique edge identification
-sequenceId |  | integer | sequenceId to differentiate between multiple edges with the same edgeId
+sequenceId |  | Uint32 | sequenceId to differentiate between multiple edges with the same edgeId
 *edgeDescription* |  | string | Additional information on the edge 
 released |  | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
 ***trajectory*** <br><br>} |  | JSON-object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.4<br><br>Trajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed.
