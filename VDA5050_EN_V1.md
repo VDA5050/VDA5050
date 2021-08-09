@@ -664,7 +664,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 header |    | N/A | For header information see 6.4 
 orderId |  | string | Order identification.<br>This is to be used to identify multiple order messages that belong to the same order. 
-orderUpdateId |  | Integer | orderUpdate identification.<br>Is unique per orderId.<br>If an orderupdate is rejected, this field is to be passed in the rejection message
+orderUpdateId |  | uint32 | orderUpdate identification.<br>Is unique per orderId.<br>If an orderupdate is rejected, this field is to be passed in the rejection message
 zoneSetId |  | string | Unique identifier of the zone set that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGVs do not understand zones.<br> Do not add to message if no zones are used. 
 **nodes [node]** |  | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
 **edges [edge]** |  | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
