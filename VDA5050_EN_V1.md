@@ -537,7 +537,10 @@ The orderId stays the same and the orderUpdateId is incremented.
 
 The last node of the previous base is the first base node in the updated order.
 With this node the AGV can add the updated order onto the current order (stitching). 
-The other nodes and edges from the previous base are not resent. 
+The other nodes and edges from the previous base are not resent.
+
+MC has the option to make changes to the horizon by sending entirely different nodes as the new base.
+The horizon can also be deleted.
 
 To allow loops in orders (like going from node 1 to 2 and then back to 1) a sequenceId is assigned to the node and edge objects. 
 This sequenceId runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on). 
