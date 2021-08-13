@@ -90,7 +90,7 @@ Version 2.0
 [6.11 actionStates](#actionStates)<br>
 [6.12 Action Blocking Types and sequence](#ABTas)<br>
 [6.13 Topic "Visualization"](#TV)<br>
-[6.14 Topic "connection"](#Tc)<br>
+	[6.14 Topic "connection"](#Tc)<br>
 [7 Best practice](#Bp)<br>
 [7.1 Error reference](#Er)<br>
 [7.2 Format of parameters](#Fop)<br>
@@ -1138,7 +1138,10 @@ serialNumber | string | Serial number of the AGV
 connectionState | string | Enum {ONLINE, OFFLINE, CONNECTIONBROKEN}<br><br>ONLINE: connection between AGV and broker is active.<br><br>OFFLINE: connection between AGV and broker has gone offline in a coordinated way. <br><br> CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended. 
 
 The last will message will not be sent when a connection is ended in a gracefully way by using a MQTT disconnection command. 
-The last will message is only sent by the broker if the connection is unexpectedly interrupted. 
+The last will message is only sent by the broker if the connection is unexpectedly interrupted.
+
+**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT Broker.
+As a result, the timestamp and headerId fields will always be outdated.
 
 AGV wants to disconnect gracefully: 
 
