@@ -327,7 +327,8 @@ If the AGV disconnects from the broker, it keeps all the order information and f
 
 Protocol-Security needs to be taken in account by broker configuration.
 
-To reduce the communication overhead, the MQTT QoS level 0 is to be used for all communications.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `state` and `visualization`.
+The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
 
@@ -1124,6 +1125,7 @@ During the connection of an AGV client to the broker, a last will topic and mess
 Thus, the master control can detect a disconnection event by subscribing the connection topics of all AGVs.
 The disconnection is detected via a heartbeat that is exchanged between the broker and the client. 
 The interval is configurable in most brokers and should be set around 15 seconds.
+The Quality of Service level for the `connection` topic shall be 1 - At Least Once.
 
 The suggested last will topic structure is:
 
