@@ -342,7 +342,7 @@ For a local broker the MQTT topic levels are suggested as followed:
 
 **interfaceName/majorVersion/manufacturer/serialNumber/topic**
 
-Example: uagy/v2/KIT/0001/order
+Example: uagv/v2/KIT/0001/order
 
 
 
@@ -767,7 +767,7 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station e.g. if the battery is full. <br>Battery state is only allowed to be “false” when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agyPosition.x<br>.agvPosition.y<br>.agyPosition.theta<br>.ayPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
+initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.ayPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
 stateRequest | - | Requests the AGV to send a new state report | yes |  | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(as long as it is automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the paramater lhd needs to be present (e.g. LHD1). <br>The paramater stationType informs how the pick operation is handled in detail (e.g. floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g. EPAL, INDU, etc). <br>For preparing the load handling device (e.g. pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations etc. are not reported as running in the AGV state because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (String, optional)<br>stationType (String)<br>stationName(String, optional)<br>loadType (String) <br>loadId(String, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
@@ -920,10 +920,10 @@ orderId|  | string | Unique order identification of the current order or the pre
 orderUpdateId |  | Uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
-lastNodeSequenceId |  | Uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
+lastNodeSequenceId |  | Uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"0" if no lastNodeSequenced is available.
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
-***anyPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs.
+***agvPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs.
 ***velocity*** |  | JSON-object | The AGVs velocity in vehicle coordinates. 
 ***loads [load]*** |  | array | Loads that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
 driving |  | boolean | “true”: indicates that the AGV is driving and/or rotating. Other movements of the AGV (e.g. lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
@@ -957,7 +957,7 @@ released |  | boolean | “true” indicates that the edge is part of the base.<
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**agyPosition** { |  | JSON-object | Defines the position on a map in world coordinates. Each floor has its own map.
+**agvPosition** { |  | JSON-object | Defines the position on a map in world coordinates. Each floor has its own map.
 positionInitialized |  | boolean | “false”: position is not initialized<br><br>“true”: position is initialized
 *localizationScore* |  | float64 | Range: [0.0 ... 1.0]<br><br>Describes the quality of the localization and therefore, can be used e. g. by SLAM-AGVs to describe how accurate the current position information is.<br><br>0.0: position unknown<br><br>1.0: position known<br><br>Optional for vehicles that cannot estimate their localization score.<br><br>Only for logging and visualization purposes. 
 *deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br><br>Optional for vehicles that cannot estimate their deviation e.g. grid-based localization.<br><br>Only for logging and visualization purposes.
