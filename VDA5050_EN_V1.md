@@ -1109,7 +1109,7 @@ If there are multiple actions on the same node with different blocking types, Fi
 
 
 
-### <a name="TV"></a> 6.13 Topic "Visualization" 
+### <a name="TV"></a> 6.13 Topic "visualization" 
 
 For a near real-time position update the AGV can broadcast its position and velocity on the subtopic visualization.
 
