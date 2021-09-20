@@ -936,6 +936,7 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
 **informations [info]** |  | array | Array of info-objects. <br>An empty array indicates that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
 **safetyState** |  | JSOn-object | Contains all safety-related information. 
+**maps [map]** |  | array | Maps that are currently present on the AGV.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1038,6 +1039,12 @@ Object structure | Unit | Data type | Description
 **safetyState** { |  | JSON-object |  
 eStop |  | string | Enum {autoAck,manual,remote,none}<br>Acknowledge-Type of eStop:<br>autoAck: auto-acknowledgeable e-stop is activated e.g. by bumper or protective field<br>manual: e-stop hast to be acknowledged manually at the vehicle<br>remote: facility e-stop hast to be acknowledged remotely<br>none: no e-stop activated
 fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated
+
+Object structure | Unit | Data type | Description
+---|---|---|---
+**map** { |  | JSON-object |
+*mapId* | | string | ID of the map
+*active* <br><br><br><br><br> }| | boolean | “true”: Indicates this map is currently active/used on the AGV.<br> “false”: Indicates this map is not currently active on the AGV and thus could be activated or deleted by request.<br><br> At most one map can have this flag set to true.
 
 The following description lists the operatingMode of the topic "states".
 
