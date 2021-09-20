@@ -772,7 +772,8 @@ pick | drop<br><br>(sofern automatisiert) | Request the AGV to pick a load. <br>
 **drop** | pick<br><br>(sofern automatisiert) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (String, optional)<br>stationType (String, optional)<br>stationName (String, optional)<br>loadType (String, optional)<br>loadId(String, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
 **detectObject** | - | AGV detects object (e.g. load, charging spot, free parking position). | yes | objectType(String, optional) | - | no | yes | yes 
 **finePositioning** | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, AGV will e.g. align on stationary equipment while traversing an edge.<br>InstantAction: AGV starts positioning exactly on a target. | yes | stationType(String, optional)<br>stationName(String, optional) | - | no | yes | yes
-**waitForTrigger** | - | AGV has to wait for a trigger on the AGV (e.g. button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(String) | - | no | yes | no 
+**waitForTrigger** | - | AGV has to wait for a trigger on the AGV or via the MC from a third system (e.g. button press, manual loading). In this time the agv may not continue with order execution <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(String) | - | no | yes | no 
+**trigger** | - | AGV is notified on a trigger being released by master control. The MC gets information from a third party system that the process the AGV was waiting for is finished. This is especially important if there are several actions on a node and the AGV should wait between the actions. | yes | actionId(String) | - | yes | no | no 
 **cancelOrder** | - | AGV stops as soon as possible. <br>This could be immediately or on the next node. <br>Then the order is deleted. All actions are canceled. | yes | - | - | yes | no | no 
 
 
@@ -797,6 +798,7 @@ action | initializing | running | paused | finished | failed
 **detectObject** | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
 **finePositioning** | - | AGV positions itself exactly on a target. | The fine positioning process is being paused e.g. if a safety fiild is violated. <br>After removing the violation the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
 **waitForTrigger** | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails if order has been canceled. 
+**trigger** | - | The trigger on the agv is released. | - | Trigger has been triggered. | trigger fails and AGV stays in waitForTrigger until trigger released. 
 **cancelOrder** | - | AGV is stopping or driving until it reaches the next node. | - | AGV stands still and has canceled the order. | - 
 
 
