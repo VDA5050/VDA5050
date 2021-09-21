@@ -1,5 +1,4 @@
-# Annex A:   
-# AGV factsheet
+# Annex A: AGV factsheet
 
 # **A1 Scope**
 
