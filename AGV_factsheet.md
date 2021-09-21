@@ -160,49 +160,45 @@ This JSON object defines actions and parameters which are supported by the AGV.
 |*resultDescription* | string  | free text: description of the resultDescription |
 |*}*                 |         |                          |
 
-#### 
-
 ### agvGeometry
 
 This JSON object defines the geometry properties of the AGV, e.g. outlines and wheel positions
 
-| **Field**                            | **data type**        | **description**                                                                                                                                                   |
-|--------------------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| *wheelDefinitions [wheelDefinition]* | Array of JSON-object | list of wheels, containing wheel-arrangement and geometry                                                                                                         |
-| {                                    |                      |                                                                                                                                                                   |
-| type                                 | String (Enum)        | wheel type DRIVE, CASTER, FIXED, MECANUM                                                                                                                          |
-| isActiveDriven                       | Bool                 | True: wheel is actively driven (de: angetrieben)                                                                                                                  |
-| isActiveSteered                      | Bool                 | True: wheel is actively steered (de: aktiv gelenkt)                                                                                                               |
-| position {                           | JSON-object          |                                                                                                                                                                   |
-| x                                    | float64              | [m] x-position in AGV-coordinate system                                                                                                                           |
-| y                                    | float64              | [m] y-position in AGV-coordinate system                                                                                                                           |
-| *theta*                              | float64              | [rad] orientation of wheel in AGV-coordinate system Necessary for fixed wheels                                                                                    |
-| }                                    |                      |                                                                                                                                                                   |
-| diameter                             | float64              | [m] nominal diameter of wheel                                                                                                                                     |
-| width                                | float64              | [m] nominal width of wheel                                                                                                                                        |
-| *centerDisplacement*                 | float64              | [m] nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels) if the parameter is not defined, it is assumed as 0            |
-| *constraints*                        | String               | free text: can be used by the manufacturer to define constraints                                                                                                  |
-| }                                    |                      |                                                                                                                                                                   |
+| **Field**                            | **data type**        | **description**                                        |
+|--------------------------------------|----------------------|--------------------------------------------------------|
+| *wheelDefinitions [wheelDefinition]* | Array of JSON-object | list of wheels, containing wheel-arrangement and geometry |
+| {                                    |                      |                                                        |
+| type                                 | enum                 | wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```     |
+| isActiveDriven                       | Bool                 | True: wheel is actively driven (de: angetrieben)       |
+| isActiveSteered                      | Bool                 | True: wheel is actively steered (de: aktiv gelenkt)    |
+| position {                           | JSON-object          |                                                        |
+|&emsp; x                              | float64              | [m] x-position in AGV-coordinate system          |
+|&emsp; y                              | float64              | [m] y-position in AGV-coordinate system          |
+|&emsp; *theta*                        | float64              | [rad] orientation of wheel in AGV-coordinate system Necessary for fixed wheels |
+| }                                    |                      |                                                        |
+| diameter                             | float64              | [m] nominal diameter of wheel                          |
+| width                                | float64              | [m] nominal width of wheel                             |
+| *centerDisplacement*                 | float64              | [m] nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> if the parameter is not defined, it is assumed to be 0            |
+| *constraints*                        | string               | free text: can be used by the manufacturer to define constraints |
+| }                                    |                      |                                                        |
 | *envelopes2d [envelope2d]*           | Array of JSON-object | list of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g.the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases |
-| {                                    |                      |                                                                                                                                                                   |
-| set                                  | String               | name of the envelope curve set                                                                                                                                    |
-| polygonPoints [polygonPoint]         | Array of JSON-object | envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting                                                                    |
-| {                                    |                      |                                                                                                                                                                   |
-| x                                    | float64              | [m] x-position of polygon-point                                                                                                                                   |
-| y                                    | float64              | [m] y-position of polygon-point                                                                                                                                   |
-| }                                    |                      |                                                                                                                                                                   |
+| {                                    |                      |                                                        |
+| set                                  | string               | name of the envelope curve set                         |
+| polygonPoints [polygonPoint]         | Array of JSON-object | envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting |
+| {                                    |                      |                                                        |
+|&emsp; x                              | float64              | [m] x-position of polygon-point                        |
+|&emsp; y                              | float64              | [m] y-position of polygon-point                        |
+| }                                    |                      |                                                        |
 | *description*                        | String               | free text: description of envelope curve set                                                                                                                      |
-| *}*                                  |                      |                                                                                                                                                                   |
-| *envelopes3d [envelope3d]*           | Array of JSON-object | list of AGV-envelope curves in 3D (german: „Hüllkurven“)                                                                                                          |
-| *{*                                  |                      |                                                                                                                                                                   |
-| set                                  | String               | name of the envelope curve set                                                                                                                                    |
-| format                               | String               | format of data e.g. DXF                                                                                                                                           |
-| *data*                               | JSON-object          | 3D-envelope curve data, format specified in ‚format‘                                                                                                              |
-| *url*                                | String               | protocol and url-definition for downloading the 3D-envelope curve data e.g. <ftp://xxx.yyy.com/ac4dgvhoif5tghji>                                                  |
-| *description*                        | String               | free text: description of envelope curve set                                                                                                                      |
-| *}*                                  |                      |                                                                                                                                                                   |
-
-#### 
+| *}*                                  |                      |                                                        |
+| *envelopes3d [envelope3d]*           | Array of JSON-object | list of AGV-envelope curves in 3D (german: „Hüllkurven“) |
+| *{*                                  |                      |                                                        |
+| set                                  | String               | name of the envelope curve set                         |
+| format                               | String               | format of data e.g. DXF                                |
+| *data*                               | JSON-object          | 3D-envelope curve data, format specified in ‚format‘   |
+| *url*                                | String               | protocol and url-definition for downloading the 3D-envelope curve data e.g. <ftp://xxx.yyy.com/ac4dgvhoif5tghji> |
+| *description*                        | String               | free text: description of envelope curve set           |
+| *}*                                  |                      |                                                        |
 
 ### loadSpecification
 
