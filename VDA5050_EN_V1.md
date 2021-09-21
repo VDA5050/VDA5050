@@ -936,7 +936,7 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
 **informations [info]** |  | array | Array of info-objects. <br>An empty array indicates that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
 **safetyState** |  | JSOn-object | Contains all safety-related information. 
-**maps [map]** |  | array | Maps that are currently present on the AGV.
+**maps [map]** |  | array | List of Maps that are currently present on the AGV.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
