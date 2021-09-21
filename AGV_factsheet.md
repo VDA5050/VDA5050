@@ -102,7 +102,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | maxStringLens {               | JSON-object   | maximum lengths of strings,                 |
 | *msgLen*                      | uint32        | maximum MQTT Message length                 |
 | *topicSerialLen*              | uint32        | maximum length of serial-number part in MQTT-topics<br/><br/>Affected Parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber   |
-| *topicElemLen*                | uint32        | maximum length of all other parts in MQTT-topics  Affected parameters:  order.timestamp  order.version  order.manufacturer instantActions.timestamp  instantActions.version  instantActions.manufacturer state.timestamp  state.version  state.manufacturer visualization.timestamp  visualization.version  visualization.manufacturer connection.timestamp  connection.version  connection.manufacturer |
+| *topicElemLen*                | uint32        | maximum length of all other parts in MQTT-topics<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
 | *idLen*                       | uint32        | maximum length of ID-Strings<br/><br/>Affected parameters:<br/>order.orderId<br/>order.zoneSetId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
 | *idNumericalOnly*             | Bool          | If true ID-strings need to contain numerical values only |
 | *enumLen*                     | uint32        | maximum length of ENUM- and Key-Strings<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState                                               |
@@ -116,134 +116,49 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | *actions.actionsParameters*   | uint32        | maximum number of parameters per action processable by the AGV |
 | *instantActions*              | uint32        | maximum number of instant actions per message processable by the AGV |
 | *trajectory.knotVector*       | uint32        | maximum number of knots per trajectory processable by the AGV |
-| *trajectory.controlPoints*    | uint32        | maximum number of control points per trajectory processable by the AGV                                                                                                                                                                                                                                                                                                                                   |
-| *state.nodeStates*            | uint32        | maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV                                                                                                                                                                                                                                                                                                                     |
-| *state.edgeStates*            | uint32        | maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV                                                                                                                                                                                                                                                                                                                     |
+| *trajectory.controlPoints*    | uint32        | maximum number of control points per trajectory processable by the AGV |
+| *state.nodeStates*            | uint32        | maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV |
+| *state.edgeStates*            | uint32        | maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV |
 | *state.loads*                 | uint32        | maximum number of load-objects sent by the AGV                |
 | *state.actionStates*          | uint32        | maximum number of actionStates sent by the AGV                |
 | *state.errors*                | uint32        | maximum number of errors sent by the AGV in one state-message |
-| *state.informations*          | uint32        | maximum number of informations sent by the AGV in one state-message                                                                                                                                                                                                                                                                                                                                      |
-| *error.errorReferences*       | uint32        | maximum number of error references sent by the AGV for each error                                                                                                                                                                                                                                                                                                                                        |
-| *informations.infoReferences* | uint32        | maximum number of info references sent by the AGV for each information                                                                                                                                                                                                                                                                                                                                   |
-| }                             |               |                                                                                                                                                                                                                                                                                                                                                                                                          |
+| *state.informations*          | uint32        | maximum number of informations sent by the AGV in one state-message    |
+| *error.errorReferences*       | uint32        | maximum number of error references sent by the AGV for each error      |
+| *informations.infoReferences* | uint32        | maximum number of info references sent by the AGV for each information |
+| }                             |               |                                                                        |
 | timing {                      | JSON-object   | timing information                                            |
 | minOrderInterval              | float32       | [s] minimum interval sending order messages to the AGV        |
 | minStateInterval              | float32       | [s] minimum interval for sending state-messages               |
-| *defaultStateInterval*        | float32       | [s] default interval for sending state-messages *if not defined, the default value from the main document is used*                                                                                                                                                                                                                                                                                       |
-|  *visualisationInterval*      | float32       | [s] default interval for sending messages on visualisation topic                                                                                                                                                                                                                                                                                                                                         |
+| *defaultStateInterval*        | float32       | [s] default interval for sending state-messages *if not defined, the default value from the main document is used* |
+|  *visualisationInterval*      | float32       | [s] default interval for sending messages on visualisation topic       |
 | }                             |               |                                                               |
-|                               |               |                                                               |
-|                               |               |                                                               |
-
-### 
 
 ### agvProtocolFeatures
 
 This JSON object defines actions and parameters which are supported by the AGV.
 
-| **Field**                              | **data type**                                           | **description**                                                                                                                                   |                                                |
-|----------------------------------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| optionalParameters [optionalParameter] | Array of JSON-object                                    | list of supported and/or required optional parameters  Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |                                                |
-| {                                      |                                                         |                                                                                                                                                   |                                                |
-| parameter                              | String                                                  | full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*                                                          |                                                |
-| support                                | Enum                                                    | type of support for the optional parameter, the following values are possible: SUPPORTED                                                          | optional parameter is supported like specified |
-| REQUIRED                               | optional parameter is required for proper AGV-operation |                                                                                                                                                   |                                                |
-
-*description*
-
-String
-
-free text
-
-Description of optional parameter. E.g.
-
-\- Reason, why the optional parameter ‚direction‘ is necessary for this AGV-type and which values it can contain.
-
-\- The parameter ‘nodeMarker’ must contain unsigned interger-numbers only.
-
-\- Nurbs-Support is limited to straight lines and circle segments.
-
-}
-
-agvActions [agvAction]
-
-Array of JSON-object
-
-list of all actions with parameters supported by this AGV.
-This includes standard actions specified in VDA5050 and manufacturer-specific actions
-
-{
-
-actionType
-
-String
-
-unique actionType corresponding to action.actionType
-
-*actionDescription*
-
-String
-
-free text: description of the action
-
-actionScopes
-
-Array of Enum
-
-list of allowed scopes for using this action-type
-
-| INSTANT | usable as instantAction |
-|---------|-------------------------|
-| NODE    | usable on nodes         |
-| EDGE    | usable on edges         |
-
-e.g. [„INSTANT“, „NODE“]
-
-*actionParameters [actionParameter]*
-
-Array of JSON-object
-
-list of parameters
-
-if not defined, the action has no parameters
-
-*{*
-
-key
-
-String
-
-key-String for Parameter
-
-valueDataType
-
-Enum
-
-data type of Value, possible data types are
-
-BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY
-
-*description*
-
-String
-
-free text: description of the parameter
-
-*isOptional*
-
-Bool
-
-True: optional parameter
-
-*}*
-
-*resultDescription*
-
-String
-
-free text: description of the resultDescription
-
-*}*
+| **Field**    | **data type** | **description**  |
+|--------------|---------------|------------------|
+| optionalParameters [optionalParameter] | Array of JSON-object | list of supported and/or required optional parameters<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |                                                |
+| {            |               |                  |
+| parameter    | string        | full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*|
+| support      | enum          | type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified<br/>REQUIRED: optional parameter is required for proper AGV-operation |
+| *description*| string        | free text<br/>Description of optional parameter. E.g.<ul><li>Reason, why the optional parameter ‚direction‘ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned interger-numbers only.</li><li>Nurbs-Support is limited to straight lines and circle segments.</li>
+| }            |               |                  |
+| agvActions [agvAction] | Array of JSON-object | list of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions |
+| {            |               |                  |
+| actionType   | string        | unique actionType corresponding to action.actionType |
+| *actionDescription* | string  | free text: description of the action |
+| actionScopes | array of enum | list of allowed scopes for using this action-type<br/><br/>INSTANT: usable as instantAction<br/>NODE: usable on nodes<br/>EDGE: usable on edges<br/><br/>e.g. ```[„INSTANT“, „NODE“]```|
+| *actionParameters [actionParameter]* | Array of JSON-object | list of parameters<br/>if not defined, the action has no parameters |
+|&emsp;*{*     |               |                  |
+|&emsp;key     | string        | key-String for Parameter |
+|&emsp;valueDataType | enum    | data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY |
+|&ensp;*description* | string  | free text: description of the parameter |
+|&ensp;*isOptional*  | Bool    | True: optional parameter |
+|&ensp;*}*           |         |                          |         
+|*resultDescription* | string  | free text: description of the resultDescription |
+|*}*                 |         |                          |
 
 #### 
 
