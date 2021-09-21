@@ -915,11 +915,11 @@ Errors can pass references that help with finding the cause of the error via the
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 header |  | N/A | For header information see 6.4 
-orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string ("") if no previous orderId is available. 
-orderUpdateId |  | Uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
+orderId|  | string | Unique order identifi¬cation of the current order or the previous finished order. <br>The orderId is kept until a new order is re¬ceived. <br>Empty string ("") if no previous orderId is avai¬lable. 
+orderUpdateId |  | uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
-lastNodeSequenceId |  | Uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"0" if no lastNodeSequenced is available.
+lastNodeSequenceId |  | uint32 | sequenceId of the last reached node or, if AGV is currently on a node, sequenceId of current node. <br>"o" if no lastNodeSequenced is available. 
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects that need to be traversed for fulfilling the order<br>(empty list if idle)
 ***agvPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs.
