@@ -999,7 +999,7 @@ width | m | float64 | Absolute width of the load´s bounding box.
 *height* <br><br><br><br>}| m | float64 | Absolute height of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
 **actionState** { |  | JSON-object |  
 actionId |  |string  | action_ID
-actionType |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
+*actionType* |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
 *actionDescription* |  | string | Additional information on the current action. 
 actionStatus |  | string | Enum {WAITING;<br>INITIALIZING;<br>RUNNING;<br>PAUSED;<br>FINISHED;<br>FAILED}<br>WAITING: waiting for the trigger<br><br>(passing the mode, entering the edge)<br><br> PAUSED: paused by instantAction or external trigger<br><br>FAILED: action could not be performed. 
 *resultDescription*<br><br><br><br>} |  | string | Description of the result, e.g. the result of a RFID-read.<br><br>Errors will be transmitted in errors.<br><br>Examples for results are given in 6.5
