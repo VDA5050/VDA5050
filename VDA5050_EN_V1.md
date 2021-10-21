@@ -1021,6 +1021,7 @@ errorType |  | string | Type/name of error
 *errorDescription* |  | string | Error description 
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning)<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated)
 
+<a name="errorReferenceImpl"></a>
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
@@ -1171,7 +1172,7 @@ This section includes additional information which helps in facilitating a commo
 
 ### <a name="Er"></a> 7.1 Error reference 
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see 5.6.2 Implementation).
+If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#errorReferenceImpl)).
 This can include the following information:
 
 - headerId
