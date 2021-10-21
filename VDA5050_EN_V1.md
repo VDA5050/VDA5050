@@ -758,9 +758,9 @@ If there is no way to map some action to one of the actions of the following sec
 
 general |  | scope 
 :---:|--- | :---:
-action, counter action, Description, important, Parameter | linked state |  instant, node, edge 
+action, counter action, Description, idempotent, Parameter | linked state |  instant, node, edge 
 
-action | counter action | Description | important | Parameter | linked state | instant | node | edge
+action | counter action | Description | idempotent | Parameter | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>No more AGV driving movements - reaching next node is not necessary.<br>Actions can continue. <br>Order is resumable. | yes | - | paused | yes | no | no 
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
