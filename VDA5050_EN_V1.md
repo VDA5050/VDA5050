@@ -686,7 +686,7 @@ Object structure | Unit | Data type | Description
 **nodePosition** { |  | JSON-object | Defines the position on a map in a global projectspezific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolut Orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
 *allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDevaitionTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
@@ -713,7 +713,7 @@ endNodeId |  | string | nodeId of endNode
 *maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
 *maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on edge
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
-*orientation* | rad | float64 | Orientation of the AGV on the edge relative to the global project specific map coordinate origin (for holonomic vehicles with more than one driving direction). <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.<br>If rotationAllowed is “false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If a trajectory with orientation is defined, follow the trajectories orientation. <br>If a trajectory without orientation and the orientation field here is defined, apply the orientation to the tangent of the trajectory. 
+*orientation* | rad | float64 | Orientation of the AGV on the edge, tangential to the edge (0.0 = forwards, PI = backwards) (for holonomic vehicles with more than one driving direction). <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.<br>If rotationAllowed is “false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation tangentially to the trajectory. 
 *direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Example: left,  right, straight, 433MHz 
 *rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br><br>Optional:<br>No limit if not set.
@@ -733,8 +733,8 @@ Object structure | Unit | Data type | Description
 **controlPoint** { |  | JSON-object |  
 x |  | float64 | X coordinate described in the world coordinate system. 
 y |  | float64 | Y coordinate described in the world coordinate system.
-*orientation* | rad | float64 | Range: [-Pi ... Pi]<br>Orientation of the AGV on this position of the curve. <br>The orientation is in world coordinates. <br>When not defined the orientation of the AGV will be tangential to the curve 
-weight<br><br>} |  | float64 | Range: (0 ... ∞)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+*weight* |  | float64 | Range: (0 ... ∞)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+} |  |  |
 
 
 ### <a name="Actions"></a> 6.8 Actions
@@ -758,9 +758,9 @@ If there is no way to map some action to one of the actions of the following sec
 
 general |  | scope 
 :---:|--- | :---:
-action, counter action, Description, important, Parameter | linked state |  instant, node, edge 
+action, counter action, Description, idempotent, Parameter | linked state |  instant, node, edge 
 
-action | counter action | Description | important | Parameter | linked state | instant | node | edge
+action | counter action | Description | idempotent | Parameter | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>No more AGV driving movements - reaching next node is not necessary.<br>Actions can continue. <br>Order is resumable. | yes | - | paused | yes | no | no 
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
@@ -936,7 +936,7 @@ Object structure | Unit | Data type | Description
 **batteryState** |  | JSON-object | Contains all battery-related information.
 operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6.
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
-***informations [info]*** |  | array | Array of info-objects. <br>An empty array indicates that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
+***information [info]*** |  | array | Array of info-objects. <br>An empty array indicates that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
 **safetyState** |  | JSOn-object | Contains all safety-related information. 
 
 Object structure | Unit | Data type | Description 
@@ -981,7 +981,7 @@ Object structure | Unit | Data type | Description
 *loadPosition* |  | string | Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
 ***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
 ***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-*weight*<br><br>} | kg | uint32 | Range: [0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
+*weight*<br><br>} | kg | float64 | Range: [0.0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -999,7 +999,7 @@ width | m | float64 | Absolute width of the load´s bounding box.
 *height* <br><br><br><br>}| m | float64 | Absolute height of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
 **actionState** { |  | JSON-object |  
 actionId |  |string  | action_ID
-actionType |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
+*actionType* |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
 *actionDescription* |  | string | Additional information on the current action. 
 actionStatus |  | string | Enum {WAITING;<br>INITIALIZING;<br>RUNNING;<br>PAUSED;<br>FINISHED;<br>FAILED}<br>WAITING: waiting for the trigger<br><br>(passing the mode, entering the edge)<br><br> PAUSED: paused by instantAction or external trigger<br><br>FAILED: action could not be performed. 
 *resultDescription*<br><br><br><br>} |  | string | Description of the result, e.g. the result of a RFID-read.<br><br>Errors will be transmitted in errors.<br><br>Examples for results are given in 6.5
@@ -1021,6 +1021,7 @@ errorType |  | string | Type/name of error
 *errorDescription* |  | string | Error description 
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning)<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated)
 
+<a name="errorReferenceImpl"></a>
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
@@ -1171,7 +1172,7 @@ This section includes additional information which helps in facilitating a commo
 
 ### <a name="Er"></a> 7.1 Error reference 
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see 5.6.2 Implementation).
+If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#errorReferenceImpl)).
 This can include the following information:
 
 - headerId

@@ -129,7 +129,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | minOrderInterval              | float32       | [s] minimum interval sending order messages to the AGV        |
 | minStateInterval              | float32       | [s] minimum interval for sending state-messages               |
 | *defaultStateInterval*        | float32       | [s] default interval for sending state-messages *if not defined, the default value from the main document is used* |
-|  *visualisationInterval*      | float32       | [s] default interval for sending messages on visualisation topic       |
+|  *visualizationInterval*      | float32       | [s] default interval for sending messages on visualization topic       |
 | }                             |               |                                                               |
 
 ### agvProtocolFeatures
