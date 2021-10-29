@@ -57,7 +57,7 @@ Version 2.0
 [6 Protocol specification](#Ps)<br>
 [6.1 Symbols of the tables and meaning of formatting](#Sottamof)<br>
 [6.1.1 Optional fields](#Of)<br>
-[6.1.2 Permitted characters and field lenghts](#Pcafl)<br>
+[6.1.2 Permitted characters and field lengths](#Pcafl)<br>
 [6.1.3 Notation of enumerations](#Noe) <br>
 [6.1.4 JSON Datatypes](#JD)<br>
 [6.2 MQTT connection handling, security and QoS](#MchsaQ)<br>
@@ -718,7 +718,7 @@ endNodeId |  | string | nodeId of endNode
 *rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br><br>Optional:<br>No limit if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted if AGV cannot process trajectories or if AGV plans its own trajectory.
-*lenght* | m | float64 | Lenght of the path from startNode to endNode<br><br>Optional:<br><br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
+*length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br><br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -1142,7 +1142,7 @@ manufacturer | string | Manufacturer of the AGV
 serialNumber | string | Serial number of the AGV 
 connectionState | string | Enum {ONLINE, OFFLINE, CONNECTIONBROKEN}<br><br>ONLINE: connection between AGV and broker is active.<br><br>OFFLINE: connection between AGV and broker has gone offline in a coordinated way. <br><br> CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended. 
 
-The last will message will not be sent when a connection is ended in a gracefully way by using a MQTT disconnection command. 
+The last will message will not be sent when a connection is ended in a graceful way by using a MQTT disconnection command. 
 The last will message is only sent by the broker if the connection is unexpectedly interrupted.
 
 **Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT Broker.
@@ -1150,17 +1150,17 @@ As a result, the timestamp and headerId fields will always be outdated.
 
 AGV wants to disconnect gracefully: 
 
-1. AGV sends „uagv/v2/manufacturer/SN/connection“ with connectionState = „offline“.
+1. AGV sends „uagv/v2/manufacturer/SN/connection“ with `connectionState` set to `OFFLINE`.
 2. Disconnect the mqtt connection with a disconnect command.
 
 AGV comes online: 
 
-1. Set the lastwill to „uagv/v2/manufacturer/SN/connection“ with the field „connectionState“ = „connectionBroken“, when the mqtt connection is created.
-2. Send the topic „uagv/v2/manufacturer/SN/connection“ with connectionState = „online“.
+1. Set the lastwill to „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`, when the mqtt connection is created.
+2. Send the topic „uagv/v2/manufacturer/SN/connection“ with `connectionState` set to `ONLINE`.
 
 All messages of this topic should be send with a retained flag. 
 
-When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field „connectionState“ set to „connectionBroken“.
+When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
 
 
