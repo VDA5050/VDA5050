@@ -1,8 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "state",
-    "description": "all encompassing state of the AGV. Internal Document version: 5.0.0",
-    "documentVersion": "5.0.0",
+    "description": "all encompassing state of the AGV.",
     "subtopic": "/state",
     "type": "object",
     "properties": {
