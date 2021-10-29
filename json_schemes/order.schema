@@ -119,7 +119,7 @@
                             },
                             "allowedDeviationTheta": {
                                 "type": "number",
-                                "minimum": 0,
+                                "minimum": -3.141592654,
                                 "maximum": 3.141592654,
                                 "description": "Indicates how exact an AGV has to align its orientation with the nodes theta. The value is interpreted as theta+-deviation.nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer)."
                             },
