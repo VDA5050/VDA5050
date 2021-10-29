@@ -4,13 +4,32 @@
     "description": "all encompassing state of the AGV.",
     "subtopic": "/state",
     "type": "object",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "orderId",
+        "orderUpdateId",
+        "lastNodeId",
+        "lastNodeSequenceId",
+        "nodeStates",
+        "edgeStates",
+        "driving",
+        "actionStates",
+        "batteryState",
+        "operatingMode",
+        "errors",
+        "safetyState"
+    ],
     "properties": {
         "headerId": {
             "type": "integer",
             "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "type": "string",
+            "type": "date-time",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
@@ -84,6 +103,11 @@
             "items": {
                 "type": "object",
                 "title": "nodeState",
+                "required": [
+                    "nodeId",
+                    "released",
+                    "sequenceId"
+                ],
                 "properties": {
                     "nodeId": {
                         "type": "string",
@@ -99,7 +123,12 @@
                     },
                     "nodePosition": {
                         "type": "object",
-                        "title": "nodePosition",
+                        "required": [
+                            "x",
+                            "y",
+                            "theta",
+                            "mapId"
+                        ],
                         "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV).\nOptional:\nMaster control has this information. Can be sent additionally, e. g. for debugging purposes. ",
                         "properties": {
                             "x": {
@@ -114,24 +143,13 @@
                             "mapId": {
                                 "type": "string"
                             }
-                        },
-                        "required": [
-                            "x",
-                            "y",
-                            "theta",
-                            "mapId"
-                        ]
+                        }
                     },
                     "released": {
                         "type": "boolean",
                         "description": "True: indicates that the node is part of the base. False: indicates that the node is part of the horizon."
                     }
-                },
-                "required": [
-                    "nodeId",
-                    "released",
-                    "sequenceId"
-                ]
+                }
             }
         },
         "edgeStates": {
@@ -139,7 +157,11 @@
             "description": "Information about the edges the AGV still has to drive over. Empty list if the AGV is idle.",
             "items": {
                 "type": "object",
-                "title": "edgeState",
+                "required": [
+                    "edgeId",
+                    "sequenceId",
+                    "released"
+                ],
                 "properties": {
                     "edgeId": {
                         "type": "string",
@@ -160,6 +182,11 @@
                     "trajectory": {
                         "type": "object",
                         "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 5.4 Topic: Order (from master control to AGV).\nTrajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed. ",
+                        "required": [
+                            "degree",
+                            "knotVector",
+                            "controlPoints"
+                        ],
                         "properties": {
                             "degree": {
                                 "type": "integer",
@@ -179,7 +206,11 @@
                                 "description": "List of JSON controlPoint objects defining the control points of the NURBS. This includes the start and end point.",
                                 "items": {
                                     "type": "object",
-                                    "title": "controlPoint",
+                                    "required": [
+                                        "x",
+                                        "y",
+                                        "weight"
+                                    ],
                                     "properties": {
                                         "x": {
                                             "type": "number"
@@ -191,32 +222,23 @@
                                             "type": "number",
                                             "description": "The weight with which this control point pulls no the curve.\nWhen not defined, the default will be 1.0."
                                         }
-                                    },
-                                    "required": [
-                                        "x",
-                                        "y",
-                                        "weight"
-                                    ]
+                                    }
                                 }
                             }
-                        },
-                        "required": [
-                            "degree",
-                            "knotVector",
-                            "controlPoints"
-                        ]
+                        }
                     }
-                },
-                "required": [
-                    "edgeId",
-                    "sequenceId",
-                    "released"
-                ]
+                }
             }
         },
         "agvPosition": {
             "type": "object",
-            "title": "agvPosition",
+            "required": [
+                "x",
+                "y",
+                "theta",
+                "mapId",
+                "positionInitialized"
+            ],
             "description": "The AGVs position",
             "properties": {
                 "x": {
@@ -248,18 +270,10 @@
                     "type": "number",
                     "description": "Value for position deviation range in meters. Can be used if the AGV is able to derive it."
                 }
-            },
-            "required": [
-                "x",
-                "y",
-                "theta",
-                "mapId",
-                "positionInitialized"
-            ]
+            }
         },
         "velocity": {
             "type": "object",
-            "title": "velocity",
             "description": "The AGVs velocity in vehicle coordinates",
             "properties": {
                 "vx": {
@@ -278,6 +292,7 @@
             "description": "Array for information about the loads that an AGV currently carries, if the AGV has any information about them. This array is optional: if an AGV cannot reason about its load state, it shall not send this field. If an empty field is sent, MC is to assume that the AGV can reason about its load state and that the AGV currently does not carry a load.",
             "items": {
                 "type": "object",
+                "required": [],
                 "description": "Load object that describes the load if the AGV has information about it.",
                 "title": "load",
                 "properties": {
@@ -294,6 +309,11 @@
                     },
                     "boundingBoxReference": {
                         "type": "object",
+                        "required": [
+                            "x",
+                            "y",
+                            "z"
+                        ],
                         "description": "This point describes the loads position on the AGV in the vehicle coordinates. The boundingBoxReference point is in the middle of the footprint of the load, so length/2 and width/2.",
                         "properties": {
                             "x": {
@@ -308,16 +328,14 @@
                             "theta": {
                                 "type": "number"
                             }
-                        },
-                        "required": [
-                            "x",
-                            "y",
-                            "z"
-                        ]
+                        }
                     },
                     "loadDimensions": {
                         "type": "object",
-                        "title": "loadDimensions",
+                        "required": [
+                            "length",
+                            "width"
+                        ],
                         "description": "Dimensions of the loadâ€™s bounding box in meters. ",
                         "properties": {
                             "length": {
@@ -332,18 +350,13 @@
                                 "type": "number",
                                 "description": "Absolute height of the loads bounding box in meter.\nOptional:\nSet value only if known."
                             }
-                        },
-                        "required": [
-                            "length",
-                            "width"
-                        ]
+                        }
                     },
                     "weight": {
                         "type": "number",
                         "description": "Weight of load in kg"
                     }
-                },
-                "required": []
+                }
             }
         },
         "actionStates": {
@@ -351,6 +364,10 @@
             "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
             "items": {
                 "type": "object",
+                "required": [
+                    "actionId",
+                    "actionStatus"
+                ],
                 "title": "actionState",
                 "properties": {
                     "actionId": {
@@ -370,29 +387,28 @@
                     },
                     "actionStatus": {
                         "type": "string",
-                        "description": "waiting: waiting for trigger\nfailed: action could not be performed.",
+                        "description": "WAITING: waiting for trigger\nFAILED: action could not be performed.",
                         "enum": [
-                            "waiting",
-                            "initializing",
-                            "running",
-                            "finished",
-                            "failed"
+                            "WAITING",
+                            "INITIALIZING",
+                            "RUNNING",
+                            "FINISHED",
+                            "FAILED"
                         ]
                     },
                     "resultDescription": {
                         "type": "string",
                         "description": "Description of the result, e.g. the result of a rfid-read."
                     }
-                },
-                "required": [
-                    "actionId",
-                    "actionStatus"
-                ]
+                }
             }
         },
         "batteryState": {
             "type": "object",
-            "title": "batteryState",
+            "required": [
+                "batteryCharge",
+                "charging"
+            ],
             "description": "All information relating to the battery.",
             "properties": {
                 "batteryCharge": {
@@ -415,18 +431,17 @@
                     "type": "number",
                     "description": "estimated reach with actual State of Charge"
                 }
-            },
-            "required": [
-                "batteryCharge",
-                "charging"
-            ]
+            }
         },
         "errors": {
             "type": "array",
-            "title": "Errors",
             "description": "Array of errors. Errors are kept until resolution.",
             "items": {
                 "type": "object",
+                "required": [
+                    "errorType",
+                    "errorLevel"
+                ],
                 "title": "Error",
                 "properties": {
                     "errorType": {
@@ -435,7 +450,6 @@
                     },
                     "errorReferences": {
                         "type": "array",
-                        "title": "errorReferences",
                         "items": {
                             "type": "object",
                             "title": "errorReference",
@@ -467,19 +481,17 @@
                         ]
                     }
                 }
-            },
-            "required": [
-                "errorType",
-                "errorLevel"
-            ]
+            }
         },
         "information": {
             "type": "array",
-            "title": "Information",
             "description": "Array of information messages. Messages are only for visualization/debugging. There's no specification when these messages are deleted.",
             "items": {
                 "type": "object",
-                "title": "Information",
+                "required": [
+                    "infoType",
+                    "infoLevel"
+                ],
                 "properties": {
                     "infoType": {
                         "type": "string",
@@ -487,9 +499,12 @@
                     },
                     "infoReferences": {
                         "type": "array",
-                        "title": "infoReferences",
                         "items": {
                             "type": "object",
+                            "required": [
+                                "referenceKey",
+                                "referenceValue"
+                            ],
                             "title": "infoReference",
                             "description": "Object that holds the info reference (e.g. orderId, orderUpdateId, actionId...) as key-value pairs.",
                             "properties": {
@@ -499,11 +514,7 @@
                                 "referenceValue": {
                                     "type": "string"
                                 }
-                            },
-                            "required": [
-                                "referenceKey",
-                                "referenceValue"
-                            ]
+                            }
                         }
                     },
                     "infoDescription": {
@@ -519,25 +530,20 @@
                         ]
                     }
                 }
-            },
-            "required": [
-                "infoType",
-                "infoLevel"
-            ]
+            }
         },
         "safetyState": {
             "type": "object",
-            "title": "safetyStatus",
             "description": "Object that holds information about the safety status",
             "properties": {
                 "eStop": {
                     "type": "string",
                     "description": "autoAck, manual, remote, none",
                     "enum": [
-                        "autoAck",
-                        "manual",
-                        "remote",
-                        "none"
+                        "AUTOACK",
+                        "MANUAL",
+                        "REMOTE",
+                        "NONE"
                     ]
                 },
                 "fieldViolation": {
@@ -550,24 +556,5 @@
                 "fieldViolation"
             ]
         }
-    },
-    "required": [
-        "headerId",
-        "timestamp",
-        "version",
-        "manufacturer",
-        "serialNumber",
-        "orderId",
-        "orderUpdateId",
-        "lastNodeId",
-        "lastNodeSequenceId",
-        "nodeStates",
-        "edgeStates",
-        "driving",
-        "actionStates",
-        "batteryState",
-        "operatingMode",
-        "errors",
-        "safetyState"
-    ]
+    }
 }
