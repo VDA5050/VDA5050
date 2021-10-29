@@ -4,13 +4,24 @@
     "description": "The message schema to communicate orders from master control to the AGV.\nInternal Document Version: 5.0.0",
     "subtopic": "/order",
     "type": "object",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "orderId",
+        "orderUpdateId",
+        "nodes",
+        "edges"
+    ],
     "properties": {
         "headerId": {
             "type": "integer",
             "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "type": "string",
+            "type": "date-time",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
@@ -126,78 +137,7 @@
                         "description": "Array of actions that are to be executed on the node. Their sequence in the list governs their sequence of execution.",
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "title": "nodeAction",
-                            "description": "nodeAction",
-                            "required": [
-                                "actionId",
-                                "actionType"
-                            ],
-                            "properties": {
-                                "actionType": {
-                                    "type": "string",
-                                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
-                                },
-                                "actionId": {
-                                    "type": "string",
-                                    "description": "ID to distinguish between multiple actions with the same type on the same node."
-                                },
-                                "actionDescription": {
-                                    "type": "string",
-                                },
-                                "blockingType": {
-                                    "type": "string",
-                                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
-                                    "enum": [
-                                        "NONE",
-                                        "SOFT",
-                                        "HARD"
-                                    ]
-                                },
-                                "actionParameters": {
-                                    "type": "array",
-                                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
-                                    "items": {
-                                        "title": "actionParameter",
-                                        "type": "object",
-                                        "required": [
-                                            "key",
-                                            "value"
-                                        ],
-                                        "properties": {
-                                            "key": {
-                                                "type": "string",
-                                                "description": "The key of the action parameter.",
-                                                "examples": [
-                                                    "duration",
-                                                    "direction",
-                                                    "signal"
-                                                ]
-                                            },
-                                            "value": {
-                                                "type": [
-                                                    "array",
-                                                    "boolean",
-                                                    "number",
-                                                    "string"
-                                                ],
-                                                "description": "The value of the action parameter",
-                                                "examples": [
-                                                    103.2,
-                                                    "left",
-                                                    true,
-                                                    [
-                                                        "arrays",
-                                                        "are",
-                                                        "also",
-                                                        "valid"
-                                                    ]
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            "$ref": "#/definitions/action"
                         }
                     }
                 }
@@ -411,15 +351,80 @@
             }
         }
     },
-    "required": [
-        "headerId",
-        "timestamp",
-        "version",
-        "manufacturer",
-        "serialNumber",
-        "orderId",
-        "orderUpdateId",
-        "nodes",
-        "edges"
-    ]
+    "definitions": {
+        "action": {
+            "type": "object",
+            "description": "Describes an action that the AGV must perform.",
+            "required": [
+                "actionId",
+                "actionType",
+                "blockingType"
+            ],
+            "properties": {
+                "actionType": {
+                    "type": "string",
+                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                },
+                "actionId": {
+                    "type": "string",
+                    "description": "ID to distinguish between multiple actions with the same type on the same node."
+                },
+                "actionDescription": {
+                    "type": "string"
+                },
+                "blockingType": {
+                    "type": "string",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                    "enum": [
+                        "NONE",
+                        "SOFT",
+                        "HARD"
+                    ]
+                },
+                "actionParameters": {
+                    "type": "array",
+                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                    "items": {
+                        "title": "actionParameter",
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "value"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "description": "The key of the action parameter.",
+                                "examples": [
+                                    "duration",
+                                    "direction",
+                                    "signal"
+                                ]
+                            },
+                            "value": {
+                                "type": [
+                                    "array",
+                                    "boolean",
+                                    "number",
+                                    "string"
+                                ],
+                                "description": "The value of the action parameter",
+                                "examples": [
+                                    103.2,
+                                    "left",
+                                    true,
+                                    [
+                                        "arrays",
+                                        "are",
+                                        "also",
+                                        "valid"
+                                    ]
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
