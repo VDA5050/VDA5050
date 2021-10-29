@@ -1,8 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "visualization",
     "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
-    "documentVersion": "5.0.0",
     "subtopic": "/visualization",
     "type": "object",
     "properties": {
@@ -11,7 +10,7 @@
             "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "type": "string",
+            "type": "date-time",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
@@ -35,8 +34,14 @@
         "agvPosition": {
             "type": "object",
             "title": "agvPosition",
-            "$id": "#/position",
             "description": "The AGVs position",
+            "required": [
+                "x",
+                "y",
+                "theta",
+                "mapId",
+                "positionInitialized"
+            ],
             "properties": {
                 "x": {
                     "type": "number"
@@ -64,14 +69,7 @@
                     "type": "number",
                     "description": "Value for position deviation range in meters. Can be used if the AGV is able to derive it."
                 }
-            },
-            "required": [
-                "x",
-                "y",
-                "theta",
-                "mapId",
-                "positionInitialized"
-            ]
+            }
         },
         "velocity": {
             "type": "object",
