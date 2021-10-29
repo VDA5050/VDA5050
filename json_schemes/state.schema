@@ -420,7 +420,7 @@
                     "description": "Battery voltage"
                 },
                 "batteryHealth": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "State of health in percent."
                 },
                 "charging": {
@@ -428,7 +428,7 @@
                     "description": "If true: Charging in progress."
                 },
                 "reach": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "estimated reach with actual State of Charge"
                 }
             }
@@ -534,6 +534,10 @@
         },
         "safetyState": {
             "type": "object",
+            "required": [
+                "eStop",
+                "fieldViolation"
+            ],
             "description": "Object that holds information about the safety status",
             "properties": {
                 "eStop": {
@@ -550,11 +554,7 @@
                     "type": "boolean",
                     "description": "Protective field violation"
                 }
-            },
-            "required": [
-                "eStop",
-                "fieldViolation"
-            ]
+            }
         }
     }
 }
