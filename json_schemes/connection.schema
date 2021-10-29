@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",,
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "connection",
     "description": "The last will message of the AGV. Has to be sent with retain flag.\nOnce the AGV comes online, it has to send this message on its connect topic, with the connectionState enum set to \"online\".\n The last will message is to be configured with the connection state set to \"connectionBroken\".\nThus, if the AGV disconnects from the broker, master control gets notified via the topic \"connection\".\nIf the AGV is disconnecting in an orderly fashion (e.g. shutting down, sleeping), the AGV is to publish a message on this topic with the connectionState set to \"disconnected\".",
     "subtopic": "/connection",
