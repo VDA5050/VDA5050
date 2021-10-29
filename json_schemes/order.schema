@@ -220,7 +220,7 @@
                         "type": "number",
                         "description": "Maximum rotation speed in rad/s"
                     },
-                    "distance": {
+                    "length": {
                         "type": "number",
                         "description": "Distance of the path from startNode to endNode in meters. This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
                     },
@@ -276,68 +276,7 @@
                         "description": "Array of action objects with detailed information.",
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "title": "edgeAction",
-                            "description": "edgeAction",
-                            "required": [
-                                "actionId",
-                                "actionType"
-                            ],
-                            "properties": {
-                                "actionType": {
-                                    "type": "string",
-                                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
-                                },
-                                "actionId": {
-                                    "type": "string",
-                                    "description": "ID to distinguish between multiple actions with the same name on the same node."
-                                },
-                                "actionDescription": {
-                                    "type": "string",
-                                },
-                                "actionParameters": {
-                                    "type": "array",
-                                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
-                                    "items": {
-                                        "type": "object",
-                                        "required": [
-                                            "key",
-                                            "value"
-                                        ],
-                                        "properties": {
-                                            "key": {
-                                                "type": "string",
-                                                "description": "The key of the action parameter.",
-                                                "examples": [
-                                                    "duration",
-                                                    "direction",
-                                                    "signal"
-                                                ]
-                                            },
-                                            "value": {
-                                                "type": [
-                                                    "array",
-                                                    "boolean",
-                                                    "number",
-                                                    "string"
-                                                ],
-                                                "description": "The value of the action parameter",
-                                                "examples": [
-                                                    103.2,
-                                                    "left",
-                                                    true,
-                                                    [
-                                                        "arrays",
-                                                        "are",
-                                                        "also",
-                                                        "valid"
-                                                    ]
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            "$ref": "#/definitions/action"
                         }
                     }
                 }
