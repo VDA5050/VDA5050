@@ -1,8 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "instantActions",
     "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
-    "documentVersion": "5.0.0",
     "subtopic": "/instantActions",
     "type": "object",
     "properties": {
