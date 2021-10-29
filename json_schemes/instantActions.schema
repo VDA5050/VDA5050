@@ -12,7 +12,7 @@
         },
         "timestamp": {
             "title": "timestamp",
-            "type": "string",
+            "type": "date-time",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
@@ -34,16 +34,15 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
-        "instantActions": {
+        "actions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "$id": "#instantAction",
-                "title": "instantAction",
                 "description": "Action Object",
                 "required": [
                     "actionId",
-                    "actionName"
+                    "actionName",
+                    "blockingType"
                 ],
                 "properties": {
                     "actionName": {
