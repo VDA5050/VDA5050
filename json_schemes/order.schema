@@ -257,18 +257,11 @@
                                         "weight": {
                                             "type": "number",
                                             "description": "The weight with which this control point pulls no the curve.\nWhen not defined, the default will be 1.0."
-                                        },
-                                        "orientation": {
-                                            "type": "number",
-                                            "description": "Orientation of the AGV on this position of the curve. The orientation is in world coordinates.\nWhen not defined the orientation of the AGV will be tangential to the curve.",
-                                            "minimum": -3.14159265359,
-                                            "maximum": 3.14159265359
                                         }
                                     },
                                     "required": [
                                         "x",
-                                        "y",
-                                        "weight"
+                                        "y"
                                     ]
                                 }
                             }
