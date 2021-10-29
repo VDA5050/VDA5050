@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Order Message",
-    "description": "The message schema to communicate orders from master control to the AGV.\nInternal Document Version: 5.0.0",
+    "description": "The message schema to communicate orders from master control to the AGV.",
     "subtopic": "/order",
     "type": "object",
     "required": [
