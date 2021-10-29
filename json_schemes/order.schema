@@ -227,6 +227,11 @@
                     "trajectory": {
                         "type": "object",
                         "description": "Trajectory that an AGV has to follow on this edge. The trajectory is to be defined as a NURBS.",
+                        "required": [
+                            "degree",
+                            "knotVector",
+                            "controlPoints"
+                        ],
                         "properties": {
                             "degree": {
                                 "type": "integer",
@@ -265,12 +270,7 @@
                                     ]
                                 }
                             }
-                        },
-                        "required": [
-                            "degree",
-                            "knotVector",
-                            "controlPoints"
-                        ]
+                        }
                     },
                     "actions": {
                         "description": "Array of action objects with detailed information.",
