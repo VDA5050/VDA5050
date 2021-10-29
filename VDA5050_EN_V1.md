@@ -915,7 +915,7 @@ Errors can pass references that help with finding the cause of the error via the
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 header |  | N/A | For header information see 6.4 
-orderId|  | string | Unique order identifi¬cation of the current order or the previous finished order. <br>The orderId is kept until a new order is re¬ceived. <br>Empty string ("") if no previous orderId is avai¬lable. 
+orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string ("") if no previous orderId is available. 
 orderUpdateId |  | uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | nodeId of last reached node or, if AGV is currently on a node, current node (e.g. „node7”). Empty string ("") if no lastNodeId is available.
