@@ -14,12 +14,10 @@
     ],
     "properties": {
         "headerId": {
-            "title": "headerId",
             "type": "integer",
             "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "title": "timestamp",
             "type": "date-time",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
@@ -27,7 +25,6 @@
             ]
         },
         "version": {
-            "title": "Version",
             "type": "string",
             "description": "Version of the protocol [Major].[Minor].[Patch]",
             "examples": [
