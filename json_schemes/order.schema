@@ -198,7 +198,7 @@
                     },
                     "orientation": {
                         "type": "number",
-                        "description": "Orientation of the AGV on the edge relative to the map coordinate origin (for holonomic vehicles with more than one driving direction).\nExample: orientation Pi/2 rad will lead to a rotation of 90 degrees.\nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.\nIf rotationAllowed is “false”, rotate before entering the edge.\nIf that is not possible, reject the order.\nIf a trajectory with orientation is defined, follow the trajectories orientation. If a trajectory without orientation and the orientation field here is defined, apply the orientation to the tangent of the trajectory.",
+                        "description": "Orientation of the AGV on the edge, tangential to the edge (0.0 = forwards, PI = backwards) (for holonomic vehicles with more than one driving direction). Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”. If rotationAllowed is “false”, rotate before entering the edge. If that is not possible, reject the order. If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation tangentially to the trajectory.",
                         "minimum": -3.14159265359,
                         "maximum": 3.14159265359
                     },
