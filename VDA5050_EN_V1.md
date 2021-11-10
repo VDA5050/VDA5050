@@ -118,7 +118,7 @@ In detail, this should be achieved by the following points:
 
 - Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles
 - Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
-- Reduction of implementation time due to high "Plug & Play" capability, as required information (z. B. Cards) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety
+- Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. maps) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety
 - Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination-with the corresponding logic for all transport vehicles, vehicle models and manufacturers
 - Increase in manufacturer's independence using common interfaces between vehicle control and coordination level
 - Integration of proprietary DTS inventory systems by implementing a vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1)
