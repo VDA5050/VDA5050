@@ -102,7 +102,9 @@ Version 2.0
 
 The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA) developed. 
 The aim of both parties is to create a universally applicable interface. 
-Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision. 
+Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
+The contribution to this document via GitHub is greatly appreciated.
+The Repository can be found at the following link: http://github.com/vda5050/vda5050.
 
 
 
