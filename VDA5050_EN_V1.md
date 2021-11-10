@@ -119,7 +119,7 @@ In detail, this should be achieved by the following points:
 - Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles
 - Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
 - Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. maps) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety
-- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination-with the corresponding logic for all transport vehicles, vehicle models and manufacturers
+- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers
 - Increase in manufacturer's independence using common interfaces between vehicle control and coordination level
 - Integration of proprietary DTS inventory systems by implementing a vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1)
 
@@ -136,21 +136,21 @@ Other interfaces required for operation between the AGV and the master control (
 ---
 
 This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and a master control.
-The aim is for AGVs to speak with different characteristics (e.g. underrun tractor or fork lift AGV) in a uniform language with a master control. 
+The goal is for AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) in a uniform language with a master control. 
 This creates the basis for operating any combination of AGVs in a master control.
 The master control provides a contract award and coordination of the AGV traffic (cf. Chapter 5).
 
 The interface is based on the requirements from production and plant logistics in the automotive industry.
 According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e. the logistical processes from goods receiving through production supply to goods out) to control free navigating vehicles and guided vehicles.
 
-In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to deviations in a dynamic environment or be adapted to them shortly afterwards. 
+In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards. 
 Autonomous properties such as the independent bypassing of obstacles can fulfilled by free navigating vehicles as well as guided vehicles. 
 However, as soon as the path planning is carried out on the vehicle itself, this document describes free navigating vehicles (see glossary). 
 Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
 
 For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
 This should enable a complete coverage of the master control for vehicles that are guided. 
-Vehicles that are free navigating can be integrated into the expandable structure; a detailed specification required for this is not part of this recommendation.
+Vehicles that are free navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
 
 For the integration of proprietary stock systems, individual definitions of interface may be required, which are not considered as part of this recommendation.
 
@@ -175,13 +175,13 @@ The communication interface is designed to support the following requirements:
 - Enabling the integration of vehicles with different degrees of autonomy
 - Enable decision, e.g. with regard to the selection of routes or the behaviour at intersections 
 
-Vehicles should transfer their status immediately at a regular interval or when their status changes. 
+Vehicles should transfer their status at a regular interval or when their status changes. 
 
 Communication is done over wireless networks, taking into account the effects of connection failures and loss of messages. 
 
 The message log is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
-MQTT 3.1.1 is defined as the version to be used. 
-Use of MQTT 5 is possible once this is redistributed and tested. 
+MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
+Use of MQTT 5 is possible but not recommended. 
 MQTT allows the distribution of messages to subchannels, which are called "topics" in English. 
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
 
