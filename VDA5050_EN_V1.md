@@ -3,7 +3,7 @@
 
 ## VDA 5050
 
-## Version 2.0, June 2020
+## Version 2.0, INSERT DATE
 
 ![control system and av](./assets/csagv.png) 
 
@@ -39,8 +39,6 @@ www.vda.de
 **Copyright**
 Association of the Automotive Industry (VDA)
 Reproduction and any other form of reproduction is only permitted with specification of the source.
-
-Belaystation June 2020
 
 Version 2.0
 
