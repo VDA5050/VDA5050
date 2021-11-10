@@ -49,8 +49,7 @@
         "orderUpdateId": {
             "description": "orderUpdate identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
             "type": "integer",
-            "minimum": 0,
-            "maximum": 4294967296
+            "minimum": 0
         },
         "zoneSetId": {
             "description": "Unique identifier of the zone set that the AGV has to use for navigation or that was used by MC for planning.\nOptional: Some MC systems do not use zones. Some AGVs do not understand zones. Do not add to message if no zones are used.",
@@ -80,7 +79,6 @@
                     "sequenceId": {
                         "type": "integer",
                         "minimum": 0,
-                        "maximum": 4294967296,
                         "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId can run across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
                     "nodeDescription": {
@@ -165,7 +163,6 @@
                     "sequenceId": {
                         "type": "integer",
                         "minimum": 0,
-                        "maximum": 4294967296,
                         "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
                     "edgeDescription": {
