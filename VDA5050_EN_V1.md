@@ -243,7 +243,7 @@ Functions of the AGV are:
 In addition, the integrator must take into account the following when configuring the overall system (incomplete list): 
 
 - Map configuration : The coordinate systems of the master control and the AGV must be coordinated 
-- Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g. it may be different for AGV carrying a load and for AGV that do not carry a load.
+- Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g. it may be different for an AGV carrying a load and for an AGV that do not carry a load.
 
 
 
@@ -256,9 +256,8 @@ Communication between the AGV and peripheral equipment, e. g. between the AGV an
 
 The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
 
-In addition, JSON schemas are available for validation in a public Git repository (https://github.com/MaximilianRies/vd-m-a-5050). 
-The branch to this document version is 5.00.
-The JSON schemes are the "some point of truth" and are considered a universal data set with the claim to correctness that can be relied upon as a developer of the interface.
+In addition, JSON schemas are available for validation in the public Git repository (https://github.com/VDA5050/VDA5050/json_schemas).
+The JSON schemas are updated with every release of the VDA5050.
 
 
 
