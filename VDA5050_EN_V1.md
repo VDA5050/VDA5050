@@ -215,6 +215,7 @@ Routes can be one-way streets,  routes for certain vehicle groups (based on the 
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
+The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the AGV Factsheet section of this document.
 
 The configuration of the DTS described above is not part of this document. 
 However, it forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
