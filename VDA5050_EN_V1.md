@@ -302,6 +302,7 @@ A-Z a-z 0-9 _ - . :
 
 A maximum message length is not defined. 
 If an AGVs memory is insufficient to process an incoming order, it is to reject the order.
+The AGV communicates maximum field and array lengths via the AGV factsheet during integration or startup.
 
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
 
