@@ -228,7 +228,7 @@ Functions of the master control are:
 - Assignment of orders to the AGV
 - Route calculation and guidance of the AGV (taking into account the limitations of the individual physical properties of each AGV, e.g. size, manouevrability, etc.)
 - Detection and resolution of blockages ("deadlocks")
-- Energy management: Load orders can interrupt transfer orders
+- Energy management: Charging orders can interrupt transfer orders
 - Traffic control: Buffer routes and waiting positions
 - (temporary) changes in the environment, such as freeing certain areas or changing the maximum speed
 - Communication with peripheral systems such as doors, gates, elevators, etc. 
