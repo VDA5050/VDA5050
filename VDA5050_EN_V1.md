@@ -365,7 +365,7 @@ The `$` character is also used in some MQTT brokers for special internal topics,
 ### <a name="PH"></a> 6.4 Protocol Header
 
 Each JSON starts with a header.
-In the following sections, the header will be referenced as header but only for readability. 
+In the following sections, the following fields will be referenced as header for readability. 
 The header consists of the following individual elements. 
 The header is not a JSON object.
 
