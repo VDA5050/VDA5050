@@ -670,7 +670,11 @@ The orientation must be in radians and must be within +Pi and –Pi.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-header |    | N/A | For header information see 6.4 
+headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
+version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
+manufacturer | | string | Manufacturer of the AGV 
+serialNumber | | string | Serial number of the AGV 
 orderId |  | string | Order identification.<br>This is to be used to identify multiple order messages that belong to the same order. 
 orderUpdateId |  | uint32 | orderUpdate identification.<br>Is unique per orderId.<br>If an orderupdate is rejected, this field is to be passed in the rejection message
 zoneSetId |  | string | Unique identifier of the zone set that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGVs do not understand zones.<br> Do not add to message if no zones are used. 
@@ -823,7 +827,11 @@ For additional information, see chapter 7 Best practices.
 
 Object structure | Data type | Description 
 ---|---|---
-header | N/A | For header information see 6.4
+headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
+version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
+manufacturer | | string | Manufacturer of the AGV 
+serialNumber | | string | Serial number of the AGV 
 actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order. 
 
 
@@ -920,7 +928,11 @@ Errors can pass references that help with finding the cause of the error via the
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-header |  | N/A | For header information see 6.4 
+headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
+version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
+manufacturer | | string | Manufacturer of the AGV 
+serialNumber | | string | Serial number of the AGV 
 orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string ("") if no previous orderId is available. 
 orderUpdateId |  | uint32 | Order Update Identification to identify that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
