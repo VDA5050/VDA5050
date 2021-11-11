@@ -340,7 +340,7 @@ The topic `connection` shall use the QoS level 1 (At Least Once).
 ### <a name="MTL"></a> 6.3 MQTT-Topic Levels 
 
 The MQTT-Topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
-For a cloud-based MQTT-Broker the topic structure (black) has to be adapted individually to match the topics defined in this protocol (red). 
+For a cloud-based MQTT-Broker the topic structure has to be adapted individually to match the topics defined in this protocol. 
 This means that the topic names defined in the following sections are mandatory.
 
 For a local broker the MQTT topic levels are suggested as followed:
@@ -359,7 +359,8 @@ manufacturer | string | Manufacturer of the AGV (e.g. RobotCompany)
 serialNumber | string | Unique AGV Serial Number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g. Order or System State) see Cap. 6.5
 
-
+Note: Since the `/` character is used to define topic hierachies, it must not be used in any of the aforementioned fields.
+The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
 ### <a name="PH"></a> 6.4 Protocol Header
 
@@ -376,9 +377,9 @@ version | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | string | Manufacturer of the AGV 
 serialNumber | string | Serial number of the AGV 
 
-Protocol version
+#### Protocol version
 
-The version uses semantic versioning as versioning schema. 
+The protocol version uses semantic versioning as versioning schema.
 
 Examples for major version changes: 
 - Breaking changes, e.g. new non-optional fields
@@ -402,7 +403,7 @@ instantActions | master control | AGV | Communication of the actions that are to
 state | AGV | master control | Communication of the AGVs state | mandatory | state.schema
 visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
 connection | Broker/AGV | master control | Indicates when AGV connection is lost. Not to be used by master control for checking the vehicle health. Added for a MQTT protocol level check of connection. | mandatory | connection.schema 
-
+factsheet | AGV | master control | Setup of AGV in master control. | mandatory | factsheet.schema
 
 
 ### <a name="TOfmctA"></a> 6.6 Topic: Order (from master control to AGV)
