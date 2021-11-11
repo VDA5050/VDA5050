@@ -310,7 +310,7 @@ The matching of maximum field lengths, string lengths or value ranges is up to t
 
 #### <a name="Noe"></a> 6.1.3 Notation of enumerations 
 
-Enumerations are basically in large letters. 
+Enumerations must be written in uppercase. 
 This includes keywords such as the states of the actions (WAITING, FINISHED, etc...) or values of the "direction" field (LEFT, RIGHT, 443MHZ, etc...).
 
 
@@ -318,7 +318,7 @@ This includes keywords such as the states of the actions (WAITING, FINISHED, etc
 #### <a name="JD"></a> 6.1.4 JSON Datatypes 
 
 Where possible, JSON data types must be used.
-A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers (1, 0 or,ä,).
+A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers.
 
 
 
