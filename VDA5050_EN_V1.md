@@ -217,8 +217,8 @@ Within the routes, stations for loading and unloading, battery charging stations
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
 The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the AGV Factsheet section of this document.
 
-The configuration of the DTS described above is not part of this document. 
-However, it forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
+The configuration of routes and the route network described above is not part of this document.
+It forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
 The resulting orders for an AGV are then transferred to the vehicle via an MQTT message broker.
 This then continuously reports its status to the master control in parallel with the execution of the job. 
 This is also done using the MQTT message broker.
