@@ -209,9 +209,12 @@ During the implementation phase, the DTS consisting of the master control and th
 The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the master control by importing from other systems. 
 Essentially, this concerns the following content:
 
-- Definition of driving routes: Using CAD import, driving rates can be taken over in the master control. Alternatively, driving courses can also be implemented manually in the master control by the operator. Driving courses can be one-way streets, driving courses for certain vehicle groups (based on the size ratios) etc.
-- Route network configuration: Within the driving course, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations etc. are defined. 
-- Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) Are stored by the operator.
+- Definition of  routes: Using CAD import,  routes can be taken over in the master control.
+Alternatively, routes can also be implemented manually in the master control by the operator.
+Routes can be one-way streets,  routes for certain vehicle groups (based on the size ratios) etc.
+- Route network configuration:
+Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations etc. are defined. 
+- Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
 
 The configuration of the DTS described above is not part of this document. 
 However, it forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
