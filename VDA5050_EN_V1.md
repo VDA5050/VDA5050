@@ -290,6 +290,7 @@ Master control shall only send optional information that the AGV supports.
 Example: Trajectories are optional. 
 If an AGV cannot process trajectories, master control shall not send a trajectory to the vehicle.
 
+The AGV must communicate which optional parameters it needs via an AGV factsheet message.
 
 
 #### <a name="Pcafl"></a> 6.1.2 Permitted characters and field lengths
