@@ -1,0 +1,91 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "visualization",
+    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
+    "subtopic": "/visualization",
+    "type": "object",
+    "properties": {
+        "headerId": {
+            "type": "integer",
+            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+        },
+        "timestamp": {
+            "type": "date-time",
+            "description": "Timestamp in ISO8601 format.",
+            "examples": [
+                "1991-03-11T11:40:03.12Z"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the protocol [Major].[Minor].[Patch]",
+            "examples": [
+                "1.3.2"
+            ]
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the AGV"
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the AGV."
+        },
+        "agvPosition": {
+            "type": "object",
+            "title": "agvPosition",
+            "description": "The AGVs position",
+            "required": [
+                "x",
+                "y",
+                "theta",
+                "mapId",
+                "positionInitialized"
+            ],
+            "properties": {
+                "x": {
+                    "type": "number"
+                },
+                "y": {
+                    "type": "number"
+                },
+                "theta": {
+                    "type": "number"
+                },
+                "mapId": {
+                    "type": "string"
+                },
+                "positionInitialized": {
+                    "type": "boolean",
+                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                },
+                "localizationScore": {
+                    "type": "number",
+                    "description": "Localization score for SLAM based vehicles, if the AGV can communicate it.",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                },
+                "deviationRange": {
+                    "type": "number",
+                    "description": "Value for position deviation range in meters. Can be used if the AGV is able to derive it."
+                }
+            }
+        },
+        "velocity": {
+            "type": "object",
+            "title": "velocity",
+            "description": "The AGVs velocity in vehicle coordinates",
+            "properties": {
+                "vx": {
+                    "type": "number"
+                },
+                "vy": {
+                    "type": "number"
+                },
+                "omega": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

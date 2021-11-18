@@ -1,0 +1,359 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Order Message",
+    "description": "The message schema to communicate orders from master control to the AGV.",
+    "subtopic": "/order",
+    "type": "object",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "orderId",
+        "orderUpdateId",
+        "nodes",
+        "edges"
+    ],
+    "properties": {
+        "headerId": {
+            "type": "integer",
+            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+        },
+        "timestamp": {
+            "type": "date-time",
+            "description": "Timestamp in ISO8601 format.",
+            "examples": [
+                "1991-03-11T11:40:03.12Z"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the protocol [Major].[Minor].[Patch]",
+            "examples": [
+                "1.3.2"
+            ]
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the AGV"
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the AGV."
+        },
+        "orderId": {
+            "description": "Unique order Identification.",
+            "type": "string"
+        },
+        "orderUpdateId": {
+            "description": "orderUpdate identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
+            "type": "integer",
+            "minimum": 0
+        },
+        "zoneSetId": {
+            "description": "Unique identifier of the zone set that the AGV has to use for navigation or that was used by MC for planning.\nOptional: Some MC systems do not use zones. Some AGVs do not understand zones. Do not add to message if no zones are used.",
+            "type": "string"
+        },
+        "nodes": {
+            "description": "This list holds the base and the horizon nodes of the order graph.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "title": "node",
+                "required": [
+                    "nodeId",
+                    "sequenceId",
+                    "released",
+                    "actions"
+                ],
+                "properties": {
+                    "nodeId": {
+                        "type": "string",
+                        "description": "Unique node identification",
+                        "examples": [
+                            "pumpenhaus_1",
+                            "MONTAGE"
+                        ]
+                    },
+                    "sequenceId": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId can run across all nodes and edges of the same order and is reset when a new orderId is issued."
+                    },
+                    "nodeDescription": {
+                        "type": "string",
+                        "description": "Verbose Node Description."
+                    },
+                    "released": {
+                        "type": "boolean",
+                        "description": "If true, the node is part of the base plan. If false, the node is part of the horizon plan."
+                    },
+                    "nodePosition": {
+                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. Precision is up to the specific implementation",
+                        "type": "object",
+                        "required": [
+                            "x",
+                            "y",
+                            "mapId"
+                        ],
+                        "properties": {
+                            "x": {
+                                "type": "number"
+                            },
+                            "y": {
+                                "type": "number"
+                            },
+                            "theta": {
+                                "description": "Orientation of the AGV on the node.\nOptional: vehicle can plan the path by itself.\nIf defined, the AGV has to assume the theta angle on this node.\nIf previous edge disallows rotation, the AGV is to rotate on the node.\nIf following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.",
+                                "type": "number",
+                                "minimum": -3.14159265359,
+                                "maximum": 3.14159265359
+                            },
+                            "allowedDeviationXy": {
+                                "type": "number",
+                                "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
+                                "minimum": 0
+                            },
+                            "allowedDeviationTheta": {
+                                "type": "number",
+                                "minimum": -3.141592654,
+                                "maximum": 3.141592654,
+                                "description": "Indicates how exact an AGV has to align its orientation with the nodes theta. The value is interpreted as theta+-deviation.nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer)."
+                            },
+                            "mapId": {
+                                "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
+                                "type": "string"
+                            },
+                            "mapDescription": {
+                                "description": "Verbose description of the Map",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "actions": {
+                        "description": "Array of actions that are to be executed on the node. Their sequence in the list governs their sequence of execution.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/action"
+                        }
+                    }
+                }
+            }
+        },
+        "edges": {
+            "type": "array",
+            "description": "Base and Horizon Edges of the Order Graph.",
+            "items": {
+                "type": "object",
+                "title": "edge",
+                "required": [
+                    "edgeId",
+                    "sequenceId",
+                    "released",
+                    "startNodeId",
+                    "endNodeId",
+                    "actions"
+                ],
+                "properties": {
+                    "edgeId": {
+                        "type": "string",
+                        "description": "Unique edge identification"
+                    },
+                    "sequenceId": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
+                    },
+                    "edgeDescription": {
+                        "type": "string",
+                        "description": "Verbose description of the edge."
+                    },
+                    "released": {
+                        "type": "boolean",
+                        "description": "If true, the edge is part of the base plan. If false, the edge is part of the horizon plan."
+                    },
+                    "startNodeId": {
+                        "type": "string",
+                        "description": "The nodeId of the start node."
+                    },
+                    "endNodeId": {
+                        "type": "string",
+                        "description": "The nodeId of the end node."
+                    },
+                    "maxSpeed": {
+                        "type": "number",
+                        "description": "permitted maximum speed of the agv on the edge in m/s. Speed is defined by the fastest point of the vehicle."
+                    },
+                    "maxHeight": {
+                        "type": "number",
+                        "description": "Permitted maximum height of the vehicle, including the load, on edge. In meters."
+                    },
+                    "minHeight": {
+                        "type": "number",
+                        "description": "Permitted minimal height of the edge measured at the bottom of the load. In meters."
+                    },
+                    "orientation": {
+                        "type": "number",
+                        "description": "Orientation of the AGV on the edge, tangential to the edge (0.0 = forwards, PI = backwards) (for holonomic vehicles with more than one driving direction). Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”. If rotationAllowed is “false”, rotate before entering the edge. If that is not possible, reject the order. If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation tangentially to the trajectory.",
+                        "minimum": -3.14159265359,
+                        "maximum": 3.14159265359
+                    },
+                    "direction": {
+                        "type": "string",
+                        "description": "Sets direction at junctions for line-guided vehicles, to be defined initially (vehicle-individual). Can be descriptive (left, right, middle) or a frequency.",
+                        "examples": [
+                            "left",
+                            "right",
+                            "straight",
+                            "433MHz"
+                        ]
+                    },
+                    "rotationAllowed": {
+                        "type": "boolean",
+                        "description": "If true, rotation is allowed on the edge."
+                    },
+                    "maxRotationSpeed": {
+                        "type": "number",
+                        "description": "Maximum rotation speed in rad/s"
+                    },
+                    "length": {
+                        "type": "number",
+                        "description": "Distance of the path from startNode to endNode in meters. This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
+                    },
+                    "trajectory": {
+                        "type": "object",
+                        "description": "Trajectory that an AGV has to follow on this edge. The trajectory is to be defined as a NURBS.",
+                        "required": [
+                            "degree",
+                            "knotVector",
+                            "controlPoints"
+                        ],
+                        "properties": {
+                            "degree": {
+                                "type": "integer",
+                                "description": "The degree of the NURBS."
+                            },
+                            "knotVector": {
+                                "type": "array",
+                                "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1",
+                                "items": {
+                                    "type": "number",
+                                    "maximum": 1,
+                                    "minimum": 0
+                                }
+                            },
+                            "controlPoints": {
+                                "type": "array",
+                                "description": "List of JSON controlPoint objects defining the control points of the NURBS. This includes the start and end point.",
+                                "items": {
+                                    "type": "object",
+                                    "title": "controlPoint",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number"
+                                        },
+                                        "y": {
+                                            "type": "number"
+                                        },
+                                        "weight": {
+                                            "type": "number",
+                                            "description": "The weight with which this control point pulls no the curve.\nWhen not defined, the default will be 1.0."
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "description": "Array of action objects with detailed information.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/action"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "action": {
+            "type": "object",
+            "description": "Describes an action that the AGV must perform.",
+            "required": [
+                "actionId",
+                "actionType",
+                "blockingType"
+            ],
+            "properties": {
+                "actionType": {
+                    "type": "string",
+                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                },
+                "actionId": {
+                    "type": "string",
+                    "description": "ID to distinguish between multiple actions with the same type on the same node."
+                },
+                "actionDescription": {
+                    "type": "string"
+                },
+                "blockingType": {
+                    "type": "string",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                    "enum": [
+                        "NONE",
+                        "SOFT",
+                        "HARD"
+                    ]
+                },
+                "actionParameters": {
+                    "type": "array",
+                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                    "items": {
+                        "title": "actionParameter",
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "value"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "description": "The key of the action parameter.",
+                                "examples": [
+                                    "duration",
+                                    "direction",
+                                    "signal"
+                                ]
+                            },
+                            "value": {
+                                "type": [
+                                    "array",
+                                    "boolean",
+                                    "number",
+                                    "string"
+                                ],
+                                "description": "The value of the action parameter",
+                                "examples": [
+                                    103.2,
+                                    "left",
+                                    true,
+                                    [
+                                        "arrays",
+                                        "are",
+                                        "also",
+                                        "valid"
+                                    ]
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
