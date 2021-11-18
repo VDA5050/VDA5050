@@ -211,7 +211,7 @@ Routes can be one-way streets,  routes for certain vehicle groups (based on the 
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the AGV Factsheet section of this document.
+The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [AGV Factsheet section](#factsheet) of this document.
 
 The configuration of routes and the route network described above is not part of this document.
 It forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
@@ -297,9 +297,8 @@ A-Z a-z 0-9 _ - . :
 
 A maximum message length is not defined. 
 If an AGVs memory is insufficient to process an incoming order, it is to reject the order.
-The AGV communicates maximum field and array lengths via the AGV factsheet during integration or startup.
-
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
+For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [section 7 - AGV Factsheet](#factsheet).
 
 
 
