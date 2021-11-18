@@ -134,12 +134,12 @@ Other interfaces required for operation between the AGV and the master control (
 # <a name="Scope"></a> 3 Scope
 
 This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and a master control.
-The goal is for AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) in a uniform language with a master control. 
+The goal is to allow AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) to communicate with a master control (MC) in a uniform language. 
 This creates the basis for operating any combination of AGVs in a master control.
-The master control provides a contract award and coordination of the AGV traffic (cf. Chapter 5).
+The master control provides orders and coordinates the AGV traffic.
 
 The interface is based on the requirements from production and plant logistics in the automotive industry.
-According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e. the logistical processes from goods receiving through production supply to goods out) to control free navigating vehicles and guided vehicles.
+According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e. the logistical processes from goods receiving through production supply to goods out, to control free navigating vehicles and guided vehicles.
 
 In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards. 
 Autonomous properties such as the independent bypassing of obstacles can fulfilled by free navigating vehicles as well as guided vehicles. 
