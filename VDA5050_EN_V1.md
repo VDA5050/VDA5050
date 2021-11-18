@@ -865,13 +865,13 @@ If two events correlate with each other (e.g. the receiving of a new order usual
 
 #### <a name="CaLe"></a> 6.10.1 Concept and Logic 
 
-The order progress is tracked by the nodeStates and edgeStates. 
+The order progress is tracked by the `nodeStates` and edgeStates`. 
 Additionally, if the AGV is able to derive its current position it can publish its position via the “position” field.
 
-If the AVG plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the trajectory object in the state message, unless master control cannot use this field and it was agreed during integration that this field must not be sent.
+If the AVG plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration that this field must not be sent.
 After nodes are released by master control, the AGV is not allowed to change its trajectory.
 
-The “nodeStates/edgeStates” includes all nodes/edges that the AGV still must traverse.
+The `nodeStates` and `edgeStates` includes all nodes/edges that the AGV still must traverse.
 
 ![Figure 12 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/Figure12.png) 
 >Figure 12 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
@@ -881,14 +881,14 @@ The “nodeStates/edgeStates” includes all nodes/edges that the AGV still must
 #### <a name="Tonaeletoa"></a> 6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions 
 
 The AGV decides on its own when a node should count as traversed.
-Generally, the AGV’s control point should be within the node’s deviationRangeXY and its orientation within deviationRangeTheta.
+Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
 
-The AGV reports the traversal of a node by removing its nodeState from the nodeStates array and setting the lastNodeId, lastNodeSequenceNumber to the traversed node’s values.
+The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceNumber` to the traversed node’s values.
 
 As soon as the AGV reports the node as traversed, the AGV must trigger the actions associated with the node, if any.
 
 The traversal of a node also marks the leaving of the edge leading up to the node. 
-The edge must then be removed from the edgeStates and the actions that were active on the edge must be finished.
+The edge must then be removed from the `edgeStates` and the actions that were active on the edge must be finished.
 
 The traversal of the node also marks the moment when the AGV enters the following edge, if there is one.
 The edges actions must now be triggered. 
@@ -901,25 +901,25 @@ An exception to this rule is if the AGV has to pause on the edge (because of a s
 
 #### <a name="Br"></a> 6.10.3 Base request 
 
-If the AGV detects that its base is running low, it can set the newBaseRequest flag to true to prevent unnecessary braking.
+If the AGV detects that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
 
 
 #### <a name="Information"></a> 6.10.4 Information 
 
-The AGV can submit arbitrary additional information to master control via the information array.
+The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
 
-master control must not use the info messages for logic, it must only be used for visualisation and debugging purposes.
+Master control must not use the info messages for logic, it must only be used for visualization and debugging purposes.
 
 
 
 #### <a name="Errors"></a> 6.10.5 Errors 
 
-The AGV reports errors via the errors array. 
-Errors have two levels: warning and fatal.
-A warning is a self-resolving error, e.g. a field violation. 
-A fatal error needs human intervention.
+The AGV reports errors via the `errors` array. 
+Errors have two levels: `WARNING` and `FATAL`.
+A `WARNING` is a self-resolving error, e.g. a field violation. 
+A `FATAL` error needs human intervention.
 Errors can pass references that help with finding the cause of the error via the errorReferences array.
 
 
@@ -945,9 +945,6 @@ lastNodeSequenceId |  | uint32 | sequenceId of the last reached node or, if AGV 
 ***loads [load]*** |  | array | Loads that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
 driving |  | boolean | “true”: indicates that the AGV is driving and/or rotating. Other movements of the AGV (e.g. lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
 *paused* |  | boolean | True: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>False: The AGV is currently not in a paused state.
-
-Object structure | Unit | Data type | Description 
----|---|---|---
 *newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeIdId“. <br>Distance is in meters.
 **actionStates [actionState]** |  | array | Contains a list of the current actions and the actions which are yet to be finished. <br>This may include actions from previous nodes that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
@@ -955,7 +952,7 @@ Object structure | Unit | Data type | Description
 operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6.
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
 ***information [info]*** |  | array | Array of info-objects. <br>An empty array indicates that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
-**safetyState** |  | JSOn-object | Contains all safety-related information. 
+**safetyState** |  | JSON-object | Contains all safety-related information. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -965,6 +962,9 @@ sequenceID |  | Uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node 
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 Optional:master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+
+Object structure | Unit | Data type | Description 
+---|---|---|---
 **edgeState** { |  | JSON-object |  |
 edgeId |  | string | Unique edge identification
 sequenceId |  | Uint32 | sequenceId to differentiate between multiple edges with the same edgeId
@@ -1015,6 +1015,9 @@ Object structure | Unit | Data type | Description
 length | m | float64 | Absolute length of the load´s bounding box. 
 width | m | float64 | Absolute width of the load´s bounding box. 
 *height* <br><br><br><br>}| m | float64 | Absolute height of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
+
+Object structure | Unit | Data type | Description 
+---|---|---|---
 **actionState** { |  | JSON-object |  
 actionId |  |string  | action_ID
 *actionType* |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
@@ -1052,7 +1055,7 @@ Object structure | Unit | Data type | Description
 infoType |  | string | Type/name of information 
 *infoReferences [infoReference]* |  | array | Array of references 
 *infoDescription* |  | string | Info of description 
-infoLevel <br><br><br>}|  | string | Enum {DEBUG,INFO}<br><br>DEBUG: used fot debugging<br> INFO: used for visualization 
+infoLevel <br><br><br>}|  | string | Enum {DEBUG,INFO}<br><br>DEBUG: used for debugging<br> INFO: used for visualization 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1067,25 +1070,26 @@ Object structure | Unit | Data type | Description
 eStop |  | string | Enum {AUTOACK,MANUAL,REMOTE,NONE}<br>Acknowledge-Type of eStop:<br>AUTOACK: auto-acknowledgeable e-stop is activated e.g. by bumper or protective field<br>MANUAL: e-stop hast to be acknowledged manually at the vehicle<br>REMOTE: facility e-stop hast to be acknowledged remotely<br>NONE: no e-stop activated
 fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated
 
+### Operating Mode Description
 The following description lists the operatingMode of the topic "states".
 
-Identifier | Data type | Type | Description 
----|---|---|---
-operatingMode | string | AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control
-|  | SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can’t exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
-|  | MANUAL | master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is send to the master control. <br>When AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
-|  | SERVICE | master control is not in control of the AGV. <br>master control doesn’t send driving order or actions to the AGV. <br>Authorized personal can reconfigure the AGV. 
-|  | TEACHING | master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>The AGV is being taught, e.g. mapping is done by a master control
+Identifier | Description 
+---|---
+AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control
+SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can’t exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
+MANUAL | master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is send to the master control. <br>When AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
+SERVICE | master control is not in control of the AGV. <br>master control doesn’t send driving order or actions to the AGV. <br>Authorized personal can reconfigure the AGV. 
+TEACHIN | master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>The AGV is being taught, e.g. mapping is done by a master control
 
 
 
 ### <a name="actionStates"></a> 6.11 actionStates
 
-When an AGV receives an action (either attached to a node or edge or via an instantAction) it must represent this action with an actionState in its actionStates array.
+When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`) it must represent this `action` with an `actionState` in its `actionStates` array.
 
-actionStates describe via their field “actionStatus” at which stage of the actions lifecycle the action is.
+`actionStates` describe via their field `actionStatus` at which stage of the actions lifecycle the action is.
 
-Table 1 describes, which value the enum actionStatus can hold
+Table 1 describes, which value the enum `actionStatus` can hold
 
 actionStatus | Description 
 ---|---
@@ -1108,7 +1112,7 @@ A state transition diagram is provided in Figure 14.
 ### <a name="ABTas"></a> 6.12 Action Blocking Types and sequence 
 
 The order of multiple actions in a list define the sequence in which those actions are to be executed. 
-The parallel execution of actions is governed by their respective blockingType.
+The parallel execution of actions is governed by their respective `blockingType`.
 
 Actions can have three distinct blocking types, described in Table 2.
 
@@ -1129,7 +1133,7 @@ If there are multiple actions on the same node with different blocking types, Fi
 
 ### <a name="TV"></a> 6.13 Topic "visualization" 
 
-For a near real-time position update the AGV can broadcast its position and velocity on the subtopic visualization.
+For a near real-time position update the AGV can broadcast its position and velocity on the subtopic `visualization`.
 
 The structure of the position message is the same as the position and velocity message in the state.
 For additional information see chapter 6.7 Implementation. 
