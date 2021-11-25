@@ -687,7 +687,7 @@ released |  | boolean | "true" indicates that the node is part of the base. <br>
 
 Object structure | Unit | Data type | Description 
 ---| --- |--- | ---
-**nodePosition** { |  | JSON-object | Defines the position on a map in a global projectspezific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
+**nodePosition** { |  | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolut Orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
@@ -714,9 +714,9 @@ sequenceId |  | Integer | Number to track the sequence of nodes and edges in an 
 released |  | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId |  | string | nodeId of startNode
 endNodeId |  | string | nodeId of endNode
-*maxSpeed* | m/s | Float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
-*maxHeight* | m | Float64 | Permitted maximum height of the vehicle, including the load, on edge
-*minHeight* | m | Float64 | Permitted minimal height of the load handling device on the edge.
+*maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
+*maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on edge
+*minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the edge. The value *orientationType* defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.<br>If rotationAllowed is “false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory. 
 *orientationType* |  | string | Enum {`GLOBAL`, `TANGENTIAL`} <br>"GLOBAL"- relative to the global project specific map coordinate system<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
 *direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Example: left,  right, straight, 433MHz 
@@ -953,7 +953,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON-object |  |
 nodeId |  | string | Unique node identification 
-sequenceID |  | Uint32 | sequenceId to discern multiple nodes with same nodeId.
+sequenceID |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node 
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 Optional:master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
@@ -962,7 +962,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **edgeState** { |  | JSON-object |  |
 edgeId |  | string | Unique edge identification
-sequenceId |  | Uint32 | sequenceId to differentiate between multiple edges with the same edgeId
+sequenceId |  | uint32 | sequenceId to differentiate between multiple edges with the same edgeId
 *edgeDescription* |  | string | Additional information on the edge 
 released |  | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
 ***trajectory*** <br><br>} |  | JSON-object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.4<br><br>Trajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed.
