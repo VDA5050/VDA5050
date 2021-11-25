@@ -3,7 +3,7 @@
 
 ## VDA 5050
 
-## Version 2.0, INSERT DATE
+## Version 2.0.0 RELEASE CANDIDATE, FOR REVIEW!!
 
 ![control system and av](./assets/csagv.png) 
 
@@ -682,7 +682,7 @@ nodeId |   |  string | Unique node identification
 sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued. 
 *nodeDescription* |  | string | Additional information on the node 
 released |  | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon. 
-***node Position*** |  | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g. line-guided vehicles).
+***nodePosition*** |  | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g. line-guided vehicles).
 **actions [action]** <br> } |  | array | Array of actions to be executed on a node. <br>Empty array if no actions required. 
 
 Object structure | Unit | Data type | Description 
@@ -729,7 +729,7 @@ endNodeId |  | string | nodeId of endNode
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **trajectory** { |  | JSON-object |  
-degree |  | float64 | Range: [1 ... ∞]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
+degree |  | float64 | Range: [1 ... infinity]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
 **knotVector [float64]** |  | array | Range: [ 0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
 **controlPoints [controlPoint]**<br><br> } |  | array | List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
 
@@ -738,7 +738,7 @@ Object structure | Unit | Data type | Description
 **controlPoint** { |  | JSON-object |  
 x |  | float64 | X coordinate described in the world coordinate system. 
 y |  | float64 | Y coordinate described in the world coordinate system.
-*weight* |  | float64 | Range: (0 ... ∞)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+*weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
 
@@ -994,7 +994,7 @@ Object structure | Unit | Data type | Description
 *loadPosition* |  | string | Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
 ***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
 ***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-*weight*<br><br>} | kg | float64 | Range: [0.0 ... ∞)<br><br>Absolute weight of the load measured in kg. 
+*weight*<br><br>} | kg | float64 | Range: [0.0 ... infinity)<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1027,7 +1027,7 @@ batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values 
 *batteryVoltage* | V | float64 | Battery Voltage 
 *batteryHealth* | % | int8 | Range: [0 .. 100]<br><br>State of Health 
 charging |  | boolean | “true”: charging in progress<br>“false”: AGV is currently not charging
-*reach* <br><br>}| m | uint32 | Range: [0 ... ∞)<br><br>Estimated reach with current State of Charge 
+*reach* <br><br>}| m | uint32 | Range: [0 ... infinity)<br><br>Estimated reach with current State of Charge 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
