@@ -5,7 +5,7 @@
 
 ## Version 2.0.0 RELEASE CANDIDATE, FOR REVIEW!!
 
-![control system and av](./assets/csagv.png) 
+![control system and automated guided vehicles](./assets/csagv.png) 
 
 
 
@@ -18,7 +18,7 @@ This recommendation describes the communication interface for exchanging order a
 
 ### Disclaimer 
 
-The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGV) and one that is freely applicable to everyone and is non-binding. 
+The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGV) and master control and one that is freely applicable to everyone and is non-binding.
 Those who apply them must ensure that they are applied properly in the specific case.
 
 They shall take into account the state of the art prevailing at the time of each issue.
@@ -100,8 +100,8 @@ Version 2.0
 # <a name="Foreword"></a> 1 Foreword 
 
 
-The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA) developed. 
-The aim of both parties is to create a universally applicable interface. 
+The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA). 
+The aim of both parties is to create an universally applicable interface. 
 Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
 The contribution to this document via GitHub is greatly appreciated.
 The Repository can be found at the following link: http://github.com/vda5050/vda5050.
@@ -110,47 +110,47 @@ The Repository can be found at the following link: http://github.com/vda5050/vda
 
 # <a name="Ootd"></a> 2 Objective of the document 
 
-The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing AGV when used in the automotive industry and to enable parallel operation with AGV from different manufacturers and conventional systems (inventory systems) in the same working environment.
+The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGV) system when used in the automotive industry and to enable parallel operation with AGV from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
-Uniform interface between the master control and the automated guided vehicles (AGV) shall be defined. 
-In detail, this should be achieved by the following points:
+Uniform interface between MC and AGV shall be defined. 
+In detail, this should be achieved by the following points: 
 
-- Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles
-- Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
-- Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. maps) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety
-- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers
-- Increase in manufacturer's independence using common interfaces between vehicle control and coordination level
-- Integration of proprietary DTS inventory systems by implementing a vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1)
+- A description of a standard for communication between AGV and MC and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
+- An increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
+- A reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
+- A complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
+- An increase in manufacturers independence using common interfaces between vehicle control and coordination level.
+- An integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary MC and the superordinate MC (cf.  Figure 1).
 
 ![Figure 1 Integration of DTS inventory systems](./assets/Figure1.png)
 >Figure 1 Integration of DTS inventory systems
 
-In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and the master control. 
+In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and MC.
 
-Other interfaces required for operation between the AGV and the master control (e.g. for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g. external peripherals, fire protection gates etc.) are not initially included in this document. 
+Other interfaces required for operation between AGV and MC (e.g., for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document. 
 
 
 
 # <a name="Scope"></a> 3 Scope
 
-This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and a master control.
-The goal is to allow AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) to communicate with a master control (MC) in a uniform language. 
-This creates the basis for operating any combination of AGVs in a master control.
-The master control provides orders and coordinates the AGV traffic.
+This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and MC.
+The goal is to allow AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) to communicate with MC in uniform language. 
+This creates the basis for operating any combination of AGV in a MC.
+The MC provides orders and coordinates the AGV traffic.
 
 The interface is based on the requirements from production and plant logistics in the automotive industry.
-According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e. the logistical processes from goods receiving through production supply to goods out, to control free navigating vehicles and guided vehicles.
+According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control free navigating vehicles and guided vehicles.
 
 In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards. 
-Autonomous properties such as the independent bypassing of obstacles can fulfilled by free navigating vehicles as well as guided vehicles. 
-However, as soon as the path planning is carried out on the vehicle itself, this document describes free navigating vehicles (see glossary). 
+Autonomous properties such as the independent bypassing of obstacles can be fulfilled by free navigating vehicles as well as guided vehicles. 
+However, as soon as the path planning is carried out on the vehicle itself, this document describes free navigating vehicles (see glossary).
 Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
 
 For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
-This should enable a complete coverage of the master control for vehicles that are guided. 
+This should enable a complete coverage of the MC for vehicles that are guided. 
 Vehicles that are free navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
 
-For the integration of proprietary stock systems, individual definitions of interface may be required, which are not considered as part of this recommendation.
+For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
 
 
 
@@ -170,7 +170,7 @@ The communication interface is designed to support the following requirements:
 
 - Control of min. 1000 vehicles
 - Enabling the integration of vehicles with different degrees of autonomy
-- Enable decision, e.g. with regard to the selection of routes or the behaviour at intersections 
+- Enable decision, e.g., with regard to the selection of routes or the behavior at intersections 
 
 Vehicles should transfer their status at a regular interval or when their status changes. 
 
@@ -179,7 +179,7 @@ Communication is done over wireless networks, taking into account the effects of
 The message log is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
 MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
 Use of MQTT 5 is possible but not recommended. 
-MQTT allows the distribution of messages to subchannels, which are called "topics" in English. 
+MQTT allows the distribution of messages to subchannels, which are called "topics". 
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
 
 The JSON structure allows for a future extension of the protocol with additional parameters.
@@ -189,32 +189,32 @@ The parameters are described in English to ensure that the protocol is readable,
 
 # <a name="Pacoc"></a> 5 Process and content of communication
 
-As shown in the information flow to the operation of AGV, there are at least the following actors (see Figure 2): 
+As shown in the information flow to the operation of AGV, there are at least the following participants (see Figure 2): 
 
-- The operator provides basic information, 
-- the master control organizes and manages the operation and 
+- the operator provides basic information
+- the MC organizes and manages the operation 
 - the AGV carries out the orders
 
 Figure 2 describes the communication content during the operational phase.
-During implementation or modification, the AGV and master control are manually configured. 
+During implementation or modification, the AGV and MC are manually configured. 
 
 ![Figure 2 Structure of the Information Flow](./assets/Figure2.png)
 >Figure 2 Structure of the Information Flow
 
-During the implementation phase, the DTS consisting of the master control and the AGV is set up.
-The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the master control by importing from other systems. 
+During the implementation phase, the driverless transport systems (DTS) consisting of MC and AGV is set up.
+The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the MC by importing from other systems. 
 Essentially, this concerns the following content:
 
-- Definition of  routes: Using CAD import,  routes can be taken over in the master control.
-Alternatively, routes can also be implemented manually in the master control by the operator.
-Routes can be one-way streets,  routes for certain vehicle groups (based on the size ratios) etc.
+- Definition of  routes: Using CAD import,  routes can be taken over in the MC.
+Alternatively, routes can also be implemented manually in the MC by the operator.
+Routes can be one-way streets,  restricted for certain vehicle groups (based on the size ratios), etc.
 - Route network configuration:
-Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations etc. are defined. 
+Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
 The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [AGV Factsheet section](#factsheet) of this document.
 
 The configuration of routes and the route network described above is not part of this document.
-It forms the basis for enabling order control and driving course assignment through the master control based on this information and the transport requirements to be completed. 
+It forms the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed. 
 The resulting orders for an AGV are then transferred to the vehicle via an MQTT message broker.
 This then continuously reports its status to the master control in parallel with the execution of the job. 
 This is also done using the MQTT message broker.
@@ -222,7 +222,7 @@ This is also done using the MQTT message broker.
 Functions of the master control are: 
 
 - Assignment of orders to the AGV
-- Route calculation and guidance of the AGV (taking into account the limitations of the individual physical properties of each AGV, e.g. size, manouevrability, etc.)
+- Route calculation and guidance of the AGV (taking into account the limitations of the individual physical properties of each AGV, e.g., size, maneuverability, etc.)
 - Detection and resolution of blockages ("deadlocks")
 - Energy management: Charging orders can interrupt transfer orders
 - Traffic control: Buffer routes and waiting positions
@@ -238,16 +238,16 @@ Functions of the AGV are:
 
 In addition, the integrator must take into account the following when configuring the overall system (incomplete list): 
 
-- Map configuration : The coordinate systems of the master control and the AGV must be coordinated 
-- Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g. it may be different for an AGV carrying a load and for an AGV that do not carry a load.
+- Map configuration: The coordinate systems of the master control and the AGV must be matched.
+- Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g., it may be different for an AGV carrying a load and for an AGV that does not carry a load.
 
 
 
 # <a name="Ps"></a> 6 Protocol specification 
 
 The following section describes the details of the communication protocol.
-The protocol specifies the communication between the master control and the AGVs.
-Communication between the AGV and peripheral equipment, e. g. between the AGV and a gate, is excluded.
+The protocol specifies the communication between the master control and the AGV.
+Communication between the AGV and peripheral equipment, e.g., between the AGV and a gate, is excluded.
 
 The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
 
@@ -263,7 +263,7 @@ The table contains the name of the identifier, its unit, its data type, and a de
 Identification | Description [ENG]
 ---|----
 standard | Variable is an elementary data type 
-**bold** | Variable is a non-elementary data type (e.g. JSON-object or array) and defined separately
+**bold** | Variable is a non-elementary data type (e.g., JSON-object or array) and defined separately
 *italic* | Variable is optional 
 [Square brackets] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is squareBrackets)
 
@@ -275,7 +275,7 @@ All enumerations are in UPPERCASE.
 
 ### <a name="Of"></a> 6.1.1 Optional fields
 
-If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e. g. when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field trajectory within the edges object of the order can be omitted). 
+If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGV plan their trajectory themselves and the field trajectory within the edge object of the order can be omitted). 
 
 If the AGV receives a message that contains a field which is marked as optional in this protocol, the AGV is expected to act accordingly and cannot ignore the field. 
 If the AGV cannot process the message accordingly then the expected behavior is to communicate this within an error message and to reject the order.
@@ -296,7 +296,7 @@ The recommendation is that IDs should only use the following characters:
 A-Z a-z 0-9 _ - . :
 
 A maximum message length is not defined. 
-If an AGVs memory is insufficient to process an incoming order, it is to reject the order.
+If an AGV memory is insufficient to process an incoming order, it is to reject the order.
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
 For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [section 7 - AGV Factsheet](#factsheet).
 
@@ -348,12 +348,12 @@ Example: uagv/v2/KIT/0001/order
 MQTT Topic Level | Data type | Description 
 ---|-----|-----
 interfaceName | string | Name of the used interface 
-majorVersion | string | Major version number, prepended with a "v"
-manufacturer | string | Manufacturer of the AGV (e.g. RobotCompany)
+majorVersion | string | Major version number, preceded by "v"
+manufacturer | string | Manufacturer of the AGV (e.g., RobotCompany)
 serialNumber | string | Unique AGV Serial Number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g. Order or System State) see Cap. 6.5
 
-Note: Since the `/` character is used to define topic hierachies, it must not be used in any of the aforementioned fields.
+Note: Since the `/` character is used to define topic hierarchies, it must not be used in any of the aforementioned fields.
 The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
 ## <a name="PH"></a> 6.4 Protocol Header
@@ -376,28 +376,31 @@ serialNumber | string | Serial number of the AGV
 The protocol version uses semantic versioning as versioning schema.
 
 Examples for major version changes: 
-- Breaking changes, e.g. new non-optional fields
+
+- Breaking changes, e.g., new non-optional fields
 
 Examples for minor version changes: 
+
 - New features like an additional topic for visualization 
 
 Examples for patch version: 
+
 - Higher available precision for a batteryCharge 
 
 
 
 ## <a name="Sfc"></a> 6.5 Subtopics for communication
 
-The AGV protocol uses the following topics for information exchange between master control and the AGVs 
+The AGV protocol uses the following topics for information exchange between master control and AGV
 
 Subtopic name | Published by | Subscribed by | Used for | Implementation | Schema 
 ---|---|---|---|---|---
 order | master control | AGV | Communication of driving orders from master control to the AGV | mandatory | order.schema 
 instantActions | master control | AGV | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
-state | AGV | master control | Communication of the AGVs state | mandatory | state.schema
+state | AGV | master control | Communication of the AGV state | mandatory | state.schema
 visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
-connection | Broker/AGV | master control | Indicates when AGV connection is lost. Not to be used by master control for checking the vehicle health. Added for a MQTT protocol level check of connection. | mandatory | connection.schema 
-factsheet | AGV | master control | Setup of AGV in master control. | mandatory | factsheet.schema
+connection | Broker/AGV | master control | Indicates when AGV connection is lost, not to be used by master control for checking the vehicle health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
+factsheet | AGV | master control | Setup of AGV in master control | mandatory | factsheet.schema
 
 
 ## <a name="TOfmctA"></a> 6.6 Topic: Order (from master control to AGV)
@@ -408,17 +411,17 @@ The topic "order" is the MQTT topic via which the AGV receives a JSON encapsulat
 
 ### <a name="CaL"></a> 6.6.1 Concept and Logic 
 
-The basic structure of an order is a graph of nodes and edges. 
+The basic structure of an order is a graph of nodes and edges.
 The AGV is expected to traverse the nodes and edges to fulfill the order.
-The full graph of all connected nodes and edges are held by master control.
+The full graph of all connected nodes and edges is held by master control.
 
-The graph representation in the master control contains restrictions, e. g. which AGV is allowed to traverse which edge.
-These restrictions will not be communicated to the AGV. 
-The master control only includes edges in an AGV’s order which the concerning AGV is allowed to traverse.
+The graph representation in the master control contains restrictions, e.g., which AGV is allowed to traverse which edge.
+These restrictions will not be communicated to the AGV.
+The master control only includes edges in an AGV order which the concerning AGV is allowed to traverse.
 
-It is to be avoided that the master control has a separate graph representation for each type of AGV. 
-Whenever possible, one location, e. g. waiting position in front of fire door, should only have one node for all types of AGVs. 
-However, due to the different sizes and specifications of the AGVs, it might be necessary to deviate from this standard in certain situations.
+It is to be avoided that the master control has a separate graph representation for each type of AGV.
+Whenever possible, one location, e.g., a waiting position in front of fire door, should only have one node for all types of AGV.
+However, due to the different sizes and specifications of AGV, it might be necessary to deviate from this standard in certain situations.
 
 ![Figure 3 Graph representation in Master Control and graph transmitted in orders](./assets/Figure3.png) 
 >Figure 3 Graph representation in Master Control and graph transmitted in orders
@@ -433,10 +436,10 @@ The first node of an order must be trivially reachable for the AGV.
 This means either that the AGV is already standing on the node, or that the AGV is in the nodes deviation range.
 
 Nodes and edges both have a boolean attribute “released”.
-If a node or edge is released the AGV is expected to traverse it. 
+If a node or edge is released, the AGV is expected to traverse it. 
 If a node or edge is not released, the AGV must not traverse it.
 
-An edge only can be released if both the start and end node of the edge are released.
+An edge only can be released, if both the start and end node of the edge are released.
 
 After an unreleased edge, no released nodes or edges can follow in the sequence. 
 
@@ -457,10 +460,10 @@ For traffic control the order-topic includes only the path to a decision point.
 Before reaching the decision point, the master control will send an updated path with additional path segments.
 To communicate to the AGV what it will most likely have to do after reaching the decision point, an order consists of two separate parts: 
 
-- <u>Drive to the decision point "Base":</u> The "base" is the defined route that the AGV travels. All nodes and edges of the "Base" route have already been approved by the control panel for the vehicle. 
-- <u>Estimated journey from the decision point "Horizon":</u> The "Horizon" is the route that the AGV is likely to drive if there is no traffic jam. The "Horizon" route has not yet been approved by the control panel. However, the AGV will initially only travel to the last junction of the "Base" route.
+- <u>Drive to the decision point "Base":</u> The "Base" is the defined route that the AGV travels. All nodes and edges of the "Base" route have already been approved by the control panel for the vehicle. 
+- <u>Estimated journey from the decision point "Horizon":</u> The "Horizon" is the route that the AGV is likely to drive, if there is no traffic jam. The "Horizon" route has not yet been approved by the control panel. However, the AGV will initially only travel to the last junction of the "Base" route.
 
-Since MQTT is an asynchronous protocol and transmission via WLAN is not reliable, it is important to note that the "base" cannot be changed. 
+Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, it is important to note, that the "base" cannot be changed. 
 The master control can therefore assume that the "base" is executed by the AGV.
 A later section describes a procedure for cancelling an order, but this is also considered unreliable due to the communication restrictions mentioned above.
 
@@ -494,12 +497,12 @@ For the sake of readability, a complete JSON example has been omitted here.
 	]
 }
 ```
->Figure 5 Pseudocode of a order
+>Figure 5 Pseudocode of an order
 
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6). 
 Note that the "orderUpdateId" is incremented and that the first node of the job update corresponds to the last shared base node of the previous order message.
 
-This ensures that the AGV can also perform the job update, i.e. that the first node of the job update is reachable by executing the edges already known to the AGV.
+This ensures that the AGV can also perform the job update, i.e., that the first node of the job update is reachable by executing the edges already known to the AGV.
 
 ```
 }
@@ -520,27 +523,27 @@ This ensures that the AGV can also perform the job update, i.e. that the first n
 ```
 >Figure 6 Pseudocode of an order update. Please look out for the change of the "orderUpdateId"
 
-This also aids in the event that an orderUpdate goes missing (because of unreliable WIFI). 
+This also aids in the event that an orderUpdate goes missing (because of unreliable wireless network). 
 The AGV can always check that the last known base node has the same nodeId (and nodeSequenceId, more on that later) as the first new base node.
 
 Also note that node 7 is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes 6 and 4 is not valid.
 
-It is important that the contents of the stitching node (node 7 in the example case) are not changed. 
-For actions, deviation range etc. the AGV must use the instructions provided in the first order (Code Snippet 1, orderUpdateId 0).
+It is important, that the contents of the stitching node (node 7 in the example case) are not changed. 
+For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/Figure7.png)
 >Figure 7 Regular update process - order extension
 
 Figure 7 describes how an order should be extended.
-It shows the information that is currently available on the AGV. 
+It shows the information, that is currently available on the AGV. 
 The orderId stays the same and the orderUpdateId is incremented. 
 
 The last node of the previous base is the first base node in the updated order.
 With this node the AGV can add the updated order onto the current order (stitching). 
 The other nodes and edges from the previous base are not resent.
 
-MC has the option to make changes to the horizon by sending entirely different nodes as the new base.
+Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
 To allow loops in orders (like going from node 1 to 2 and then back to 1) a sequenceId is assigned to the node and edge objects. 
@@ -552,8 +555,8 @@ This is necessary to determine on AGV side to which node the master control refe
 
 Figure 8 describes the process of accepting an order or orderUpdate.
 
-![Figure 8 The proces of accepting an order or orderUpdate](./assets/Figure8.png)
->Figure 8 The proces of accepting an order or orderUpdate
+![Figure 8 The process of accepting an order or orderUpdate](./assets/Figure8.png)
+>Figure 8 The process of accepting an order or orderUpdate
 
 
 
@@ -561,20 +564,20 @@ Figure 8 describes the process of accepting an order or orderUpdate.
 
 In the event of an unplanned change in the base nodes, the order must be canceled by using the instantAction cancelOrder.
 
-After receiving the instantAction cancelOrder, the vehicle stops (based on its capabilities, e.g. right where it is, or on the next node).
+After receiving the instantAction cancelOrder, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
 If there are actions scheduled, these actions must be cancelled and should report “failed” in their actionState. 
 If there are running actions, those actions should be cancelled and also be reported as failed.
-If the action cannot be interrupted, the actionState of that action should reflect that by reporting “running” while it is running, and after that the respective state (“finished” if  successful, “failed” if not).
+If the action cannot be interrupted, the actionState of that action should reflect that by reporting “running” while it is running, and after that the respective state (“finished”, if  successful and “failed”, if not).
 While actions are running, the cancelOrder action must report “running”, until all actions are cancelled/finished. 
 After all vehicle movements and all actions are stopped, the cancelOrder action status must report “finished”.
 
 The orderId and orderUpdateId is kept. 
 
-Figure 9 shows the expected behaviour for different AGV capabilities.
+Figure 9 shows the expected behavior for different AGV capabilities.
 
-![Figure 9 Expected behaviour after a cancelOrder](./assets/Figure9.png)
->Figure 9 Expected behaviour after a cancelOrder
+![Figure 9 Expected behavior after a cancelOrder](./assets/Figure9.png)
+>Figure 9 Expected behavior after a cancelOrder
 
 
 
@@ -584,12 +587,13 @@ After the cancellation of an order, the vehicle must be in a state to receive a 
 
 In the case of an AGV that localizes itself on nodes via a tag, the new order has to begin on the node the AGV is now standing on (see also Figure 5).
 
-In case of the AGV that can stop in-between nodes, the choice is up to master control how the next order should be started. 
+In case of an AGV that can stop in-between nodes, the choice is up to master control how the next order should be started. 
 The AGV must accept both methods.
 
 There are two options:
-- Send an order where the first node is a temporary node that is positioned where the AGV currently stands. The AGV must then realize that this node is trivially reachable and accept the order.
-- Send an order where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV must realize that this node must be counted as traversed and accept the order.
+
+- Send an order, where the first node is a temporary node that is positioned where the AGV currently stands. The AGV must then realize that this node is trivially reachable and accept the order.
+- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV must realize that this node must be counted as traversed and accept the order.
 
 
 
@@ -598,14 +602,14 @@ There are two options:
 If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action must report as failed.
 
 The AGV must report a “noOrderToCancel” error with the errorLevel set to warning. 
-The instantAction’s actionId must be passed as an errorReference.
+The actionId of the instantAction must be passed as an errorReference.
 
 
 
 ### <a name="Or"></a> 6.6.4 Order rejection
 
-There are several scenarios when an order must be rejected. 
-These are also explained in Figure 8.
+There are several scenarios, when an order must be rejected. 
+These are explained in Figure 8.
 
 
 
