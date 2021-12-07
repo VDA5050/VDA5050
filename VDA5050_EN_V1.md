@@ -112,31 +112,31 @@ The Repository can be found at the following link: http://github.com/vda5050/vda
 
 The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGV) system when used in the automotive industry and to enable parallel operation with AGV from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
-Uniform interface between MC and AGV shall be defined. 
+Uniform interface between master control and AGV shall be defined. 
 In detail, this should be achieved by the following points: 
 
-- A description of a standard for communication between AGV and MC and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
-- An increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
-- A reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
-- A complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
-- An increase in manufacturers independence using common interfaces between vehicle control and coordination level.
-- An integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary MC and the superordinate MC (cf.  Figure 1).
+- Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
+- Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains. 
+- Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
+- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
+- Increase in manufacturers independence using common interfaces between vehicle control and coordination level.
+- Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1).
 
 ![Figure 1 Integration of DTS inventory systems](./assets/Figure1.png)
 >Figure 1 Integration of DTS inventory systems
 
-In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and MC.
+In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
 
-Other interfaces required for operation between AGV and MC (e.g., for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document. 
+Other interfaces required for operation between AGV and master control (e.g., for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document. 
 
 
 
 # <a name="Scope"></a> 3 Scope
 
-This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and MC.
-The goal is to allow AGVs with different characteristics (e.g. underrun tractor or fork lift AGV) to communicate with MC in uniform language. 
-This creates the basis for operating any combination of AGV in a MC.
-The MC provides orders and coordinates the AGV traffic.
+This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and master control.
+The goal is to allow AGV with different characteristics (e.g., underrun tractor or fork lift AGV) to communicate with master control in uniform language. 
+This creates the basis for operating any combination of AGV in a master control.
+The master control provides orders and coordinates the AGV traffic.
 
 The interface is based on the requirements from production and plant logistics in the automotive industry.
 According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control free navigating vehicles and guided vehicles.
@@ -147,7 +147,7 @@ However, as soon as the path planning is carried out on the vehicle itself, this
 Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
 
 For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
-This should enable a complete coverage of the MC for vehicles that are guided. 
+This should enable a complete coverage of the master control for vehicles that are guided. 
 Vehicles that are free navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
 
 For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
@@ -192,21 +192,21 @@ The parameters are described in English to ensure that the protocol is readable,
 As shown in the information flow to the operation of AGV, there are at least the following participants (see Figure 2): 
 
 - the operator provides basic information
-- the MC organizes and manages the operation 
+- the master control organizes and manages the operation 
 - the AGV carries out the orders
 
 Figure 2 describes the communication content during the operational phase.
-During implementation or modification, the AGV and MC are manually configured. 
+During implementation or modification, the AGV and master control are manually configured. 
 
 ![Figure 2 Structure of the Information Flow](./assets/Figure2.png)
 >Figure 2 Structure of the Information Flow
 
-During the implementation phase, the driverless transport systems (DTS) consisting of MC and AGV is set up.
-The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the MC by importing from other systems. 
+During the implementation phase, the driverless transport systems (DTS) consisting of master control and AGV is set up.
+The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the master control by importing from other systems. 
 Essentially, this concerns the following content:
 
-- Definition of  routes: Using CAD import,  routes can be taken over in the MC.
-Alternatively, routes can also be implemented manually in the MC by the operator.
+- Definition of  routes: Using CAD import,  routes can be taken over in the master control.
+Alternatively, routes can also be implemented manually in the master control by the operator.
 Routes can be one-way streets,  restricted for certain vehicle groups (based on the size ratios), etc.
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
