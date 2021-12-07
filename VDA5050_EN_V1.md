@@ -677,8 +677,8 @@ version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2
 manufacturer | | string | Manufacturer of the AGV 
 serialNumber | | string | Serial number of the AGV 
 orderId |  | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order. 
-orderUpdateId |  | uint32 | Order update identification.<br>Is unique per orderId.<br>If an orderUpdate is rejected, this field is to be passed in the rejection message
-zoneSetId |  | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used. 
+orderUpdateId |  | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message
+zoneSetId |  | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used. 
 **nodes [node]** |  | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
 **edges [edge]** |  | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
 
@@ -699,9 +699,9 @@ x | m | float64 | X-position on the map in reference to the map coordinate syste
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
 *allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
-*allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDevaitionTheta and the highest acceptable angle is theta + allowedDeviationTheta.
-mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-*mapDescription* <br> } |  | string | Additional information on the map
+*allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
+mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*mapDescription* <br> } |  | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -709,29 +709,29 @@ Object structure | Unit | Data type | Description
 actionType |  | string | Name of action as described in the first column of “Actions and Parameters”. <br> Identifies the function of the action. 
 actionId |  | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
 *actionDescription* |  | string | Additional information on the action
-blockingType |  | string | Enum {NOTE, SOFT, HARD} <br> "NONE"- allows driving and other actions<br>"SOFT"- allows other actions, but not driving<br>"HARD"- is the only allowed action at that time.
-***actionParameters [actionParameter]*** <br><br> } |  | array | Array of actionParameter-objects for the indicated action e.g. deviceId, loadId, external Triggers. <br><br> See "Actions and Parameters"
+blockingType |  | string | Enum {NOTE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
+***actionParameters [actionParameter]*** <br><br> } |  | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> See "Actions and Parameters"
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**edge** { |  | JSON-object | Directional connection between two nodes
-edgeId |  | string | Unique edge identification 
+**edge** { |  | JSON-object | Directional connection between two nodes.
+edgeId |  | string | Unique edge identification.
 sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
-*edgeDescription* |  | string | Additional information on the edge 
+*edgeDescription* |  | string | Additional information on the edge.
 released |  | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
-startNodeId |  | string | nodeId of startNode
-endNodeId |  | string | nodeId of endNode
+startNodeId |  | string | nodeId of startNode.
+endNodeId |  | string | nodeId of endNode.
 *maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
-*maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on edge
+*maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on edge.
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the edge. The value *orientationType* defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.<br>If rotationAllowed is “false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory. 
-*orientationType* |  | string | Enum {`GLOBAL`, `TANGENTIAL`} <br>"GLOBAL"- relative to the global project specific map coordinate system<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
-*direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Example: left,  right, straight, 433MHz 
-*rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit if not set.
-*maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br><br>Optional:<br>No limit if not set.
-***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted if AGV cannot process trajectories or if AGV plans its own trajectory.
-*length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br><br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-**action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+*orientationType* |  | string | Enum {`GLOBAL`, `TANGENTIAL`}: <br>"GLOBAL"- relative to the global project specific map coordinate system;<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
+*direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left,  right, straight, 433MHz.
+*rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
+*maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
+***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
+*length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
+**action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -745,7 +745,7 @@ Object structure | Unit | Data type | Description
 **controlPoint** { |  | JSON-object |  
 x |  | float64 | X coordinate described in the world coordinate system. 
 y |  | float64 | Y coordinate described in the world coordinate system.
-*weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+*weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
 
@@ -756,11 +756,11 @@ If the AGV supports actions other than driving, these actions are executed via t
 Actions that are to be executed on an edge must only run while the AGV is on the edge (see 6.10.2).
 
 Actions that are triggered on nodes can run as long as they need to run. 
-Actions on nodes should be self-terminating (e.g. an audio signal that lasts for five seconds, or a pick action that is finished after picking up a load) or should be formulated pairwise (e.g. activateWarningLights and deactivateWarningLights), although there may be exceptions. 
+Actions on nodes should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or should be formulated pairwise (e.g., activateWarningLights and deactivateWarningLights), although there may be exceptions. 
 
-The following section presents predefined actions that must be used by the AGV if the AGVs capabilities map to the action description.
+The following section presents predefined actions that must be used by the AGV, if the AGVs capabilities map to the action description.
 If there is a sensible way to use the defined parameters, they must be used. 
-Additional parameters can be defined if they are needed to execute an action successfully.
+Additional parameters can be defined, if they are needed to execute an action successfully.
 
 If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that must be used by master control.
 
@@ -771,6 +771,7 @@ If there is no way to map some action to one of the actions of the following sec
 general |  | scope 
 :---:|--- | :---:
 action, counter action, Description, idempotent, Parameter | linked state |  instant, node, edge 
+(TODO: was ist das?)
 
 action | counter action | Description | idempotent | Parameter | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
