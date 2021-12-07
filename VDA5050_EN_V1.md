@@ -616,6 +616,7 @@ These are explained in Figure 8.
 #### <a name="Vgamno"></a> 6.6.4.1 Vehicle gets a malformed new order
 
 Resolution:
+
 1. Vehicle does NOT take over the new order in its internal buffer. 
 2. The vehicle reports the warning "validationError"
 3. The warning must be reported until the vehicle has accepted a new order.
@@ -625,28 +626,30 @@ Resolution:
 #### <a name="Vraowaicpeglhhtmlholaansii"></a> 6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)
 
 Resolution: 
+
 1. Vehicle does NOT take over the new order in its internal buffer 
 2. Vehicle reports the warning "orderError" with the wrong fields as error references
 3. The warning must not be reported until the vehicle has accepted a new order. 
 
 
 
-#### <a name="Vehiclegets"></a> 6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId
+#### <a name="Vehiclegets"></a> 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution: 
+
 1. Vehicle does NOT take over the new order in its internal buffer. 
 2. Vehicle keeps the PREVIOUS order it its buffer. 
 3. The vehicle reports the warning "orderUpdateError"
 4. The vehicle continues with the executing the previous order. 
 
 If the AGV receives an order with the same orderId and orderUpdateId twice, the second order will be ignored. 
-This might happen if the master control sends the order again because the status message came too late and the master control could not verify that the first order was received.
+This might happen, if the master control sends the order again, because the status message came too late and the master control could not verify that the first order was received.
 
 
 
 ### <a name="Maps"></a> 6.6.5 Maps
 
-To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the local map coordinate system (see Figure 10).
+To ensure consistent navigation among different types of AGV, the position is always specified in reference to the local map coordinate system (see Figure 10).
 For the differentiation between different levels a unique mapId is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards. 
 A positive rotation therefore is to be understood as a counterclockwise rotation. 
@@ -668,33 +671,33 @@ The orientation must be in radians and must be within +Pi and –Pi.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
+headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
 timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | | string | Manufacturer of the AGV 
 serialNumber | | string | Serial number of the AGV 
-orderId |  | string | Order identification.<br>This is to be used to identify multiple order messages that belong to the same order. 
-orderUpdateId |  | uint32 | orderUpdate identification.<br>Is unique per orderId.<br>If an orderupdate is rejected, this field is to be passed in the rejection message
-zoneSetId |  | string | Unique identifier of the zone set that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGVs do not understand zones.<br> Do not add to message if no zones are used. 
+orderId |  | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order. 
+orderUpdateId |  | uint32 | Order update identification.<br>Is unique per orderId.<br>If an orderUpdate is rejected, this field is to be passed in the rejection message
+zoneSetId |  | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used. 
 **nodes [node]** |  | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
 **edges [edge]** |  | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**node** { |  | ISON-object|   
+**node** { |  | JSON-object|   
 nodeId |   |  string | Unique node identification
-sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued. 
+sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued. 
 *nodeDescription* |  | string | Additional information on the node 
 released |  | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon. 
-***nodePosition*** |  | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g. line-guided vehicles).
-**actions [action]** <br> } |  | array | Array of actions to be executed on a node. <br>Empty array if no actions required. 
+***nodePosition*** |  | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g., line-guided vehicles).
+**actions [action]** <br> } |  | array | Array of actions to be executed on a node. <br>Empty array, if no actions required. 
 
 Object structure | Unit | Data type | Description 
 ---| --- |--- | ---
 **nodePosition** { |  | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolut Orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
 *allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDevaitionTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
