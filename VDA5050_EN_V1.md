@@ -771,6 +771,7 @@ If there is no way to map some action to one of the actions of the following sec
 general |  | scope 
 :---:|--- | :---:
 action, counter action, Description, idempotent, Parameter | linked state |  instant, node, edge 
+(TODO: was ist das?)
 
 action | counter action | Description | idempotent | Parameter | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
@@ -795,6 +796,7 @@ pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs wit
 action | action states 
 ---|---
   | initializing, running, paused, finished, failed 
+  (TODO: What is this?)
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
@@ -825,7 +827,7 @@ Some examples for which instant actions could be relevant are:
 - resume order after pause ;
 - activate signal (optical, audio, etc.).
 
-For additional information, see chapter 8 Best practices.
+For additional information, see chapter 8 Best practices. (TODO: Verlinken?)
 
 Object structure | | Data type | Description 
 ---|---|---|---
@@ -950,7 +952,7 @@ driving |  | boolean | “true”: indicates, that the AGV is driving and/or rot
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeId“. <br>Distance is in meters.
 **actionStates [actionState]** |  | array | Contains a list of the current actions and the actions, which are yet to be finished. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
 **batteryState** |  | JSON-object | Contains all battery-related information.
-operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6. 
+operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6. (TODO: Verlinken)
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
 ***information [info]*** |  | array | Array of info-objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
 **safetyState** |  | JSON-object | Contains all safety-related information. 
@@ -959,7 +961,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON-object |  |
 nodeId |  | string | Unique node identification.
-sequenceID |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
+sequenceID |  | uint32 | sequenceId to discern multiple nodes with same nodeId. (TODO: Wieso nicht CamelCase?)
 *nodeDescription* |  | string | Additional information on the node.
 ***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
@@ -1090,7 +1092,7 @@ When an AGV receives an `action` (either attached to a `node` or `edge` or via a
 
 `actionStates` describe in the field `actionStatus` at which stage of the actions lifecycle the action is.
 
-Table 1 describes, which value the enum `actionStatus` can hold. 
+Table 1 describes, which value the enum `actionStatus` can hold. (TODO: Wieso hier plötzlich Table 1?)
 
 actionStatus | Description 
 ---|---
@@ -1115,7 +1117,7 @@ A state transition diagram is provided in Figure 14.
 The order of multiple actions in a list define the sequence, in which those actions are to be executed. 
 The parallel execution of actions is governed by their respective `blockingType`.
 
-Actions can have three distinct blocking types, described in Table 2. 
+Actions can have three distinct blocking types, described in Table 2. (TODO:Auch hier plötzlich Table?)
 
 actionStatus | Description 
 ---|---
@@ -1220,7 +1222,7 @@ The factsheet consists of the JSON-objects listed in the following table.
 | header                 | N/A           | Header.                                                                              |
 | typeSpecification      | JSON-object   | These parameters generally specify the class and the capabilities of the AGV.|
 | physicalParameters     | JSON-object   | These parameters specify the basic physical properties of the AGV.|
-| protocolLimits         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication.  |
+| protocolLimits         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication.  (TODO: Was ist mit similar in MQTT gemeint?) |
 | protocolFeatures       | JSON-object   | Supported features of VDA5050 protocol.|
 | agvGeometry            | JSON-object   | Detailed definition of AGV geometry.|
 | loadSpecification      | JSON-object   | Abstract specification of load capabilities.|
@@ -1234,11 +1236,11 @@ This JSON object describes general properties of the AGV type.
 |---------------------|-----------------|-----------------|
 | seriesName          | string          | Free text generalized series name as specified by manufacturer. |
 | *seriesDescription* | string          | Free text human readable description of the AGV type series.    |
-| agvKinematic        | string          | Simplified description of AGV kinematics-type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive<br/>OMNI: omni-directional vehicle<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics |
+| agvKinematic        | string          | Simplified description of AGV kinematics-type.<br/> (TODO: Oben immer Enum {})[DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive<br/>OMNI: omni-directional vehicle<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics |
 | agvClass            | string          | Simplified description of AGV class.<br/>[FORKLIFT, CONVEYOR, TUGGER, CARRIER]<br/>FORKLIFT: forklift.<br/>CONVEYOR: AGV with conveyors on it.</br>TUGGER: tugger.<br/>CARRIER: load carrier with or without lifting unit. |
 | maxLoadMass         | float64         | [kg], Maximum loadable mass. |
-| localizationTypes   | Array of String  | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
-| navigationTypes     | Array of String | List of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
+| localizationTypes   | Array of String (TODO: form: Array[string]?) | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
+| navigationTypes     | Array of String | List of path planning types supported by the AGV, sorted by priority.<br/>Example values: (TODO: Muss eigentlich Enum sein, oder?)<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
 
 #### physicalParameters
 
@@ -1305,20 +1307,20 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | optionalParameters [optionalParameter] | Array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |                                                |
 | {            |               |                  |
 | &emsp;parameter    | string        | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
-| &emsp;support      | enum      | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
+| &emsp;support      | enum (TODO: Wieso enum, geht in JSON nicht?)         | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
 | &emsp;*description*| string        | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned interger-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>
 | }            |               |                  |
 | agvActions [agvAction] | Array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | {            |               |                  |
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
-| &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
+| &emsp;actionScopes | array of enum (TODO: Array of Strings?) | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
 | &emsp;*actionParameters [actionParameter]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
 |&emsp;&emsp;*description* | string  | Free-form text: description of the parameter. |
-|&emsp;&emsp;*isOptional*  | boolean    | "true": optional parameter. |
+|&emsp;&emsp;*isOptional*  | Bool    | "true": optional parameter. |
 |&emsp;*}*           |         |                          |         
 |*resultDescription* | string  | Free-form text: description of the resultDescription. |
 |*}*                 |         |                          |
@@ -1332,7 +1334,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | *wheelDefinitions [wheelDefinition]* | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
 | {                                    |                      |                                                        |
 | &emsp;type                                 | enum                 | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```.     |
-| &emsp;isActiveDriven                       | boolean                 | "true": wheel is actively driven (de: angetrieben).       |
+| &emsp;isActiveDriven                       | Bool                 | "true": wheel is actively driven (de: angetrieben).       |
 | &emsp;isActiveSteered                      | boolean                 | "true": wheel is actively steered (de: aktiv gelenkt).    |
 | &emsp;position {                           | JSON-object          |                                                        |
 |&emsp;&emsp; x                              | float64              | [m], x-position in AGV-coordinate. system          |
@@ -1346,7 +1348,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | }                                    |                      |                                                        |
 | *envelopes2d [envelope2d]*           | Array of JSON-object | List of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | {                                    |                      |                                                        |
-| &emsp;set                             | string               | Name of the envelope curve set.                         |
+| &emsp;set (TODO: Ungünstiger Name)                                 | string               | Name of the envelope curve set.                         |
 | &emsp;polygonPoints [polygonPoint]         | Array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
 | &emsp;{                                    |                      |                                                        |
 |&emsp;&emsp; x                              | float64              | [m], x-position of polygon-point.                        |
