@@ -62,7 +62,7 @@ Version 2.0
 [6.3 MQTT-Topic Levels](#MTL)<br>
 [6.4 Protocol Header](#PH)<br>
 [6.5 Subtopics for communication](#Sfc)<br>
-[6.6 Topic: Order (from master control to AGV)](#TOfmctA)<br>
+[6.6 Topic: "order" (from master control to AGV)](#TOfmctA)<br>
 [6.6.1 Concept and Logic](#CaL)<br>
 [6.6.2 Orders and order updates](#Oaou)<br>
 [6.6.3 Order Cancellation (by Master Control)](#OCbMC)<br>
@@ -77,8 +77,8 @@ Version 2.0
 [6.8 Actions](#Actions)<br>
 [6.8.1 Predefined action definitions, their parameters, effects and scope](#Padtpeas)<br>
 [6.8.2 Predefined action definitions, their parameters, effects and scope](#Padtpeas1)<br>
-[6.9 Topic: instantActions (from master control to AGV)](#Tifmc)<br>
-[6.10 Topic: State (from AGV to master control)](#TSfAtmc)<br>
+[6.9 Topic: "instantActions" (from master control to AGV)](#Tifmc)<br>
+[6.10 Topic: "state" (from AGV to master control)](#TSfAtmc)<br>
 [6.10.1 Concept and Logic](#CaLe)<br>
 [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa)<br>
 [6.10.3 Base request](#Br)<br>
@@ -87,8 +87,9 @@ Version 2.0
 [6.10.6 Implementation](#Implementation)<br>
 [6.11 actionStates](#actionStates)<br>
 [6.12 Action Blocking Types and sequence](#ABTas)<br>
-[6.13 Topic "Visualization"](#TV)<br>
+[6.13 Topic "visualization"](#TV)<br>
 [6.14 Topic "connection"](#Tc)<br>
+[6.15 Topic "factsheet"](#Tf)<br>
 [7 Best practice](#Bp)<br>
 [7.1 Error reference](#Er)<br>
 [7.2 Format of parameters](#Fop)<br>
@@ -326,7 +327,7 @@ If the AGV disconnects from the broker, it keeps all the order information and f
 
 Protocol-Security needs to be taken in account by broker configuration.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `state` and `visualization`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `state`, `factsheet` and `visualization`.
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
@@ -403,7 +404,7 @@ connection | Broker/AGV | master control | Indicates when AGV connection is lost
 factsheet | AGV | master control | Setup of AGV in master control | mandatory | factsheet.schema
 
 
-## <a name="TOfmctA"></a> 6.6 Topic: Order (from master control to AGV)
+## <a name="TOfmctA"></a> 6.6 Topic: "order"(from master control to AGV)
 
 The topic "order" is the MQTT topic via which the AGV receives a JSON encapsulated order. 
 
@@ -779,14 +780,15 @@ stopPause | startPause | Deactivates the pause mode. <br>Movement and all other 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
 initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
-stateRequest | - | Requests the AGV to send a new state report. | yes |  | - | yes | no | no 
+stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the paramater lhd needs to be present (e.g. LHD1). <br>The paramater stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as running in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
-**drop** | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
-**detectObject** | - | AGV detects object (e.g. load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes 
-**finePositioning** | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, AGV will e.g. align on stationary equipment while traversing an edge.<br>InstantAction: AGV starts positioning exactly on a target. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
-**waitForTrigger** | - | AGV has to wait for a trigger on the AGV (e.g. button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no 
-**cancelOrder** | - | AGV stops as soon as possible. <br>This could be immediately or on the next node. <br>Then the order is deleted. All actions are canceled. | yes | - | - | yes | no | no 
+drop | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
+detectObject | - | AGV detects object (e.g. load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes 
+finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, AGV will e.g. align on stationary equipment while traversing an edge.<br>InstantAction: AGV starts positioning exactly on a target. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
+waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g. button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no 
+cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately or on the next node. <br>Then the order is deleted. All actions are canceled. | yes | - | - | yes | no | no 
+factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no 
 
 
 
@@ -798,23 +800,24 @@ action | action states
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
-**startPause** | - | Activation of the mode is in preperation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode can not be activated for some reason (e.g., overridden by hardware switch).
-**stopPause** | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode can not be deactivated for some reason (e.g., overwritten by hardware switch). 
-**startCharging** | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error. 
-**stopCharging** | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error. 
-**initPosition** | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
-**stateRequest** | - | - | - | The state has been communicated | - 
-**logReport** | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
-**pick** | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
-**drop** | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied.  <br>Failed drop operations should correspond with an error. 
-**detectObject** | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
-**finePositioning** | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
-**waitForTrigger** | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled. 
-**cancelOrder** | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | - 
+startPause | - | Activation of the mode is in preperation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode can not be activated for some reason (e.g., overridden by hardware switch).
+stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode can not be deactivated for some reason (e.g., overwritten by hardware switch). 
+startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error. 
+stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error. 
+initPosition | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
+stateRequest | - | - | - | The state has been communicated | - 
+logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
+pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
+drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied.  <br>Failed drop operations should correspond with an error. 
+****detectObject**** | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
+finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
+waitForTrigger | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled. 
+cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | - 
+factsheetRequest | - | - | - | The factsheet has been communicated | - 
 
 
 
-## <a name="Tifmc"></a> 6.9 Topic: instantActions (from master to control to AGV)
+## <a name="Tifmc"></a> 6.9 Topic: "instantActions" (from master to control to AGV)
 
 In certain cases, it is necessary to send actions to the AGV, that need to be performed immediately. 
 This is made possible by publishing an instantAction message to the topic instantActions.
@@ -842,7 +845,7 @@ See also Figure 12 for the different transitions of an actionStatus.
 
 
 
-## <a name="TSfAtmc"></a> 6.10 Topic: State (from AGV to master control)
+## <a name="TSfAtmc"></a> 6.10 Topic: "state" (from AGV to master control)
 
 The AGV-State will be transmitted on only one topic.
 Compared to separate messages (e.g., for orders, battery-state and errors) using one topic will reduce the workload of the broker and the master control for handling messages, while also keeping the information about the AGV state synchronized.
@@ -1185,7 +1188,7 @@ All messages of this topic should be send with a retained flag.
 
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
-# <a name="factsheet">7 AGV Factsheet</a>
+## <a name="Tf"></a> 6.16 Topic "factsheet"
 
 The factsheet provides basic information about a specific AGV type series.
 This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system.
@@ -1195,36 +1198,27 @@ The values for some fields in the AGV factsheet can only be specified during sys
 
 The factsheet is both intended as a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
 
-## 7.1 Contents of the AGV factsheet
+The MC can request the factsheet from the AGV by sending the instant action:  `factsheetRequest`
 
-The following tables specify the sections of the AGV factsheet as JSON structures.
+All messages of this topic should be send with a retained flag. 
 
-### 7.1.2 Header
-The header is not a JSON-object, but consists of five separate entries in the top level of the JSON-file.
-
-| **Field**    | **data type** | **description**                                                                                                                         |
-|--------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| *headerId*   | uint32        | Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
-| *timestamp*  | string        | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g., “2020-12-15T11:40:03.12Z”).|
-| version      | string        | Version of the VDA-5050 protocol [Major].[Minor].[Patch] (e.g., 1.3.2).|
-| manufacturer | string        | Manufacturer of the AGV.|
-| serialNumber | string        | Serial number of the AGV.|
-
-The fields headerId and timestamp are only relevant for an automatic electronic transfer of the factsheet.
-
-### 7.1.3 Factsheet JSON strcture
+### 6.16.1 Factsheet JSON strcture
 The factsheet consists of the JSON-objects listed in the following table.
 
-| **Field**              | **data type** | **description**                                                                     |
-|------------------------|---------------|-------------------------------------------------------------------------------------|
-| header                 | N/A           | Header.                                                                              |
-| typeSpecification      | JSON-object   | These parameters generally specify the class and the capabilities of the AGV.|
-| physicalParameters     | JSON-object   | These parameters specify the basic physical properties of the AGV.|
-| protocolLimits         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication.  |
-| protocolFeatures       | JSON-object   | Supported features of VDA5050 protocol.|
-| agvGeometry            | JSON-object   | Detailed definition of AGV geometry.|
-| loadSpecification      | JSON-object   | Abstract specification of load capabilities.|
-| localizationParameters | JSON-object   | Detailed specification of localization.|
+| **Field**                  | **data type** | **description**                                              |
+| -------------------------- | ------------- | ------------------------------------------------------------ |
+| headerId                   | uint32        | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
+| timestamp                  | string        | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ(e.g.“2017-04-15T11:40:03.12Z”). |
+| version                    | string        | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2). |
+| manufacturer               | string        | Manufacturer of the AGV.                                     |
+| serialNumber               | string        | Serial number of the AGV.                                     |
+| **typeSpecification**      | JSON-object   | These parameters generally specify the class and the capabilities of the AGV. |
+| **physicalParameters**     | JSON-object   | These parameters specify the basic physical properties of the AGV. |
+| **protocolLimits**         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication. |
+| **protocolFeatures**       | JSON-object   | Supported features of VDA5050 protocol.                      |
+| **agvGeometry**            | JSON-object   | Detailed definition of AGV geometry.                         |
+| **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |
+| **localizationParameters** | JSON-object   | Detailed specification of localization.                      |
 
 #### typeSpecification
 
@@ -1262,7 +1256,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 
 | **Field**                     | **data type** | **description**                             |
 |-------------------------------|---------------|---------------------------------------------|
-| maxStringLens {               | JSON-object   | Maximum lengths of strings.                 |
+| **maxStringLens** {           | JSON-object   | Maximum lengths of strings.                 |
 | &emsp;*msgLen*                      | uint32        | Maximum MQTT message length                 |
 | &emsp;*topicSerialLen*              | uint32        | Maximum length of serial-number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber   |
 | &emsp;*topicElemLen*                | uint32        | Maximum length of all other parts in MQTT-topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
@@ -1271,7 +1265,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*enumLen*                     | uint32        | Maximum length of ENUM- and Key-Strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState                                               |
 | &emsp;*loadIdLen*                   | uint32        | Maximum length of loadId Strings |
 | }                             |               |                                  |
-| maxArrayLens {                | JSON-object   | Maximum lengths of arrays.                                 |
+| **maxArrayLens** {            | JSON-object   | Maximum lengths of arrays.                                 |
 | &emsp;*order.nodes*                 | uint32        | Maximum number of nodes per order processable by the AGV.  |
 | &emsp;*order.edges*                 | uint32        | Maximum number of edges per order processable by the AGV.  |
 | &emsp;*node.actions*                | uint32        | Maximum number of actions per node processable by the AGV. |
@@ -1289,7 +1283,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*error.errorReferences*       | uint32        | Maximum number of error references sent by the AGV for each error.      |
 | &emsp;*informations.infoReferences* | uint32        | Maximum number of info references sent by the AGV for each information. |
 | }                             |               |                                                                        |
-| timing {                      | JSON-object   | Timing information.                                            |
+| **timing** {                  | JSON-object   | Timing information.                                            |
 | &emsp;minOrderInterval              | float32       | [s], Minimum interval sending order messages to the AGV.        |
 | &emsp;minStateInterval              | float32       | [s], Minimum interval for sending state-messages.               |
 | &emsp;*defaultStateInterval*        | float32       | [s], Default interval for sending state-messages, *if not defined, the default value from the main document is used*. |
@@ -1302,24 +1296,24 @@ This JSON object defines actions and parameters which are supported by the AGV.
 
 | **Field**    | **data type** | **description**  |
 |--------------|---------------|------------------|
-| optionalParameters [optionalParameter] | Array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |                                                |
+| **optionalParameters** [**optionalParameter**] | Array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |
 | {            |               |                  |
 | &emsp;parameter    | string        | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
 | &emsp;support      | enum      | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
-| &emsp;*description*| string        | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned interger-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>
+| &emsp;*description*| string        | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned interger-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
 | }            |               |                  |
-| agvActions [agvAction] | Array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **agvActions** [**agvAction**] | Array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | {            |               |                  |
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
-| &emsp;*actionParameters [actionParameter]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
+| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
 |&emsp;&emsp;*description* | string  | Free-form text: description of the parameter. |
 |&emsp;&emsp;*isOptional*  | boolean    | "true": optional parameter. |
-|&emsp;*}*           |         |                          |         
+|&emsp;*}*           |         |                          |
 |*resultDescription* | string  | Free-form text: description of the resultDescription. |
 |*}*                 |         |                          |
 
@@ -1329,12 +1323,12 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 
 | **Field**                            | **data type**        | **description**                                        |
 |--------------------------------------|----------------------|--------------------------------------------------------|
-| *wheelDefinitions [wheelDefinition]* | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
+| ***wheelDefinitions** [**wheelDefinition**]* | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
 | {                                    |                      |                                                        |
 | &emsp;type                                 | enum                 | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```.     |
 | &emsp;isActiveDriven                       | boolean                 | "true": wheel is actively driven (de: angetrieben).       |
 | &emsp;isActiveSteered                      | boolean                 | "true": wheel is actively steered (de: aktiv gelenkt).    |
-| &emsp;position {                           | JSON-object          |                                                        |
+| &emsp;**position** {                           | JSON-object          |                                                        |
 |&emsp;&emsp; x                              | float64              | [m], x-position in AGV-coordinate. system          |
 |&emsp;&emsp; y                              | float64              | [m], y-position in AGV-coordinate. system          |
 |&emsp;&emsp; *theta*                        | float64              | [rad], orientation of wheel in AGV-coordinate system Necessary for fixed wheels. |
@@ -1344,21 +1338,21 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;*centerDisplacement*                 | float64              | [m], nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0.            |
 | &emsp;*constraints*                        | string               | Free-form text: can be used by the manufacturer to define constraints. |
 | }                                    |                      |                                                        |
-| *envelopes2d [envelope2d]*           | Array of JSON-object | List of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| ***envelopes2d** [**envelope2d**]*   | Array of JSON-object | List of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | {                                    |                      |                                                        |
 | &emsp;set                             | string               | Name of the envelope curve set.                         |
-| &emsp;polygonPoints [polygonPoint]         | Array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
+| &emsp;**polygonPoints**  **[polygonPoint]**         | Array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
 | &emsp;{                                    |                      |                                                        |
 |&emsp;&emsp; x                              | float64              | [m], x-position of polygon-point.                        |
 |&emsp;&emsp; y                              | float64              | [m], y-position of polygon-point.                        |
 | &emsp;}                                    |                      |                                                        |
 | &emsp;*description*                        | string               | Free-form text: description of envelope curve set.   |
 | *}*                                  |                      |                                                        |
-| *envelopes3d [envelope3d]*           | Array of JSON-object | List of AGV-envelope curves in 3D (german: „Hüllkurven“). |
+| ***envelopes3d [envelope3d]***       | Array of JSON-object | List of AGV-envelope curves in 3D (german: „Hüllkurven“). |
 | *{*                                  |                      |                                                        |
 | &emsp;set                                  | string               | Name of the envelope curve set.                         |
 | &emsp;format                               | string               | Format of data, e.g., DXF.                                |
-| &emsp;*data*                               | JSON-object          | 3D-envelope curve data, format specified in 'format'.   |
+| &emsp;***data***                           | JSON-object          | 3D-envelope curve data, format specified in 'format'.   |
 | &emsp;*url*                                | string               | Protocol and url-definition for downloading the 3D-envelope curve data, e.g. <ftp://xxx.yyy.com/ac4dgvhoif5tghji>. |
 | &emsp;*description*                        | string               | Free-form text: description of envelope curve set           |
 | *}*                                  |                      |                                                        |
@@ -1370,13 +1364,13 @@ This JSON object specifies load handling and supported load types of the AGV.
 | **Field**                        | **data type**        | **description**                                                      |
 |----------------------------------|----------------------|----------------------------------------------------------------------|
 | *loadPositions*         | Array of String      | List of load positions / load handling devices.<br/>This lists contains the valid values for the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
-| *loadSets [loadSet]*    | Array of JSON-object | list of load-sets that can be handled by the AGV                     |
+| ***loadSets [loadSet]*** | Array of JSON-object | list of load-sets that can be handled by the AGV                     |
 | {                                    |                      |                                                        |
 |&emsp; setName                 | string               | Unique name of the load set, e.g., DEFAULT, SET1, etc.                 |
 |&emsp; loadType                | string               | Type of load, e.g., EPAL, XLT1200, etc.                                  |
 |&emsp; *loadPositions*         | Array of String      | List of load positions btw. load handling devices, this load-set is valid for.<br/>*If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.* |
-|&emsp; *boundingBoxReference*  | JSON-object          | Bounding box reference as defined in parameter loads[] in state-message. |
-|&emsp; *loadDimensions*        | JSON-object          | Load dimensions as defined in parameter loads[] in state-message.     |
+|&emsp; ***boundingBoxReference***  | JSON-object          | Bounding box reference as defined in parameter loads[] in state-message. |
+|&emsp; ***loadDimensions***        | JSON-object          | Load dimensions as defined in parameter loads[] in state-message.     |
 |&emsp; *maxWeight*             | float64              | [kg], maximum weight of loadtype.                                      |
 |&emsp; *minLoadhandlingHeight* | float64              | [m], minimum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
 |&emsp;  *maxLoadhandlingHeight* | float64              | [m], maximum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
@@ -1393,13 +1387,13 @@ This JSON object specifies load handling and supported load types of the AGV.
 | }                       |                      |                                                           |
 
 
-# <a name="Bp"></a> 8 Best practice
+# <a name="Bp"></a> 7 Best practice
 
 This section includes additional information, which helps in facilitating a common understanding concurrent with the logic of the protocol. 
 
 
 
-## <a name="Er"></a> 8.1 Error reference 
+## <a name="Er"></a> 7.1 Error reference 
 
 If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#errorReferenceImpl)).
 This can include the following information:
@@ -1414,7 +1408,7 @@ If an action cannot be completed because of external factors (e.g. no load at ex
 
 
 
-## <a name="Fop"></a> 8.2 Format of parameters 
+## <a name="Fop"></a> 7.2 Format of parameters 
 
 Parameters for errors, information, actions are designed as an array of JSON-Objects with key-value-pairs. 
 Sample for the actionParameter of an action “someAction” with key-value-pairs for stationType and loadType:
@@ -1429,11 +1423,11 @@ This was thoroughly and controversially discussed in multiple meetings.
 
 
 
-# <a name="Glossary"></a> 9 Glossary 
+# <a name="Glossary"></a> 8 Glossary 
 
 
 
-## <a name="Definition"></a> 9.1 Definition
+## <a name="Definition"></a> 8.1 Definition
 
 Concept | Description 
 ---|---
