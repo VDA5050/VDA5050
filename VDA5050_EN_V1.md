@@ -809,7 +809,7 @@ stateRequest | - | - | - | The state has been communicated | -
 logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
 pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
 drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied.  <br>Failed drop operations should correspond with an error. 
-****detectObject**** | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
+detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
 finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
 waitForTrigger | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled. 
 cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | - 
@@ -1184,7 +1184,7 @@ AGV comes online:
 1. Set the last will to „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`, when the mqtt connection is created.
 2. Send the topic „uagv/v2/manufacturer/SN/connection“ with `connectionState` set to `ONLINE`.
 
-All messages of this topic should be send with a retained flag. 
+All messages on this topic shall be sent with a retained flag.
 
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
@@ -1200,7 +1200,7 @@ The factsheet is both intended as a human-readable document and for machine proc
 
 The MC can request the factsheet from the AGV by sending the instant action:  `factsheetRequest`
 
-All messages of this topic should be send with a retained flag. 
+All messages on this topic shall be sent with a retained flag.
 
 ### 6.16.1 Factsheet JSON strcture
 The factsheet consists of the JSON-objects listed in the following table.
