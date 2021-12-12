@@ -179,7 +179,6 @@ Communication is done over wireless networks, taking into account the effects of
 
 The message log is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
 MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
-Use of MQTT 5 is possible but not recommended. 
 MQTT allows the distribution of messages to subchannels, which are called "topics". 
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
 
