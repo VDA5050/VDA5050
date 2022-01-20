@@ -14,7 +14,7 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format. YYYY-MM-DDTHH:mm:ss.ssZ",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -39,7 +39,7 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Action Object",
+                "description": "Array of actions that need to be performed immediately and are not part of the regular order.",
                 "required": [
                     "actionId",
                     "actionName",
