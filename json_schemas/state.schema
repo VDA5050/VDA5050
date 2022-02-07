@@ -25,7 +25,7 @@
     ],
     "properties": {
         "headerId": {
-            "type": "number",
+            "type": "integer",
             "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
@@ -56,7 +56,7 @@
             "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
         },
         "orderUpdateId": {
-            "type": "number",
+            "type": "integer",
             "description": "Order Update Identification to identify that an order update has been accepted by the AGV. \"0\" if no previous orderUpdateId is available."
         },
         "zoneSetId": {
@@ -68,7 +68,7 @@
             "description": "nodeID of last reached node or, if AGV is currently on a node, current node (e.g., \"node7\"). Empty string (\"\") if no lastNodeId is available."
         },
         "lastNodeSequenceId": {
-            "type": "number",
+            "type": "integer",
             "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node.\nâ€œ0â€ if no lastNodeSequenceId is available. "
         },
         "driving": {
@@ -115,7 +115,7 @@
                         "description": "Unique node identification"
                     },
                     "sequenceId": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "sequenceId to discern multiple nodes with same nodeId."
                     },
                     "nodeDescription": {
@@ -169,7 +169,7 @@
                         "description": "Unique edge identification"
                     },
                     "sequenceId": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "sequenceId of the edge."
                     },
                     "edgeDescription": {
@@ -190,7 +190,7 @@
                         ],
                         "properties": {
                             "degree": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1."
                             },
                             "knotVector": {
