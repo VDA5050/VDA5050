@@ -1,0 +1,4 @@
+# ingnore eclipse .project file
+.project
+.vscode
+*.pdf
