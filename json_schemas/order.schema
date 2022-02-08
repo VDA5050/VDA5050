@@ -23,7 +23,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -44,7 +44,7 @@
             "description": "Serial number of the AGV."
         },
         "orderId": {
-            "description": "Unique order Identification.",
+            "description": "Order Identification. This is to be used to identify multiple order messages that belong to the same order.",
             "type": "string"
         },
         "orderUpdateId": {
@@ -57,7 +57,7 @@
             "type": "string"
         },
         "nodes": {
-            "description": "This list holds the base and the horizon nodes of the order graph.",
+            "description": "Array of nodes objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "type": "array",
             "items": {
                 "type": "object",
@@ -80,18 +80,18 @@
                     "sequenceId": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId can run across all nodes and edges of the same order and is reset when a new orderId is issued."
+                        "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
                     "nodeDescription": {
                         "type": "string",
-                        "description": "Verbose Node Description."
+                        "description": "Additional information on the node."
                     },
                     "released": {
                         "type": "boolean",
-                        "description": "If true, the node is part of the base plan. If false, the node is part of the horizon plan."
+                        "description": "True indicates that the node is part of the base. False indicates that the node is part of the horizon."
                     },
                     "nodePosition": {
-                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. Precision is up to the specific implementation",
+                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for vehicle-types that do not require the node position (e.g., line-guided vehicles).",
                         "type": "object",
                         "required": [
                             "x",
@@ -100,14 +100,16 @@
                         ],
                         "properties": {
                             "x": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "X-position on the map in reference to the map coordinate system. Precision is up to the specific implementation."
                             },
                             "y": {
-                                "type": "number"
+                                "type": "number",
+                                "description":"Y-position on the map in reference to the map coordinate system. Precision is up to the specific implementation."
                             },
                             "theta": {
-                                "description": "Orientation of the AGV on the node.\nOptional: vehicle can plan the path by itself.\nIf defined, the AGV has to assume the theta angle on this node.\nIf previous edge disallows rotation, the AGV is to rotate on the node.\nIf following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.",
                                 "type": "number",
+                                "description": "Absolute orientation of the AGV on the node. \nOptional: vehicle can plan the path by itself.\nIf defined, the AGV has to assume the theta angle on this node. If previous edge disallows rotation, the AGV must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.",
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
@@ -120,20 +122,20 @@
                                 "type": "number",
                                 "minimum": -3.141592654,
                                 "maximum": 3.141592654,
-                                "description": "Indicates how exact an AGV has to align its orientation with the nodes theta. The value is interpreted as theta+-deviation.nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer)."
+                                "description": "Indicates how big the deviation of theta angle can be. \nThe lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta."
                             },
                             "mapId": {
-                                "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e. g. leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
+                                "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
                                 "type": "string"
                             },
                             "mapDescription": {
-                                "description": "Verbose description of the Map",
+                                "description": "Additional information on the map.",
                                 "type": "string"
                             }
                         }
                     },
                     "actions": {
-                        "description": "Array of actions that are to be executed on the node. Their sequence in the list governs their sequence of execution.",
+                        "description": "Array of actions to be executed on a node. Empty array, if no actions required.",
                         "type": "array",
                         "items": {
                             "$ref": "#/definitions/action"
@@ -144,7 +146,7 @@
         },
         "edges": {
             "type": "array",
-            "description": "Base and Horizon Edges of the Order Graph.",
+            "description": "Directional connection between two nodes. Array of edge objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "items": {
                 "type": "object",
                 "title": "edge",
@@ -164,15 +166,15 @@
                     "sequenceId": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
+                        "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
                     "edgeDescription": {
                         "type": "string",
-                        "description": "Verbose description of the edge."
+                        "description": "Additional information on the edge."
                     },
                     "released": {
                         "type": "boolean",
-                        "description": "If true, the edge is part of the base plan. If false, the edge is part of the horizon plan."
+                        "description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
                     },
                     "startNodeId": {
                         "type": "string",
@@ -184,25 +186,29 @@
                     },
                     "maxSpeed": {
                         "type": "number",
-                        "description": "permitted maximum speed of the agv on the edge in m/s. Speed is defined by the fastest point of the vehicle."
+                        "description": "Permitted maximum speed on the edge in m/s. Speed is defined by the fastest measurement of the vehicle."
                     },
                     "maxHeight": {
                         "type": "number",
-                        "description": "Permitted maximum height of the vehicle, including the load, on edge. In meters."
+                        "description": "Permitted maximum height of the vehicle, including the load, on edge in meters."
                     },
                     "minHeight": {
                         "type": "number",
-                        "description": "Permitted minimal height of the edge measured at the bottom of the load. In meters."
+                        "description": "Permitted minimal height of the load handling device on the edge in meters"
                     },
                     "orientation": {
                         "type": "number",
-                        "description": "Orientation of the AGV on the edge, tangential to the edge (0.0 = forwards, PI = backwards) (for holonomic vehicles with more than one driving direction). Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”. If rotationAllowed is “false”, rotate before entering the edge. If that is not possible, reject the order. If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation tangentially to the trajectory.",
+                        "description": "Orientation of the AGV on the edge. The value orientationType defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. \nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to True. If rotationAllowed is False, rotate before entering the edge. If that is not possible, reject the order. \nIf no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation to the trajectory.",
                         "minimum": -3.14159265359,
                         "maximum": 3.14159265359
                     },
+                    "orientationType":{
+                        "type": "string",
+                        "description": "Enum {GLOBALGLOBAL, TANGENTIALTANGENTIAL}: \n\"GLOBAL\"- relative to the global project specific map coordinate system; \n\"TANGENTIAL\"- tangential to the edge. \nIf not defined, the default value is \"TANGENTIAL\"."
+                    },
                     "direction": {
                         "type": "string",
-                        "description": "Sets direction at junctions for line-guided vehicles, to be defined initially (vehicle-individual). Can be descriptive (left, right, middle) or a frequency.",
+                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).",
                         "examples": [
                             "left",
                             "right",
@@ -212,19 +218,19 @@
                     },
                     "rotationAllowed": {
                         "type": "boolean",
-                        "description": "If true, rotation is allowed on the edge."
+                        "description": "True: rotation is allowed on the edge. False: rotation is not allowed on the edge. \nOptional: No limit, if not set."
                     },
                     "maxRotationSpeed": {
                         "type": "number",
-                        "description": "Maximum rotation speed in rad/s"
+                        "description": "Maximum rotation speed in rad/s. \nOptional: No limit, if not set."
                     },
                     "length": {
                         "type": "number",
-                        "description": "Distance of the path from startNode to endNode in meters. This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
+                        "description": "Distance of the path from startNode to endNode in meters. \nOptional: This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
                     },
                     "trajectory": {
                         "type": "object",
-                        "description": "Trajectory that an AGV has to follow on this edge. The trajectory is to be defined as a NURBS.",
+                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the AGV should move between startNode and endNode. \nOptional: Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.",
                         "required": [
                             "degree",
                             "knotVector",
@@ -233,11 +239,12 @@
                         "properties": {
                             "degree": {
                                 "type": "integer",
-                                "description": "The degree of the NURBS."
+                                "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1.",
+                                "minimum": 1
                             },
                             "knotVector": {
                                 "type": "array",
-                                "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1",
+                                "description": "Sequence of parameter values that determines where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1.",
                                 "items": {
                                     "type": "number",
                                     "maximum": 1,
@@ -246,20 +253,23 @@
                             },
                             "controlPoints": {
                                 "type": "array",
-                                "description": "List of JSON controlPoint objects defining the control points of the NURBS. This includes the start and end point.",
+                                "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
                                 "items": {
                                     "type": "object",
                                     "title": "controlPoint",
                                     "properties": {
                                         "x": {
-                                            "type": "number"
+                                            "type": "number",
+                                            "description": "X coordinate described in the world coordinate system."
                                         },
                                         "y": {
-                                            "type": "number"
+                                            "type": "number",
+                                            "description": "Y coordinate described in the world coordinate system."
                                         },
                                         "weight": {
                                             "type": "number",
-                                            "description": "The weight with which this control point pulls no the curve.\nWhen not defined, the default will be 1.0."
+                                            "minimum": 0,
+                                            "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0."
                                         }
                                     },
                                     "required": [
@@ -284,7 +294,7 @@
     "definitions": {
         "action": {
             "type": "object",
-            "description": "Describes an action that the AGV must perform.",
+            "description": "Describes an action that the AGV can perform.",
             "required": [
                 "actionId",
                 "actionType",
@@ -293,14 +303,15 @@
             "properties": {
                 "actionType": {
                     "type": "string",
-                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                    "description": "Name of action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
                 },
                 "actionId": {
                     "type": "string",
-                    "description": "ID to distinguish between multiple actions with the same type on the same node."
+                    "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
                 "actionDescription": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Additional information on the action."
                 },
                 "blockingType": {
                     "type": "string",

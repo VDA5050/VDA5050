@@ -12,7 +12,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
