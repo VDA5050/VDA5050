@@ -709,7 +709,7 @@ Object structure | Unit | Data type | Description
 actionType |  | string | Name of action as described in the first column of “Actions and Parameters”. <br> Identifies the function of the action. 
 actionId |  | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
 *actionDescription* |  | string | Additional information on the action
-blockingType |  | string | Enum {NOTE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
+blockingType |  | string | Enum {NONE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } |  | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> See "Actions and Parameters"
 
 Object structure | Unit | Data type | Description 
