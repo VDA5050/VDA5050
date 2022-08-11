@@ -1,0 +1,206 @@
+{
+    "title": "t6-800 Factsheet",
+    "description": "The factsheet provides basic information about a specific AGV type series. This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system. The factsheet also includes information about AGV communication interfaces which are required for the integration of an AGV type series into a VD[M]A-5050-compliant master control.",
+    "type": "object",
+    "headerId": 1,
+    "timestamp": "2022-08-11T11:40:03.12Z",
+    "version": "5.0.0",
+    "manufacturer": "mushiny",
+    "serialNumber": "1",
+    "typeSpecification": {
+        "seriesName": "Mushiny latent AGV",
+        "seriesDescription": "The later-generation latent AGV, it's only ¥38,000",
+        "agvKinematic": "DIFF",
+        "agvClass": "CARRIER",
+        "maxLoadMass": 800,
+        "localizationTypes": ["SPOT"],
+        "navigationTypes": ["VIRTUAL_LINE_GUIDED"]
+    },
+    "physicalParameters": {
+        "speedMin": 0.4,
+        "speedMax": 2.2,
+        "accelerationMax": 1.6,
+        "decelerationMax": 2.0,
+        "heightMin": 0.23,
+        "heightMax": 0.3,
+        "width": 0.86,
+        "length": 0.96
+    },
+    "protocolLimits": {
+        "maxStringLens": {
+            "msgLen": 102400000,
+            "topicSerialLen": 50,
+            "topicElemLen": 200,
+            "idLen": 200,
+            "idNumericalOnly": true,
+            "enumLen": 50,
+            "loadIdLen": 20
+        },
+        "maxArrayLens": {
+            "order.nodes": 2000,
+            "order.edges": 2000,
+            "node.actions": 10,
+            "edge.actions": 10,
+            "actions.actionsParameters": 10,
+            "instantActions": 3,
+            "trajectory.knotVector": 0,
+            "trajectory.controlPoints": 0,
+            "state.nodeStates": 10,
+            "state.edgeStates": 10,
+            "state.loads": 1,
+            "state.actionStates": 10,
+            "state.errors": 1,
+            "state.information": 1,
+            "error.errorReferences": 2,
+            "information.infoReferences": 2
+        },
+        "timing": {
+            "minOrderInterval": 0.5,
+            "minStateInterval": 0.5,
+            "defaultStateInterval": 0.5,
+            "visualizationInterval": 0.5
+        }
+    },
+    "protocolFeatures": {
+        "type": "object",
+        "required": [
+            "optionalParameters",
+            "agvActions"
+        ],
+        "description": "Supported features of VDA5050 protocol",
+        "properties": {
+            "optionalParameters": [{
+                "parameter": "order.edges.edgeRun.gear.5",
+                "support": "SUPPORTED"
+            },
+            {
+                "parameter": "order.edges.edgeRun.gear.6",
+                "support": "SUPPORTED"
+            }],
+            "agvActions": [
+                {
+                    "actionType": "5",
+                    "actionDescription": "直接直行",
+                    "actionScopes": ["EDGE"],
+                    "actionParameters":[
+                        {
+                            "key": "distance",
+                            "valueDataType": "INTEGER",
+                            "description": "直行的距离",
+                            "isOptional": false
+                        }
+                    ]
+                },
+                {
+                    "actionType": "16",
+                    "actionDescription": "转弯",
+                    "actionScopes": ["NODE"],
+                    "actionParameters":[
+                        {
+                            "key": "angle",
+                            "valueDataType": "INTEGER",
+                            "description": "转弯的目标角度",
+                            "isOptional": false
+                        }
+                    ]
+                },
+                {
+                    "actionType": "60",
+                    "actionDescription": "自身复位",
+                    "actionScopes": ["INSTANT"]
+                }
+            ]
+        }
+    },
+    "agvGeometry": {
+        "type": "object",
+        "description": "Detailed definition of AGV geometry",
+        "properties": {
+            "wheelDefinitions": [{
+                "type": "DRIVE",
+                "isActiveDriven": true,
+                "isActiveSteered": true,
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "theta": 1.57
+                },
+                "diameter": 0.2,
+                "width": 0.1,
+                "centerDisplacement": 0
+            },{
+                "type": "DRIVE",
+                "isActiveDriven": true,
+                "isActiveSteered": true,
+                "position": {
+                    "x": 0.8,
+                    "y": 0,
+                    "theta": 1.57
+                },
+                "diameter": 0.2,
+                "width": 0.1,
+                "centerDisplacement": 0
+            }],
+            "envelopes2d": [{
+                "set": "curve set",
+                "polygonPoints": [{"x":0,"y":0}]
+            }],
+            "envelopes3d": [{
+                "set": "curve set",
+                "format": "DXF"
+            }]
+        }
+    },
+    "loadSpecification": {
+        "type": "object",
+        "description": "Abstract specification of load capabilities",
+        "properties": {
+            "loadPositions": {
+                "type": "array",
+                "description": "list of load positions / load handling devices. This lists contains the valid values for the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "loadSets": {
+                "type": "array",
+                "description": "list of load-sets that can be handled by the AGV",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "setName",
+                        "loadType"
+                    ],
+                    "properties": {
+                        "setName": "SET1",
+                        "loadType": "POD800",
+                        "loadPositions": [],
+                        "boundingBoxReference": {
+                            "x": 0.5,
+                            "y": 0.5,
+                            "z": 0.3
+                        },
+                        "loadDimensions": {
+                            "length": 1.1,
+                            "width": 1
+                        },
+                        "maxWeigth": 800,
+                        "minLoadhandlingHeight": 0,
+                        "maxLoadhandlingHeight": 2.5,
+                        "minLoadhandlingDepth": 0,
+                        "maxLoadhandlingDepth": 0.5,
+                        "minLoadhandlingTilt": 0,
+                        "maxLoadhandlingTilt": 0.05,
+                        "agvSpeedLimit": 2.0,
+                        "agvAccelerationLimit": 1.0,
+                        "agvDecelerationLimit": 1.0,
+                        "pickTime": 3,
+                        "dropTime": 3,
+                        "description": "Be careful that the ground is not too wet"
+                    }
+                }
+            }
+        }
+    },
+    "localizationParameters": 8
+}
