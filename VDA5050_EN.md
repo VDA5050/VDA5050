@@ -3,7 +3,7 @@
 
 ## VDA 5050
 
-## Version 2.0.0 RELEASE CANDIDATE, FOR REVIEW!!
+## Version 2.0.0
 
 ![control system and automated guided vehicles](./assets/csagv.png) 
 
