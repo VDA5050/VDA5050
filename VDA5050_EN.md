@@ -1046,6 +1046,7 @@ errorType |  | string | Type/name of error
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
 
 <a name="errorReferenceImpl"></a>
+
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
