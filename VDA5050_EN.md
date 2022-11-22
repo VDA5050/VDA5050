@@ -962,7 +962,8 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 map{ | | JSON-Object| 
-mapId | | String | 
+mapId | | string | 
+*mapVersion* | | string | 
 *mapDescription* | | string | 
 mapStatus <br>}| |string | Enum {ACTIVE, READY}
  
@@ -1451,7 +1452,7 @@ Central map | The maps that will be held centrally in the master control.<br> Th
 
 | **action**     | **counter   action** | **Description**                                                                                                                                             | **important** | **Parameter**                                                                     | **linked state** | **Instant \| node \| edge** |
 |----------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------------------------------------------------------------------------------|------------------|-----------------------------|
-| **downloadMap**    | -                    | Trigger the download of a new map.   Active during the download. Errors reported in vehicle state. Finished after   verification of successful download.    | no            | mapId (String)<br>mapVersion (string, optional)<br>mapAdress (String, optional)<br>mapHash   (String, optional)    | .maps            | yes \| no \| no             |
+| **downloadMap**    | -                    | Trigger the download of a new map.   Active during the download. Errors reported in vehicle state. Finished after   verification of successful download.    | no            | mapId (string)<br>mapVersion (string, optional)<br>mapAdress (string, optional)<br>mapHash   (string, optional)    | .maps            | yes \| no \| no             |
 | **deleteMap**      | -                    | Trigger   the removal of a map from the vehicle storage.                                                                                                    | no            | mapId (Sting)<br>mapVersion (string, optional)<br>   <br>                                                      | .maps            | yes \| no \| no             |
 
 
@@ -1460,6 +1461,6 @@ Central map | The maps that will be held centrally in the master control.<br> Th
 
 | **action**      | **Initializing**                                  | **Running**                                                        | **Paused** | **Finished**                                                                           | **Failed**                                                                                                                             |
 |-----------------|---------------------------------------------------|--------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **downloadMap** | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished.               | -          | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to READY.    |    <br>Download failed, updated in vehicle   state.     Connection lost, Map server   unreachable, mapId/mapVersion not existing on map server    |
-| **deleteMap**   | -                                                 | AGV deletes map with requested mapId from its internal storage.    | -          | AGV removes mapId/mapVersion from its state.                                                      |    <br>Can't   delete map, if map is currently in use. Already d.eleted                                                                |
+| **downloadMap** | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished.               | -          | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to READY.    | Download failed, updated in vehicle   state.     Connection lost, Map server   unreachable, mapId/mapVersion not existing on map server    |
+| **deleteMap**   | -                                                 | AGV deletes map with requested mapId from its internal storage.    | -          | AGV removes mapId/mapVersion from its state.                                                      |    <br>Can't   delete map, if map is currently in use. Already deleted                                                                |
 
