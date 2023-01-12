@@ -1289,7 +1289,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 |  &emsp;*visualizationInterval*      | float32       | [s], Default interval for sending messages on visualization topic.       |
 | }                             |               |                                                               |
 
-#### agvProtocolFeatures
+#### protocolFeatures
 
 This JSON object defines actions and parameters which are supported by the AGV.
 
