@@ -1046,6 +1046,7 @@ errorType |  | string | Type/name of error
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
 
 <a name="errorReferenceImpl"></a>
+
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
@@ -1306,7 +1307,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
-| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
+| &emsp; _**actionParameters** [**actionParameter**]_ | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
@@ -1322,7 +1323,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 
 | **Field**                            | **data type**        | **description**                                        |
 |--------------------------------------|----------------------|--------------------------------------------------------|
-| ***wheelDefinitions** [**wheelDefinition**]* | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
+| _**wheelDefinitions** [**wheelDefinition**]_ | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
 | {                                    |                      |                                                        |
 | &emsp;type                                 | enum                 | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```.     |
 | &emsp;isActiveDriven                       | boolean                 | "true": wheel is actively driven (de: angetrieben).       |
@@ -1337,7 +1338,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;*centerDisplacement*                 | float64              | [m], nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0.            |
 | &emsp;*constraints*                        | string               | Free-form text: can be used by the manufacturer to define constraints. |
 | }                                    |                      |                                                        |
-| ***envelopes2d** [**envelope2d**]*   | Array of JSON-object | List of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| _**envelopes2d** [**envelope2d**]_   | Array of JSON-object | List of AGV-envelope curves in 2D (german: „Hüllkurven“), e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | {                                    |                      |                                                        |
 | &emsp;set                             | string               | Name of the envelope curve set.                         |
 | &emsp;**polygonPoints**  **[polygonPoint]**         | Array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
