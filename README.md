@@ -6,7 +6,7 @@ Developed jointly by the German Association of the Automotive Industry (www.vda.
 
 
 # How to contribute
-If you work for a member of the VDA/VDMA , check with your contanct person if you can join the working group.
+If you work for a member of the VDA/VDMA, check with your contanct person if you can join the working group.
 
 Everyone is free to raise issues or offer new improvements for the protocol using the Github-Issues. Github-Issues are tagged by the VDA/VDMA team as **VD(M)A in progress**, when the issue is discussed in the monthly VDA 5050 meetings. If the issue has been accepted by the team, it will recive a milestone tag, indicating when the change will be added to the document, according to
 - V2.0.1: Minor Change like typos and fixes,
