@@ -74,6 +74,7 @@ Version 2.0
 [6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#Vehiclegets)<br>
 [6.6.5 Maps](#Maps)<br>
 [6.7 Implementation of the order message](#Iotom)<br>
+[6.7.1 Corridor](#Corridor)<br>
 [6.8 Actions](#Actions)<br>
 [6.8.1 Predefined action definitions, their parameters, effects and scope](#Padtpeas)<br>
 [6.8.2 Predefined action definitions, their parameters, effects and scope](#Padtpeas1)<br>
@@ -83,8 +84,9 @@ Version 2.0
 [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa)<br>
 [6.10.3 Base request](#Br)<br>
 [6.10.4 Information](#Information)<br>
-[6.10.5 Errors](#Errors)<br>
-[6.10.6 Implementation](#Implementation)<br>
+[6.10.5 No navigation path found](#NoNavPath)<br> 
+[6.10.6 Errors](#Errors)<br>
+[6.10.7 Implementation](#Implementation)<br>
 [6.11 actionStates](#actionStates)<br>
 [6.12 Action Blocking Types and sequence](#ABTas)<br>
 [6.13 Topic "visualization"](#TV)<br>
@@ -732,6 +734,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
+***corridor*** | | | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1).
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -749,6 +752,25 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 *weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
+Object structure | Unit | Data type | Description
+---|---|---|---
+_**corridor**_ { |  | JSON-object |
+leftWidth |  | float64 | Defines the width of the corridor in meter to the left. Value must be equal or greater zero [0... float64.maxValue].
+rightWidth <br><br>**}**|  | float64 | Defines the width of the corridor in meter to the right. Value must be equal or greater zero [0... float64.maxValue].
+
+### <a name = "Corridor"></a> 6.7.1 Corridor
+
+For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate.  In contrast to an allowed deviation the left and right boundaries are not only valid for the tool center pointer of the vehicle, but they are also valid for every part of the vehicle including the load. ```leftWidth``` and ```rightWidth``` can be non-identical, to define an asymmetric corridor. If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
+
+![Figure 16 Corridor defined by a left and right boundary](./assets/Corridor-1.png)
+>Figure 16 Corridor defined by a left and right boundary.
+
+Additional to each left and right boundary a semi-circle at the beginning and the end of each edge is also allowed for navigation. The diameter of the semi circle is the width of the corridor. The area which is available for planning the navigation path is the sum of all sub corridors of the current base. Traversed edges are not considered to determine the navigation space. A vehicle which is pushed back manually on a traversed edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move.
+
+![Figure 17 The sum of both sub corridors defines the available area for path planning.](./assets/Corridor-2.png)
+>Figure 17 The sum of both sub corridors defines the available area for path planning..
+
+The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an appropriate error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the AMR with corridor information which allows the vehicle to move again.
 
 ## <a name="Actions"></a> 6.8 Actions
 
@@ -907,9 +929,13 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
+### <a name="NoNavPath"></a> 6.10.4 No navigation path found 
+
+If the AGV is using the corridor information (see 6.7.1) for free navigation and it cannot determine a path inside these allowed navigation space,
+it can set the `noNavPathFound` flag to `true` to signal MC that the vehicle isn't able to move further on. The vehicle may send additional information about the reason as error inside the state message. It is up to MC how to deal with these specific vehicle state. This flag is only valid during an active order.  
 
 
-### <a name="Information"></a> 6.10.4 Information 
+### <a name="Information"></a> 6.10.5 Information 
 
 The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
@@ -918,7 +944,7 @@ Master control must not use the info messages for logic, it must only be used fo
 
 
 
-### <a name="Errors"></a> 6.10.5 Errors 
+### <a name="Errors"></a> 6.10.6 Errors 
 
 The AGV reports errors via the `errors` array. 
 Errors have two levels: `WARNING` and `FATAL`.
@@ -928,7 +954,7 @@ Errors can pass references that help with finding the cause of the error via the
 
 
 
-### <a name="Implementation"></a> 6.10.6 Implementation
+### <a name="Implementation"></a> 6.10.7 Implementation
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -951,6 +977,7 @@ lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV
 driving |  | boolean | “true”: indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
 *paused* |  | boolean | “true”: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>“false”: The AGV is currently not in a paused state.
 *newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
+*noNavPathFound* | | boolean | "true": AGV isn't able to determine a path inside the allowed navigation space (see also section 6.7.1).
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeId“. <br>Distance is in meters.
 **actionStates [actionState]** |  | array | Contains a list of the current actions and the actions, which are yet to be finished. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
 **batteryState** |  | JSON-object | Contains all battery-related information.
