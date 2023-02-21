@@ -9,7 +9,7 @@
         "typeSpecification",
         "physicalParameters",
         "protocolLimits",
-        "protocolFeatures",
+        "agvProtocolFeatures",
         "agvGeometry",
         "loadSpecification"
     ],
@@ -315,7 +315,7 @@
             }
         }
     },
-    "protocolFeatures": {
+    "agvProtocolFeatures": {
         "type": "object",
         "required": [
             "optionalParameters",
