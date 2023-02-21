@@ -313,6 +313,7 @@ This includes keywords such as the states of the actions (WAITING, FINISHED, etc
 
 Where possible, JSON data types must be used.
 A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers.
+Numerical data types are specified with type and precision, e.g. float64 or uint32. Special number values from the IEEE 754 like NaN and infinity are not supported.
 
 
 
