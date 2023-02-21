@@ -1314,7 +1314,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 |&emsp;&emsp;*description* | string  | Free-form text: description of the parameter. |
 |&emsp;&emsp;*isOptional*  | boolean    | "true": optional parameter. |
 |&emsp;*}*           |         |                          |
-|*resultDescription* | string  | Free-form text: description of the resultDescription. |
+|*resultDescription* | string  | Free-form text: description of the result. |
 |*}*                 |         |                          |
 
 ### agvGeometry
