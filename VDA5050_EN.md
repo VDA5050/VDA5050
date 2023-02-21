@@ -734,7 +734,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-***corridor*** | | | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1).
+***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1).
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
