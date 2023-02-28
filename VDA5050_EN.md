@@ -601,7 +601,7 @@ There are two options:
 
 If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action must report as failed.
 
-The AGV must report a “noOrderToCancel” error with the errorLevel set to warning. 
+The AGV must report a “NO_ORDER_TO_CANCEL” error with the errorLevel set to warning. 
 The actionId of the instantAction must be passed as an errorReference.
 
 
@@ -618,7 +618,7 @@ These are explained in Figure 8.
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer. 
-2. The vehicle reports the warning "validationError"
+2. The vehicle reports the warning "VALIDATION_ERROR"
 3. The warning must be reported until the vehicle has accepted a new order.
 
 
@@ -628,7 +628,7 @@ Resolution:
 Resolution: 
 
 1. Vehicle does NOT take over the new order in its internal buffer 
-2. Vehicle reports the warning "orderError" with the wrong fields as error references
+2. Vehicle reports the warning "ORDER_ERROR" with the wrong fields as error references
 3. The warning must not be reported until the vehicle has accepted a new order. 
 
 
@@ -639,7 +639,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer. 
 2. Vehicle keeps the PREVIOUS order it its buffer. 
-3. The vehicle reports the warning "orderUpdateError"
+3. The vehicle reports the warning "ORDER_UPDATE_ERROR"
 4. The vehicle continues with the executing the previous order. 
 
 If the AGV receives an order with the same orderId and orderUpdateId twice, the second order will be ignored. 
@@ -1051,7 +1051,7 @@ charging |  | boolean | “true”: charging in progress.<br>“false”: AGV is
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **error** { |  | JSON-object |  
-errorType |  | string | Type/name of error 
+errorType |  | string | Type/name of error; case style of entries ALL_CAPITALS like for enums
 ***errorReferences [errorReference]*** |  | array | Array of references to identify the source of the error (e.g., headerId, orderId, actionId, etc.).<br>For additional information see „Best practices“ chapter 8.
 *errorDescription* |  | string | Error description. 
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
