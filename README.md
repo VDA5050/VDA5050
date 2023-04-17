@@ -1,7 +1,7 @@
 # VDA5050
 An open standard for communication between AGV fleets and a central master control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the Mechanical Engineering Industry Association (www.vdma.org), as well as the Institute for Material Flow and Logistics (IFL) at KIT (www.ifl.kit.edu) and many contributors from the AMR industry.
 
-**DISCLAIMER**: The current version of the official VDA 5050 document can be found [here](https://www.vda.de/de/aktuelles/publikationen/publication/vda-5050-version-2.0.0-fts-kommunikationsschnittstelle) on the VDA website.
+**DISCLAIMER**: We are constantly working to improve the VDA 5050. If there are any differences between the markdown document/JSON schemas on GitHub and the published document by the VDA, the PDF on the VDA website is valid. The current version of the official VDA 5050 document can be found here ([German](https://www.vda.de/de/suche#"5050")/[English](https://www.vda.de/en/search#"5050")).
 
 # How to contribute
 If you work at an VDA / VDMA member, check with your contact person if you can join the working group.
