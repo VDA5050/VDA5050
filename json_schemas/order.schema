@@ -113,7 +113,7 @@
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
-                            "allowedDeviationXy": {
+                            "allowedDeviationXY": {
                                 "type": "number",
                                 "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
                                 "minimum": 0
