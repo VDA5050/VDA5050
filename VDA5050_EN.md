@@ -737,7 +737,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1).
+***corridor[corridorPoint]*** | | array | Array of points defining a simple polygone. Points are listed counter-lock wise. This polygone defines the  boundaries in which a vehicle can free navigate during driving on this edge. <br><br>Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1). 
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -755,20 +755,23 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 *weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
-Object structure | Unit | Data type | Description
+Object structure | Unit | Data type | Description 
 ---|---|---|---
-_**corridor**_ { |  | JSON-object |
-leftWidth |  | float64 | Defines the width of the corridor in meter to the left. Value must be equal or greater zero [0... float64.maxValue].
-rightWidth <br><br>**}**|  | float64 | Defines the width of the corridor in meter to the right. Value must be equal or greater zero [0... float64.maxValue].
+**corridorPoint** { |  | JSON-object |  
+x |  | float64 | X coordinate described in the world coordinate system. 
+y |  | float64 | Y coordinate described in the world coordinate system.
+} |  |  |
+
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate.  In contrast to an allowed deviation the left and right boundaries are not only valid for the tool center pointer of the vehicle, but they are also valid for every part of the vehicle including the load. ```leftWidth``` and ```rightWidth``` can be non-identical, to define an asymmetric corridor. If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
+For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the tool center pointer of the vehicle, but they are also valid for every part of the vehicle including the load. If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
 
 ![Figure 16 Corridor defined by a left and right boundary](./assets/Corridor-1.png)
 >Figure 16 Corridor defined by a left and right boundary.
 
-Additional to each left and right boundary a semi-circle at the beginning and the end of each edge is also allowed for navigation. The diameter of the semi circle is the width of the corridor. The area which is available for planning the navigation path is the sum of all sub corridors of the current base. Traversed edges are not considered to determine the navigation space. A vehicle which is pushed back manually on a traversed edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move.
+The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries. 
+A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space. 
 
 ![Figure 17 The sum of both sub corridors defines the available area for path planning.](./assets/Corridor-2.png)
 >Figure 17 The sum of both sub corridors defines the available area for path planning..
