@@ -767,16 +767,20 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 
 For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the tool center pointer of the vehicle, but they are also valid for every part of the vehicle including the load. If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
 
-![Figure 16 Corridor defined by a left and right boundary](./assets/Corridor-1.png)
->Figure 16 Corridor defined by a left and right boundary.
+![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
+>Figure 16 Corridor with boundaries.
 
-The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries. 
-A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space. 
+The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). 
+A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18). 
 
-![Figure 17 The sum of both sub corridors defines the available area for path planning.](./assets/Corridor-2.png)
->Figure 17 The sum of both sub corridors defines the available area for path planning..
+![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
+>Figure 17 Three edges with their current corridor defined by a simple polygon.
 
 The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an appropriate error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the AMR with corridor information which allows the vehicle to move again.
+
+![Figure 18 The union of all polygons defines the available area for path planning.](./assets/Polygon2.png)
+>Figure 18 The union of all polygons defines the available area for path planning..
+
 
 ## <a name="Actions"></a> 6.8 Actions
 
