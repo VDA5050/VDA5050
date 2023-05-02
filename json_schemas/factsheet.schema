@@ -110,7 +110,7 @@
                     "items": {
                         "type": "string",
                         "enum": [
-                            "PHYSICAL_LINDE_GUIDED",
+                            "PHYSICAL_LINE_GUIDED",
                             "VIRTUAL_LINE_GUIDED",
                             "AUTONOMOUS"
                         ]
