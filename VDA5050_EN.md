@@ -781,6 +781,8 @@ The motion control software of the vehicle shall check permanently if a part of 
 ![Figure 18 The union of all polygons defines the available area for path planning.](./assets/Polygon2.png)
 >Figure 18 The union of all polygons defines the available area for path planning..
 
+If the AGV is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error.
+
 
 ## <a name="Actions"></a> 6.8 Actions
 
