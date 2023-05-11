@@ -941,12 +941,6 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
-### <a name="NoNavPath"></a> 6.10.4 No navigation path found 
-
-If the AGV is using the corridor information (see 6.7.1) for free navigation and it cannot determine a path inside these allowed navigation space,
-it can set the `noNavPathFound` flag to `true` to signal MC that the vehicle isn't able to move further on. The vehicle may send additional information about the reason as error inside the state message. It is up to MC how to deal with these specific vehicle state. This flag is only valid during an active order.  
-
-
 ### <a name="Information"></a> 6.10.5 Information 
 
 The AGV can submit arbitrary additional information to master control via the `information` array.
@@ -989,7 +983,6 @@ lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV
 driving |  | boolean | “true”: indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
 *paused* |  | boolean | “true”: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>“false”: The AGV is currently not in a paused state.
 *newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
-*noNavPathFound* | | boolean | "true": AGV isn't able to determine a path inside the allowed navigation space (see also section 6.7.1).
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeId“. <br>Distance is in meters.
 **actionStates [actionState]** |  | array | Contains a list of the current actions and the actions, which are yet to be finished. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
 **batteryState** |  | JSON-object | Contains all battery-related information.
