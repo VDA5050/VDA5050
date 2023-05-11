@@ -770,7 +770,7 @@ For a vehicle, which plans autonomically the path from one node to the next node
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
 >Figure 16 Corridor with boundaries.
 
-The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). 
+The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). Polygons of non released edges aren't part of the current corridor.
 A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18). 
 
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
