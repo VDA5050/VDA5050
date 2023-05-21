@@ -720,7 +720,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **edge** { |  | JSON-object | Directional connection between two nodes.
 edgeId |  | string | Unique edge identification.
-sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+sequenceId |  | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
 *edgeDescription* |  | string | Additional information on the edge.
 released |  | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId |  | string | nodeId of startNode.
