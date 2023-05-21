@@ -2,6 +2,14 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "instantActions",
     "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "actions"
+    ],
     "subtopic": "/instantActions",
     "type": "object",
     "properties": {
