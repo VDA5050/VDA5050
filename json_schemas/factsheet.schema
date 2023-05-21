@@ -9,7 +9,7 @@
         "typeSpecification",
         "physicalParameters",
         "protocolLimits",
-        "agvProtocolFeatures",
+        "protocolFeatures",
         "agvGeometry",
         "loadSpecification"
     ],
@@ -23,7 +23,7 @@
     "timestamp": {
         "type": "string",
         "format": "date-time",
-        "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+        "description": "Timestamp in ISO8601 Format",
         "examples": [
             "1991-03-11T11:40:03.12Z"
         ]
@@ -109,7 +109,7 @@
                 "items": {
                     "type": "string",
                     "enum": [
-                        "PHYSICAL_LINE_GUIDED",
+                        "PHYSICAL_LINDE_GUIDED",
                         "VIRTUAL_LINE_GUIDED",
                         "AUTONOMOUS"
                     ]
@@ -315,7 +315,7 @@
             }
         }
     },
-    "agvProtocolFeatures": {
+    "protocolFeatures": {
         "type": "object",
         "required": [
             "optionalParameters",
