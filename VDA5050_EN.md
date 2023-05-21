@@ -967,8 +967,8 @@ Object structure | Unit | Data type | Description
 nodeId |  | string | Unique node identification.
 sequenceId |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node.
-***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
-released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+released|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+***nodePosition***<br><br>}|  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
