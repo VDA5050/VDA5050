@@ -1476,23 +1476,3 @@ Concept | Description
 Free navigation AGV | Vehicles that use a map to plan their own path. <br>The master control sends only start and destination coordinates.<br>The vehicle sends its path to the master control.<br>When the communication to the master control is broken off, the vehicle is able to continue its journey.<br>Free-navigation vehicles may be allowed to bypass local obstacles.<br>It may also be possible that a fine adjustment of the receiving/dispensing position by the vehicle itself is carried out.
 Guided vehicles (physical or virtual) | Vehicles that get their path sent by the master control. <br>The calculation of the path takes place in the master control.<br>When communication to the master control is broken off, the vehicle terminates its released nodes and edges (the "base") and then stops.<br>Guided vehicles may be allowed to bypass local obstacles.<br>It may also be possible that a fine adjustment of the receiving/dispensing position by the vehicle itself is carried out.
 Central map | The maps that will be held centrally in the master control.<br> This is initially created and then used.<br> A future version of the interface will make it possible to transfer this map to the vehicles (e.g., for free navigation).
-
-
-# <a name="Maps-Extension"></a> 9 Maps 
-
-## <a name="AD"></a>9.1 Action Definition
-
-| **action**     | **counter   action** | **Description**                                                                                                                                             | **important** | **Parameter**                                                                     | **linked state** | **Instant \| node \| edge** |
-|----------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------------------------------------------------------------------------------|------------------|-----------------------------|
-| **downloadMap**    | -                    | Trigger the download of a new map.   Active during the download. Errors reported in vehicle state. Finished after   verification of successful download.    | no            | mapId (string)<br>mapVersion (string, optional)<br>mapAdress (string, optional)<br>mapHash   (string, optional)    | .maps            | yes \| no \| no             |
-| **deleteMap**      | -                    | Trigger   the removal of a map from the vehicle storage.                                                                                                    | no            | mapId (Sting)<br>mapVersion (string, optional)<br>   <br>                                                      | .maps            | yes \| no \| no             |
-
-
-
-## <a name="DoAS"></a>9.2 Definition of Action States
-
-| **action**      | **Initializing**                                  | **Running**                                                        | **Paused** | **Finished**                                                                           | **Failed**                                                                                                                             |
-|-----------------|---------------------------------------------------|--------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **downloadMap** | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished.               | -          | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to READY.    | Download failed, updated in vehicle   state.     Connection lost, Map server   unreachable, mapId/mapVersion not existing on map server    |
-| **deleteMap**   | -                                                 | AGV deletes map with requested mapId from its internal storage.    | -          | AGV removes mapId/mapVersion from its state.                                                      |    <br>Can't   delete map, if map is currently in use. Already deleted                                                                |
-
