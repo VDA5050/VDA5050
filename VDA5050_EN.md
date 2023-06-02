@@ -993,15 +993,6 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-map{ | | JSON-Object| 
-mapId | | string | 
-*mapVersion* | | string | 
-*mapDescription* | | string | 
-mapStatus <br>}| |string | Enum {ACTIVE, READY}
- 
-
-Object structure | Unit | Data type | Description 
----|---|---|---
 **nodeState** { | JSON-object |  |
 nodeId |  | string | Unique node identification.
 sequenceId |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
