@@ -769,7 +769,7 @@ For a vehicle, which plans autonomically the path from one node to the next node
 >Figure 16 Corridor with boundaries.
 
 The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). Polygons of non released edges aren't part of the current corridor.
-A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18). 
+A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18).
 
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
 >Figure 17 Three edges with their current corridor defined by a simple polygon.
@@ -779,7 +779,7 @@ The motion control software of the vehicle shall check permanently if a part of 
 ![Figure 18 The union of all polygons defines the available area for path planning.](./assets/Polygon2.png)
 >Figure 18 The union of all polygons defines the available area for path planning..
 
-If the AGV is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error.
+If the AGV is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. See also section 6.10.2 for further information.
 
 
 ## <a name="Actions"></a> 6.8 Actions
@@ -811,7 +811,7 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no
+initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y (float64)<br>theta (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the paramater lhd needs to be present (e.g. LHD1). <br>The paramater stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as running in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
@@ -933,7 +933,21 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 ![Figure 13 nodeStates, edgeStates, actionStates during order handling](./assets/Figure13.png)
 >Figure 13 nodeStates, edgeStates, actionStates during order handling
 
+#### Corridors
 
+The corridor attribute of an edge leads to two different types of nodes inside inside an order: *goal nodes* and *way nodes*.
+
+- A *goal node* contains actions and therefore the shuttle has to reach this nodes precisely. The fleet management can define via the `allowedDeviationXY` and `allowedDeviationTheta` how precisely the node has to be reached. If no deviation is defined no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).
+- A *way node* contains no actions and therefore the shuttle may pass this node not precisely. The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect.
+*(Remarks: Consulting  `allowedDeviationXY` and `allowedDeviationTheta` to detect whether a way point is passed or not makes it difficult to define a correct ridable order and not defeating the reason using the corridor attribute. While the corridor attribute covers the whole vehicle contour an allowed deviation refers to the reference point of the vehicle. This makes it not trivial to define right deviation range according to the given corridor polygon or vice versa. Way points should be used defining the navigation area together with the corridor attribute and traffic control.)*
+
+An AGV on an edge with a corridor attribute shall determine the current edge by calculating the perpendicular distance to each edge of the current base. The edge with the shortest distance is the current edge. All nodes and edges with lower sequence numbers count as passed.
+
+An AGV coming from an edge without a corridor attribute is not allowed to use the corridor of a subsequent edge until the current edge is released.
+
+An AGV coming from an edge with a corridor attribute followed by an edge without a corridor attribute shall be driving on the subsequent edge when leaving the corridor polygon.
+
+A decision point is reached when vehicle reaches the orthogonal line which is going through the decision point.
 
 ### <a name="Br"></a> 6.10.3 Base request 
 
