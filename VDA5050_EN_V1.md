@@ -3,7 +3,10 @@
 
 ## VDA 5050
 
-## Version 2.0, June 2020
+## Version 1.1
+
+# :warning: **Deprecated Version 1.1 – Current version 2.0 can be found on the VDA website!** :warning:
+Note: This version may have differences to the published version 1.1 by the VDA, as this Git version was only a working document.
 
 ![control system and av](./assets/csagv.png) 
 
