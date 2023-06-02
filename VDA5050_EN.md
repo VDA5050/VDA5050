@@ -87,9 +87,8 @@ Version 2.0
 [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa)<br>
 [6.10.3 Base request](#Br)<br>
 [6.10.4 Information](#Information)<br>
-[6.10.5 No navigation path found](#NoNavPath)<br> 
-[6.10.6 Errors](#Errors)<br>
-[6.10.7 Implementation](#Implementation)<br>
+[6.10.5 Errors](#Errors)<br>
+[6.10.6 Implementation](#Implementation)<br>
 [6.11 actionStates](#actionStates)<br>
 [6.12 Action Blocking Types and sequence](#ABTas)<br>
 [6.13 Topic "visualization"](#TV)<br>
@@ -969,7 +968,6 @@ timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.�
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
-maps[map] | | array | Contains information on all maps existing on this vehicle. 
 orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available. 
 orderUpdateId |  | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
