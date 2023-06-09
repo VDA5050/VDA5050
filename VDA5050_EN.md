@@ -937,7 +937,7 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 The corridor attribute of an edge leads to two different types of nodes inside inside an order: *goal nodes* and *way nodes*.
 
-- A *goal node* contains actions and therefore the shuttle has to reach this nodes precisely. The fleet management can define via the `allowedDeviationXY` and `allowedDeviationTheta` how precisely the node has to be reached. If no deviation is defined no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).
+- A *goal node* contains actions and therefore the vehicle has to reach this nodes precisely. The fleet management can define via the `allowedDeviationXY` and `allowedDeviationTheta` how precisely the node has to be reached. If no deviation is defined no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).
 - A *way node* contains no actions and therefore the shuttle may pass this node not precisely. The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect.
 *(Remarks: Consulting  `allowedDeviationXY` and `allowedDeviationTheta` to detect whether a way point is passed or not makes it difficult to define a correct ridable order and not defeating the reason using the corridor attribute. While the corridor attribute covers the whole vehicle contour an allowed deviation refers to the reference point of the vehicle. This makes it not trivial to define right deviation range according to the given corridor polygon or vice versa. Way points should be used defining the navigation area together with the corridor attribute and traffic control.)*
 
