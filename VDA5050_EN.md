@@ -735,7 +735,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-***corridor[corridorPoint]*** | | array | Array of points defining a simple polygone. Points are listed counter-lock wise. The first point must not recur to close the polygone. This polygone defines the  boundaries in which a vehicle can free navigate during driving on this edge. <br><br>Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1). 
+***corridor[polygonVertex]*** | | array | Array of vertices defining a simple polygone. Vertices are listed counter-lock wise. The first vertex must not recur to close the polygone. This polygone defines the  boundaries in which a vehicle can free navigate during driving on this edge. <br><br>Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation (details see section 6.7.1). 
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -755,7 +755,7 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**corridorPoint** { |  | JSON-object |  
+**polygonVertex** { |  | JSON-object |  
 x |  | float64 | X coordinate described in the world coordinate system. 
 y |  | float64 | Y coordinate described in the world coordinate system.
 } |  |  |
@@ -768,7 +768,7 @@ For a vehicle, which plans autonomically the path from one node to the next node
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
 >Figure 16 Corridor with boundaries.
 
-The corridor object defines a simple polygone (no self intersection, no holes) and the points shall be listed counter-clock wise. The coordinates of the points are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). Polygons of non released edges aren't part of the current corridor.
+The corridor object defines a simple polygone (no self intersection, no holes). The coordinates of the vertices are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). Polygons of non released edges aren't part of the current corridor.
 A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18).
 
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
