@@ -774,7 +774,7 @@ A vehicle which is pushed back manually on a traversed or not released edge is o
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
 >Figure 17 Three edges with their current corridor defined by a simple polygon.
 
-The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an appropriate error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the AMR with corridor information which allows the vehicle to move again.
+The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the AMR with corridor information which allows the vehicle to move again.
 
 ![Figure 18 The union of all polygons defines the available area for path planning.](./assets/Polygon2.png)
 >Figure 18 The union of all polygons defines the available area for path planning..
