@@ -51,53 +51,53 @@ Version 2.0
 
 [1 Foreword](#-1-foreword)<br>
 [2 Objective of the document](#-2-objective-of-the-document)<br>
-[3 Scope](#Scope)<br>
-[3.1 Other applicable documents](#Oad)<br>
-[4 Requirements and protocol definition](#Rapd)<br>
-[5 Process and content of communication](#Pacoc)<br>
-[6 Protocol specification](#Ps)<br>
-[6.1 Symbols of the tables and meaning of formatting](#Sottamof)<br>
-[6.1.1 Optional fields](#Of)<br>
-[6.1.2 Permitted characters and field lengths](#Pcafl)<br>
-[6.1.3 Notation of enumerations](#Noe) <br>
-[6.1.4 JSON Datatypes](#JD)<br>
-[6.2 MQTT connection handling, security and QoS](#MchsaQ)<br>
-[6.3 MQTT-Topic Levels](#MTL)<br>
-[6.4 Protocol Header](#PH)<br>
-[6.5 Subtopics for communication](#Sfc)<br>
-[6.6 Topic: "order" (from master control to AGV)](#TOfmctA)<br>
-[6.6.1 Concept and Logic](#CaL)<br>
-[6.6.2 Orders and order updates](#Oaou)<br>
-[6.6.3 Order Cancellation (by Master Control)](#OCbMC)<br>
-[6.6.3.1 Receiving a new order after cancellation](#Ranoac)<br>
-[6.6.3.2 Receiving a cancelOrder action when AGV has no order](#RacawAhno)<br>
-[6.6.4 Order rejection](#Or)<br>
-[6.6.4.1 Vehicle gets a malformed new order](#Vgamno)<br>
-[6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)](#Vraowaicpeglhhtmlholaansii)<br>
-[6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#Vehiclegets)<br>
-[6.6.5 Maps](#Maps)<br>
-[6.7 Implementation of the order message](#Iotom)<br>
-[6.8 Actions](#Actions)<br>
-[6.8.1 Predefined action definitions, their parameters, effects and scope](#Padtpeas)<br>
-[6.8.2 Predefined action definitions, their parameters, effects and scope](#Padtpeas1)<br>
-[6.9 Topic: "instantActions" (from master control to AGV)](#Tifmc)<br>
-[6.10 Topic: "state" (from AGV to master control)](#TSfAtmc)<br>
-[6.10.1 Concept and Logic](#CaLe)<br>
-[6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa)<br>
-[6.10.3 Base request](#Br)<br>
-[6.10.4 Information](#Information)<br>
-[6.10.5 Errors](#Errors)<br>
-[6.10.6 Implementation](#Implementation)<br>
-[6.11 actionStates](#actionStates)<br>
-[6.12 Action Blocking Types and sequence](#ABTas)<br>
-[6.13 Topic "visualization"](#TV)<br>
-[6.14 Topic "connection"](#Tc)<br>
-[6.15 Topic "factsheet"](#Tf)<br>
-[7 Best practice](#Bp)<br>
-[7.1 Error reference](#Er)<br>
-[7.2 Format of parameters](#Fop)<br>
-[8 Glossary](#Glossary)<br>
-[8.1 Definition](#Definition)<br>
+[3 Scope](#-3-scope)<br>
+[3.1 Other applicable documents](#-31-other-applicable-documents)<br>
+[4 Requirements and protocol definition](#-4-requirements-and-protocol-definition)<br>
+[5 Process and content of communication](#-5-process-and-content-of-communication)<br>
+[6 Protocol specification](#-6-protocol-specification)<br>
+[6.1 Symbols of the tables and meaning of formatting](#-61-symbols-of-the-tables-and-meaning-of-formatting)<br>
+[6.1.1 Optional fields](#-611-optional-fields)<br>
+[6.1.2 Permitted characters and field lengths](#-612-permitted-characters-and-field-lengths)<br>
+[6.1.3 Notation of enumerations](#-613-notation-of-enumerations) <br>
+[6.1.4 JSON Datatypes](#-614-json-datatypes)<br>
+[6.2 MQTT connection handling, security and QoS](#-62-mqtt-connection-handling-security-and-qos)<br>
+[6.3 MQTT-Topic Levels](#-63-mqtt-topic-levels)<br>
+[6.4 Protocol Header](#-64-protocol-header)<br>
+[6.5 Subtopics for communication](#-65-subtopics-for-communication)<br>
+[6.6 Topic: "order" (from master control to AGV)](#-66-topic-orderfrom-master-control-to-agv)<br>
+[6.6.1 Concept and Logic](#-661-concept-and-logic)<br>
+[6.6.2 Orders and order updates](#-662-orders-and-order-update)<br>
+[6.6.3 Order Cancellation (by Master Control)](#-663-order-cancellation-by-master-control)<br>
+[6.6.3.1 Receiving a new order after cancellation](#-6631-receiving-a-new-order-after-cancellation)<br>
+[6.6.3.2 Receiving a cancelOrder action when AGV has no order](#-6632-receiving-a-cancelorder-action-when-agv-has-no-order)<br>
+[6.6.4 Order rejection](#-664-order-rejection)<br>
+[6.6.4.1 Vehicle gets a malformed new order](#-6641-vehicle-gets-a-malformed-new-order)<br>
+[6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)](#-6642-vehicle-receives-an-order-with-actions-it-cannot-perform-eg-lifting-height-higher-than-maximum-lifting-height-or-lifting-actions-although-no-stroke-is-installed-or-with-fields-that-it-cannot-use-eg-trajectory)<br>
+[6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#-6643-vehicle-gets-a-new-order-with-the-same-orderid-but-a-lower-orderupdateid-than-the-current-orderupdateid)<br>
+[6.6.5 Maps](#-665-maps)<br>
+[6.7 Implementation of the order message](#-67-implementation-of-the-order-message)<br>
+[6.8 Actions](#-68-actions)<br>
+[6.8.1 Predefined action definitions, their parameters, effects and scope](#-681-predefined-action-definition-their-parameters-effects-and-scope)<br>
+[6.8.2 Predefined action definitions, their parameters, effects and scope](#-682-predefined-action-definitions-description-of-their-states)<br>
+[6.9 Topic: "instantActions" (from master control to AGV)](#-69-topic-instantactions-from-master-to-control-to-agv)<br>
+[6.10 Topic: "state" (from AGV to master control)](#-610-topic-state-from-agv-to-master-control)<br>
+[6.10.1 Concept and Logic](#-6101-concept-and-logic)<br>
+[6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#-6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
+[6.10.3 Base request](#-6103-base-request)<br>
+[6.10.4 Information](#-6104-information)<br>
+[6.10.5 Errors](#-6105-errors)<br>
+[6.10.6 Implementation](#-6106-implementation)<br>
+[6.11 actionStates](#-611-actionstates)<br>
+[6.12 Action Blocking Types and sequence](#-612-action-blocking-types-and-sequence)<br>
+[6.13 Topic "visualization"](#-613-topic-visualization)<br>
+[6.14 Topic "connection"](#-614-topic-connection)<br>
+[6.15 Topic "factsheet"](#-615-topic-factsheet)<br>
+[7 Best practice](#-7-best-practice)<br>
+[7.1 Error reference](#-71-error-reference)<br>
+[7.2 Format of parameters](#-72-format-of-parameters)<br>
+[8 Glossary](#-8-glossary)<br>
+[8.1 Definition](#-81-definition)<br>
 
 
 
@@ -1191,7 +1191,7 @@ All messages on this topic shall be sent with a retained flag.
 
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
-## <a id="Tf"></a> 6.16 Topic "factsheet"
+## <a id="Tf"></a> 6.15 Topic "factsheet"
 
 The factsheet provides basic information about a specific AGV type series.
 This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system.
