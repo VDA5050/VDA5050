@@ -49,8 +49,8 @@ Version 2.0
 
 ## Table of contents
 
-[1 Foreword](#1-foreword)<br>
-[2 Objective of the document](#2-objective-of-the-document)<br>
+[1 Foreword](#-1-foreword)<br>
+[2 Objective of the document](#-2-objective-of-the-document)<br>
 [3 Scope](#Scope)<br>
 [3.1 Other applicable documents](#Oad)<br>
 [4 Requirements and protocol definition](#Rapd)<br>
