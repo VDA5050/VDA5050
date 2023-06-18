@@ -101,7 +101,7 @@ Version 2.0
 
 
 
-# <a name="Foreword"></a> 1 Foreword 
+# <a id="Foreword"></a> 1 Foreword 
 
 
 The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA). 
@@ -112,7 +112,7 @@ The Repository can be found at the following link: http://github.com/vda5050/vda
 
 
 
-# <a name="Ootd"></a> 2 Objective of the document 
+# <a id="Ootd"></a> 2 Objective of the document 
 
 The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGV) system when used in the automotive industry and to enable parallel operation with AGV from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
