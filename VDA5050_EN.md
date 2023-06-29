@@ -764,7 +764,7 @@ rightWidth <br><br>**}**|  | float64 | Defines the width of the corridor in mete
 
 For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are also valid for every part of the vehicle including the load. 
 ```leftWidth``` and ```rightWidth``` can be non-identical, to define an asymmetric corridor.
-If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
+If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. *(Remark: MC is responsible to send corridor widths which are drivable for the vehicle.)*
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1.png)
 >Figure 16 Corridor with boundaries.
