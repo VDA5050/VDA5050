@@ -1324,7 +1324,6 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*instantActions*              | uint32        | Maximum number of instant actions per message processable by the AGV. |
 | &emsp;*trajectory.knotVector*       | uint32        | Maximum number of knots per trajectory processable by the AGV. |
 | &emsp;*trajectory.controlPoints*    | uint32        | Maximum number of control points per trajectory processable by the AGV. |
-| &emsp;*corridor.vertices*   |  uint32    | Maximum number of vertices per polygon processable by the AGV. *If not defined, the attribute isn't supported.*|
 | &emsp;*state.nodeStates*            | uint32        | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
 | &emsp;*state.edgeStates*            | uint32        | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
 | &emsp;*state.loads*                 | uint32        | Maximum number of load-objects sent by the AGV.                |
