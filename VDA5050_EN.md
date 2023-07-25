@@ -780,6 +780,8 @@ The motion control software of the vehicle shall check permanently if a part of 
 
 If the vehicle is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. See also section 6.10.2 for further information.
 
+If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
+
 
 ## <a name="Actions"></a> 6.8 Actions
 
