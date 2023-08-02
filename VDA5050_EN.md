@@ -773,8 +773,8 @@ Additional to each left and right boundary a semi-circle at the beginning and th
 The union of all corridors of the current base defines the navigation space (see figure 18). 
 Traversed edges are not considered to determine the navigation space. A vehicle which is pushed back manually on a traversed edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move.
 
-![Figure 17 The sum of both sub corridors defines the available area for path planning.](./assets/Corridor-2.png)
->Figure 17 The sum of both sub corridors defines the available area for path planning..
+![Figure 17 The sum of all contiguous corridors defines the available area for path planning.](./assets/Corridor-2.png)
+>Figure 17 The sum of all contiguous corridors defines the available area for path planning.
 
 The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
 
@@ -942,7 +942,7 @@ The corridor attribute of an edge leads to two different types of nodes inside a
 - A *way node* contains no actions or non blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely. 
 
 The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute. -
-*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviation``` control multiple behaviours. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
+*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
 
 - The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
 
