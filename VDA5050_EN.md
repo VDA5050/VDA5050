@@ -1221,6 +1221,7 @@ The factsheet consists of the JSON-objects listed in the following table.
 | **agvGeometry**            | JSON-object   | Detailed definition of AGV geometry.                         |
 | **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |
 | **localizationParameters** | JSON-object   | Detailed specification of localization.                      |
+| ***agvStatus*** | JSON-object   | Summary of current software, hardware and network configuration.                      |
 
 #### typeSpecification
 
@@ -1387,6 +1388,26 @@ This JSON object specifies load handling and supported load types of the AGV.
 |&emsp; *dropTime*              | float64              | [s], approx. time for dropping the load.                    |
 |&emsp; *description*           | string               | Free-form text: description of the load handling set.            |
 | }                       |                      |                                                           |
+
+#### agvStatus
+
+This JSON-object details the software and hardware versions running on the vehicle, as well as a quick summary of network information.
+
+| **Field**       | **data type** | **description**                                       |
+|-----------------|---------------|-------------------------------------------------------|
+| *versions[versionInfo]*       | Array of JSON-object       | List of key-value pair objects containing software and hardware information.  |
+| {                               |                      |                                                        |
+|&emsp; key                              | String              | Key of the software/hardware version used. (E.g softwareVersion)         |
+|&emsp; value                              | String              | The version corresponding to the key. (E.g v1.12.4-beta)         |
+| }                                    |                      |                                                        |
+| *network*  {      | JSON-object       | Information about the vehicle's network connection.                        |
+|&emsp;&emsp; *dnsServers*                              | Array of String              | List of Domain Name Servers (DNS) used by the vehicle.          |
+|&emsp;&emsp; *ntpServers*                              | Array of String              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
+|&emsp;&emsp; *localIpAddress*                       | String              | The IP address of the vehicle on the network. |
+|&emsp;&emsp; *netMask*                       | String              | The subnet mask used in the network configuration |
+|&emsp;&emsp; *defaultGateway*                       | String              | The default gateway used by the vehicle |
+| &emsp;}                                    |                      |                                                        |
+
 
 
 # <a name="Bp"></a> 7 Best practice
