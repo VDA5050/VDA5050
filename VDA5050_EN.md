@@ -941,7 +941,7 @@ The corridor attribute of an edge leads to two different types of nodes inside a
 - A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and therefore the vehicle has to reach this nodes precisely (means within the normal tolerance of the vehicle manufacturer).
 - A *way node* contains no actions or non blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely. 
 
-The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute. -
+The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute.
 *(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
 
 - The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
@@ -949,7 +949,6 @@ The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no e
 - A vehicle driving on an edge without a corridor attribute is not allowed to use the corridor of a subsequent edge for navigation until the end node of the current edge (first node inside the node state array) is traversed. 
 The vehicle decides on its own, when this node should count as traversed.
 Generally, the vehicles control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
-
 
 - A vehicle coming from an edge with a corridor attribute followed by an edge without a corridor attribute shall reach the end node of the current edge precisely (means within the normal tolerance of the vehicle manufacturer) before counting this node as traversed.
 
