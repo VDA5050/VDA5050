@@ -69,7 +69,7 @@
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node.\nâ€œ0â€ if no lastNodeSequenceId is available. "
+            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node. \"0\" if no lastNodeSequenceId is available."
         },
         "driving": {
             "type": "boolean",
