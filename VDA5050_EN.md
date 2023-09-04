@@ -762,26 +762,30 @@ rightWidth <br><br>**}**|  | float64 | Defines the width of the corridor in mete
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are also valid for every part of the vehicle including the load. 
-```leftWidth``` and ```rightWidth``` can be non-identical, to define an asymmetric corridor.
-If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. *(Remark: MC is responsible to send corridor widths which are drivable for the vehicle.)*
+For a vehicle, which is able to plan independent the path from one node to the next node, the optional corridor object enables this
+vehicle to deviate from the edge for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load. **If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.** The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide vehicle with the ability to avoid obstacles.
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1.png)
 >Figure 16 Corridor with boundaries.
 
-Additional to each left and right boundary a semi-circle at the beginning and the end of each edge is also allowed for navigation. The diameter of the semi circle is the width of the corridor. 
-The union of all corridors of the current base defines the navigation space (see figure 18). 
+The area in which the vehicle is allowed to independent navigate is defined by a left and right boundary. 
+Additional to each left and right boundary a semi-circle at the beginning and the end of each edge is also allowed for navigation. The diameter of the semi circle is the width of the corridor. ```leftWidth``` and ```rightWidth``` can be non-identical, to define an asymmetric corridor. *(Remark: MC is responsible to send corridor widths which are drivable for the vehicle.)*
+The union of all corridors of the current base defines the navigation space (see figure 17). 
 Traversed edges are not considered to determine the navigation space. A vehicle which is pushed back manually on a traversed edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move.
+
+(*Remarks: A corridor defines which area a vehicle can use for navigation. It is accepted by the operator that the vehicle uses this area for driving. It is not intended to use the corridor to define a specific trajectory.
+It is also not intended that this attribute is used to specify a larger area in which a vehicle is allowed to plan independently from the edge start node to the edge end node with very different paths as result. Especially if the defined corridor encloses also larger parts of other distant edges. In this case the upcoming concept of "zones" is the preferred solution.*).
 
 ![Figure 17 The sum of all contiguous corridors defines the available area for path planning.](./assets/Corridor-2.png)
 >Figure 17 The sum of all contiguous corridors defines the available area for path planning.
 
 The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
 
-If the vehicle is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. See also section 6.10.2 for further information.
+If the AGV is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. 
 
 If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
 
+See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
 ## <a name="Actions"></a> 6.8 Actions
 
