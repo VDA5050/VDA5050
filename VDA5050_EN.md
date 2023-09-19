@@ -1403,7 +1403,7 @@ This JSON-object details the software and hardware versions running on the vehic
 | *network*  {      | JSON-object       | Information about the vehicle's network connection.                        |
 |&emsp;&emsp; *dnsServers*                              | Array of String              | List of Domain Name Servers (DNS) used by the vehicle.          |
 |&emsp;&emsp; *ntpServers*                              | Array of String              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
-|&emsp;&emsp; *localIpAddress*                       | String              | The IP address of the vehicle on the network. |
+|&emsp;&emsp; *localIpAddress*                       | String              | The IP address under which the vehicle can be reached inside the network. |
 |&emsp;&emsp; *netmask*                       | String              | The subnet mask used in the network configuration |
 |&emsp;&emsp; *defaultGateway*                       | String              | The default gateway used by the vehicle |
 | &emsp;}                                    |                      |                                                        |
