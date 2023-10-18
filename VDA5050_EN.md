@@ -871,7 +871,7 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 The order progress is tracked by the `nodeStates` and `edgeStates`. 
 Additionally, if the AGV is able to derive its current position, it can publish its position via the “position” field.
 
-If the AVG plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
+If the AGV plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
 After nodes are released by master control, the AGV is not allowed to change its trajectory.
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
