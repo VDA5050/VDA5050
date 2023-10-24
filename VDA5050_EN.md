@@ -702,7 +702,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed. <br> If this attribute isn't set on an edge end node and the corridor attribute is set on this edge, the value is assumed as 0.
+*allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed. <br> If this attribute is not set on an edge end node and the corridor attribute is set on this edge, the value is assumed to be 0.
 *allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br> <br> Indicates how big the deviation of theta angle can be. <br> <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } |  | string | Additional information on the map.
@@ -758,32 +758,31 @@ Object structure | Unit | Data type | Description
 _**corridor**_ { |  | JSON-object |
 leftWidth | m | float64 | Defines the width of the corridor in meter to the left. Value must be equal or greater zero [0... float64.maxValue].
 rightWidth | m | float64 | Defines the width of the corridor in meter to the right. Value must be equal or greater zero [0... float64.maxValue].
-*vehicleRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the control point or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle control point.<br> Enum { CP , CONTOUR }
+*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the control point or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle control point (= "CP") .<br> Enum { CP , CONTOUR }
 
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor attribute
 
-For a vehicle, which is able to plan independent the path from one node to the next node, the optional corridor edge attribute enables this vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate. 
+For a vehicle, which is able to plan the path independent of the Master Control from one node to the next node, the optional corridor edge attribute enables this vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
 The behavior of a vehicle which uses the corridor attribute of an edge shall be still the behavior of a line guide vehicle with the ability to avoid obstacles.
 
 (*Remark: An edge defines a logical connection between two nodes and not necessarily the real trajectory a vehicle follows to drive from the start node to the end node.
-A vehicle may use a different trajectory, independent if an edge trajectory attribute is defined or not.*)
+The vehicle can use a different trajectory, regardless of whether an edge trajectory attribute is defined or not.*)
+
+
 
 ![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
->Figure 16 Edges with boundaries.
+>Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "CP").
 
 The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
-The optional field `vehicleRefPoint` specifies whether the the vehicle control point or the contour of the vehicle shall be inside the defined boundaries.
+The optional field `vehicleRefPoint` specifies whether the the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
 The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
-
-![Figure 17 The sum of all contiguous corridors defines the available area for path planning.](./assets/Corridor-3.png)
->Figure 17 The sum of all contiguous corridors defines the available area for path planning.
 
 The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
 If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
-The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
+The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
-If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
+If the vehicle supports both the ```trajectory``` and corridor ```attributes```, the MC must not use both attributes simultaneously on the same edge.
 
 See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
