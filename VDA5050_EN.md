@@ -775,7 +775,7 @@ The vehicle can use a different trajectory, regardless of whether an edge trajec
 >Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "CP").
 
 The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
-The optional field `vehicleRefPoint` specifies whether the the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
+The optional field `corridorRefPoint` specifies whether the the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
 The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
 
 The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
