@@ -733,7 +733,7 @@ endNodeId |  | string | nodeId of endNode.
 *direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left,  right, straight, 433MHz.
 *rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
-***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory. Shall not be used concurrent with the corridor attribute.
+***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
 ***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation. Shall not be used concurrent with the trajectory attribute.
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
@@ -769,8 +769,6 @@ The behavior of a vehicle which uses the corridor attribute of an edge shall be 
 (*Remark: An edge defines a logical connection between two nodes and not necessarily the real trajectory a vehicle follows to drive from the start node to the end node.
 The vehicle can use a different trajectory, regardless of whether an edge trajectory attribute is defined or not.*)
 
-
-
 ![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
 >Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "CP").
 
@@ -781,8 +779,6 @@ The boundaries of the edges shall be defined in a way that once the vehicle has 
 The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
 If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
 The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
-
-If the vehicle supports both the ```trajectory``` and corridor ```attributes```, the MC must not use both attributes simultaneously on the same edge.
 
 See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
