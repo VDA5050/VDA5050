@@ -766,19 +766,25 @@ rightWidth | m | float64 | Defines the width of the corridor in meter to the rig
 For a vehicle, which is able to plan the path independent of the Master Control from one node to the next node, the optional corridor edge attribute enables this vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
 The behavior of a vehicle which uses the corridor attribute of an edge shall be still the behavior of a line guide vehicle with the ability to avoid obstacles.
 
-(*Remark: An edge defines a logical connection between two nodes and not necessarily the real trajectory a vehicle follows to drive from the start node to the end node.
-The vehicle can use a different trajectory, regardless of whether an edge trajectory attribute is defined or not.*)
+(*Remark:
+ An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory a vehicle follows driving from the start node to the end node.
+Depending on the vehicle type the trajectory a vehicle takes between the start and the end node is either defined by MC via the trajectory edge attribute or deposed as predefined trajectories on the vehicle.
+Depending on the internal vehicle state the selected trajectory may varying.*)
 
 ![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
 >Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "CP").
 
 The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
-The optional field `corridorRefPoint` specifies whether the the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
+The optional field `corridorRefPoint` specifies whether the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
 The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
 
 The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
 If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
 The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
+
+(*Remark:
+Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance has to be considered during initial operation and if MC makes
+traffic control decision based on the vehicles footprint MC shall consider the possible deviation from the trajectory too.*)
 
 See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
