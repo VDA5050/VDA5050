@@ -1143,7 +1143,7 @@ If there are multiple actions on the same node with different blocking types, Fi
 For a near real-time position update the AGV can broadcast its position and velocity on the subtopic `visualization`.
 
 The structure of the position message is the same as the position and velocity message in the state.
-For additional information see chapter 6.7 Implementation. 
+For additional information see chapter 6.10 Implementation. 
 The update rate for this topic is defined by the integrator.
 
 
