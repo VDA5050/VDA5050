@@ -49,59 +49,59 @@ Version 2.0
 
 ## Table of contents
 
-[1 Foreword](#Foreword)<br>
-[2 Objective of the document](#Ootd)<br>
-[3 Scope](#Scope)<br>
-[3.1 Other applicable documents](#Oad)<br>
-[4 Requirements and protocol definition](#Rapd)<br>
-[5 Process and content of communication](#Pacoc)<br>
-[6 Protocol specification](#Ps)<br>
-[6.1 Symbols of the tables and meaning of formatting](#Sottamof)<br>
-[6.1.1 Optional fields](#Of)<br>
-[6.1.2 Permitted characters and field lengths](#Pcafl)<br>
-[6.1.3 Notation of enumerations](#Noe) <br>
-[6.1.4 JSON Datatypes](#JD)<br>
-[6.2 MQTT connection handling, security and QoS](#MchsaQ)<br>
-[6.3 MQTT-Topic Levels](#MTL)<br>
-[6.4 Protocol Header](#PH)<br>
-[6.5 Subtopics for communication](#Sfc)<br>
-[6.6 Topic: "order" (from master control to AGV)](#TOfmctA)<br>
-[6.6.1 Concept and Logic](#CaL)<br>
-[6.6.2 Orders and order updates](#Oaou)<br>
-[6.6.3 Order Cancellation (by Master Control)](#OCbMC)<br>
-[6.6.3.1 Receiving a new order after cancellation](#Ranoac)<br>
-[6.6.3.2 Receiving a cancelOrder action when AGV has no order](#RacawAhno)<br>
-[6.6.4 Order rejection](#Or)<br>
-[6.6.4.1 Vehicle gets a malformed new order](#Vgamno)<br>
-[6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)](#Vraowaicpeglhhtmlholaansii)<br>
-[6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#Vehiclegets)<br>
-[6.6.5 Maps](#Maps)<br>
-[6.7 Implementation of the order message](#Iotom)<br>
-[6.8 Actions](#Actions)<br>
-[6.8.1 Predefined action definitions, their parameters, effects and scope](#Padtpeas)<br>
-[6.8.2 Predefined action definitions, their parameters, effects and scope](#Padtpeas1)<br>
-[6.9 Topic: "instantActions" (from master control to AGV)](#Tifmc)<br>
-[6.10 Topic: "state" (from AGV to master control)](#TSfAtmc)<br>
-[6.10.1 Concept and Logic](#CaLe)<br>
-[6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa)<br>
-[6.10.3 Base request](#Br)<br>
-[6.10.4 Information](#Information)<br>
-[6.10.5 Errors](#Errors)<br>
-[6.10.6 Implementation](#Implementation)<br>
-[6.11 actionStates](#actionStates)<br>
-[6.12 Action Blocking Types and sequence](#ABTas)<br>
-[6.13 Topic "visualization"](#TV)<br>
-[6.14 Topic "connection"](#Tc)<br>
-[6.15 Topic "factsheet"](#Tf)<br>
-[7 Best practice](#Bp)<br>
-[7.1 Error reference](#Er)<br>
-[7.2 Format of parameters](#Fop)<br>
-[8 Glossary](#Glossary)<br>
-[8.1 Definition](#Definition)<br>
+[1 Foreword](#1-foreword)<br>
+[2 Objective of the document](#2-objective-of-the-document)<br>
+[3 Scope](#3-scope)<br>
+[3.1 Other applicable documents](#31-other-applicable-documents)<br>
+[4 Requirements and protocol definition](#4-requirements-and-protocol-definition)<br>
+[5 Process and content of communication](#5-process-and-content-of-communication)<br>
+[6 Protocol specification](#6-protocol-specification)<br>
+[6.1 Symbols of the tables and meaning of formatting](#61-symbols-of-the-tables-and-meaning-of-formatting)<br>
+[6.1.1 Optional fields](#611-optional-fields)<br>
+[6.1.2 Permitted characters and field lengths](#612-permitted-characters-and-field-lengths)<br>
+[6.1.3 Notation of enumerations](#613-notation-of-enumerations) <br>
+[6.1.4 JSON Datatypes](#614-json-datatypes)<br>
+[6.2 MQTT connection handling, security and QoS](#62-mqtt-connection-handling-security-and-qos)<br>
+[6.3 MQTT-Topic Levels](#63-mqtt-topic-levels)<br>
+[6.4 Protocol Header](#64-protocol-header)<br>
+[6.5 Subtopics for communication](#65-subtopics-for-communication)<br>
+[6.6 Topic: "order" (from master control to AGV)](#66-topic-orderfrom-master-control-to-agv)<br>
+[6.6.1 Concept and Logic](#661-concept-and-logic)<br>
+[6.6.2 Orders and order updates](#662-orders-and-order-update)<br>
+[6.6.3 Order Cancellation (by Master Control)](#663-order-cancellation-by-master-control)<br>
+[6.6.3.1 Receiving a new order after cancellation](#6631-receiving-a-new-order-after-cancellation)<br>
+[6.6.3.2 Receiving a cancelOrder action when AGV has no order](#6632-receiving-a-cancelorder-action-when-agv-has-no-order)<br>
+[6.6.4 Order rejection](#664-order-rejection)<br>
+[6.6.4.1 Vehicle gets a malformed new order](#6641-vehicle-gets-a-malformed-new-order)<br>
+[6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)](#6642-vehicle-receives-an-order-with-actions-it-cannot-perform-eg-lifting-height-higher-than-maximum-lifting-height-or-lifting-actions-although-no-stroke-is-installed-or-with-fields-that-it-cannot-use-eg-trajectory)<br>
+[6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#6643-vehicle-gets-a-new-order-with-the-same-orderid-but-a-lower-orderupdateid-than-the-current-orderupdateid)<br>
+[6.6.5 Maps](#665-maps)<br>
+[6.7 Implementation of the order message](#67-implementation-of-the-order-message)<br>
+[6.8 Actions](#68-actions)<br>
+[6.8.1 Predefined action definitions, their parameters, effects and scope](#681-predefined-action-definition-their-parameters-effects-and-scope)<br>
+[6.8.2 Predefined action definitions, their parameters, effects and scope](#682-predefined-action-definitions-description-of-their-states)<br>
+[6.9 Topic: "instantActions" (from master control to AGV)](#69-topic-instantactions-from-master-to-control-to-agv)<br>
+[6.10 Topic: "state" (from AGV to master control)](#610-topic-state-from-agv-to-master-control)<br>
+[6.10.1 Concept and Logic](#6101-concept-and-logic)<br>
+[6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
+[6.10.3 Base request](#6103-base-request)<br>
+[6.10.4 Information](#6104-information)<br>
+[6.10.5 Errors](#6105-errors)<br>
+[6.10.6 Implementation](#6106-implementation)<br>
+[6.11 actionStates](#611-actionstates)<br>
+[6.12 Action Blocking Types and sequence](#612-action-blocking-types-and-sequence)<br>
+[6.13 Topic "visualization"](#613-topic-visualization)<br>
+[6.14 Topic "connection"](#614-topic-connection)<br>
+[6.15 Topic "factsheet"](#615-topic-factsheet)<br>
+[7 Best practice](#7-best-practice)<br>
+[7.1 Error reference](#71-error-reference)<br>
+[7.2 Format of parameters](#72-format-of-parameters)<br>
+[8 Glossary](#8-glossary)<br>
+[8.1 Definition](#81-definition)<br>
 
 
 
-# <a name="Foreword"></a> 1 Foreword 
+# 1 Foreword 
 
 
 The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA). 
@@ -112,7 +112,7 @@ The Repository can be found at the following link: http://github.com/vda5050/vda
 
 
 
-# <a name="Ootd"></a> 2 Objective of the document 
+# 2 Objective of the document 
 
 The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGV) system when used in the automotive industry and to enable parallel operation with AGV from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
@@ -135,7 +135,7 @@ Other interfaces required for operation between AGV and master control (e.g., fo
 
 
 
-# <a name="Scope"></a> 3 Scope
+# 3 Scope
 
 This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and master control.
 The goal is to allow AGV with different characteristics (e.g., underrun tractor or fork lift AGV) to communicate with master control in uniform language. 
@@ -158,7 +158,7 @@ For the integration of proprietary stock systems, individual definitions of the 
 
 
 
-## <a name="Oad"></a> 3.1 Other applicable documents
+## 3.1 Other applicable documents
 
 Document (Dokument) | Description 
 ----------------------------------| ----------------
@@ -168,7 +168,7 @@ DIN EN ISO 3691-4 | Industrial Trucks Safety Requirements and Verification-Part 
 
 
 
-# <a name="Rapd"></a> 4 Requirements and protocol definition 
+# 4 Requirements and protocol definition 
 
 The communication interface is designed to support the following requirements: 
 
@@ -190,7 +190,7 @@ The parameters are described in English to ensure that the protocol is readable,
 
 
 
-# <a name="Pacoc"></a> 5 Process and content of communication
+# 5 Process and content of communication
 
 As shown in the information flow to the operation of AGV, there are at least the following participants (see Figure 2): 
 
@@ -246,7 +246,7 @@ In addition, the integrator must take into account the following when configurin
 
 
 
-# <a name="Ps"></a> 6 Protocol specification 
+# 6 Protocol specification 
 
 The following section describes the details of the communication protocol.
 The protocol specifies the communication between the master control and the AGV.
@@ -259,7 +259,7 @@ The JSON schemas are updated with every release of the VDA5050.
 
 
 
-## <a name="Sottamof"></a> 6.1 Symbols of the tables and meaning of formatting
+## 6.1 Symbols of the tables and meaning of formatting
 
 The table contains the name of the identifier, its unit, its data type, and a description, if any.
 
@@ -276,7 +276,7 @@ All enumerations are in UPPERCASE.
 
 
 
-### <a name="Of"></a> 6.1.1 Optional fields
+### 6.1.1 Optional fields
 
 If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGV plan their trajectory themselves and the field trajectory within the edge object of the order can be omitted). 
 
@@ -291,7 +291,7 @@ If an AGV cannot process trajectories, master control shall not send a trajector
 The AGV must communicate which optional parameters it needs via an AGV factsheet message.
 
 
-### <a name="Pcafl"></a> 6.1.2 Permitted characters and field lengths
+### 6.1.2 Permitted characters and field lengths
 
 All communication is encoded in UTF-8 to enable international adaption of descriptions.
 The recommendation is that IDs should only use the following characters:
@@ -305,21 +305,22 @@ For ease of integration, AGV vendors must supply an AGV factsheet that is detail
 
 
 
-### <a name="Noe"></a> 6.1.3 Notation of enumerations 
+### 6.1.3 Notation of enumerations 
 
 Enumerations must be written in uppercase. 
 This includes keywords such as the states of the actions (WAITING, FINISHED, etc...) or values of the "direction" field (LEFT, RIGHT, 443MHZ, etc...).
 
 
 
-### <a name="JD"></a> 6.1.4 JSON Datatypes 
+### 6.1.4 JSON Datatypes 
 
 Where possible, JSON data types must be used.
 A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers.
+Numerical data types are specified with type and precision, e.g. float64 or uint32. Special number values from the IEEE 754 like NaN and infinity are not supported.
 
 
 
-## <a name="MchsaQ"></a> 6.2 MQTT connection handling, security and QoS
+## 6.2 MQTT connection handling, security and QoS
 
 The MQTT protocol provides the option of setting a last will message for a client.
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
@@ -334,7 +335,7 @@ The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
 
-## <a name="MTL"></a> 6.3 MQTT-Topic Levels 
+## 6.3 MQTT-Topic Levels 
 
 The MQTT-Topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
 For a cloud-based MQTT-Broker the topic structure has to be adapted individually to match the topics defined in this protocol. 
@@ -359,7 +360,7 @@ topic | string | Topic (e.g. Order or System State) see Cap. 6.5
 Note: Since the `/` character is used to define topic hierarchies, it must not be used in any of the aforementioned fields.
 The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
-## <a name="PH"></a> 6.4 Protocol Header
+## 6.4 Protocol Header
 
 Each JSON starts with a header.
 In the following sections, the following fields will be referenced as header for readability. 
@@ -369,7 +370,7 @@ The header is not a JSON object.
 Object structure/Identifier | Data type | Description 
 ---|---|---
 headerId | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
-timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
+timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss,ffZ (e.g.“2017-04-15T11:40:03.12Z”)
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | string | Manufacturer of the AGV 
 serialNumber | string | Serial number of the AGV 
@@ -392,7 +393,7 @@ Examples for patch version:
 
 
 
-## <a name="Sfc"></a> 6.5 Subtopics for communication
+## 6.5 Subtopics for communication
 
 The AGV protocol uses the following topics for information exchange between master control and AGV
 
@@ -406,13 +407,13 @@ connection | Broker/AGV | master control | Indicates when AGV connection is lost
 factsheet | AGV | master control | Setup of AGV in master control | mandatory | factsheet.schema
 
 
-## <a name="TOfmctA"></a> 6.6 Topic: "order"(from master control to AGV)
+## 6.6 Topic: "order"(from master control to AGV)
 
 The topic "order" is the MQTT topic via which the AGV receives a JSON encapsulated order. 
 
 
 
-### <a name="CaL"></a> 6.6.1 Concept and Logic 
+### 6.6.1 Concept and Logic 
 
 The basic structure of an order is a graph of nodes and edges.
 The AGV is expected to traverse the nodes and edges to fulfill the order.
@@ -457,7 +458,7 @@ The process of updating an order is described in the next section.
 
 
 
-### <a name="Oaou"></a> 6.6.2 Orders and order update 
+### 6.6.2 Orders and order update 
 
 For traffic control the order-topic includes only the path to a decision point. 
 Before reaching the decision point, the master control will send an updated path with additional path segments.
@@ -563,7 +564,7 @@ Figure 8 describes the process of accepting an order or orderUpdate.
 
 
 
-### <a name="OCbMC"></a> 6.6.3 Order Cancellation (by Master Control)
+### 6.6.3 Order Cancellation (by Master Control)
 
 In the event of an unplanned change in the base nodes, the order must be canceled by using the instantAction cancelOrder.
 
@@ -584,7 +585,7 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 
 
-#### <a name="Ranoac"></a> 6.6.3.1 Receiving a new order after cancellation
+#### 6.6.3.1 Receiving a new order after cancellation
 
 After the cancellation of an order, the vehicle must be in a state to receive a new order. 
 
@@ -600,7 +601,7 @@ There are two options:
 
 
 
-#### <a name="RacawAhno"></a> 6.6.3.2 Receiving a cancelOrder action when AGV has no order
+#### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
 If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action must report as failed.
 
@@ -609,14 +610,14 @@ The actionId of the instantAction must be passed as an errorReference.
 
 
 
-### <a name="Or"></a> 6.6.4 Order rejection
+### 6.6.4 Order rejection
 
 There are several scenarios, when an order must be rejected. 
 These are explained in Figure 8.
 
 
 
-#### <a name="Vgamno"></a> 6.6.4.1 Vehicle gets a malformed new order
+#### 6.6.4.1 Vehicle gets a malformed new order
 
 Resolution:
 
@@ -626,7 +627,7 @@ Resolution:
 
 
 
-#### <a name="Vraowaicpeglhhtmlholaansii"></a> 6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)
+#### 6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)
 
 Resolution: 
 
@@ -636,7 +637,7 @@ Resolution:
 
 
 
-#### <a name="Vehiclegets"></a> 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
+#### 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution: 
 
@@ -650,7 +651,7 @@ This might happen, if the master control sends the order again, because the stat
 
 
 
-### <a name="Maps"></a> 6.6.5 Maps
+### 6.6.5 Maps
 
 To ensure consistent navigation among different types of AGV, the position is always specified in reference to the local map coordinate system (see Figure 10).
 For the differentiation between different levels a unique mapId is used.
@@ -670,12 +671,12 @@ The orientation must be in radians and must be within +Pi and –Pi.
 
 
 
-## <a name="Iotom"></a> 6.7 Implementation of the order message
+## 6.7 Implementation of the order message
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”)
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.“2017-04-15T11:40:03.12Z”)
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | | string | Manufacturer of the AGV 
 serialNumber | | string | Serial number of the AGV 
@@ -701,8 +702,8 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* |  | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
-*allowedDeviationTheta* |  | float64 | Range: [0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
+*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
+*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } |  | string | Additional information on the map.
 
@@ -712,14 +713,14 @@ Object structure | Unit | Data type | Description
 actionType |  | string | Name of action as described in the first column of “Actions and Parameters”. <br> Identifies the function of the action. 
 actionId |  | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
 *actionDescription* |  | string | Additional information on the action
-blockingType |  | string | Enum {NOTE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
+blockingType |  | string | Enum {NONE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } |  | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> See "Actions and Parameters"
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **edge** { |  | JSON-object | Directional connection between two nodes.
 edgeId |  | string | Unique edge identification.
-sequenceId |  | Integer | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+sequenceId |  | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
 *edgeDescription* |  | string | Additional information on the edge.
 released |  | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId |  | string | nodeId of startNode.
@@ -734,13 +735,13 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-**action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**actions [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **trajectory** { |  | JSON-object |  
-degree |  | float64 | Range: [1 ... infinity]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
-**knotVector [float64]** |  | array | Range: [ 0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
+degree |  | float64 | Range: [1.0 ... float64.max]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
+**knotVector [float64]** |  | array | Range: [0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
 **controlPoints [controlPoint]**<br><br> } |  | array | List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
 
 Object structure | Unit | Data type | Description 
@@ -748,11 +749,11 @@ Object structure | Unit | Data type | Description
 **controlPoint** { |  | JSON-object |  
 x |  | float64 | X coordinate described in the world coordinate system. 
 y |  | float64 | Y coordinate described in the world coordinate system.
-*weight* |  | float64 | Range: (0 ... infinity)<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+*weight* |  | float64 | Range: [0.0 ... float64.max]<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
 
-## <a name="Actions"></a> 6.8 Actions
+## 6.8 Actions
 
 If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic instantActions (see 6.9).
 
@@ -769,7 +770,7 @@ If there is no way to map some action to one of the actions of the following sec
 
 
 
-### <a name="Padtpeas"></a> 6.8.1 Predefined action definition, their parameters, effects and scope
+### 6.8.1 Predefined action definition, their parameters, effects and scope
 
 general |  | scope 
 :---:|--- | :---:
@@ -794,7 +795,7 @@ factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes 
 
 
 
-### <a name="Padtpeas1"></a> 6.8.2 Predefined action definitions, description of their states 
+### 6.8.2 Predefined action definitions, description of their states 
 
 action | action states 
 ---|---
@@ -819,7 +820,7 @@ factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 
 
-## <a name="Tifmc"></a> 6.9 Topic: "instantActions" (from master to control to AGV)
+## 6.9 Topic: "instantActions" (from master to control to AGV)
 
 In certain cases, it is necessary to send actions to the AGV, that need to be performed immediately. 
 This is made possible by publishing an instantAction message to the topic instantActions.
@@ -835,7 +836,7 @@ For additional information, see chapter 8 Best practices.
 Object structure | | Data type | Description 
 ---|---|---|---
 headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g., “2017-04-15T11:40:03.12Z”)
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., “2017-04-15T11:40:03.12Z”)
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | | string | Manufacturer of the AGV. 
 serialNumber | | string | Serial number of the AGV.
@@ -847,7 +848,7 @@ See also Figure 12 for the different transitions of an actionStatus.
 
 
 
-## <a name="TSfAtmc"></a> 6.10 Topic: "state" (from AGV to master control)
+## 6.10 Topic: "state" (from AGV to master control)
 
 The AGV-State will be transmitted on only one topic.
 Compared to separate messages (e.g., for orders, battery-state and errors) using one topic will reduce the workload of the broker and the master control for handling messages, while also keeping the information about the AGV state synchronized.
@@ -869,12 +870,12 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 
 
 
-### <a name="CaLe"></a> 6.10.1 Concept and Logic 
+### 6.10.1 Concept and Logic 
 
 The order progress is tracked by the `nodeStates` and `edgeStates`. 
 Additionally, if the AGV is able to derive its current position, it can publish its position via the “position” field.
 
-If the AVG plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
+If the AGV plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
 After nodes are released by master control, the AGV is not allowed to change its trajectory.
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
@@ -884,7 +885,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still m
 
 
 
-### <a name="Tonaeletoa"></a> 6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions 
+### 6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions 
 
 The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
@@ -905,13 +906,13 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 
 
-### <a name="Br"></a> 6.10.3 Base request 
+### 6.10.3 Base request 
 
 If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
 
 
-### <a name="Information"></a> 6.10.4 Information 
+### 6.10.4 Information 
 
 The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
@@ -920,7 +921,7 @@ Master control must not use the info messages for logic, it must only be used fo
 
 
 
-### <a name="Errors"></a> 6.10.5 Errors 
+### 6.10.5 Errors 
 
 The AGV reports errors via the `errors` array. 
 Errors have two levels: `WARNING` and `FATAL`.
@@ -930,12 +931,12 @@ Errors can pass references that help with finding the cause of the error via the
 
 
 
-### <a name="Implementation"></a> 6.10.6 Implementation
+### 6.10.6 Implementation
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ (e.g.“2017-04-15T11:40:03.12Z”).
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.“2017-04-15T11:40:03.12Z”).
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
@@ -943,7 +944,7 @@ orderId|  | string | Unique order identification of the current order or the pre
 orderUpdateId |  | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., „node7”). Empty string (""), if no lastNodeId is available.
-lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"o" if no lastNodeSequenced is available. 
+lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node.
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
 ***agvPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGV without the capability to localize themselves, e.g., line guided AGVs.
@@ -966,8 +967,8 @@ Object structure | Unit | Data type | Description
 nodeId |  | string | Unique node identification.
 sequenceId |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
 *nodeDescription* |  | string | Additional information on the node.
-***nodePosition*** |  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
-released<br><br>}|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+released|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+***nodePosition***<br><br>}|  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -993,9 +994,9 @@ mapId |  | string | Unique identification of the map in which the position is re
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **velocity** { |  | JSON-object |  
-*vx* | m/s | float64 | The AVGs velocity in its x direction.
-*vy* | m/s | float64 | The AVGs velocity in its y direction.
-*omega*<br>}| Rad/s | float64 | The AVGs turning speed around its z axis.
+*vx* | m/s | float64 | The AGVs velocity in its x direction.
+*vy* | m/s | float64 | The AGVs velocity in its y direction.
+*omega*<br>}| Rad/s | float64 | The AGVs turning speed around its z axis.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1005,7 +1006,7 @@ Object structure | Unit | Data type | Description
 *loadPosition* |  | string | Indicates, which load handling/carrying unit of the AGV is used, e.g., in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
 ***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
 ***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
-*weight*<br><br>} | kg | float64 | Range: [0.0 ... infinity)<br><br>Absolute weight of the load measured in kg. 
+*weight*<br><br>} | kg | float64 | Range: [0.0 ... float64.max]<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1036,9 +1037,9 @@ Object structure | Unit | Data type | Description
 **batteryState** { |  | JSON-object |  
 batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery Voltage.
-*batteryHealth* | % | int8 | Range: [0 .. 100]<br><br>State of Health. 
+*batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State of Health. 
 charging |  | boolean | “true”: charging in progress.<br>“false”: AGV is currently not charging.
-*reach* <br><br>}| m | uint32 | Range: [0 ... infinity)<br><br>Estimated reach with current State of Charge. 
+*reach* <br><br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated reach with current State of Charge. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1048,7 +1049,7 @@ errorType |  | string | Type/name of error
 *errorDescription* |  | string | Error description. 
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
 
-<a name="errorReferenceImpl"></a>
+<a id="errorReferenceImpl"></a>
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
@@ -1089,7 +1090,7 @@ TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn’t 
 
 
 
-## <a name="actionStates"></a> 6.11 actionStates
+## 6.11 actionStates
 
 When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it must represent this `action` with an `actionState` in its `actionStates` array.
 
@@ -1103,7 +1104,7 @@ WAITING | Action was received by AGV but the node where it triggers was not yet 
 INITIALIZING | Action was triggered, preparatory measures are initiated.
 RUNNING | The action is running.
 PAUSED | The action is paused because of a pause instantAction or external trigger (pause button on AGV)
-FINISHED | The action is finished. <br>A result is reported via the resultDescription
+FINISHED | The action is finished. <br>A result is reported via the result.
 FAILED | Action could not be finished for whatever reason.
 
 >Table 1 The acceptable values for the actionStatus field
@@ -1115,7 +1116,7 @@ A state transition diagram is provided in Figure 14.
 
 
 
-## <a name="ABTas"></a> 6.12 Action Blocking Types and Sequence 
+## 6.12 Action Blocking Types and Sequence 
 
 The order of multiple actions in a list define the sequence, in which those actions are to be executed. 
 The parallel execution of actions is governed by their respective `blockingType`.
@@ -1137,17 +1138,17 @@ If there are multiple actions on the same node with different blocking types, Fi
 
 
 
-## <a name="TV"></a> 6.13 Topic "visualization" 
+## 6.13 Topic "visualization" 
 
 For a near real-time position update the AGV can broadcast its position and velocity on the subtopic `visualization`.
 
 The structure of the position message is the same as the position and velocity message in the state.
-For additional information see chapter 6.7 Implementation. 
+For additional information see chapter 6.10 Implementation. 
 The update rate for this topic is defined by the integrator.
 
 
 
-## <a name="Tc"></a> 6.14 Topic "connection"
+## 6.14 Topic "connection"
 
 During the connection of an AGV client to the broker, a last will topic and message can be set, which is published by the broker upon disconnection of the AGV client from the broker.
 Thus, the master control can detect a disconnection event by subscribing the connection topics of all AGV.
@@ -1164,7 +1165,7 @@ The last will message is defined as a JSON encapsulated message with the followi
 Identifier | Data type | Description 
 ---|---|---
 headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | string | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ(e.g.“2017-04-15T11:40:03.12Z”).
+timestamp | string | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g.“2017-04-15T11:40:03.12Z”).
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2).
 manufacturer | string | Manufacturer of the AGV. 
 serialNumber | string | Serial number of the AGV. 
@@ -1190,7 +1191,7 @@ All messages on this topic shall be sent with a retained flag.
 
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
-## <a name="Tf"></a> 6.16 Topic "factsheet"
+## 6.15 Topic "factsheet"
 
 The factsheet provides basic information about a specific AGV type series.
 This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system.
@@ -1204,13 +1205,13 @@ The MC can request the factsheet from the AGV by sending the instant action:  `f
 
 All messages on this topic shall be sent with a retained flag.
 
-### 6.16.1 Factsheet JSON strcture
+### 6.15.1 Factsheet JSON strcture
 The factsheet consists of the JSON-objects listed in the following table.
 
 | **Field**                  | **data type** | **description**                                              |
 | -------------------------- | ------------- | ------------------------------------------------------------ |
 | headerId                   | uint32        | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
-| timestamp                  | string        | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ(e.g.“2017-04-15T11:40:03.12Z”). |
+| timestamp                  | string        | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g.“2017-04-15T11:40:03.12Z”). |
 | version                    | string        | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2). |
 | manufacturer               | string        | Manufacturer of the AGV.                                     |
 | serialNumber               | string        | Serial number of the AGV.                                     |
@@ -1292,7 +1293,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 |  &emsp;*visualizationInterval*      | float32       | [s], Default interval for sending messages on visualization topic.       |
 | }                             |               |                                                               |
 
-#### agvProtocolFeatures
+#### protocolFeatures
 
 This JSON object defines actions and parameters which are supported by the AGV.
 
@@ -1389,13 +1390,13 @@ This JSON object specifies load handling and supported load types of the AGV.
 | }                       |                      |                                                           |
 
 
-# <a name="Bp"></a> 7 Best practice
+# 7 Best practice
 
 This section includes additional information, which helps in facilitating a common understanding concurrent with the logic of the protocol. 
 
 
 
-## <a name="Er"></a> 7.1 Error reference 
+## 7.1 Error reference 
 
 If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#errorReferenceImpl)).
 This can include the following information:
@@ -1410,7 +1411,7 @@ If an action cannot be completed because of external factors (e.g. no load at ex
 
 
 
-## <a name="Fop"></a> 7.2 Format of parameters 
+## 7.2 Format of parameters 
 
 Parameters for errors, information, actions are designed as an array of JSON-Objects with key-value-pairs. 
 Sample for the actionParameter of an action “someAction” with key-value-pairs for stationType and loadType:
@@ -1425,11 +1426,11 @@ This was thoroughly and controversially discussed in multiple meetings.
 
 
 
-# <a name="Glossary"></a> 8 Glossary 
+# 8 Glossary 
 
 
 
-## <a name="Definition"></a> 8.1 Definition
+## 8.1 Definition
 
 Concept | Description 
 ---|---
