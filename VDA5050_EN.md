@@ -93,6 +93,7 @@ Version 2.0
 [6.13 Topic "visualization"](#613-topic-visualization)<br>
 [6.14 Topic "connection"](#614-topic-connection)<br>
 [6.15 Topic "factsheet"](#615-topic-factsheet)<br>
+[6.15 Map Updates](#616-maps)<br>
 [7 Best practice](#7-best-practice)<br>
 [7.1 Error reference](#71-error-reference)<br>
 [7.2 Format of parameters](#72-format-of-parameters)<br>
@@ -705,6 +706,7 @@ y | m | float64 | Y-position on the map in reference to the map coordinate syste
 *allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*mapVersion* |  | string | Use map with mapId and mapVersion.<br> Optional: if not set use active version of map/mapId.
 *mapDescription* <br> } |  | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description 
@@ -782,7 +784,7 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
+initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set take the already active version of map/mapId. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>mapVersion (string, optional)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the paramater lhd needs to be present (e.g. LHD1). <br>The paramater stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as running in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
@@ -940,7 +942,7 @@ timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.�
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
-maps[map] | | array | Contains information on all maps existing on this vehicle (see 6.16 for further information). 
+*maps[map]* | | array | Array of map-objects, that are currently stored on the vehicle (see 6.16 for further information). 
 orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available. 
 orderUpdateId |  | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
@@ -964,11 +966,12 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-map{ | | JSON-Object| 
-mapId | | string | 
-*mapVersion* | | string | 
+**map**{ | | JSON-Object| 
+mapId | | string | ID of the map.
+*mapVersion* | | string | Version of the map
 *mapDescription* | | string | 
-mapStatus <br>}| |string | Enum {ACTIVE, READY}
+mapStatus <br>}| |string | Enum {ACTIVE, READY}<br>ACTIVE: Indicates this map is currently active / used on the AGV. At most one map can have its status set to ACTIVE.<br>READY: Indicates this map is not currently active on the AGV and thus could be activated or deleted by request.
+
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -998,6 +1001,7 @@ x | m | float64 | X-position on the map in reference to the map coordinate syste
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 theta |  | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV. 
 mapId |  | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*mapVersion* |  | string | Use map with mapId and mapVersion.<br> Optional: if not set use active version of map/mapId.
 *mapDescription*<br>} |  | string | Additional information on the map. 
 
 Object structure | Unit | Data type | Description 
