@@ -93,7 +93,7 @@ Version 2.0
 [6.13 Topic "visualization"](#613-topic-visualization)<br>
 [6.14 Topic "connection"](#614-topic-connection)<br>
 [6.15 Topic "factsheet"](#615-topic-factsheet)<br>
-[6.15 Map Updates](#616-maps)<br>
+[6.16 Map Updates](#616-maps)<br>
 [7 Best practice](#7-best-practice)<br>
 [7.1 Error reference](#71-error-reference)<br>
 [7.2 Format of parameters](#72-format-of-parameters)<br>
