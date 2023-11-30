@@ -1388,7 +1388,27 @@ This JSON object specifies load handling and supported load types of the AGV.
 |&emsp; *dropTime*              | float64              | [s], approx. time for dropping the load.                    |
 |&emsp; *description*           | string               | Free-form text: description of the load handling set.            |
 | }                       |                      |                                                           |
+# 6.16 Maps 
 
+Map files to be distributed are located on a map server that can be accessed by the AGV. Transfer of a map to an AGV must consist of a single file. If more files are needed, they must be bundled/packed into a single file.
+The map transfer from map server to the AGV is done via pull operation. It is initiated by master control by sending an instantAction.
+To keep downtime as low as possible and to enable master control to synchronize activation of new maps, preloading/buffering of maps is crucial. Transfer of a map to the AGV and activating it to be used should be separate processes. Activation of a map present on theAGV is also initiated by master control via instantAction.
+
+## 6.16.1 Action Definition
+
+| **action**     | **counter   action** | **Description**                                                                                                                                             | **important** | **Parameter**                                                                     | **linked state** | **Instant \| node \| edge** |
+|----------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------------------------------------------------------------------------------|------------------|-----------------------------|
+| **downloadMap**    | -                    | Trigger the download of a new map.   Active during the download. Errors reported in vehicle state. Finished after   verification of successful download.    | no            | mapId (string)<br>mapVersion (string, optional)<br>mapAdress (string, optional)<br>mapHash   (string, optional)    | .maps            | yes \| no \| no             |
+| **deleteMap**      | -                    | Trigger   the removal of a map from the vehicle storage.                                                                                                    | no            | mapId (Sting)<br>mapVersion (string, optional)<br>   <br>                                                      | .maps            | yes \| no \| no             |
+
+
+
+## 6.16.2 Definition of Action States
+
+| **action**      | **Initializing**                                  | **Running**                                                        | **Paused** | **Finished**                                                                           | **Failed**                                                                                                                             |
+|-----------------|---------------------------------------------------|--------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| **downloadMap** | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished.               | -          | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to READY.    | Download failed, updated in vehicle   state.     Connection lost, Map server   unreachable, mapId/mapVersion not existing on map server    |
+| **deleteMap**   | -                                                 | AGV deletes map with requested mapId from its internal storage.    | -          | AGV removes mapId/mapVersion from its state.                                                      |    <br>Can't   delete map, if map is currently in use. Already deleted                                                                |
 
 # 7 Best practice
 
