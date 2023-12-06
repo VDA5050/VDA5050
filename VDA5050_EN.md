@@ -925,7 +925,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still m
 
 The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
-If the edge attribute `corridor` of the subsequent edge is set, these boundaries shall be meet additionally.
+If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be meet additionally.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceNumber` to the traversed node’s values.
 
