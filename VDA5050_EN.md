@@ -735,7 +735,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
-***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can free navigate during driving this edge. <br><br> Optional:<br> These values can be used by a free navigating AMR to determine the area, which can be used for navigation. Shall not be used concurrent with the trajectory attribute.
+***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.<br><br> Optional<br>
 **action [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -756,14 +756,15 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 _**corridor**_ { |  | JSON-object |
-leftWidth | m | float64 | Defines the width of the corridor in meter to the left. Value must be equal or greater zero [0... float64.maxValue].
-rightWidth | m | float64 | Defines the width of the corridor in meter to the right. Value must be equal or greater zero [0... float64.maxValue].
-*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the control point or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle control point (= "CP") .<br> Enum { CP , CONTOUR }
+leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
+rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
+*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor attribute
 
-For a vehicle, which is able to plan the path independent of the Master Control from one node to the next node, the optional corridor edge attribute enables this vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
+The optional corridor edge attribute enables the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
+In this context the trajectory means the pre-planned path the vehicle would be driving if no corridor attribute is defined.
 The behavior of a vehicle which uses the corridor attribute of an edge shall be still the behavior of a line guide vehicle with the ability to avoid obstacles.
 
 (*Remark:
