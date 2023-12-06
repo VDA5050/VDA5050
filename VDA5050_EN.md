@@ -773,14 +773,14 @@ Depending on the vehicle type the trajectory a vehicle takes between the start a
 Depending on the internal vehicle state the selected trajectory may varying.*)
 
 ![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
->Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "CP").
+>Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "KC").
 
 The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
 The optional field `corridorRefPoint` specifies whether the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
 The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
 
 The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
-If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
+If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an error.
 The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
 (*Remark:
