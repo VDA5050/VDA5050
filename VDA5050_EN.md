@@ -466,7 +466,7 @@ To communicate to the AGV what it will most likely have to do after reaching the
 - <u>Drive to the decision point "Base":</u> The "Base" is the defined route that the AGV travels. All nodes and edges of the "Base" route have already been approved by the control panel for the vehicle. 
 - <u>Estimated journey from the decision point "Horizon":</u> The "Horizon" is the route that the AGV is likely to drive, if there is no traffic jam. The "Horizon" route has not yet been approved by the control panel. However, the AGV will initially only travel to the last junction of the "Base" route.
 
-Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, it is important to note, that the "base" cannot be changed. 
+Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, it is important to note, that the "base" cannot be changed. If the AGV miss a order update ( the orderUpdateId from the order is not replayed in the status) the MC has to resend the order update. 
 The master control can therefore assume that the "base" is executed by the AGV.
 A later section describes a procedure for cancelling an order, but this is also considered unreliable due to the communication restrictions mentioned above.
 
