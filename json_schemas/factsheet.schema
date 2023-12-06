@@ -24,7 +24,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+            "description": "Timestamp in ISO8601 format.",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -110,7 +110,7 @@
                     "items": {
                         "type": "string",
                         "enum": [
-                            "PHYSICAL_LINDE_GUIDED",
+                            "PHYSICAL_LINE_GUIDED",
                             "VIRTUAL_LINE_GUIDED",
                             "AUTONOMOUS"
                         ]
@@ -598,7 +598,7 @@
             "properties": {
                 "loadPositions": {
                     "type": "array",
-                    "description": "list of load positions / load handling devices. This lists contains the valid values for the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
+                    "description": "list of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
                     "items": {
                         "type": "string"
                     }
@@ -676,7 +676,7 @@
                                     }
                                 }
                             },
-                            "maxWeigth": {
+                            "maxWeight": {
                                 "type": "number",
                                 "description": "maximum weight of loadtype",
                                 "unit": "kg"
@@ -737,7 +737,7 @@
                                 "description": "approx. time for dropping the load"
                             },
                             "description": {
-                                "type": "number",
+                                "type": "string",
                                 "description": "free text description of the load handling set"
                             }
                         }

@@ -106,8 +106,8 @@
                 "title": "nodeState",
                 "required": [
                     "nodeId",
-                    "released",
-                    "sequenceId"
+                    "sequenceId",
+                    "released"
                 ],
                 "properties": {
                     "nodeId": {
@@ -121,6 +121,10 @@
                     "nodeDescription": {
                         "type": "string",
                         "description": "Additional information on the node."
+                    },
+                    "released": {
+                        "type": "boolean",
+                        "description": "True: indicates that the node is part of the base. False: indicates that the node is part of the horizon."
                     },
                     "nodePosition": {
                         "type": "object",
@@ -144,10 +148,6 @@
                                 "type": "string"
                             }
                         }
-                    },
-                    "released": {
-                        "type": "boolean",
-                        "description": "True: indicates that the node is part of the base. False: indicates that the node is part of the horizon."
                     }
                 }
             }
