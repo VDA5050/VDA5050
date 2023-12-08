@@ -1,22 +1,23 @@
 <!---
 @startuml
+scale 0.65
 start
 #lightgreen:Order arrives via MQTT;
 #lightgreen:Validate JSON;
 if ((1) is received order valid?) then (no)
-    #red:reject order
+    #orange: reject order
     throw error;
     stop
 endif
 ->yes;
     if ((2) is received order new?) then (yes)
         if ((3) is vehicle still executing\nan order or waiting for an update?) then (yes)
-        #red:reject order\nthrow error;
+        #orange:reject order\nthrow error;
          stop
        endif
        ->no;
             if ((4) is start of new order close\nenough to current position?) then (no)
-                #red:reject order\nthrow error;
+                #orange:reject order\nthrow error;
                 stop
             endif
             ->yes;
@@ -25,7 +26,7 @@ endif
           #lightgreen: execute order;
      else (no - received order is update of current order)
         if ((5) is received order update deprecated?) then (yes)
-            #red:reject order\nthrow error;
+            #orange:reject order\nthrow error;
             stop
         endif
         ->no;
@@ -36,7 +37,7 @@ endif
             ->no;
                 if ((3) is vehicle still executing an\norder or waiting for an update?) then (yes)
                     if ((7) is the received update a valid\ncontinuation of the currently\nrunning order?) then (no)
-                      #red:reject order\nthrow error;
+                      #orange:reject order\nthrow error;
                       stop
                     endif
                     ->yes;
@@ -44,7 +45,7 @@ endif
                         #lightgreen:- accept order update\n- set orderUpdateId\n- append states to the ones\ncurrently running/planned (9);
                 else (no)
                     if ((8) is the received update a valid\ncontinuation of the previous\ncompleted actions?) then (no)
-                        #red:reject order\nthrow error;
+                        #orange:reject order\nthrow error;
                         stop;
                     endif
                     ->yes;
