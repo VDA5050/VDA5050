@@ -675,34 +675,39 @@ The orientation must be in radians and must be within +Pi and –Pi.
 >Figure 11 Coordinate systems for map and vehicle
 
 ### <mark>6.6.6 Map Distribution
-<mark>Map files to be distributed are located on a map server that can be accessed by the AGV. Transfer of a map to an AGV must consist of a single file. If more files are needed, they must be bundled/packed into a single file.
-The map transfer from map server to the AGV is done via pull operation. It is initiated by master control by sending an instantAction.
-To keep downtime as low as possible and to enable master control to synchronize activation of new maps, preloading/buffering of maps is crucial. Transfer of a map to the AGV and activating it to be used should be separate processes. Activation of a map present on theAGV is also initiated by master control via instantAction.
+<mark>To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
-#### <mark>6.6.6.1 Maps in Vehicle Status
-<mark>Information about maps that are available on the AGV will be contained in the maps array as part of the state message. Each map entry consists of mapId and current status (ACTIVE or READY). At most one map is allowed to be ACTIVE. An empty list indicates that no map is available on the AGV.
+<mark>The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master controller issuing a download command using an instantAction.
+
+<mark>In order to minimise downtime and facilitate the master controller's ability to synchronise the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle status channel. It's important to note that the transfer of a map to an AGV and the subsequent activation of the map are different processes. The activation of a pre-loaded map on an AGV is also triggered by the Master Control using an instantAction.
+<mark>Maps are deleted by the Master Control using an Instant Action. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is also indicated in the vehicle status.
+
+#### <mark>6.6.6.1 Maps in the Vehicle State
+<mark>Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId' and 'mapStatus', which can be either 'ACTIVE' for maps currently in use, or 'READY' if the download of the map has been completed but the map is not yet in use. The status of the download process is indicated by the current action not being completed. Errors will be reported.
+
+<mark>Note that only one map can be set to 'ACTIVE' at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
 
 #### <mark>6.6.6.2 Map Download
-<mark>The map distribution is managed using instant actions.
-Master control initiates the download process on the AGV by sending an instantAction with actionName *downloadMap* to the AGV. Required parameters are mapId that is used for all subsequent map related communication and the address where to download from.
-The actionStatus will be set to running by the AGV as soon as downloading the file has started.
-The actionStatus will be set to finished after the download was completed successfully and set to failed if the download could not be completed successfully.
-After successful download the map id must be added to the AGV’s list of maps that is published as part of the state message (see 4.1).
-The process of downloading a map must not change, delete or (de-)activate any map already present on the AGV.
+<mark>Map download is triggered through the instant action 'downloadMap' by the master control. This command includes the mandatory parameters 'mapId' and 'mapDownloadLink', under which the map is stored on the map server and which is accessable for the vehicle. 
+
+<mark>The AGV sets the 'actionStatus' to 'running' as soon as it begins downloading the map file. Upon successful completion of the download, the 'actionStatus' is updated to 'finished'. If the download is unsuccessful, the status is set to 'failed'. Once the download is successfully completed, the map must be appended to the vehicle list of maps in the state.
+
+<mark>It is critical to ensure that the process of downloading a map does not alter, delete, activate, or deactivate any existing maps on the vehicle.
 
 #### <mark>6.6.6.3 Activate Downloaded Maps
-<mark>There are multiple ways to activate a downloaded map on the vehicle.
-- <mark>Downloaded map is used in an order
-- <mark>Use *initPosition* to set the vehicle position on a new map
-- <mark>Use *activateMap* to set a map to active on the vehicle without setting or updating the vehicle position.
+<mark>Multiple methods are available for activating a downloaded map on the vehicle:
+1. <mark>**Using the Downloaded Map in an Order**: Activate the map as part of executing an order using the new 'mapId' and optional 'mapVersion' in the node object.
+2. <mark>**Setting the Vehicle Position on a New Map**: Use the 'initPosition' instant action to define the vehicle's position on the new map.
+3. <mark>**Activating a Map Without Updating Vehicle Position**: Use the 'activateMap' instant action to set a map as active on the vehicle, without altering or updating the vehicle's position.
+
+<mark>To ensure that the maps used for an order are all up to date, it is essential to check that each map passed during order execution contains at least one node (see Figure X). To do this, the 'mapId' and optional 'mapVersion' of the maps on the vehicle must match those specified in the order. Any discrepancy must result in the order being rejected.
+
+![Figure X Correct use of an order using multiple maps.](./assets/use_of_multiple_maps_one_order.png)
+><mark>Figure X Correct use of an order spanning across multiple maps.
 
 #### <mark>6.6.6.4 Delete Maps on the vehicle
-<mark>Master control can request deletion of a specific map by sending an action with the actionName deleteMap to the AGV. The mapId must be set as action parameter. If a specific version of the same mapId should be removed, the mapVersion must be set as well.
-To prevent the AGV from running out of free space it is allowed to delete the oldest, non-active map on its own initiative. If there is enough free space, the AGV should not delete any map.
-After successful deletion the map must be removed from the AGV’s list of maps that is published as part of the state message (see 4.1).
-
-
-
+<mark>The master control can request the deletion of a specific map from a vehicle. This is done by the instant action 'deleteMap'. To manage storage efficiently and prevent a vehicle from running out of space, the vehicle can delete a map that is not currently active by itself. However, this should only be done if there is a lack of free space. If sufficient storage is available, the vehicle should not delete any maps.
+Following the successful deletion of a map, it is essential to remove that map's entry from the vehicles list of maps in the vehicle state.
 
 ## 6.7 Implementation of the order message
 
@@ -818,7 +823,7 @@ startCharging | stopCharging | Activates the charging process. <br>Charging can 
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
 initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. <mark>Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set take the already active version of map/mapId.</mark> | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br><mark>mapVersion (string, optional)</mark><br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>#TODO | yes | yes<br>(Elevator) | no 
 <mark>activateMap (notDefinedYet) | <mark>- | <mark>Activte a previously downloaded map explecitly to be used in orders without initializing a new position. | <mark>yes | <mark>mapId  (string)<br>mapVersion (string, optional) | <mark>#TODO | <mark>yes | <mark>no (?) | <mark>no (?)
-<mark>downloadMap | <mark>- | <mark>Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | <mark>yes | <mark>mapId (string)<br>mapVersion (string, optional)<br>mapAdress (string, optional)<br>mapHash   (string, optional) | <mark>.maps | <mark>yes | <mark>no (?) | <mark>no (?)
+<mark>downloadMap | <mark>- | <mark>Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | <mark>yes | <mark>mapId (string)<br>mapVersion (string, optional)<br>mapDownloadLink (string, optional)<br>mapHash   (string, optional) | <mark>.maps | <mark>yes | <mark>no (?) | <mark>no (?)
 <mark>deleteMap  | <mark>- | <mark>Trigger   the removal of a map from the vehicle storage.  | <mark>yes | <mark>mapId  (string)<br>mapVersion (string, optional) | <mark>.maps | <mark>yes | <mark>no | <mark>no
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
