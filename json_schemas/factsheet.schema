@@ -745,10 +745,6 @@
                 }
             }
         },
-        "localizationParameters": {
-            "type": "integer",
-            "description": "Detailed specification of localization"
-        },
          "agvStatus": {
             "type": "object",
             "properties": {
