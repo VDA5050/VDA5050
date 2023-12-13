@@ -662,7 +662,7 @@ Resolution:
 Resolution: 
 
 1. Vehicle does NOT take over the new order in its internal buffer. 
-2. Vehicle keeps the PREVIOUS order it its buffer. 
+2. Vehicle keeps the PREVIOUS order in its buffer. 
 3. The vehicle reports the warning "orderUpdateError"
 4. The vehicle continues with the executing the previous order. 
 
