@@ -1241,8 +1241,7 @@ The factsheet consists of the JSON-objects listed in the following table.
 | **protocolLimits**         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication. |
 | **protocolFeatures**       | JSON-object   | Supported features of VDA5050 protocol.                      |
 | **agvGeometry**            | JSON-object   | Detailed definition of AGV geometry.                         |
-| **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |
-| **localizationParameters** | JSON-object   | Detailed specification of localization.                      |
+| **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |                   |
 | ***agvStatus*** | JSON-object   | Summary of current software, hardware and network configuration.                      |
 
 #### typeSpecification
