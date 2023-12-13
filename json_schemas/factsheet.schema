@@ -748,6 +748,74 @@
         "localizationParameters": {
             "type": "integer",
             "description": "Detailed specification of localization"
+        },
+         "agvStatus": {
+            "type": "object",
+            "properties": {
+                "versions": {
+                    "type": "array",
+                    "description": "Array containing various hardware and software versions running on the vehicle.",
+                    "items": {
+                        "title": "version",
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "value"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "description": "The key of the version.",
+                                "examples": [
+                                    "softwareVersion",
+                                    "cameraVersion",
+                                    "plcSoftChecksum"
+                                ]
+                            },
+                            "value": {
+                                "type": "string",
+                                "description": "The value of the action parameter.",
+                                "examples": [
+                                    "v1.03.2",
+                                    "0620NL51805A0",
+                                    "0x4297F30C"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "network": {
+                    "type": "object",
+                    "properties": {
+                        "dnsServers": {
+                            "type": "array",
+                            "description": "List of DNS servers used by the vehicle.",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "localIpAddress": {
+                            "type": "string",
+                            "description": "Local IP address of the vehicle on the network."
+                        },
+                        "ntpServers": {
+                            "type": "array",
+                            "description": "List of NTP servers used by the vehicle.",
+                            "items": {
+                                "type": "string"
+                            }  
+                        },
+                        "netmask": {
+                            "type": "string",
+                            "description": "Network subnet mask."
+                        },
+                        "defaultGateway": {
+                            "type": "string",
+                            "description": "Default gateway used by the vehicle."
+                        }
+                    }
+                }
+            }
         }
     }
 }
