@@ -1331,7 +1331,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
-| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
+| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Chapter 6.7 in nodes and edges.|
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
