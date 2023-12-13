@@ -1065,16 +1065,17 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { |  | JSON-object |  
 errorType |  | string | Type/name of error 
-***errorReferences [errorReference]*** |  | array | Array of references to identify the source of the error (e.g., headerId, orderId, actionId, etc.).<br>For additional information see „Best practices“ chapter 8.
-*errorDescription* |  | string | Error description. 
+***errorReferences [errorReference]*** |  | array | Array of references (e.g. nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see „Best practices“ chapter 8.
+*errorDescription* |  | string | Verbose description providing details and possible causes of the error. 
+*errorHint* |  | string | Hint on how to approach or solve the reported error. 
 errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
 
 <a id="errorReferenceImpl"></a>
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **errorReference** { |  | JSON-object |  
-referenceKey |  | string | References the type of reference (e.g., headerId, orderId, actionId, etc.).
-referenceValue <br>} |  | string | References the value, which belongs to the reference key.
+referenceKey |  | string | Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.).
+referenceValue <br>} |  | string | The value that belongs to the reference key. For example, the id of the node where the error occurred.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|--- 
