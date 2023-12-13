@@ -1,12 +1,12 @@
 ![logo](./assets/logo.png)
 
-# :warning: **Working Version – Official version can be found on the VDA website!** :warning:
+# :warning: **Proposed Changes for Version 2.1.0 – Official version can be found on the VDA website!** :warning:
 
 # Interface for the communication between automated guided vehicles (AGV) and a master control 
 
 ## VDA 5050
 
-## Version 2.0.0
+## Version 2.1.0
 
 ![control system and automated guided vehicles](./assets/csagv.png) 
 
