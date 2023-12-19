@@ -1221,7 +1221,7 @@ The factsheet consists of the JSON-objects listed in the following table.
 | **agvGeometry**            | JSON-object   | Detailed definition of AGV geometry.                         |
 | **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |
 | **localizationParameters** | JSON-object   | Detailed specification of localization.                      |
-| ***agvStatus*** | JSON-object   | Summary of current software, hardware and network configuration.                      |
+| ***vehicleConfig*** | JSON-object   | Summary of current software and hardware versions on the vehicle and optional network information.                      |
 
 #### typeSpecification
 
@@ -1389,7 +1389,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 |&emsp; *description*           | string               | Free-form text: description of the load handling set.            |
 | }                       |                      |                                                           |
 
-#### agvStatus
+#### vehicleConfig
 
 This JSON-object details the software and hardware versions running on the vehicle, as well as a quick summary of network information.
 
@@ -1400,10 +1400,10 @@ This JSON-object details the software and hardware versions running on the vehic
 |&emsp; key                              | String              | Key of the software/hardware version used. (E.g softwareVersion)         |
 |&emsp; value                              | String              | The version corresponding to the key. (E.g v1.12.4-beta)         |
 | }                                    |                      |                                                        |
-| *network*  {      | JSON-object       | Information about the vehicle's network connection.                        |
+| *network*  {      | JSON-object       | Information about the vehicle's network connection. The listed information shall not be updated while the vehicle is operating.                       |
 |&emsp;&emsp; *dnsServers*                              | Array of String              | List of Domain Name Servers (DNS) used by the vehicle.          |
 |&emsp;&emsp; *ntpServers*                              | Array of String              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
-|&emsp;&emsp; *localIpAddress*                       | String              | The IP address under which the vehicle can be reached inside the network. |
+|&emsp;&emsp; *localIpAddress*                       | String              | A priori assigned IP address. Note that this IP address should not modified/changed during operations. |
 |&emsp;&emsp; *netmask*                       | String              | The subnet mask used in the network configuration |
 |&emsp;&emsp; *defaultGateway*                       | String              | The default gateway used by the vehicle |
 | &emsp;}                                    |                      |                                                        |
