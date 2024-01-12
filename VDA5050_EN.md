@@ -679,37 +679,35 @@ To enable an automatic map distribution and intelligent management of restarting
 
 The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master controller issuing a download command using an instantAction.
 
-<mark>Each map is uniquly identified through a mapId describing a certain area of the vehicles workspace and a mapVersion, indicating updates to previous versions. Before a new order is accepted, the vehicle must check, if all necessary maps in the necessary version are present on the vehicle.
+Each map is uniquely identified by a combination of a mapId and a mapVersion. The mapId describes a specific area of the vehicle's workspace, and the mapVersion indicates updates to previous versions. Before accepting a new job, the vehicle must check that there is a map on the vehicle for each mapId.
 
-In order to minimise downtime and facilitate the master controller's ability to synchronise the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle status channel. It's important to note that the transfer of a map to an AGV and the subsequent activation of the map are different processes. <mark>The activation of a pre-loaded map on a vehicle can be triggered either by the vehicle itself or by the Master Control using an instantAction.
-Maps are deleted by the Master Control using an Instant Action. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is indicated in the vehicle status.
+In order to minimize downtime and make it easier for the master controller to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle status channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the Master Control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the Master Control with another instantAction. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is shown in the vehicle status.
 
 #### 6.6.6.1 Maps in the Vehicle State
-<mark>Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion' and 'mapStatus', which can be either 'ENABLED' for maps currently in use, or 'READY' if the download of the map has been completed but the map is not yet in use. The status of the download process is indicated by the current action not being completed. Errors will be reported in the status as well.
+The .agvPostion.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the status.
 
-Note that <mark>multiple maps with different mapIds</mark> can be set to 'ENABLED' at a time. <mark>There can always only be one version of maps with the same mapId enabled. </mark> If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
+Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
 
 #### 6.6.6.2 Map Download
-Map download is triggered through the instant action 'downloadMap' by the master control. This command includes the mandatory parameters 'mapId' and 'mapDownloadLink', under which the map is stored on the map server and which is accessable for the vehicle. 
+The map download is triggered by the 'downloadMap' instant action from the Master Control. This command contains the mandatory parameters 'mapId' and 'mapDownloadLink' under which the map is stored on the map server and which can be accessed by the vehicle.
 
-The AGV sets the 'actionStatus' to 'running' as soon as it begins downloading the map file. Upon successful completion of the download, the 'actionStatus' is updated to 'finished'. If the download is unsuccessful, the status is set to 'failed'. Once the download is successfully completed, the map must be appended to the vehicle list of maps in the state.
+The AGV sets the 'actionStatus' to 'running' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'finished'. If the download is unsuccessful, the status is set to 'failed'. Once the download has been successfully completed, the map must be added to the vehicle list of maps in the state.
 
-It is critical to ensure that the process of downloading a map does not alter, delete, activate, or deactivate any existing maps on the vehicle.
+It is important to ensure that the process of downloading a map does not modify, delete, enable or disable any existing maps on the vehicle.
 
 #### 6.6.6.3 Enable Downloaded Maps
-<mark>Multiple methods are available for activating a downloaded map on the vehicle:
-1. <mark>**Using the Downloaded Map in an Order**: Enable the map as part of executing an order using the new 'mapId' and optional 'mapVersion' in the node object.
-2. <mark>**Setting the Vehicle Position on a New Map**: Use the 'initPosition' instant action to define the vehicle's position on the new map.
-3. <mark>**Activating a Map Without Updating Vehicle Position**: Use the 'activateMap' instant action to set a map as active on the vehicle, without altering or updating the vehicle's position.
+1. **Set the vehicle position on a new map**: Use the 'initPosition' instant action to set the vehicle position on the new map.
+2. **Enable a map without updating the vehicle position**: Use the 'enableMap' instant action to set a map as active on the vehicle without changing or updating the vehicle's position.
+3. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly.
 
-<mark>To ensure that the maps used for an order are all up to date, it is essential to check that each map passed during order execution contains at least one node (see Figure X). To do this, the 'mapId' and optional 'mapVersion' of the maps on the vehicle must match those specified in the order. Any discrepancy must result in the order being rejected.
+It is important to verify that each map passed during order execution contains at least one node (see Figure X) to ensure that the correct maps are used for an order. To do this, the 'mapId' of the maps on the vehicle must match those specified in the order. Any discrepancy must result in the order being rejected.
 
-![Figure X Correct use of an order using multiple maps.](./assets/use_of_multiple_maps_one_order.png)
-><mark>Figure X Correct use of an order spanning across multiple maps.
+![Figure 12 Correct use of an order using multiple maps.](./assets/Figure12.png)
+>Figure 12 Correct use of an order spanning across multiple maps.
 
-#### <mark>6.6.6.4 Delete Maps on the vehicle
-<mark>The master control can request the deletion of a specific map from a vehicle. This is done by the instant action 'deleteMap'. To manage storage efficiently and prevent a vehicle from running out of space, the vehicle can delete a map that is not currently active by itself. However, this should only be done if there is a lack of free space. If sufficient storage is available, the vehicle should not delete any maps.
-Following the successful deletion of a map, it is essential to remove that map's entry from the vehicles list of maps in the vehicle state.
+#### 6.6.6.4 Delete Maps on the vehicle
+The master control can request the deletion of a specific map from a vehicle. This is done with the instant action 'deleteMap'. To manage storage efficiently and to prevent a vehicle from running out of memory space, the vehicle can delete a map that is not currently enabled by itself. However, this should only be done if there is a lack of free space. If there is sufficient memory, the vehicle should not delete any maps.
+After successfully deleting a map, it is important to remove that map's entry from the vehicle's list of maps in the vehicle state.
 
 ## 6.7 Implementation of the order message
 
@@ -745,7 +743,6 @@ y | m | float64 | Y-position on the map in reference to the map coordinate syste
 *allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-<mark>*mapVersion* |  | <mark>string | <mark>Use map with mapId and mapVersion.<br> Optional: if not set use active version of map/mapId.
 *mapDescription* <br> } |  | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description 
@@ -823,10 +820,10 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. <mark>Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set take the already active version of map/mapId.</mark> | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br><mark>mapVersion (string, optional)</mark><br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>#TODO | yes | yes<br>(Elevator) | no 
-<mark>enableMap (notDefinedYet) | <mark>- | <mark>Enable a previously downloaded map explecitly to be used in orders without initializing a new position. | <mark>yes | <mark>mapId  (string)<br>mapVersion (string, optional) | <mark>#TODO | <mark>yes | <mark>no (?) | <mark>no (?)
-downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | yes | mapId (string)<br><mark>mapVersion (string)</mark><br>mapDownloadLink (string, optional)<br>mapHash   (string, optional) | .maps | yes | no | no
-deleteMap  | - | Trigger the removal of a map from the vehicle storage.  | yes | mapId  (string)<br><mark>mapVersion (string) | .maps | yes | no | no
+initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set use the already enabled version of map/mapId. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>mapVersion (string, optional)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
+enableMap | - | Enable a previously downloaded map explecitly to be used in orders without initializing a new position. | yes | mapId  (string)mapVersion (string) | .maps | yes | yes | no
+downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string, optional)<br>mapHash   (string, optional) | .maps | yes | no | no
+deleteMap  | - | Trigger the removal of a map from the vehicle memory.  | yes | mapId  (string)<br>mapVersion (string) | .maps | yes | no | no
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
@@ -853,8 +850,8 @@ stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV suppo
 startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error. 
 stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error. 
 initPosition | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
-| <mark>downloadMap | <mark>Initialize   the connection to the map server.    | <mark>AGV is downloading the map, until download finished. | - | <mark>AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to READY. | <mark>Download failed, updated in vehicle   state. Connection lost, Map server unreachable, mapId/mapVersion not existing on map server |
-| <mark>deleteMap   | <mark>- | <mark>AGV deletes map with requested mapId from its internal storage.    | <mark>- | <mark>AGV removes mapId/mapVersion from its state. |    <mark>Can not delete map, if map is currently in use. Already deleted |
+| downloadMap | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to DISABLED. | Download failed, updated in vehicle state. Connection lost, Map server unreachable, mapId/mapVersion not existing on map server |
+| deleteMap   | - | AGV deletes map with requested mapId and mapVersion from its internal memory.    | - | AGV removes mapId/mapVersion from its state. |    Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
 stateRequest | - | - | - | The state has been communicated | - 
 logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
 pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
@@ -891,7 +888,7 @@ actions [action] | | array | Array of actions that need to be performed immediat
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
-See also Figure 12 for the different transitions of an actionStatus.
+See also Figure 13 for the different transitions of an actionStatus.
 
 
 
@@ -927,8 +924,8 @@ After nodes are released by master control, the AGV is not allowed to change its
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
 
-![Figure 12 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/Figure12.png) 
->Figure 12 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
+![Figure 13 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/Figure13.png) 
+>Figure 13 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
 
@@ -948,8 +945,8 @@ The traversal of the node also marks the moment, when the AGV enters the followi
 The edges actions must now be triggered. 
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
-![Figure 13 nodeStates, edgeStates, actionStates during order handling](./assets/Figure13.png)
->Figure 13 nodeStates, edgeStates, actionStates during order handling
+![Figure 14 nodeStates, edgeStates, actionStates during order handling](./assets/Figure14.png)
+>Figure 14 nodeStates, edgeStates, actionStates during order handling
 
 
 
@@ -1015,7 +1012,7 @@ Object structure | Unit | Data type | Description
 mapId | | string | ID of the map.
 mapVersion | | string | Version of the map.
 *mapDescription* | | string | 
-mapStatus <br>}| | string | <mark>Enum {ENABLED, READY}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is not currently enabled on the AGV and thus could be enabled or deleted by request.
+mapStatus <br>}| | string | Enum {ENABLED, READY}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is not currently enabled on the AGV and thus could be enabled or deleted by request.
 
 
 Object structure | Unit | Data type | Description 
@@ -1167,10 +1164,10 @@ FAILED | Action could not be finished for whatever reason.
 
 >Table 1 The acceptable values for the actionStatus field
 
-A state transition diagram is provided in Figure 14. 
+A state transition diagram is provided in Figure 15. 
 
-![Figure 14 All possible status transitions for actionStates](./assets/Figure14.png)
->Figure 14 All possible status transitions for actionStates
+![Figure 15 All possible status transitions for actionStates](./assets/Figure15.png)
+>Figure 15 All possible status transitions for actionStates
 
 
 
@@ -1189,10 +1186,10 @@ HARD | Action must not be executed in parallel with other actions. Vehicle must 
 
 >Table 2 action blocking types
 
-If there are multiple actions on the same node with different blocking types, Figure 15 describes how the AGV should handle these actions.
+If there are multiple actions on the same node with different blocking types, Figure 16 describes how the AGV should handle these actions.
 
-![Figure 15 Handling multiple actions](./assets/Figure15.png)
->Figure 15 Handling multiple actions
+![Figure 16 Handling multiple actions](./assets/Figure16.png)
+>Figure 16 Handling multiple actions
 
 
 
