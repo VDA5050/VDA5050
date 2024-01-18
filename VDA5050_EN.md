@@ -77,6 +77,7 @@ Version 2.0
 [6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#6643-vehicle-gets-a-new-order-with-the-same-orderid-but-a-lower-orderupdateid-than-the-current-orderupdateid)<br>
 [6.6.5 Maps](#665-maps)<br>
 [6.7 Implementation of the order message](#67-implementation-of-the-order-message)<br>
+[6.7.1 Corridor](#Corridor)<br>
 [6.8 Actions](#68-actions)<br>
 [6.8.1 Predefined action definitions, their parameters, effects and scope](#681-predefined-action-definition-their-parameters-effects-and-scope)<br>
 [6.8.2 Predefined action definitions, their parameters, effects and scope](#682-predefined-action-definitions-description-of-their-states)<br>
@@ -722,7 +723,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
+*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.<br> If this attribute is not set on an edge end node and the corridor attribute is set on the corresponding edge no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer)
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } |  | string | Additional information on the map.
@@ -755,6 +756,7 @@ endNodeId |  | string | nodeId of endNode.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as a NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
+***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.<br><br> Optional<br>
 **actions [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
@@ -772,6 +774,41 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 *weight* |  | float64 | Range: [0.0 ... float64.max]<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
 } |  |  |
 
+Object structure | Unit | Data type | Description
+---|---|---|---
+_**corridor**_ { |  | JSON-object |
+leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
+rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
+*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
+
+
+### <a name = "Corridor"></a> 6.7.1 Corridor attribute
+
+The optional corridor edge attribute enables the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
+In this context the trajectory means the pre-planned path the vehicle would be driving if no corridor attribute is defined.
+The behavior of a vehicle which uses the corridor attribute of an edge shall be still the behavior of a line guide vehicle with the ability to avoid obstacles.
+
+(*Remark:
+ An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory a vehicle follows driving from the start node to the end node.
+Depending on the vehicle type the trajectory a vehicle takes between the start and the end node is either defined by MC via the trajectory edge attribute or deposed as predefined trajectories on the vehicle.
+Depending on the internal vehicle state the selected trajectory may varying.*)
+
+![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
+>Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "KC").
+
+The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
+The optional field `corridorRefPoint` specifies whether the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
+The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
+
+The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
+If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an error.
+The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
+
+(*Remark:
+Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance has to be considered during initial operation and if MC makes
+traffic control decision based on the vehicles footprint MC shall consider the possible deviation from the trajectory too.*)
+
+See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
 ## 6.8 Actions
 
@@ -802,7 +839,7 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
+initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. | yes | x  (float64)<br>y (float64)<br>theta (float64)<br>mapId  (string)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId | yes | yes<br>(Elevator) | no 
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the paramater lhd needs to be present (e.g. LHD1). <br>The paramater stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as running in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
@@ -909,6 +946,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still m
 
 The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
+If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be meet additionally.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceNumber` to the traversed node’s values.
 
@@ -923,7 +961,6 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 ![Figure 13 nodeStates, edgeStates, actionStates during order handling](./assets/Figure13.png)
 >Figure 13 nodeStates, edgeStates, actionStates during order handling
-
 
 
 ### 6.10.3 Base request 
