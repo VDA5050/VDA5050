@@ -1180,7 +1180,7 @@ The parallel execution of actions is governed by their respective `blockingType`
 
 Actions can have three distinct blocking types, described in Table 2. 
 
-actionStatus | Description 
+blockingType | Description 
 ---|---
 NONE | Action can be executed in parallel with other actions and while the vehicle is driving.
 SOFT | Action can be executed in parallel with other actions. Vehicle must not drive.
