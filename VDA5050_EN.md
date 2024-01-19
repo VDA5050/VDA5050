@@ -6,7 +6,7 @@
 
 ## VDA 5050
 
-## Version 2.0.0
+## Version 2.1.0
 
 ![control system and automated guided vehicles](./assets/csagv.png) 
 
@@ -43,7 +43,7 @@ www.vda.de
 Association of the Automotive Industry (VDA)
 Reproduction and any other form of reproduction is only permitted with specification of the source.
 
-Version 2.0
+Version 2.1.0
 
 
 
@@ -679,7 +679,7 @@ To ensure consistent navigation among different types of AGV, the position is al
 For the differentiation between different levels a unique mapId is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards. 
 A positive rotation therefore is to be understood as a counterclockwise rotation. 
-The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing skywards. 
+The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing skywards. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame.
 This is in accordance with chapter 2.11 in DIN ISO 8855.
 
 ![Figure 10 Coordinate system with sample AGV and orientation](./assets/Figure10.png)
@@ -724,7 +724,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.<br> If this attribute is not set on an edge end node and the corridor attribute is set on the corresponding edge no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer)
+*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0.0: no deviation is allowed. <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } |  | string | Additional information on the map.
@@ -949,7 +949,7 @@ The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be meet additionally.
 
-The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceNumber` to the traversed node’s values.
+The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node’s values.
 
 As soon as the AGV reports the node as traversed, the AGV must trigger the actions associated with the node, if any.
 
@@ -1002,7 +1002,7 @@ orderId|  | string | Unique order identification of the current order or the pre
 orderUpdateId |  | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
 *zoneSetId* |  |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId |  | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., „node7”). Empty string (""), if no lastNodeId is available.
-lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node.
+lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"0" if no lastNodeSequenced is available.
 **nodeStates [nodeState]** |  |array | Array of nodeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
 **edgeStates [edgeState]** |  |array | Array of edgeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
 ***agvPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGV without the capability to localize themselves, e.g., line guided AGVs.
@@ -1012,7 +1012,7 @@ driving |  | boolean | “true”: indicates, that the AGV is driving and/or rot
 *paused* |  | boolean | “true”: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>“false”: The AGV is currently not in a paused state.
 *newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeId“. <br>Distance is in meters.
-**actionStates [actionState]** |  | array | Contains a list of the current actions and the actions, which are yet to be finished. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. <br><br>The action state is kept until a new order is received.
+**actionStates [actionState]** |  | array | Contains a List of all actions from the current order and all received instantActions since the last order. The action state is kept until a new order is received. States for running instant actions are kept. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription.
 **batteryState** |  | JSON-object | Contains all battery-related information.
 operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6. 
 **errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
@@ -1305,6 +1305,8 @@ This JSON-object describes physical properties of the AGV.
 |-----------------|---------------|-------------------------------------------------------|
 | speedMin        | float64       | [m/s] Minimal controlled continuous speed of the AGV.  |
 | speedMax        | float64       | [m/s] Maximum speed of the AGV.                        |
+| *angularSpeedMin*        | float64       | [Rad/s] Minimal controlled continuous rotation speed of the AGV.  |
+| *angularSpeedMax*        | float64       | [Rad/s] Maximum rotation speed of the AGV.                        |
 | accelerationMax | float64       | [m/s²] Maximum acceleration with maximum load.         |
 | decelerationMax | float64       | [m/s²] Maximum deceleration with maximum load.         |
 | heightMin       | float64       | [m] Minimum height of AGV.                             |
@@ -1370,7 +1372,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
-| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters<br/>If not defined, the action has no parameters |
+| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Chapter 6.7 within nodes and edges.|
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
