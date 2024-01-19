@@ -745,7 +745,7 @@
                 }
             }
         },
-         "agvStatus": {
+         "vehicleConfig": {
             "type": "object",
             "properties": {
                 "versions": {
@@ -792,7 +792,7 @@
                         },
                         "localIpAddress": {
                             "type": "string",
-                            "description": "Local IP address of the vehicle on the network."
+                            "description": "A priori assigned IP address. Note that this IP address should not modified/changed during operations."
                         },
                         "ntpServers": {
                             "type": "array",
