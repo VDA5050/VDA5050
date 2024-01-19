@@ -1,4 +1,4 @@
-This markdown file is the original UML diagram from which Figure8.png was created. Changes in the diagram can be tracked via changes in this file.
+This markdown file is the original UML diagram from which processing_order_update.png was created. Changes in the diagram can be tracked via changes in this file.
 
 ```
 @startuml
