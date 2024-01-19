@@ -51,6 +51,41 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
+        "maps":{
+            "type": "array",
+            "description": "Array of map-objects, that are currently stored on the vehicle.",
+            "items": {
+                "type": "object",
+                "title": "map",
+                "required": [
+                    "mapId",
+                    "mapVersion",
+                    "mapStatus"
+                ],
+                "properties": {
+                    "mapId": {
+                        "type": "string",
+                        "description": "ID of the map describing a defined area of the vehicles workspace."
+                    },
+                    "mapVersion": {
+                        "type": "string",
+                        "description": "Version of the map."
+                    },
+                    "mapDescription": {
+                        "type": "string",
+                        "description": "Additional information on the map."
+                    },
+                    "mapStatus": {
+                        "type": "string",
+                        "description": "Information on the status of the map indicating, if a map is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "enum": [
+                            "ENABLED",
+                            "READY"
+                        ]
+                    }
+                }
+            }
+        },
         "orderId": {
             "type": "string",
             "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
