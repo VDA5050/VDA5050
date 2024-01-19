@@ -15,519 +15,460 @@
     ],
     "subtopic": "/factsheet",
     "type": "object",
-    "headerId": {
-        "type": "integer",
-        "description": "header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
-        "minimum": 0
-    },
-    "timestamp": {
-        "type": "string",
-        "format": "date-time",
-        "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
-        "examples": [
-            "1991-03-11T11:40:03.12Z"
-        ]
-    },
-    "version": {
-        "type": "string",
-        "description": "Version of the VD[M]A-5050 protocol [Major].[Minor].[Patch] (e.g. 1.3.2)",
-        "examples": [
-            "2.0.0"
-        ]
-    },
-    "manufacturer": {
-        "type": "string",
-        "description": "Manufacturer of the AGV"
-    },
-    "serialNumber": {
-        "type": "string",
-        "description": "Serial number of the AGV"
-    },
-    "typeSpecification": {
-        "type": "object",
-        "required": [
-            "seriesName",
-            "agvKinematic",
-            "agvClass",
-            "maxLoadMass",
-            "localizationTypes",
-            "navigationTypes"
-        ],
-        "description": "These parameters generally specify the class and the capabilities of the AGV",
-        "properties": {
-            "seriesName": {
-                "type": "string",
-                "description": "Free text generalized series name as specified by manufacturer"
-            },
-            "seriesDescription": {
-                "type": "string",
-                "description": "Free text human readable description of the AGV type series"
-            },
-            "agvKinematic": {
-                "type": "string",
-                "description": "simplified description of AGV kinematics-type.",
-                "enum": [
-                    "DIFF",
-                    "OMNI",
-                    "THREEWHEEL"
-                ]
-            },
-            "agvClass": {
-                "type": "string",
-                "description": "Simplified description of AGV class.",
-                "enum": [
-                    "FORKLIFT",
-                    "CONVEYOR",
-                    "TUGGER",
-                    "CARRIER"
-                ]
-            },
-            "maxLoadMass": {
-                "type": "number",
-                "description": "maximum loadable mass",
-                "unit": "kg",
-                "minimum": 0
-            },
-            "localizationTypes": {
-                "type": "array",
-                "description": "simplified description of localization type",
-                "items": {
+    "properties":{
+        "headerId": {
+            "type": "integer",
+            "description": "header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp in ISO8601 format.",
+            "examples": [
+                "1991-03-11T11:40:03.12Z"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the VD[M]A-5050 protocol [Major].[Minor].[Patch] (e.g. 1.3.2)",
+            "examples": [
+                "2.0.0"
+            ]
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the AGV"
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the AGV"
+        },
+        "typeSpecification": {
+            "type": "object",
+            "required": [
+                "seriesName",
+                "agvKinematic",
+                "agvClass",
+                "maxLoadMass",
+                "localizationTypes",
+                "navigationTypes"
+            ],
+            "description": "These parameters generally specify the class and the capabilities of the AGV",
+            "properties": {
+                "seriesName": {
                     "type": "string",
-                    "enum": [
-                        "NATURAL",
-                        "REFLECTOR",
-                        "RFID",
-                        "DMC",
-                        "SPOT",
-                        "GRID"
-                    ]
-                }
-            },
-            "navigationTypes": {
-                "type": "array",
-                "description": "List of path planning types supported by the AGV, sorted by priority",
-                "items": {
+                    "description": "Free text generalized series name as specified by manufacturer"
+                },
+                "seriesDescription": {
                     "type": "string",
+                    "description": "Free text human readable description of the AGV type series"
+                },
+                "agvKinematic": {
+                    "type": "string",
+                    "description": "simplified description of AGV kinematics-type.",
                     "enum": [
-                        "PHYSICAL_LINDE_GUIDED",
-                        "VIRTUAL_LINE_GUIDED",
-                        "AUTONOMOUS"
+                        "DIFF",
+                        "OMNI",
+                        "THREEWHEEL"
                     ]
-                }
-            }
-        }
-    },
-    "physicalParameters": {
-        "type": "object",
-        "required": [
-            "speedMin",
-            "speedMax",
-            "accelerationMax",
-            "decelerationMax",
-            "heightMax",
-            "width",
-            "length"
-        ],
-        "description": "These parameters specify the basic physical properties of the AGV",
-        "properties": {
-            "speedMin": {
-                "type": "number",
-                "description": "minimal controlled continuous speed of the AGV",
-                "unit": "m/s"
-            },
-            "speedMax": {
-                "type": "number",
-                "description": "maximum speed of the AGV",
-                "unit": "m/s"
-            },
-            "accelerationMax": {
-                "type": "number",
-                "description": "maximum acceleration with maximum load",
-                "unit": "m/s^2"
-            },
-            "decelerationMax": {
-                "type": "number",
-                "description": "maximum deceleration with maximum load",
-                "unit": "m/s^2"
-            },
-            "heightMin": {
-                "type": "number",
-                "description": "minimum height of AGV",
-                "unit": "m"
-            },
-            "heightMax": {
-                "type": "number",
-                "description": "maximum height of AGV",
-                "unit": "m"
-            },
-            "width": {
-                "type": "number",
-                "description": "width of AGV",
-                "unit": "m"
-            },
-            "length": {
-                "type": "number",
-                "description": "length of AGV",
-                "unit": "m"
-            }
-        }
-    },
-    "protocolLimits": {
-        "type": "object",
-        "required": [
-            "maxStringLens",
-            "maxArrayLens",
-            "timing"
-        ],
-        "description": "This JSON-object describes the protocol limitations of the AGV. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
-        "properties": {
-            "maxStringLens": {
-                "type": "object",
-                "description": "maximum lengths of strings",
-                "properties": {
-                    "msgLen": {
-                        "type": "integer",
-                        "description": "maximum MQTT Message length"
-                    },
-                    "topicSerialLen": {
-                        "type": "integer",
-                        "description": "maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
-                    },
-                    "topicElemLen": {
-                        "type": "integer",
-                        "description": "maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
-                    },
-                    "idLen": {
-                        "type": "integer",
-                        "description": "maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
-                    },
-                    "idNumericalOnly": {
-                        "type": "boolean",
-                        "description": "If true ID-strings need to contain numerical values only"
-                    },
-                    "enumLen": {
-                        "type": "integer",
-                        "description": "maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
-                    },
-                    "loadIdLen": {
-                        "type": "integer",
-                        "description": "maximum length of loadId Strings"
+                },
+                "agvClass": {
+                    "type": "string",
+                    "description": "Simplified description of AGV class.",
+                    "enum": [
+                        "FORKLIFT",
+                        "CONVEYOR",
+                        "TUGGER",
+                        "CARRIER"
+                    ]
+                },
+                "maxLoadMass": {
+                    "type": "number",
+                    "description": "maximum loadable mass",
+                    "unit": "kg",
+                    "minimum": 0
+                },
+                "localizationTypes": {
+                    "type": "array",
+                    "description": "simplified description of localization type",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "NATURAL",
+                            "REFLECTOR",
+                            "RFID",
+                            "DMC",
+                            "SPOT",
+                            "GRID"
+                        ]
                     }
-                }
-            },
-            "maxArrayLens": {
-                "type": "object",
-                "description": "maximum lengths of arrays",
-                "order.nodes": {
-                    "type": "integer",
-                    "description": "maximum number of nodes per order processable by the AGV"
                 },
-                "order.edges": {
-                    "type": "integer",
-                    "description": "maximum number of edges per order processable by the AGV"
-                },
-                "node.actions": {
-                    "type": "integer",
-                    "description": "maximum number of actions per node processable by the AGV"
-                },
-                "edge.actions": {
-                    "type": "integer",
-                    "description": "maximum number of actions per edge processable by the AGV"
-                },
-                "actions.actionsParameters": {
-                    "type": "integer",
-                    "description": "maximum number of parameters per action processable by the AGV"
-                },
-                "instantActions": {
-                    "type": "integer",
-                    "description": "maximum number of instant actions per message processable by the AGV"
-                },
-                "trajectory.knotVector": {
-                    "type": "integer",
-                    "description": "maximum number of knots per trajectory processable by the AGV"
-                },
-                "trajectory.controlPoints": {
-                    "type": "integer",
-                    "description": "maximum number of control points per trajectory processable by the AGV"
-                },
-                "state.nodeStates": {
-                    "type": "integer",
-                    "description": "maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV"
-                },
-                "state.edgeStates": {
-                    "type": "integer",
-                    "description": "maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV"
-                },
-                "state.loads": {
-                    "type": "integer",
-                    "description": "maximum number of load-objects sent by the AGV"
-                },
-                "state.actionStates": {
-                    "type": "integer",
-                    "description": "maximum number of actionStates sent by the AGV"
-                },
-                "state.errors": {
-                    "type": "integer",
-                    "description": "maximum number of errors sent by the AGV in one state-message"
-                },
-                "state.information": {
-                    "type": "integer",
-                    "description": "maximum number of information objects sent by the AGV in one state-message"
-                },
-                "error.errorReferences": {
-                    "type": "integer",
-                    "description": "maximum number of error references sent by the AGV for each error"
-                },
-                "information.infoReferences": {
-                    "type": "integer",
-                    "description": "maximum number of info references sent by the AGV for each information"
-                }
-            },
-            "timing": {
-                "type": "object",
-                "required": [
-                    "minOrderInterval",
-                    "minStateInterval"
-                ],
-                "description": "timing information",
-                "properties": {
-                    "minOrderInterval": {
-                        "type": "number",
-                        "description": "minimum interval sending order messages to the AGV",
-                        "unit": "s"
-                    },
-                    "minStateInterval": {
-                        "type": "number",
-                        "description": "minimum interval for sending state-messages",
-                        "unit": "s"
-                    },
-                    "defaultStateInterval": {
-                        "type": "number",
-                        "description": "default interval for sending state-messages if not defined, the default value from the main document is used",
-                        "unit": "s"
-                    },
-                    "visualizationInterval": {
-                        "type": "number",
-                        "description": "default interval for sending messages on visualization topic",
-                        "unit": "s"
+                "navigationTypes": {
+                    "type": "array",
+                    "description": "List of path planning types supported by the AGV, sorted by priority",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "PHYSICAL_LINE_GUIDED",
+                            "VIRTUAL_LINE_GUIDED",
+                            "AUTONOMOUS"
+                        ]
                     }
                 }
             }
-        }
-    },
-    "protocolFeatures": {
-        "type": "object",
-        "required": [
-            "optionalParameters",
-            "agvActions"
-        ],
-        "description": "Supported features of VDA5050 protocol",
-        "properties": {
-            "optionalParameters": {
-                "type": "array",
-                "description": "list of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the AGV.",
-                "items": {
+        },
+        "physicalParameters": {
+            "type": "object",
+            "required": [
+                "speedMin",
+                "speedMax",
+                "accelerationMax",
+                "decelerationMax",
+                "heightMax",
+                "width",
+                "length"
+            ],
+            "description": "These parameters specify the basic physical properties of the AGV",
+            "properties": {
+                "speedMin": {
+                    "type": "number",
+                    "description": "minimal controlled continuous speed of the AGV",
+                    "unit": "m/s"
+                },
+                "speedMax": {
+                    "type": "number",
+                    "description": "maximum speed of the AGV",
+                    "unit": "m/s"
+                },
+                "accelerationMax": {
+                    "type": "number",
+                    "description": "maximum acceleration with maximum load",
+                    "unit": "m/s^2"
+                },
+                "decelerationMax": {
+                    "type": "number",
+                    "description": "maximum deceleration with maximum load",
+                    "unit": "m/s^2"
+                },
+                "heightMin": {
+                    "type": "number",
+                    "description": "minimum height of AGV",
+                    "unit": "m"
+                },
+                "heightMax": {
+                    "type": "number",
+                    "description": "maximum height of AGV",
+                    "unit": "m"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "width of AGV",
+                    "unit": "m"
+                },
+                "length": {
+                    "type": "number",
+                    "description": "length of AGV",
+                    "unit": "m"
+                }
+            }
+        },
+        "protocolLimits": {
+            "type": "object",
+            "required": [
+                "maxStringLens",
+                "maxArrayLens",
+                "timing"
+            ],
+            "description": "This JSON-object describes the protocol limitations of the AGV. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
+            "properties": {
+                "maxStringLens": {
+                    "type": "object",
+                    "description": "maximum lengths of strings",
+                    "properties": {
+                        "msgLen": {
+                            "type": "integer",
+                            "description": "maximum MQTT Message length"
+                        },
+                        "topicSerialLen": {
+                            "type": "integer",
+                            "description": "maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
+                        },
+                        "topicElemLen": {
+                            "type": "integer",
+                            "description": "maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
+                        },
+                        "idLen": {
+                            "type": "integer",
+                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                        },
+                        "idNumericalOnly": {
+                            "type": "boolean",
+                            "description": "If true ID-strings need to contain numerical values only"
+                        },
+                        "enumLen": {
+                            "type": "integer",
+                            "description": "maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
+                        },
+                        "loadIdLen": {
+                            "type": "integer",
+                            "description": "maximum length of loadId Strings"
+                        }
+                    }
+                },
+                "maxArrayLens": {
+                    "type": "object",
+                    "description": "maximum lengths of arrays",
+                    "properties": {
+                        "order.nodes": {
+                            "type": "integer",
+                            "description": "maximum number of nodes per order processable by the AGV"
+                        },
+                        "order.edges": {
+                            "type": "integer",
+                            "description": "maximum number of edges per order processable by the AGV"
+                        },
+                        "node.actions": {
+                            "type": "integer",
+                            "description": "maximum number of actions per node processable by the AGV"
+                        },
+                        "edge.actions": {
+                            "type": "integer",
+                            "description": "maximum number of actions per edge processable by the AGV"
+                        },
+                        "actions.actionsParameters": {
+                            "type": "integer",
+                            "description": "maximum number of parameters per action processable by the AGV"
+                        },
+                        "instantActions": {
+                            "type": "integer",
+                            "description": "maximum number of instant actions per message processable by the AGV"
+                        },
+                        "trajectory.knotVector": {
+                            "type": "integer",
+                            "description": "maximum number of knots per trajectory processable by the AGV"
+                        },
+                        "trajectory.controlPoints": {
+                            "type": "integer",
+                            "description": "maximum number of control points per trajectory processable by the AGV"
+                        },
+                        "state.nodeStates": {
+                            "type": "integer",
+                            "description": "maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV"
+                        },
+                        "state.edgeStates": {
+                            "type": "integer",
+                            "description": "maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV"
+                        },
+                        "state.loads": {
+                            "type": "integer",
+                            "description": "maximum number of load-objects sent by the AGV"
+                        },
+                        "state.actionStates": {
+                            "type": "integer",
+                            "description": "maximum number of actionStates sent by the AGV"
+                        },
+                        "state.errors": {
+                            "type": "integer",
+                            "description": "maximum number of errors sent by the AGV in one state-message"
+                        },
+                        "state.information": {
+                            "type": "integer",
+                            "description": "maximum number of information objects sent by the AGV in one state-message"
+                        },
+                        "error.errorReferences": {
+                            "type": "integer",
+                            "description": "maximum number of error references sent by the AGV for each error"
+                        },
+                        "information.infoReferences": {
+                            "type": "integer",
+                            "description": "maximum number of info references sent by the AGV for each information"
+                        }
+                    }
+                },
+                "timing": {
                     "type": "object",
                     "required": [
-                        "parameter",
-                        "support"
+                        "minOrderInterval",
+                        "minStateInterval"
                     ],
+                    "description": "timing information",
                     "properties": {
-                        "parameter": {
-                            "type": "string",
-                            "description": "full name of optional parameter, e.g. “order.nodes.nodePosition.allowedDeviationTheta”"
+                        "minOrderInterval": {
+                            "type": "number",
+                            "description": "minimum interval sending order messages to the AGV",
+                            "unit": "s"
                         },
-                        "support": {
-                            "type": "string",
-                            "description": "type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper AGV-operation.",
-                            "enum": [
-                                "SUPPORTED",
-                                "REQUIRED"
-                            ]
+                        "minStateInterval": {
+                            "type": "number",
+                            "description": "minimum interval for sending state-messages",
+                            "unit": "s"
                         },
-                        "description": {
-                            "type": "string",
-                            "description": "free text. Description of optional parameter. E.g. Reason, why the optional parameter ‚direction‘ is necessary for this AGV-type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
+                        "defaultStateInterval": {
+                            "type": "number",
+                            "description": "default interval for sending state-messages if not defined, the default value from the main document is used",
+                            "unit": "s"
+                        },
+                        "visualizationInterval": {
+                            "type": "number",
+                            "description": "default interval for sending messages on visualization topic",
+                            "unit": "s"
                         }
                     }
                 }
-            },
-            "agvActions": {
-                "type": "array",
-                "description": "list of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
-                "items": {
-                    "required": [
-                        "actionType",
-                        "actionScopes"
-                    ],
-                    "type": "object",
-                    "properties": {
-                        "actionType": {
-                            "type": "string",
-                            "description": "unique actionType corresponding to action.actionType"
-                        },
-                        "actionDescription": {
-                            "type": "string",
-                            "description": "free text: description of the action"
-                        },
-                        "actionScopes": {
-                            "type": "array",
-                            "description": "list of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges.",
-                            "items": {
+            }
+        },
+        "protocolFeatures": {
+            "type": "object",
+            "required": [
+                "optionalParameters",
+                "agvActions"
+            ],
+            "description": "Supported features of VDA5050 protocol",
+            "properties": {
+                "optionalParameters": {
+                    "type": "array",
+                    "description": "list of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the AGV.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "parameter",
+                            "support"
+                        ],
+                        "properties": {
+                            "parameter": {
                                 "type": "string",
+                                "description": "full name of optional parameter, e.g. “order.nodes.nodePosition.allowedDeviationTheta”"
+                            },
+                            "support": {
+                                "type": "string",
+                                "description": "type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper AGV-operation.",
                                 "enum": [
-                                    "INSTANT",
-                                    "NODE",
-                                    "EDGE"
+                                    "SUPPORTED",
+                                    "REQUIRED"
                                 ]
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "free text. Description of optional parameter. E.g. Reason, why the optional parameter ‚direction‘ is necessary for this AGV-type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
                             }
-                        },
-                        "actionParameters": {
-                            "type": "array",
-                            "description": "list of parameters. if not defined, the action has no parameters",
-                            "items": {
-                                "type": "object",
-                                "required": [
-                                    "key",
-                                    "valueDataType"
-                                ],
-                                "properties": {
-                                    "key": {
-                                        "type": "string",
-                                        "description": "key-String for Parameter"
-                                    },
-                                    "valueDataType": {
-                                        "type": "string",
-                                        "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY",
-                                        "enum": [
-                                            "BOOL",
-                                            "NUMBER",
-                                            "INTEGER",
-                                            "FLOAT",
-                                            "STRING",
-                                            "OBJECT",
-                                            "ARRAY"
-                                        ]
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "description": "free text: description of the parameter"
-                                    },
-                                    "isOptional": {
-                                        "type": "boolean",
-                                        "description": "True: optional parameter"
+                        }
+                    }
+                },
+                "agvActions": {
+                    "type": "array",
+                    "description": "list of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
+                    "items": {
+                        "required": [
+                            "actionType",
+                            "actionScopes"
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "actionType": {
+                                "type": "string",
+                                "description": "unique actionType corresponding to action.actionType"
+                            },
+                            "actionDescription": {
+                                "type": "string",
+                                "description": "free text: description of the action"
+                            },
+                            "actionScopes": {
+                                "type": "array",
+                                "description": "list of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges.",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "INSTANT",
+                                        "NODE",
+                                        "EDGE"
+                                    ]
+                                }
+                            },
+                            "actionParameters": {
+                                "type": "array",
+                                "description": "list of parameters. if not defined, the action has no parameters",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "key",
+                                        "valueDataType"
+                                    ],
+                                    "properties": {
+                                        "key": {
+                                            "type": "string",
+                                            "description": "key-String for Parameter"
+                                        },
+                                        "valueDataType": {
+                                            "type": "string",
+                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY",
+                                            "enum": [
+                                                "BOOL",
+                                                "NUMBER",
+                                                "INTEGER",
+                                                "FLOAT",
+                                                "STRING",
+                                                "OBJECT",
+                                                "ARRAY"
+                                            ]
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "description": "free text: description of the parameter"
+                                        },
+                                        "isOptional": {
+                                            "type": "boolean",
+                                            "description": "True: optional parameter"
+                                        }
                                     }
                                 }
+                            },
+                            "resultDescription": {
+                                "type": "string",
+                                "description": "free text: description of the resultDescription"
                             }
-                        },
-                        "resultDescription": {
-                            "type": "string",
-                            "description": "free text: description of the resultDescription"
                         }
                     }
                 }
             }
-        }
-    },
-    "agvGeometry": {
-        "type": "object",
-        "description": "Detailed definition of AGV geometry",
-        "properties": {
-            "wheelDefinitions": {
-                "type": "array",
-                "description": "list of wheels, containing wheel-arrangement and geometry",
-                "items": {
-                    "type": "object",
-                    "required": [
-                        "type",
-                        "isActiveDriven",
-                        "isActiveSteered",
-                        "position",
-                        "diameter",
-                        "width"
-                    ],
-                    "properties": {
-                        "type": {
-                            "type": "string",
-                            "description": "wheel type. DRIVE, CASTER, FIXED, MECANUM",
-                            "enum": [
-                                "DRIVE",
-                                "CASTER",
-                                "FIXED",
-                                "MECANUM"
-                            ]
-                        },
-                        "isActiveDriven": {
-                            "type": "boolean",
-                            "description": "True: wheel is actively driven (de: angetrieben)"
-                        },
-                        "isActiveSteered": {
-                            "type": "boolean",
-                            "description": "True: wheel is actively steered (de: aktiv gelenkt)"
-                        },
-                        "position": {
-                            "type": "object",
-                            "required": [
-                                "x",
-                                "y"
-                            ],
-                            "properties": {
-                                "x": {
-                                    "type": "number",
-                                    "description": "[m] x-position in AGV-coordinate system",
-                                    "unit": "m"
-                                },
-                                "y": {
-                                    "type": "number",
-                                    "description": "y-position in AGV-coordinate system",
-                                    "unit": "m"
-                                },
-                                "theta": {
-                                    "type": "number",
-                                    "description": "orientation of wheel in AGV-coordinate system Necessary for fixed wheels",
-                                    "unit": "rad"
-                                }
-                            }
-                        },
-                        "diameter": {
-                            "type": "number",
-                            "description": "nominal diameter of wheel",
-                            "unit": "m"
-                        },
-                        "width": {
-                            "type": "number",
-                            "description": "nominal width of wheel",
-                            "unit": "m"
-                        },
-                        "centerDisplacement": {
-                            "type": "number",
-                            "unit": "m",
-                            "description": "nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels). If the parameter is not defined, it is assumed to be 0"
-                        },
-                        "constraints": {
-                            "type": "string",
-                            "description": "free text: can be used by the manufacturer to define constraints"
-                        }
-                    }
-                }
-            },
-            "envelopes2d": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "required": [
-                        "set",
-                        "polygonPoints"
-                    ],
-                    "properties": {
-                        "set": {
-                            "type": "string",
-                            "description": "name of the envelope curve set"
-                        },
-                        "polygonPoints": {
-                            "type": "array",
-                            "description": "envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
-                            "items": {
+        },
+        "agvGeometry": {
+            "type": "object",
+            "description": "Detailed definition of AGV geometry",
+            "properties": {
+                "wheelDefinitions": {
+                    "type": "array",
+                    "description": "list of wheels, containing wheel-arrangement and geometry",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "isActiveDriven",
+                            "isActiveSteered",
+                            "position",
+                            "diameter",
+                            "width"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "description": "wheel type. DRIVE, CASTER, FIXED, MECANUM",
+                                "enum": [
+                                    "DRIVE",
+                                    "CASTER",
+                                    "FIXED",
+                                    "MECANUM"
+                                ]
+                            },
+                            "isActiveDriven": {
+                                "type": "boolean",
+                                "description": "True: wheel is actively driven (de: angetrieben)"
+                            },
+                            "isActiveSteered": {
+                                "type": "boolean",
+                                "description": "True: wheel is actively steered (de: aktiv gelenkt)"
+                            },
+                            "position": {
                                 "type": "object",
                                 "required": [
                                     "x",
@@ -536,214 +477,345 @@
                                 "properties": {
                                     "x": {
                                         "type": "number",
-                                        "description": "x-position of polygon-point",
+                                        "description": "[m] x-position in AGV-coordinate system",
                                         "unit": "m"
                                     },
                                     "y": {
                                         "type": "number",
-                                        "description": " y-position of polygon-point",
+                                        "description": "y-position in AGV-coordinate system",
                                         "unit": "m"
+                                    },
+                                    "theta": {
+                                        "type": "number",
+                                        "description": "orientation of wheel in AGV-coordinate system Necessary for fixed wheels",
+                                        "unit": "rad"
                                     }
                                 }
+                            },
+                            "diameter": {
+                                "type": "number",
+                                "description": "nominal diameter of wheel",
+                                "unit": "m"
+                            },
+                            "width": {
+                                "type": "number",
+                                "description": "nominal width of wheel",
+                                "unit": "m"
+                            },
+                            "centerDisplacement": {
+                                "type": "number",
+                                "unit": "m",
+                                "description": "nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels). If the parameter is not defined, it is assumed to be 0"
+                            },
+                            "constraints": {
+                                "type": "string",
+                                "description": "free text: can be used by the manufacturer to define constraints"
                             }
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "free text: description of envelope curve set"
                         }
                     }
-                }
-            },
-            "envelopes3d": {
-                "type": "array",
-                "description": "list of AGV-envelope curves in 3D (german: „Hüllkurven“)",
-                "items": {
-                    "type": "object",
-                    "required": [
-                        "set",
-                        "format"
-                    ],
-                    "properties": {
-                        "set": {
-                            "type": "string",
-                            "description": "name of the envelope curve set"
-                        },
-                        "format": {
-                            "type": "string",
-                            "description": "format of data e.g. DXF"
-                        },
-                        "data": {
-                            "type": "object",
-                            "description": "3D-envelope curve data, format specified in ‚format‘"
-                        },
-                        "url": {
-                            "type": "string",
-                            "description": "protocol and url-definition for downloading the 3D-envelope curve data e.g. ftp://xxx.yyy.com/ac4dgvhoif5tghji"
-                        },
-                        "description": {
-                            "type": "integer",
-                            "description": "free text: description of envelope curve set"
+                },
+                "envelopes2d": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "set",
+                            "polygonPoints"
+                        ],
+                        "properties": {
+                            "set": {
+                                "type": "string",
+                                "description": "name of the envelope curve set"
+                            },
+                            "polygonPoints": {
+                                "type": "array",
+                                "description": "envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "description": "x-position of polygon-point",
+                                            "unit": "m"
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "description": " y-position of polygon-point",
+                                            "unit": "m"
+                                        }
+                                    }
+                                }
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "free text: description of envelope curve set"
+                            }
+                        }
+                    }
+                },
+                "envelopes3d": {
+                    "type": "array",
+                    "description": "list of AGV-envelope curves in 3D (german: „Hüllkurven“)",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "set",
+                            "format"
+                        ],
+                        "properties": {
+                            "set": {
+                                "type": "string",
+                                "description": "name of the envelope curve set"
+                            },
+                            "format": {
+                                "type": "string",
+                                "description": "format of data e.g. DXF"
+                            },
+                            "data": {
+                                "type": "object",
+                                "description": "3D-envelope curve data, format specified in ‚format‘"
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "protocol and url-definition for downloading the 3D-envelope curve data e.g. ftp://xxx.yyy.com/ac4dgvhoif5tghji"
+                            },
+                            "description": {
+                                "type": "integer",
+                                "description": "free text: description of envelope curve set"
+                            }
                         }
                     }
                 }
             }
-        }
-    },
-    "loadSpecification": {
-        "type": "object",
-        "description": "Abstract specification of load capabilities",
-        "properties": {
-            "loadPositions": {
-                "type": "array",
-                "description": "list of load positions / load handling devices. This lists contains the valid values for the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
-                "items": {
-                    "type": "string"
+        },
+        "loadSpecification": {
+            "type": "object",
+            "description": "Abstract specification of load capabilities",
+            "properties": {
+                "loadPositions": {
+                    "type": "array",
+                    "description": "list of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "loadSets": {
+                    "type": "array",
+                    "description": "list of load-sets that can be handled by the AGV",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "setName",
+                            "loadType"
+                        ],
+                        "properties": {
+                            "setName": {
+                                "type": "string",
+                                "description": "Unique name of the load set, e.g. DEFAULT, SET1, ..."
+                            },
+                            "loadType": {
+                                "type": "string",
+                                "description": "type of load e.g. EPAL, XLT1200, …."
+                            },
+                            "loadPositions": {
+                                "type": "array",
+                                "description": "list of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "boundingBoxReference": {
+                                "type": "object",
+                                "required": [
+                                    "x",
+                                    "y",
+                                    "z"
+                                ],
+                                "description": "bounding box reference as defined in parameter loads[] in state-message",
+                                "properties": {
+                                    "x": {
+                                        "type": "number",
+                                        "description": "x-coordinate of the point of reference."
+                                    },
+                                    "y": {
+                                        "type": "number",
+                                        "description": "y-coordinate of the point of reference."
+                                    },
+                                    "z": {
+                                        "type": "number",
+                                        "description": "z-coordinate of the point of reference."
+                                    },
+                                    "theta": {
+                                        "type": "integer",
+                                        "description": "Orientation of the loads bounding box. Important for tugger trains, etc."
+                                    }
+                                }
+                            },
+                            "loadDimensions": {
+                                "type": "object",
+                                "required": [
+                                    "length",
+                                    "width"
+                                ],
+                                "properties": {
+                                    "length": {
+                                        "type": "number",
+                                        "description": "Absolute length of the load´s bounding box."
+                                    },
+                                    "width": {
+                                        "type": "number",
+                                        "description": "Absolute width of the load´s bounding bo"
+                                    },
+                                    "height": {
+                                        "type": "number",
+                                        "description": "Absolute height of the load´s bounding box. Optional: Set value only if known."
+                                    }
+                                }
+                            },
+                            "maxWeight": {
+                                "type": "number",
+                                "description": "maximum weight of loadtype",
+                                "unit": "kg"
+                            },
+                            "minLoadhandlingHeight": {
+                                "type": "number",
+                                "unit": "m",
+                                "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
+                            },
+                            "maxLoadhandlingHeight": {
+                                "type": "number",
+                                "unit": "m",
+                                "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
+                            },
+                            "minLoadhandlingDepth": {
+                                "type": "number",
+                                "unit": "m",
+                                "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
+                            },
+                            "maxLoadhandlingDepth": {
+                                "type": "number",
+                                "unit": "m",
+                                "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
+                            },
+                            "minLoadhandlingTilt": {
+                                "type": "number",
+                                "unit": "rad",
+                                "description": "minimum allowed tilt for this load-type and –weight"
+                            },
+                            "maxLoadhandlingTilt": {
+                                "type": "number",
+                                "unit": "rad",
+                                "description": "maximum allowed tilt for this load-type and –weight"
+                            },
+                            "agvSpeedLimit": {
+                                "type": "number",
+                                "unit": "m/s^2",
+                                "description": "maximum allowed speed for this load-type and –weight"
+                            },
+                            "agvAccelerationLimit": {
+                                "type": "number",
+                                "unit": "m/s^2",
+                                "description": "maximum allowed acceleration for this load-type and –weight"
+                            },
+                            "agvDecelerationLimit": {
+                                "type": "number",
+                                "unit": "m/s^2",
+                                "description": "maximum allowed deceleration for this load-type and –weight"
+                            },
+                            "pickTime": {
+                                "type": "number",
+                                "unit": "s",
+                                "description": "approx. time for picking up the load"
+                            },
+                            "dropTime": {
+                                "type": "number",
+                                "unit": "s",
+                                "description": "approx. time for dropping the load"
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "free text description of the load handling set"
+                            }
+                        }
+                    }
                 }
-            },
-            "loadSets": {
-                "type": "array",
-                "description": "list of load-sets that can be handled by the AGV",
-                "items": {
+            }
+        },
+        "localizationParameters": {
+            "type": "integer",
+            "description": "Detailed specification of localization"
+        },
+         "vehicleConfig": {
+            "type": "object",
+            "properties": {
+                "versions": {
+                    "type": "array",
+                    "description": "Array containing various hardware and software versions running on the vehicle.",
+                    "items": {
+                        "title": "version",
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "value"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "description": "The key of the version.",
+                                "examples": [
+                                    "softwareVersion",
+                                    "cameraVersion",
+                                    "plcSoftChecksum"
+                                ]
+                            },
+                            "value": {
+                                "type": "string",
+                                "description": "The value of the action parameter.",
+                                "examples": [
+                                    "v1.03.2",
+                                    "0620NL51805A0",
+                                    "0x4297F30C"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "network": {
                     "type": "object",
-                    "required": [
-                        "setName",
-                        "loadType"
-                    ],
                     "properties": {
-                        "setName": {
-                            "type": "string",
-                            "description": "Unique name of the load set, e.g. DEFAULT, SET1, ..."
-                        },
-                        "loadType": {
-                            "type": "string",
-                            "description": "type of load e.g. EPAL, XLT1200, …."
-                        },
-                        "loadPositions": {
+                        "dnsServers": {
                             "type": "array",
-                            "description": "list of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.",
+                            "description": "List of DNS servers used by the vehicle.",
                             "items": {
                                 "type": "string"
                             }
                         },
-                        "boundingBoxReference": {
-                            "type": "object",
-                            "required": [
-                                "x",
-                                "y",
-                                "z"
-                            ],
-                            "description": "bounding box reference as defined in parameter loads[] in state-message",
-                            "properties": {
-                                "x": {
-                                    "type": "number",
-                                    "description": "x-coordinate of the point of reference."
-                                },
-                                "y": {
-                                    "type": "number",
-                                    "description": "y-coordinate of the point of reference."
-                                },
-                                "z": {
-                                    "type": "number",
-                                    "description": "z-coordinate of the point of reference."
-                                },
-                                "theta": {
-                                    "type": "integer",
-                                    "description": "Orientation of the loads bounding box. Important for tugger trains, etc."
-                                }
-                            }
+                        "localIpAddress": {
+                            "type": "string",
+                            "description": "A priori assigned IP address. Note that this IP address should not modified/changed during operations."
                         },
-                        "loadDimensions": {
-                            "type": "object",
-                            "required": [
-                                "length",
-                                "width"
-                            ],
-                            "properties": {
-                                "length": {
-                                    "type": "number",
-                                    "description": "Absolute length of the load´s bounding box."
-                                },
-                                "width": {
-                                    "type": "number",
-                                    "description": "Absolute width of the load´s bounding bo"
-                                },
-                                "height": {
-                                    "type": "number",
-                                    "description": "Absolute height of the load´s bounding box. Optional: Set value only if known."
-                                }
-                            }
+                        "ntpServers": {
+                            "type": "array",
+                            "description": "List of NTP servers used by the vehicle.",
+                            "items": {
+                                "type": "string"
+                            }  
                         },
-                        "maxWeigth": {
-                            "type": "number",
-                            "description": "maximum weight of loadtype",
-                            "unit": "kg"
+                        "netmask": {
+                            "type": "string",
+                            "description": "Network subnet mask."
                         },
-                        "minLoadhandlingHeight": {
-                            "type": "number",
-                            "unit": "m",
-                            "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
-                        },
-                        "maxLoadhandlingHeight": {
-                            "type": "number",
-                            "unit": "m",
-                            "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
-                        },
-                        "minLoadhandlingDepth": {
-                            "type": "number",
-                            "unit": "m",
-                            "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
-                        },
-                        "maxLoadhandlingDepth": {
-                            "type": "number",
-                            "unit": "m",
-                            "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
-                        },
-                        "minLoadhandlingTilt": {
-                            "type": "number",
-                            "unit": "rad",
-                            "description": "minimum allowed tilt for this load-type and –weight"
-                        },
-                        "maxLoadhandlingTilt": {
-                            "type": "number",
-                            "unit": "rad",
-                            "description": "maximum allowed tilt for this load-type and –weight"
-                        },
-                        "agvSpeedLimit": {
-                            "type": "number",
-                            "unit": "m/s^2",
-                            "description": "maximum allowed speed for this load-type and –weight"
-                        },
-                        "agvAccelerationLimit": {
-                            "type": "number",
-                            "unit": "m/s^2",
-                            "description": "maximum allowed acceleration for this load-type and –weight"
-                        },
-                        "agvDecelerationLimit": {
-                            "type": "number",
-                            "unit": "m/s^2",
-                            "description": "maximum allowed deceleration for this load-type and –weight"
-                        },
-                        "pickTime": {
-                            "type": "number",
-                            "unit": "s",
-                            "description": "approx. time for picking up the load"
-                        },
-                        "dropTime": {
-                            "type": "number",
-                            "unit": "s",
-                            "description": "approx. time for dropping the load"
-                        },
-                        "description": {
-                            "type": "number",
-                            "description": "free text description of the load handling set"
+                        "defaultGateway": {
+                            "type": "string",
+                            "description": "Default gateway used by the vehicle."
                         }
                     }
                 }
             }
         }
-    },
-    "localizationParameters": {
-        "type": "integer",
-        "description": "Detailed specification of localization"
     }
 }

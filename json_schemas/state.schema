@@ -106,8 +106,8 @@
                 "title": "nodeState",
                 "required": [
                     "nodeId",
-                    "released",
-                    "sequenceId"
+                    "sequenceId",
+                    "released"
                 ],
                 "properties": {
                     "nodeId": {
@@ -122,12 +122,15 @@
                         "type": "string",
                         "description": "Additional information on the node."
                     },
+                    "released": {
+                        "type": "boolean",
+                        "description": "True: indicates that the node is part of the base. False: indicates that the node is part of the horizon."
+                    },
                     "nodePosition": {
                         "type": "object",
                         "required": [
                             "x",
                             "y",
-                            "theta",
                             "mapId"
                         ],
                         "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV).\nOptional:Master control has this information. Can be sent additionally, e.g., for debugging purposes. ",
@@ -145,10 +148,6 @@
                                 "type": "string"
                             }
                         }
-                    },
-                    "released": {
-                        "type": "boolean",
-                        "description": "True: indicates that the node is part of the base. False: indicates that the node is part of the horizon."
                     }
                 }
             }
@@ -465,15 +464,15 @@
                         "items": {
                             "type": "object",
                             "title": "errorReference",
-                            "description": "Array of references to identify the source of the error (e.g., headerId, orderId, actionId, etc.).",
+                            "description": "Array of references (e.g. nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.",
                             "properties": {
                                 "referenceKey": {
                                     "type": "string",
-                                    "description":"References the type of reference (e.g., headerId, orderId, actionId, etc.)."
+                                    "description":"Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.)."
                                 },
                                 "referenceValue": {
                                     "type": "string",
-                                    "description":"References the value, which belongs to the reference key."
+                                    "description":"The value that belongs to the reference key. For example, the id of the node where the error occurred."
                                 }
                             },
                             "required": [
@@ -484,7 +483,11 @@
                     },
                     "errorDescription": {
                         "type": "string",
-                        "description": "Error description."
+                        "description": "Verbose description providing details and possible causes of the error."
+                    },
+                    "errorHint": {
+                        "type": "string",
+                        "description": "Hint on how to approach or solve the reported error."
                     },
                     "errorLevel": {
                         "type": "string",
