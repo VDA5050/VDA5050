@@ -464,15 +464,15 @@
                         "items": {
                             "type": "object",
                             "title": "errorReference",
-                            "description": "Array of references to identify the source of the error (e.g., headerId, orderId, actionId, etc.).",
+                            "description": "Array of references (e.g. nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.",
                             "properties": {
                                 "referenceKey": {
                                     "type": "string",
-                                    "description":"References the type of reference (e.g., headerId, orderId, actionId, etc.)."
+                                    "description":"Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.)."
                                 },
                                 "referenceValue": {
                                     "type": "string",
-                                    "description":"References the value, which belongs to the reference key."
+                                    "description":"The value that belongs to the reference key. For example, the id of the node where the error occurred."
                                 }
                             },
                             "required": [
@@ -483,7 +483,11 @@
                     },
                     "errorDescription": {
                         "type": "string",
-                        "description": "Error description."
+                        "description": "Verbose description providing details and possible causes of the error."
+                    },
+                    "errorHint": {
+                        "type": "string",
+                        "description": "Hint on how to approach or solve the reported error."
                     },
                     "errorLevel": {
                         "type": "string",
