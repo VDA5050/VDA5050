@@ -487,11 +487,11 @@ For the sake of readability, a complete JSON example has been omitted here.
 	orderId: "1234"
 	orderUpdateId:0,
 	nodes: [
-	 	 6 {released: True},
-	 	 4 {released: True},
-	 	 7 {released: True},
-	 	 2 {released: False},
-	 	 8 {released: False}
+	 	 f {released: True},
+	 	 d {released: True},
+	 	 g {released: True},
+	 	 b {released: False},
+	 	 h {released: False}
 	],
 	edges: [
 		e1 {released: True},
@@ -513,10 +513,10 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 	orderId: 1234,
 	orderUpdateId: 1,
 	nodes: [
-		7 {released: True},
-		2 {released: True},
-		8 {released: True},
-		9 {released: False}
+		g {released: True},
+		b {released: True},
+		h {released: True},
+		i {released: False}
 	],
 	edges: [
 		e8 {released: True},
@@ -530,10 +530,10 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 This also aids in the event that an orderUpdate goes missing (because of unreliable wireless network). 
 The AGV can always check that the last known base node has the same nodeId (and nodeSequenceId, more on that later) as the first new base node.
 
-Also note that node 7 is the only base node that is sent again.
-Since the base cannot be changed, a retransmission of nodes 6 and 4 is not valid.
+Also note that node g is the only base node that is sent again.
+Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
-It is important, that the contents of the stitching node (node 7 in the example case) are not changed. 
+It is important, that the contents of the stitching node (node g in the example case) are not changed. 
 For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/Figure7.png)
@@ -550,7 +550,7 @@ The other nodes and edges from the previous base are not resent.
 Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
-To allow loops in orders (like going from node 1 to 2 and then back to 1) a sequenceId is assigned to the node and edge objects. 
+To allow loops in orders (like going from node a to b and then back to a) a sequenceId is assigned to the node and edge objects. 
 This sequenceId runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on). 
 This allows for easier tracking of the order progress.
 
