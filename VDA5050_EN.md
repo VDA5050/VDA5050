@@ -1009,10 +1009,10 @@ operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  T
 Object structure | Unit | Data type | Description 
 ---|---|---|---
 **map**{ | | JSON-Object| 
-mapId | | string | ID of the map.
+mapId | | string | ID of the map describing a defined area of the vehicles workspace.
 mapVersion | | string | Version of the map.
-*mapDescription* | | string | 
-mapStatus <br>}| | string | Enum {ENABLED, READY}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is not currently enabled on the AGV and thus could be enabled or deleted by request.
+*mapDescription* | | string | Additional information on the map.
+mapStatus <br>}| | string | Enum {ENABLED, READY}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.
 
 
 Object structure | Unit | Data type | Description 
