@@ -77,7 +77,7 @@ Version 2.0
 [6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#6643-vehicle-gets-a-new-order-with-the-same-orderid-but-a-lower-orderupdateid-than-the-current-orderupdateid)<br>
 [6.6.5 Maps](#665-maps)<br>
 [6.7 Implementation of the order message](#67-implementation-of-the-order-message)<br>
-[6.7.1 Corridor](#Corridor)<br>
+[6.7.1 Corridor](#671-Corridor)<br>
 [6.8 Actions](#68-actions)<br>
 [6.8.1 Predefined action definitions, their parameters, effects and scope](#681-predefined-action-definition-their-parameters-effects-and-scope)<br>
 [6.8.2 Predefined action definitions, their parameters, effects and scope](#682-predefined-action-definitions-description-of-their-states)<br>
@@ -488,11 +488,11 @@ For the sake of readability, a complete JSON example has been omitted here.
 	orderId: "1234"
 	orderUpdateId:0,
 	nodes: [
-	 	 6 {released: True},
-	 	 4 {released: True},
-	 	 7 {released: True},
-	 	 2 {released: False},
-	 	 8 {released: False}
+	 	 f {released: True},
+	 	 d {released: True},
+	 	 g {released: True},
+	 	 b {released: False},
+	 	 h {released: False}
 	],
 	edges: [
 		e1 {released: True},
@@ -514,10 +514,10 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 	orderId: 1234,
 	orderUpdateId: 1,
 	nodes: [
-		7 {released: True},
-		2 {released: True},
-		8 {released: True},
-		9 {released: False}
+		g {released: True},
+		b {released: True},
+		h {released: True},
+		i {released: False}
 	],
 	edges: [
 		e8 {released: True},
@@ -531,10 +531,10 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 This also aids in the event that an orderUpdate goes missing (because of unreliable wireless network). 
 The AGV can always check that the last known base node has the same nodeId (and nodeSequenceId, more on that later) as the first new base node.
 
-Also note that node 7 is the only base node that is sent again.
-Since the base cannot be changed, a retransmission of nodes 6 and 4 is not valid.
+Also note that node g is the only base node that is sent again.
+Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
-It is important, that the contents of the stitching node (node 7 in the example case) are not changed. 
+It is important, that the contents of the stitching node (node g in the example case) are not changed. 
 For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/Figure7.png)
@@ -551,7 +551,7 @@ The other nodes and edges from the previous base are not resent.
 Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
-To allow loops in orders (like going from node 1 to 2 and then back to 1) a sequenceId is assigned to the node and edge objects. 
+To allow loops in orders (like going from node a to b and then back to a) a sequenceId is assigned to the node and edge objects. 
 This sequenceId runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on). 
 This allows for easier tracking of the order progress.
 
@@ -583,7 +583,6 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 8)	**is the received update a valid continuation of the previously completed order?**: Is `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last travesered node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
 
 9)	populate/ append states	refers to the action-/node-/edgeStates.
-
 
 ### 6.6.3 Order Cancellation (by Master Control)
 
