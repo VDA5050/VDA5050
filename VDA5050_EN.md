@@ -132,7 +132,7 @@ In detail, this should be achieved by the following points:
 - Increase in manufacturers independence using common interfaces between vehicle control and coordination level.
 - Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1).
 
-![Figure 1 Integration of DTS inventory systems](./assets/Figure1.png)
+![Figure 1 Integration of DTS inventory systems](./assets/concept_VDA5050.png)
 >Figure 1 Integration of DTS inventory systems
 
 In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
@@ -207,7 +207,7 @@ As shown in the information flow to the operation of AGV, there are at least the
 Figure 2 describes the communication content during the operational phase.
 During implementation or modification, the AGV and master control are manually configured. 
 
-![Figure 2 Structure of the Information Flow](./assets/Figure2.png)
+![Figure 2 Structure of the Information Flow](./assets/information_flow_VDA5050.png)
 >Figure 2 Structure of the Information Flow
 
 During the implementation phase, the driverless transport systems (DTS) consisting of master control and AGV is set up.
@@ -435,7 +435,7 @@ It is to be avoided that the master control has a separate graph representation 
 Whenever possible, one location, e.g., a waiting position in front of fire door, should only have one node for all types of AGV.
 However, due to the different sizes and specifications of AGV, it might be necessary to deviate from this standard in certain situations.
 
-![Figure 3 Graph representation in Master Control and graph transmitted in orders](./assets/Figure3.png) 
+![Figure 3 Graph representation in Master Control and graph transmitted in orders](./assets/graph_representation_transmission.png) 
 >Figure 3 Graph representation in Master Control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
@@ -483,7 +483,7 @@ The master control has the possibility to change the driving commands of the "Ho
 Before the AGV arrives at the decision point via the "base" route, the master control will send an updated route to the AGV, which includes the other nodes. 
 The procedure for changing the Horizon route is shown in Figure 4.
 
-![Figure 4 Procedure for changing the driving route "Horizon"](./assets/Figure4.png)
+![Figure 4 Procedure for changing the driving route "Horizon"](./assets/driving_route_horizon.png)
 >Figure 4 Procedure for changing the driving route "Horizon"
 
 In Figure 4, an initial job is first sent by the control panel at time t = 1.
@@ -544,7 +544,7 @@ Since the base cannot be changed, a retransmission of nodes f and d is not valid
 It is important, that the contents of the stitching node (node g in the example case) are not changed. 
 For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
-![Figure 7 Regular update process - order extension](./assets/Figure7.png)
+![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension
 
 Figure 7 describes how an order should be extended.
@@ -567,7 +567,7 @@ This is necessary to determine on AGV side to which node the master control refe
 
 Figure 8 describes the process of accepting an order or orderUpdate.
 
-![Figure 8 The process of accepting an order or orderUpdate](./assets/Figure8.png)
+![Figure 8 The process of accepting an order or orderUpdate](./assets/processing_order_update.png)
 >Figure 8 The process of accepting an order or orderUpdate
 
 1)	**is received order valid?**:
@@ -607,7 +607,7 @@ The orderId and orderUpdateId is kept.
 
 Figure 9 shows the expected behavior for different AGV capabilities.
 
-![Figure 9 Expected behavior after a cancelOrder](./assets/Figure9.png)
+![Figure 9 Expected behavior after a cancelOrder](./assets/process_cancel_order.png)
 >Figure 9 Expected behavior after a cancelOrder
 
 
@@ -687,13 +687,13 @@ A positive rotation therefore is to be understood as a counterclockwise rotation
 The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing skywards. 
 This is in accordance with chapter 2.11 in DIN ISO 8855.
 
-![Figure 10 Coordinate system with sample AGV and orientation](./assets/Figure10.png)
+![Figure 10 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 10 Coordinate system with sample AGV and orientation
 
 The X, Y and Z coordinates must be in meters. 
 The orientation must be in radians and must be within +Pi and –Pi.
 
-![Figure 11 Coordinate systems for map and vehicle](./assets/Figure11.png)
+![Figure 11 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
 >Figure 11 Coordinate systems for map and vehicle
 
 ### 6.6.6 Map Distribution
@@ -724,7 +724,7 @@ It is important to ensure that the process of downloading a map does not modify,
 
 It is important to verify that each map passed during order execution contains at least one node (see Figure X) to ensure that the correct maps are used for an order. To do this, the 'mapId' of the maps on the vehicle must match those specified in the order. Any discrepancy must result in the order being rejected.
 
-![Figure 12 Correct use of an order using multiple maps.](./assets/Figure12.png)
+![Figure 12 Correct use of an order using multiple maps.](./assets/node_placement_multiple_maps.png)
 >Figure 12 Correct use of an order spanning across multiple maps.
 
 #### 6.6.6.4 Delete Maps on the vehicle
@@ -816,8 +816,8 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 _**corridor**_ { |  | JSON-object |
-leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
-rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (siehe Figure 16). Value must be equal or greater zero [0... float64.maxValue].
+leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (siehe Figure 13). Value must be equal or greater zero [0... float64.maxValue].
+rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (siehe Figure 13). Value must be equal or greater zero [0... float64.maxValue].
 *corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 
@@ -832,8 +832,8 @@ The behavior of a vehicle which uses the corridor attribute of an edge shall be 
 Depending on the vehicle type the trajectory a vehicle takes between the start and the end node is either defined by MC via the trajectory edge attribute or deposed as predefined trajectories on the vehicle.
 Depending on the internal vehicle state the selected trajectory may varying.*)
 
-![Figure 16 Edges with boundaris.](./assets/Boundaries-1.png)
->Figure 16 Edges with boundaries (```corriorRefPoint``` is equal "KC").
+![Figure 13 Edges with boundaris.](./assets/edges_with_corridors.png)
+>Figure 13 Edges with boundaries (```corriorRefPoint``` is equal "KC").
 
 The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
 The optional field `corridorRefPoint` specifies whether the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
@@ -946,7 +946,7 @@ actions [action] | | array | Array of actions that need to be performed immediat
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
-See also Figure 13 for the different transitions of an actionStatus.
+See also Figure 15 for the different transitions of an actionStatus.
 
 
 
@@ -982,8 +982,8 @@ After nodes are released by master control, the AGV is not allowed to change its
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
 
-![Figure 13 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/Figure13.png) 
->Figure 13 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
+![Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png) 
+>Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
 
@@ -1004,8 +1004,8 @@ The traversal of the node also marks the moment, when the AGV enters the followi
 The edges actions must now be triggered. 
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
-![Figure 14 nodeStates, edgeStates, actionStates during order handling](./assets/Figure14.png)
->Figure 14 nodeStates, edgeStates, actionStates during order handling
+![Figure 15 nodeStates, edgeStates, actionStates during order handling](./assets/states_during_order_handling.png)
+>Figure 15 nodeStates, edgeStates, actionStates during order handling
 
 
 ### 6.10.3 Base request 
@@ -1223,10 +1223,10 @@ FAILED | Action could not be finished for whatever reason.
 
 >Table 1 The acceptable values for the actionStatus field
 
-A state transition diagram is provided in Figure 15. 
+A state transition diagram is provided in Figure 16. 
 
-![Figure 15 All possible status transitions for actionStates](./assets/Figure15.png)
->Figure 15 All possible status transitions for actionStates
+![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
+>Figure 16 All possible status transitions for actionStates
 
 
 
@@ -1245,10 +1245,10 @@ HARD | Action must not be executed in parallel with other actions. Vehicle must 
 
 >Table 2 action blocking types
 
-If there are multiple actions on the same node with different blocking types, Figure 16 describes how the AGV should handle these actions.
+If there are multiple actions on the same node with different blocking types, Figure 17 describes how the AGV should handle these actions.
 
-![Figure 16 Handling multiple actions](./assets/Figure16.png)
->Figure 16 Handling multiple actions
+![Figure 17 Handling multiple actions](./assets/handling_multiple_actions.png)
+>Figure 17 Handling multiple actions
 
 
 
