@@ -653,7 +653,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer 
 2. Vehicle reports the warning "orderError" with the wrong fields as error references
-3. The warning must not be reported until the vehicle has accepted a new order. 
+3. The warning must be reported until the vehicle has accepted a new order. 
 
 
 
@@ -662,7 +662,7 @@ Resolution:
 Resolution: 
 
 1. Vehicle does NOT take over the new order in its internal buffer. 
-2. Vehicle keeps the PREVIOUS order it its buffer. 
+2. Vehicle keeps the PREVIOUS order in its buffer. 
 3. The vehicle reports the warning "orderUpdateError"
 4. The vehicle continues with the executing the previous order. 
 
@@ -1180,7 +1180,7 @@ The parallel execution of actions is governed by their respective `blockingType`
 
 Actions can have three distinct blocking types, described in Table 2. 
 
-actionStatus | Description 
+blockingType | Description 
 ---|---
 NONE | Action can be executed in parallel with other actions and while the vehicle is driving.
 SOFT | Action can be executed in parallel with other actions. Vehicle must not drive.
