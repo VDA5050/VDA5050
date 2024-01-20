@@ -220,7 +220,7 @@ Routes can be one-way streets,  restricted for certain vehicle groups (based on 
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [AGV Factsheet section](#615-topic-factsheet) of this document.
+The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [Factsheet section](#615-topic-factsheet) of this document.
 
 The configuration of routes and the route network described above is not part of this document.
 It forms the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed. 
@@ -307,7 +307,7 @@ A-Z a-z 0-9 _ - . :
 A maximum message length is not defined. 
 If an AGV memory is insufficient to process an incoming order, it is to reject the order.
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
-For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [section 7 - AGV Factsheet](#factsheet).
+For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [Factsheet Section](#615-topic-factsheet).
 
 
 
@@ -1529,7 +1529,7 @@ This section includes additional information, which helps in facilitating a comm
 
 ## 7.1 Error reference 
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#errorReferenceImpl)).
+If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#6106-implementation)).
 This can include the following information:
 
 - headerId
