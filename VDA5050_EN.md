@@ -542,7 +542,7 @@ Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
 It is important, that the contents of the stitching node (node g in the example case) are not changed. 
-For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
+For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 7, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension
@@ -943,7 +943,7 @@ actions [action] | | array | Array of actions that need to be performed immediat
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
-See also Figure 15 for the different transitions of an actionStatus.
+See also Figure 16 for the different transitions of an actionStatus.
 
 
 
