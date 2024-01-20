@@ -220,7 +220,7 @@ Routes can be one-way streets,  restricted for certain vehicle groups (based on 
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [AGV Factsheet section](#factsheet) of this document.
+The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [AGV Factsheet section](#615-topic-factsheet) of this document.
 
 The configuration of routes and the route network described above is not part of this document.
 It forms the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed. 
@@ -706,7 +706,7 @@ Each map is uniquely identified by a combination of a mapId and a mapVersion. Th
 In order to minimize downtime and make it easier for the master controller to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle status channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the Master Control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the Master Control with another instantAction. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is shown in the vehicle status.
 
 #### 6.6.6.1 Maps in the Vehicle State
-The .agvPostion.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the status.
+The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the status.
 
 Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
 
@@ -816,38 +816,36 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 _**corridor**_ { |  | JSON-object |
-leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (siehe Figure 13). Value must be equal or greater zero [0... float64.maxValue].
-rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (siehe Figure 13). Value must be equal or greater zero [0... float64.maxValue].
+leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
+rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
 *corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 
-### <a name = "Corridor"></a> 6.7.1 Corridor attribute
+### 6.7.1 Corridor attribute
 
-The optional corridor edge attribute enables the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
-In this context the trajectory means the pre-planned path the vehicle would be driving if no corridor attribute is defined.
-The behavior of a vehicle which uses the corridor attribute of an edge shall be still the behavior of a line guide vehicle with the ability to avoid obstacles.
-
-(*Remark:
- An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory a vehicle follows driving from the start node to the end node.
-Depending on the vehicle type the trajectory a vehicle takes between the start and the end node is either defined by MC via the trajectory edge attribute or deposed as predefined trajectories on the vehicle.
-Depending on the internal vehicle state the selected trajectory may varying.*)
-
-![Figure 13 Edges with boundaris.](./assets/edges_with_corridors.png)
->Figure 13 Edges with boundaries (```corriorRefPoint``` is equal "KC").
-
-The area in which the vehicle is allowed to navigate independently (and to deviate from the original edge trajectory) is defined by a left and right boundary. 
-The optional field `corridorRefPoint` specifies whether the vehicle control point or the contour of the vehicle shall be within the defined boundaries.
-The boundaries of the edges shall be defined in a way that once the vehicle has traversed a node the vehicle is inside the boundaries of the new and now current edge. 
-
-The motion control software of the vehicle shall check permanently if the vehicle is inside the defined boundaries.
-If this is not the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an error.
-The MC can decide whether user interaction is required or if the vehicle can continue by cancelling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
+The optional corridor edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
+In this context, the trajectory is the pre-planned path that the vehicle would follow if no corridor attribute were defined.
+The behavior of a vehicle using the corridor attribute of an edge is still the behavior of a line-guided vehicle with the ability to avoid obstacles.
 
 (*Remark:
-Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance has to be considered during initial operation and if MC makes
-traffic control decision based on the vehicles footprint MC shall consider the possible deviation from the trajectory too.*)
+ An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
+Depending on the vehicle type, the trajectory that a vehicle takes between the start and end nodes is either defined by MC via the trajectory edge attribute or assigned to the vehicle as a predefined trajectory.
+Depending on the internal state of the vehicle, the selected trajectory may vary.*)
 
-See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
+![Figure 13 Edges with corridor attribute.](./assets/edges_with_corridors.png)
+>Figure 13 Edges with a corridor attribute defining the left and right boundaries that a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles (the corridor violation reference point ```corridorRefPoint``` is set to the kinematic center of the vehicle in this example).
+
+The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary. 
+The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be within the defined boundaries.
+The boundaries of the edges must be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node. 
+
+The vehicle's motion control software must constantly check that the vehicle is within the defined boundaries.
+If not, the vehicle must stop because it is out of the allowed navigation space and report an error.
+The MC can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
+
+(*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.)
+
+See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
 ## 6.8 Actions
 
@@ -878,8 +876,8 @@ startPause | stopPause | Activates the pause mode. <br>A linked state is require
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given paramaters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set use the already enabled version of map/mapId. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>mapVersion (string, optional)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
-enableMap | - | Enable a previously downloaded map explecitly to be used in orders without initializing a new position. | yes | mapId  (string)mapVersion (string) | .maps | yes | yes | no
+initPosition | - | Resets (overrides) the pose of the AGV with the given parameters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set use the already enabled version of map/mapId. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>mapVersion (string, optional)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
+enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId  (string)mapVersion (string) | .maps | yes | yes | no
 downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string, optional)<br>mapHash   (string, optional) | .maps | yes | no | no
 deleteMap  | - | Trigger the removal of a map from the vehicle memory.  | yes | mapId  (string)<br>mapVersion (string) | .maps | yes | no | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
