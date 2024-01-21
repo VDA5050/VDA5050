@@ -20,3 +20,4 @@ endif
         #orange: AGV stops gracefully\n and deletes nodeStates and\n edgeStates. \n actionStates are kept. \n <B>cancelOrder</B> action state is set \n to <B>finished</B>;
     stop
 @enduml
+```
