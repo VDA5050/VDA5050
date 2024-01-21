@@ -1346,8 +1346,8 @@ This JSON object describes general properties of the AGV type.
 | agvKinematic        | string          | Simplified description of AGV kinematics-type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive<br/>OMNI: omni-directional vehicle<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics |
 | agvClass            | string          | Simplified description of AGV class.<br/>[FORKLIFT, CONVEYOR, TUGGER, CARRIER]<br/>FORKLIFT: forklift.<br/>CONVEYOR: AGV with conveyors on it.</br>TUGGER: tugger.<br/>CARRIER: load carrier with or without lifting unit. |
 | maxLoadMass         | float64         | [kg], Maximum loadable mass. |
-| localizationTypes   | Array of String  | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
-| navigationTypes     | Array of String | List of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
+| localizationTypes   | array of string  | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
+| navigationTypes     | array of string | List of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
 
 #### physicalParameters
 
@@ -1413,18 +1413,18 @@ This JSON object defines actions and parameters which are supported by the AGV.
 
 | **Field**    | **data type** | **description**  |
 |--------------|---------------|------------------|
-| **optionalParameters** [**optionalParameter**] | Array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |
+| **optionalParameters** [**optionalParameter**] | array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |
 | {            |               |                  |
 | &emsp;parameter    | string        | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
 | &emsp;support      | enum      | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
 | &emsp;*description*| string        | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned integer-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
 | }            |               |                  |
-| **agvActions** [**agvAction**] | Array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **agvActions** [**agvAction**] | array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | {            |               |                  |
 | &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
 | &emsp;*actionDescription* | string  | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
-| &emsp;***actionParameters** [**actionParameter**]* | Array of JSON-object | List of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Chapter 6.7 within nodes and edges.|
+| &emsp;***actionParameters** [**actionParameter**]* | array of JSON-object | List of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Chapter 6.7 within nodes and edges.|
 |&emsp;*{*     |               |                  |
 |&emsp;&emsp;key     | string        | Key-String for Parameter. |
 |&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
@@ -1432,6 +1432,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 |&emsp;&emsp;*isOptional*  | boolean    | "true": optional parameter. |
 |&emsp;*}*           |         |                          |
 |*resultDescription* | string  | Free-form text: description of the resultDescription. |
+|*blockingTypes* | array of enum  | Array of possible blocking types for defined Action. </br> Enum {NONE, SOFT, HARD} |
 |*}*                 |         |                          |
 
 ### agvGeometry
@@ -1440,7 +1441,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 
 | **Field**                            | **data type**        | **description**                                        |
 |--------------------------------------|----------------------|--------------------------------------------------------|
-| ***wheelDefinitions** [**wheelDefinition**]* | Array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
+| ***wheelDefinitions** [**wheelDefinition**]* | array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
 | {                                    |                      |                                                        |
 | &emsp;type                                 | enum                 | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```.     |
 | &emsp;isActiveDriven                       | boolean                 | "true": wheel is actively driven.       |
@@ -1455,17 +1456,17 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;*centerDisplacement*                 | float64              | [m], nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0.            |
 | &emsp;*constraints*                        | string               | Free-form text: can be used by the manufacturer to define constraints. |
 | }                                    |                      |                                                        |
-| ***envelopes2d** [**envelope2d**]*   | Array of JSON-object | List of AGV-envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| ***envelopes2d** [**envelope2d**]*   | array of JSON-object | List of AGV-envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | {                                    |                      |                                                        |
 | &emsp;set                             | string               | Name of the envelope curve set.                         |
-| &emsp;**polygonPoints**  **[polygonPoint]**         | Array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
+| &emsp;**polygonPoints**  **[polygonPoint]**         | array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
 | &emsp;{                                    |                      |                                                        |
 |&emsp;&emsp; x                              | float64              | [m], x-position of polygon-point.                        |
 |&emsp;&emsp; y                              | float64              | [m], y-position of polygon-point.                        |
 | &emsp;}                                    |                      |                                                        |
 | &emsp;*description*                        | string               | Free-form text: description of envelope curve set.   |
 | *}*                                  |                      |                                                        |
-| ***envelopes3d [envelope3d]***       | Array of JSON-object | List of AGV-envelope curves in 3D. |
+| ***envelopes3d [envelope3d]***       | array of JSON-object | List of AGV-envelope curves in 3D. |
 | *{*                                  |                      |                                                        |
 | &emsp;set                                  | string               | Name of the envelope curve set.                         |
 | &emsp;format                               | string               | Format of data, e.g., DXF.                                |
@@ -1480,12 +1481,12 @@ This JSON object specifies load handling and supported load types of the AGV.
 
 | **Field**                        | **data type**        | **description**                                                      |
 |----------------------------------|----------------------|----------------------------------------------------------------------|
-| *loadPositions*         | Array of String      | List of load positions / load handling devices.<br/>This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
-| ***loadSets [loadSet]*** | Array of JSON-object | list of load-sets that can be handled by the AGV                     |
+| *loadPositions*         | array of string      | List of load positions / load handling devices.<br/>This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
+| ***loadSets [loadSet]*** | array of JSON-object | list of load-sets that can be handled by the AGV                     |
 | {                                    |                      |                                                        |
 |&emsp; setName                 | string               | Unique name of the load set, e.g., DEFAULT, SET1, etc.                 |
 |&emsp; loadType                | string               | Type of load, e.g., EPAL, XLT1200, etc.                                  |
-|&emsp; *loadPositions*         | Array of String      | List of load positions btw. load handling devices, this load-set is valid for.<br/>*If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.* |
+|&emsp; *loadPositions*         | array of string      | List of load positions btw. load handling devices, this load-set is valid for.<br/>*If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.* |
 |&emsp; ***boundingBoxReference***  | JSON-object          | Bounding box reference as defined in parameter loads[] in state-message. |
 |&emsp; ***loadDimensions***        | JSON-object          | Load dimensions as defined in parameter loads[] in state-message.     |
 |&emsp; *maxWeight*             | float64              | [kg], maximum weight of load type.                                      |
@@ -1509,17 +1510,17 @@ This JSON-object details the software and hardware versions running on the vehic
 
 | **Field**       | **data type** | **description**                                       |
 |-----------------|---------------|-------------------------------------------------------|
-| *versions[versionInfo]*       | Array of JSON-object       | List of key-value pair objects containing software and hardware information.  |
+| *versions[versionInfo]*       | array of JSON-object       | List of key-value pair objects containing software and hardware information.  |
 | {                               |                      |                                                        |
-|&emsp; key                              | String              | Key of the software/hardware version used. (E.g softwareVersion)         |
-|&emsp; value                              | String              | The version corresponding to the key. (E.g v1.12.4-beta)         |
+|&emsp; key                              | string              | Key of the software/hardware version used. (E.g softwareVersion)         |
+|&emsp; value                              | string              | The version corresponding to the key. (E.g v1.12.4-beta)         |
 | }                                    |                      |                                                        |
 | *network*  {      | JSON-object       | Information about the vehicle's network connection. The listed information shall not be updated while the vehicle is operating.                       |
-|&emsp;&emsp; *dnsServers*                              | Array of String              | List of Domain Name Servers (DNS) used by the vehicle.          |
-|&emsp;&emsp; *ntpServers*                              | Array of String              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
-|&emsp;&emsp; *localIpAddress*                       | String              | A priori assigned IP address. Note that this IP address should not modified/changed during operations. |
-|&emsp;&emsp; *netmask*                       | String              | The subnet mask used in the network configuration |
-|&emsp;&emsp; *defaultGateway*                       | String              | The default gateway used by the vehicle |
+|&emsp;&emsp; *dnsServers*                              | array of string              | List of Domain Name Servers (DNS) used by the vehicle.          |
+|&emsp;&emsp; *ntpServers*                              | array of string              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
+|&emsp;&emsp; *localIpAddress*                       | string              | A priori assigned IP address. Note that this IP address should not modified/changed during operations. |
+|&emsp;&emsp; *netmask*                       | string              | The subnet mask used in the network configuration |
+|&emsp;&emsp; *defaultGateway*                       | string              | The default gateway used by the vehicle |
 | &emsp;}                                    |                      |                                                        |
 
 
