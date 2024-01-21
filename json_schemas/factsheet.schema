@@ -426,6 +426,15 @@
                             "resultDescription": {
                                 "type": "string",
                                 "description": "free text: description of the resultDescription"
+                            },
+                            "blockingTypes": {
+                                "type": "array",
+                                "description": "Array of possible blocking types for defined action.",
+                                "enum": [
+                                                "NONE",
+                                                "SOFT",
+                                                "HARD"
+                                ]
                             }
                         }
                     }
