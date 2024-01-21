@@ -843,7 +843,7 @@ The vehicle's motion control software must constantly check that the vehicle is 
 If not, the vehicle must stop because it is out of the allowed navigation space and report an error.
 The MC can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
-(*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.)
+(*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.*)
 
 See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
