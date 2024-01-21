@@ -1553,8 +1553,7 @@ Sample for the actionParameter of an action “someAction” with key-value-pair
 {"key": "loadType", "value": "pallet_eu"}
 ]
 
-The reason for using the proposed scheme of “key”: “actualKey”, “value”: “actualValue” is to keep the implementation generic. 
-This was thoroughly and controversially discussed in multiple meetings.
+The reason for using the proposed scheme of “key”: “actualKey”, “value”: “actualValue” is to keep the implementation generic. The ”actualValue” can be of any possible JSON data type, type, such as float, bool, and even an object. This was thoroughly and controversially discussed in multiple meetings.
 
 
 

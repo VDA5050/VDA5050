@@ -347,7 +347,8 @@
                                     "array",
                                     "boolean",
                                     "number",
-                                    "string"
+                                    "string", 
+                                    "object"
                                 ],
                                 "description": "The value of the action parameter",
                                 "examples": [
