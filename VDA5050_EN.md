@@ -1396,9 +1396,9 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*state.loads*                 | uint32        | Maximum number of load-objects sent by the AGV.                |
 | &emsp;*state.actionStates*          | uint32        | Maximum number of actionStates sent by the AGV.                |
 | &emsp;*state.errors*                | uint32        | Maximum number of errors sent by the AGV in one state-message. |
-| &emsp;*state.informations*          | uint32        | Maximum number of information sent by the AGV in one state-message.    |
+| &emsp;*state.information*          | uint32        | Maximum number of information sent by the AGV in one state-message.    |
 | &emsp;*error.errorReferences*       | uint32        | Maximum number of error references sent by the AGV for each error.      |
-| &emsp;*informations.infoReferences* | uint32        | Maximum number of info references sent by the AGV for each information. |
+| &emsp;*information.infoReferences* | uint32        | Maximum number of info references sent by the AGV for each information. |
 | }                             |               |                                                                        |
 | **timing** {                  | JSON-object   | Timing information.                                            |
 | &emsp;minOrderInterval              | float32       | [s], Minimum interval sending order messages to the AGV.        |
