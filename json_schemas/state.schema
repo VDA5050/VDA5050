@@ -77,10 +77,10 @@
                     },
                     "mapStatus": {
                         "type": "string",
-                        "description": "Information on the status of the map indicating, if a map is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "description": "Information on the status of the map indicating, if a map is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.",
                         "enum": [
                             "ENABLED",
-                            "READY"
+                            "DISABLED"
                         ]
                     }
                 }

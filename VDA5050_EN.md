@@ -699,21 +699,21 @@ The orientation must be in radians and must be within +Pi and –Pi.
 ### 6.6.6 Map Distribution
 To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
-The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master controller issuing a download command using an instantAction.
+The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an instantAction.
 
 Each map is uniquely identified by a combination of a mapId and a mapVersion. The mapId describes a specific area of the vehicle's workspace, and the mapVersion indicates updates to previous versions. Before accepting a new job, the vehicle must check that there is a map on the vehicle for each mapId.
 
-In order to minimize downtime and make it easier for the master controller to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle status channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the Master Control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the Master Control with another instantAction. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is shown in the vehicle status.
+In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the Master Control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the Master Control with another instantAction. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is shown in the vehicle state.
 
 #### 6.6.6.1 Maps in the Vehicle State
-The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the status.
+The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
 
 Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
 
 #### 6.6.6.2 Map Download
 The map download is triggered by the 'downloadMap' instant action from the Master Control. This command contains the mandatory parameters 'mapId' and 'mapDownloadLink' under which the map is stored on the map server and which can be accessed by the vehicle.
 
-The AGV sets the 'actionStatus' to 'running' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'finished'. If the download is unsuccessful, the status is set to 'failed'. Once the download has been successfully completed, the map must be added to the vehicle list of maps in the state.
+The AGV sets the 'actionStatus' to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'failed'. Once the download has been successfully completed, the map must be added to the vehicle list of maps in the state.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable or disable any existing maps on the vehicle.
 
@@ -818,7 +818,7 @@ Object structure | Unit | Data type | Description
 _**corridor**_ { |  | JSON-object |
 leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
 rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
-*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If the not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
+*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 
 ### 6.7.1 Corridor attribute
@@ -974,7 +974,7 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 The order progress is tracked by the `nodeStates` and `edgeStates`. 
 Additionally, if the AGV is able to derive its current position, it can publish its position via the “position” field.
 
-If the AGV plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of a NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
+If the AGV plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
 After nodes are released by master control, the AGV is not allowed to change its trajectory.
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
@@ -988,7 +988,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still m
 
 The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV’s control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
-If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be meet additionally.
+If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node’s values.
 
