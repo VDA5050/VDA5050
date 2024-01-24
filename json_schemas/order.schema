@@ -280,6 +280,34 @@
                             }
                         }
                     },
+                    "corridor": {
+                        "description": "Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.",
+                        "type": "object",
+                        "required": [
+                            "leftWidth",
+                            "rightWidth"
+                        ],
+                        "properties": {
+                            "leftWidth": {
+                                "type": "number",
+                                "description": "Defines the width of the corridor in meter to the left related to the trajectory of the vehicle.",
+                                "minimum": 0.0
+                            },
+                            "rightWidth": {
+                                "type": "number",
+                                "description":"Defines the width of the corridor in meter to the right related to the trajectory of the vehicle.",
+                                "minimum": 0.0
+                            },
+                            "corridorRefPoint": {
+                                "type": "string",
+                                "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle.",
+                                "enum": [
+                                    "KC",
+                                    "CONTOUR"
+                                ]
+                            }
+                        }
+                    },
                     "actions": {
                         "description": "Array of action objects with detailed information.",
                         "type": "array",
