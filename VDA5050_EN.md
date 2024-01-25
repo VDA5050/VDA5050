@@ -15,7 +15,7 @@
 ### Brief information
 
 Definition of a communication interface for driverless transport systems (DTS).
-This recommendation describes the communication interface for exchanging order and status data between a central master control and automated guided vehicles (AGV) for intralogistics processes.  
+This recommendation describes the communication interface for exchanging order and status data between a central master control and automated guided vehicles (AGV) for intralogistics processes. 
 
 
 
@@ -46,7 +46,6 @@ Reproduction and any other form of reproduction is only permitted with specifica
 Version 2.1.0
 
 
-
 ## Table of contents
 
 [1 Foreword](#1-foreword)<br>
@@ -69,18 +68,9 @@ Version 2.1.0
 [6.6.1 Concept and Logic](#661-concept-and-logic)<br>
 [6.6.2 Orders and order updates](#662-orders-and-order-update)<br>
 [6.6.3 Order Cancellation (by Master Control)](#663-order-cancellation-by-master-control)<br>
-[6.6.3.1 Receiving a new order after cancellation](#6631-receiving-a-new-order-after-cancellation)<br>
-[6.6.3.2 Receiving a cancelOrder action when AGV has no order](#6632-receiving-a-cancelorder-action-when-agv-has-no-order)<br>
 [6.6.4 Order rejection](#664-order-rejection)<br>
-[6.6.4.1 Vehicle gets a malformed new order](#6641-vehicle-gets-a-malformed-new-order)<br>
-[6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)](#6642-vehicle-receives-an-order-with-actions-it-cannot-perform-eg-lifting-height-higher-than-maximum-lifting-height-or-lifting-actions-although-no-stroke-is-installed-or-with-fields-that-it-cannot-use-eg-trajectory)<br>
-[6.6.4.3 Vehicle gets a new order with the same orderId but a lower orderUpdateId than the current orderUpdateId](#6643-vehicle-gets-a-new-order-with-the-same-orderid-but-a-lower-orderupdateid-than-the-current-orderupdateid)<br>
 [6.6.5 Maps](#665-maps)<br>
 [6.6.6 Map Distribution](#666-map-distribution)<br>
-[6.6.6.1 Maps in Vehicle Status](#6661-maps-in-vehicle-status)<br>
-[6.6.6.2 Map Download](#6662-map-download)<br>
-[6.6.6.3 Activate Downloaded Maps](#6663-activate-downloaded-maps)<br>
-[6.6.6.4 Delete Maps on the Vehicle](#6664-delete-maps-on-the-vehicle)<br>
 [6.7 Implementation of the order message](#67-implementation-of-the-order-message)<br>
 [6.7.1 Corridor](#671-Corridor)<br>
 [6.8 Actions](#68-actions)<br>
@@ -106,16 +96,13 @@ Version 2.1.0
 [8.1 Definition](#81-definition)<br>
 
 
-
 # 1 Foreword 
-
 
 The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA). 
 The aim of both parties is to create an universally applicable interface. 
 Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
 The contribution to this document via GitHub is greatly appreciated.
 The Repository can be found at the following link: http://github.com/vda5050/vda5050.
-
 
 
 # 2 Objective of the document 
@@ -130,7 +117,7 @@ In detail, this should be achieved by the following points:
 - Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g. order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
 - Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
 - Increase in manufacturers independence using common interfaces between vehicle control and coordination level.
-- Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf.  Figure 1).
+- Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf. Figure 1).
 
 ![Figure 1 Integration of DTS inventory systems](./assets/concept_VDA5050.png)
 >Figure 1 Integration of DTS inventory systems
@@ -138,7 +125,6 @@ In detail, this should be achieved by the following points:
 In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
 
 Other interfaces required for operation between AGV and master control (e.g., for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document. 
-
 
 
 # 3 Scope
@@ -163,7 +149,6 @@ Vehicles that are free navigating can be integrated into the structure; a detail
 For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
 
 
-
 ## 3.1 Other applicable documents
 
 Document | Description 
@@ -171,7 +156,6 @@ Document | Description
 VDI Guideline 2510 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | Compatibility of driverless transport systems (DTS) - DTS master control 
 DIN EN ISO 3691-4 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems 
-
 
 
 # 4 Requirements and protocol definition 
@@ -195,7 +179,6 @@ The JSON structure allows for a future extension of the protocol with additional
 The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
 
 
-
 # 5 Process and content of communication
 
 As shown in the information flow to the operation of AGV, there are at least the following participants (see Figure 2): 
@@ -214,9 +197,9 @@ During the implementation phase, the driverless transport systems (DTS) consisti
 The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the master control by importing from other systems. 
 Essentially, this concerns the following content:
 
-- Definition of  routes: Using CAD import,  routes can be taken over in the master control.
+- Definition of routes: Using CAD import, routes can be taken over in the master control.
 Alternatively, routes can also be implemented manually in the master control by the operator.
-Routes can be one-way streets,  restricted for certain vehicle groups (based on the size ratios), etc.
+Routes can be one-way streets, restricted for certain vehicle groups (based on the size ratios), etc.
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
@@ -251,7 +234,6 @@ In addition, the integrator must take into account the following when configurin
 - Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g., it may be different for an AGV carrying a load and for an AGV that does not carry a load.
 
 
-
 # 6 Protocol specification 
 
 The following section describes the details of the communication protocol.
@@ -260,17 +242,16 @@ Communication between the AGV and peripheral equipment, e.g., between the AGV an
 
 The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
 
-In addition, JSON schemas are available for validation in the public Git repository (https://github.com/VDA5050/VDA5050/json_schemas).
+In addition, JSON schemas are available for validation in the public git repository (https://github.com/VDA5050/VDA5050).
 The JSON schemas are updated with every release of the VDA5050.
-
 
 
 ## 6.1 Symbols of the tables and meaning of formatting
 
 The table contains the name of the identifier, its unit, its data type, and a description, if any.
 
-Identification | Description [ENG]
----|----
+Identification | Description
+---|---
 standard | Variable is an elementary data type 
 **bold** | Variable is a non-elementary data type (e.g., JSON-object or array) and defined separately
 *italic* | Variable is optional 
@@ -279,7 +260,6 @@ standard | Variable is an elementary data type
 All keywords are case sensitive.
 All field names are in camelCase. 
 All enumerations are in UPPERCASE.
-
 
 
 ### 6.1.1 Optional fields
@@ -310,12 +290,10 @@ The matching of maximum field lengths, string lengths or value ranges is up to t
 For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [Factsheet Section](#615-topic-factsheet).
 
 
-
 ### 6.1.3 Notation of enumerations 
 
 Enumerations must be written in uppercase. 
 This includes keywords such as the states of the actions (WAITING, FINISHED, etc...) or values of the "direction" field (LEFT, RIGHT, 443MHZ, etc...).
-
 
 
 ### 6.1.4 JSON Datatypes 
@@ -323,7 +301,6 @@ This includes keywords such as the states of the actions (WAITING, FINISHED, etc
 Where possible, JSON data types must be used.
 A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers.
 Numerical data types are specified with type and precision, e.g. float64 or uint32. Special number values from the IEEE 754 like NaN and infinity are not supported.
-
 
 
 ## 6.2 MQTT connection handling, security and QoS
@@ -340,8 +317,7 @@ To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to b
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
-
-## 6.3 MQTT-Topic Levels 
+## 6.3 MQTT-topic levels 
 
 The MQTT-Topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
 For a cloud-based MQTT-Broker the topic structure has to be adapted individually to match the topics defined in this protocol. 
@@ -356,11 +332,10 @@ Example:
 uagv/v2/KIT/0001/order
 ```
 
-
 MQTT Topic Level | Data type | Description 
 ---|---|---
 interfaceName | string | Name of the used interface 
-majorVersion | string | Major version number, preceded by "v"
+majorVersion | string | Major version number of the VDA 5050 recommendation, preceded by "v"
 manufacturer | string | Manufacturer of the AGV (e.g., RobotCompany)
 serialNumber | string | Unique AGV Serial Number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g. Order or System State) see Cap. 6.5
@@ -368,7 +343,8 @@ topic | string | Topic (e.g. Order or System State) see Cap. 6.5
 Note: Since the `/` character is used to define topic hierarchies, it must not be used in any of the aforementioned fields.
 The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
-## 6.4 Protocol Header
+
+## 6.4 Protocol header
 
 Each JSON starts with a header.
 In the following sections, the following fields will be referenced as header for readability. 
@@ -382,6 +358,7 @@ timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.“
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | string | Manufacturer of the AGV 
 serialNumber | string | Serial number of the AGV 
+
 
 ### Protocol version
 
@@ -400,10 +377,9 @@ Examples for patch version:
 - Higher available precision for a batteryCharge 
 
 
-
 ## 6.5 Subtopics for communication
 
-The AGV protocol uses the following topics for information exchange between master control and AGV
+The AGV protocol uses the following topics for information exchange between master control and AGV.
 
 Subtopic name | Published by | Subscribed by | Used for | Implementation | Schema 
 ---|---|---|---|---|---
@@ -420,8 +396,7 @@ factsheet | AGV | master control | Setup of AGV in master control | mandatory | 
 The topic "order" is the MQTT topic via which the AGV receives a JSON encapsulated order. 
 
 
-
-### 6.6.1 Concept and Logic 
+### 6.6.1 Concept and logic 
 
 The basic structure of an order is a graph of nodes and edges.
 The AGV is expected to traverse the nodes and edges to fulfill the order.
@@ -465,15 +440,14 @@ For traffic control and to accommodate resource constrained vehicles, the full t
 The process of updating an order is described in the next section.
 
 
-
 ### 6.6.2 Orders and order update 
 
-For traffic control the order-topic includes only the path to a decision point. 
-Before reaching the decision point, the master control will send an updated path with additional path segments.
-To communicate to the AGV what it will most likely have to do after reaching the decision point, an order consists of two separate parts: 
+The job includes the released path for a vehicle to a decision point, which represents the last currently released node for the vehicle. It also includes non-released nodes that represent the most likely path the AGV will take after reaching the decision point. Thus, an order consists of two separate parts:
 
 - <u>Drive to the decision point "Base":</u> The "Base" is the defined route that the AGV travels. All nodes and edges of the "Base" route have already been approved by the control panel for the vehicle. 
 - <u>Estimated journey from the decision point "Horizon":</u> The "Horizon" is the route that the AGV is likely to drive, if there is no traffic jam. The "Horizon" route has not yet been approved by the control panel. However, the AGV will initially only travel to the last junction of the "Base" route.
+
+Before reaching the decision point, the master control will send an updated path with additional path segments.
 
 Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, it is important to note, that the "base" cannot be changed. 
 The master control can therefore assume that the "base" is executed by the AGV.
@@ -542,7 +516,7 @@ Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
 It is important, that the contents of the stitching node (node g in the example case) are not changed. 
-For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 7, orderUpdateId 0).
+For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension
@@ -574,10 +548,10 @@ Figure 8 describes the process of accepting an order or orderUpdate.
 All formatting and JSON data types are correct?
 
 2)	**is received order new or an update of the current order?**:
-Is `orderId` of the received order different to  `orderId` of order the vehicle currently holds?
+Is `orderId` of the received order different to `orderId` of order the vehicle currently holds?
 
 3)	**is vehicle still executing an order or waiting for an update?**:
-Is `nodeStates` not empty or is `actionStates` containing states which are neither FAILED or FINISHED? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore waiting for an update and executing an order.
+Is `nodeStates` not empty or is `actionStates` containing states which are neither `FAILED` nor `FINISHED`? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore waiting for an update and executing an order.
 
 4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is in the nodes deviation range (see also chapter 6.6.1)?
 
@@ -591,6 +565,7 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 
 9)	populate/ append states	refers to the action-/node-/edgeStates.
 
+
 ### 6.6.3 Order Cancellation (by Master Control)
 
 In the event of an unplanned change in the base nodes, the order must be canceled by using the instantAction cancelOrder.
@@ -599,7 +574,7 @@ After receiving the instantAction cancelOrder, the vehicle stops (based on its c
 
 If there are actions scheduled, these actions must be cancelled and should report “failed” in their actionState. 
 If there are running actions, those actions should be cancelled and also be reported as failed.
-If the action cannot be interrupted, the actionState of that action should reflect that by reporting “running” while it is running, and after that the respective state (“finished”, if  successful and “failed”, if not).
+If the action cannot be interrupted, the actionState of that action should reflect that by reporting “running” while it is running, and after that the respective state (“finished”, if successful and “failed”, if not).
 While actions are running, the cancelOrder action must report “running”, until all actions are cancelled/finished. 
 After all vehicle movements and all actions are stopped, the cancelOrder action status must report “finished”.
 
@@ -609,7 +584,6 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 ![Figure 9 Expected behavior after a cancelOrder](./assets/process_cancel_order.png)
 >Figure 9 Expected behavior after a cancelOrder
-
 
 
 #### 6.6.3.1 Receiving a new order after cancellation
@@ -627,7 +601,6 @@ There are two options:
 - Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV must realize that this node must be counted as traversed and accept the order.
 
 
-
 #### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
 If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action must report as failed.
@@ -636,12 +609,10 @@ The AGV must report a “noOrderToCancel” error with the errorLevel set to war
 The actionId of the instantAction must be passed as an errorReference.
 
 
-
 ### 6.6.4 Order rejection
 
 There are several scenarios, when an order must be rejected. 
 These are explained in Figure 8.
-
 
 
 #### 6.6.4.1 Vehicle gets a malformed new order
@@ -653,15 +624,18 @@ Resolution:
 3. The warning must be reported until the vehicle has accepted a new order.
 
 
+#### 6.6.4.2 Vehicle receives an order with actions it cannot perform or with fields that it cannot use
 
-#### 6.6.4.2 Vehicle receives an order with actions it cannot perform (e.g. lifting height higher than maximum lifting height, or lifting actions although no stroke is installed), or with fields that it cannot use (e.g. Trajectory)
+Examples:
+
+- Non-executable actions: lifting height higher than maximum lifting height, lifting actions although no stroke is installed, etc.
+- Non-useable fields: trajectory, etc.
 
 Resolution: 
 
 1. Vehicle does NOT take over the new order in its internal buffer 
 2. Vehicle reports the warning "orderError" with the wrong fields as error references
 3. The warning must be reported until the vehicle has accepted a new order. 
-
 
 
 #### 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
@@ -677,14 +651,13 @@ If the AGV receives an order with the same orderId and orderUpdateId twice, the 
 This might happen, if the master control sends the order again, because the status message came too late and the master control could not verify that the first order was received.
 
 
-
 ### 6.6.5 Maps
 
 To ensure consistent navigation among different types of AGV, the position is always specified in reference to the local map coordinate system (see Figure 10).
 For the differentiation between different levels a unique mapId is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards. 
 A positive rotation therefore is to be understood as a counterclockwise rotation. 
-The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame.
+The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
 This is in accordance with chapter 2.11 in DIN ISO 8855.
 
 ![Figure 10 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
@@ -696,7 +669,9 @@ The orientation must be in radians and must be within +Pi and –Pi.
 ![Figure 11 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
 >Figure 11 Coordinate systems for map and vehicle
 
+
 ### 6.6.6 Map Distribution
+
 To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
 The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an instantAction.
@@ -705,31 +680,40 @@ Each map is uniquely identified by a combination of a mapId and a mapVersion. Th
 
 In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the Master Control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the Master Control with another instantAction. They can also be deleted by the vehicle itself when it runs out of memory. The result of this process is shown in the vehicle state.
 
-#### 6.6.6.1 Maps in the Vehicle State
+![Figure 12 Map distribution process](./assets/map_distribution_process.png)
+>Figure 12 Communication required between master control, AGV and map server to download, enable and delete a map.
+
+#### 6.6.6.1 Maps in the vehicle state
+
 The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
 
 Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
 
-#### 6.6.6.2 Map Download
+
+#### 6.6.6.2 Map download
+
 The map download is triggered by the 'downloadMap' instant action from the Master Control. This command contains the mandatory parameters 'mapId' and 'mapDownloadLink' under which the map is stored on the map server and which can be accessed by the vehicle.
 
-The AGV sets the 'actionStatus' to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'failed'. Once the download has been successfully completed, the map must be added to the vehicle list of maps in the state.
+The AGV sets the 'actionStatus' to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map must be added to the list of `maps` in the state. Maps must not be reported in the state, before they are ready to be enabled.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable or disable any existing maps on the vehicle.
 
-#### 6.6.6.3 Enable Downloaded Maps
-1. **Set the vehicle position on a new map**: Use the 'initPosition' instant action to set the vehicle position on the new map.
-2. **Enable a map without updating the vehicle position**: Use the 'enableMap' instant action to set a map as active on the vehicle without changing or updating the vehicle's position.
-3. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly.
 
-It is important to verify that each map passed during order execution contains at least one node (see Figure X) to ensure that the correct maps are used for an order. To do this, the 'mapId' of the maps on the vehicle must match those specified in the order. Any discrepancy must result in the order being rejected.
+#### 6.6.6.3 Enable downloaded maps
 
-![Figure 12 Correct use of an order using multiple maps.](./assets/node_placement_multiple_maps.png)
->Figure 12 Correct use of an order spanning across multiple maps.
+There are two ways to enable a map on a vehicle:
 
-#### 6.6.6.4 Delete Maps on the vehicle
-The master control can request the deletion of a specific map from a vehicle. This is done with the instant action 'deleteMap'. To manage storage efficiently and to prevent a vehicle from running out of memory space, the vehicle can delete a map that is not currently enabled by itself. However, this should only be done if there is a lack of free space. If there is sufficient memory, the vehicle should not delete any maps.
+1. **Master control enables map**: Use the 'enableMap' instant action to set a map to ENABLED on the vehicle. 
+2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result must be reported in the vehicle state.
+
+It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle
+If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
+
+
+#### 6.6.6.4 Delete maps on the vehicle
+The master control can request the deletion of a specific map from a vehicle. This is done with the instant action 'deleteMap'. To manage storage efficiently and to prevent a vehicle from running out of memory space, the vehicle can delete a map that is not currently enabled by itself. However, this should only be done if there is a lack of memory. If there is sufficient memory, the vehicle should not delete any maps.
 After successfully deleting a map, it is important to remove that map's entry from the vehicle's list of maps in the vehicle state.
+
 
 ## 6.7 Implementation of the order message
 
@@ -740,85 +724,85 @@ timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.�
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2)
 manufacturer | | string | Manufacturer of the AGV 
 serialNumber | | string | Serial number of the AGV 
-orderId |  | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order. 
-orderUpdateId |  | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message
-zoneSetId |  | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used. 
-**nodes [node]** |  | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
-**edges [edge]** |  | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
+orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order. 
+orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message
+zoneSetId | | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used. 
+**nodes [node]** | | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case. 
+**edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge list empty for that case.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**node** { |  | JSON-object|   
-nodeId |   |  string | Unique node identification
-sequenceId |  | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued. 
-*nodeDescription* |  | string | Additional information on the node 
-released |  | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon. 
-***nodePosition*** |  | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g., line-guided vehicles).
-**actions [action]** <br> } |  | array | Array of actions to be executed on a node. <br>Empty array, if no actions required. 
+**node** { | | JSON-object| 
+nodeId | | string | Unique node identification
+sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued. 
+*nodeDescription* | | string | Additional information on the node 
+released | | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon. 
+***nodePosition*** | | JSON-object | Node position. <br>Optional for vehicle-types that do not require the node position (e.g., line-guided vehicles).
+**actions [action]** <br> } | | array | Array of actions to be executed on a node. <br>Empty array, if no actions required. 
 
 Object structure | Unit | Data type | Description 
 ---| --- |--- | ---
-**nodePosition** { |  | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
+**nodePosition** { | | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0.0: no deviation is allowed. <br><br> If > 0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
+*allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0.0: no deviation is allowed. (no deviation means within the normal tolerance of the AGV manufacturer)<br><br> If > 0.0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
-mapId |  | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-*mapDescription* <br> } |  | string | Additional information on the map.
+mapId | | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*mapDescription* <br> } | | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**action** { |  | JSON-object | Describes an action that the AGV can perform. 
-actionType |  | string | Name of action as described in the first column of “Actions and Parameters”. <br> Identifies the function of the action. 
-actionId |  | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
-*actionDescription* |  | string | Additional information on the action
-blockingType |  | string | Enum {NONE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
-***actionParameters [actionParameter]*** <br><br> } |  | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> See "Actions and Parameters"
+**action** { | | JSON-object | Describes an action that the AGV can perform. 
+actionType | | string | Name of action as described in the first column of “Actions and Parameters”. <br> Identifies the function of the action. 
+actionId | | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
+*actionDescription* | | string | Additional information on the action
+blockingType | | string | Enum {NONE, SOFT, HARD}: <br> "NONE"- allows driving and other actions;<br>"SOFT"- allows other actions, but not driving;<br>"HARD"- is the only allowed action at that time.
+***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**edge** { |  | JSON-object | Directional connection between two nodes.
-edgeId |  | string | Unique edge identification.
-sequenceId |  | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
-*edgeDescription* |  | string | Additional information on the edge.
-released |  | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
-startNodeId |  | string | nodeId of startNode.
-endNodeId |  | string | nodeId of endNode.
+**edge** { | | JSON-object | Directional connection between two nodes.
+edgeId | | string | Unique edge identification.
+sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+*edgeDescription* | | string | Additional information on the edge.
+released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
+startNodeId | | string | nodeId of startNode.
+endNodeId | | string | nodeId of endNode.
 *maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
 *maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on edge.
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the edge. The value *orientationType* defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.<br>If rotationAllowed is “false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory. 
-*orientationType* |  | string | Enum {`GLOBAL`, `TANGENTIAL`}: <br>"GLOBAL"- relative to the global project specific map coordinate system;<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
-*direction* |  | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left,  right, straight, 433MHz.
-*rotationAllowed* |  | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
+*orientationType* | | string | Enum {`GLOBAL`, `TANGENTIAL`}: <br>"GLOBAL"- relative to the global project specific map coordinate system;<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
+*direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left, right, straight, 433MHz.
+*rotationAllowed* | | boolean | “true”: rotation is allowed on the edge.<br>“false”: rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
-***trajectory*** |  | JSON-object | Trajectory JSON-object for this edge as NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
+***trajectory*** | | JSON-object | Trajectory JSON-object for this edge as NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
 ***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.<br><br> Optional<br>
-**actions [action]**<br><br><br> } |  | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**actions [action]**<br><br><br> } | | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**trajectory** { |  | JSON-object |  
-degree |  | float64 | Range: [1.0 ... float64.max]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
-**knotVector [float64]** |  | array | Range: [0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
-**controlPoints [controlPoint]**<br><br> } |  | array | List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
+**trajectory** { | | JSON-object | 
+degree | | float64 | Range: [1.0 ... float64.max]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
+**knotVector [float64]** | | array | Range: [0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
+**controlPoints [controlPoint]**<br><br> } | | array | List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**controlPoint** { |  | JSON-object |  
-x |  | float64 | X coordinate described in the world coordinate system. 
-y |  | float64 | Y coordinate described in the world coordinate system.
-*weight* |  | float64 | Range: [0.0 ... float64.max]<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
-} |  |  |
+**controlPoint** { | | JSON-object | 
+x | | float64 | X coordinate described in the world coordinate system. 
+y | | float64 | Y coordinate described in the world coordinate system.
+*weight* | | float64 | Range: [0.0 ... float64.max]<br><br>The weight, with which this control point pulls on the curve.<br>When not defined, the default will be 1.0.
+} | | |
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-_**corridor**_ { |  | JSON-object |
+_**corridor**_ { | | JSON-object |
 leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
 rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
-*corridorRefPoint* <br><br>**}**|  | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
+*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 
 ### 6.7.1 Corridor attribute
@@ -827,23 +811,23 @@ The optional corridor edge attribute allows the vehicle to deviate from the edge
 In this context, the trajectory is the pre-planned path that the vehicle would follow if no corridor attribute were defined.
 The behavior of a vehicle using the corridor attribute of an edge is still the behavior of a line-guided vehicle with the ability to avoid obstacles.
 
-(*Remark:
- An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
-Depending on the vehicle type, the trajectory that a vehicle takes between the start and end nodes is either defined by MC via the trajectory edge attribute or assigned to the vehicle as a predefined trajectory.
-Depending on the internal state of the vehicle, the selected trajectory may vary.*)
+*Remark:
+An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
+Depending on the vehicle type, the trajectory that a vehicle takes between the start and end nodes is either defined by master control via the trajectory edge attribute or assigned to the vehicle as a predefined trajectory.
+Depending on the internal state of the vehicle, the selected trajectory may vary.*
 
 ![Figure 13 Edges with corridor attribute.](./assets/edges_with_corridors.png)
->Figure 13 Edges with a corridor attribute defining the left and right boundaries that a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles (the corridor violation reference point ```corridorRefPoint``` is set to the kinematic center of the vehicle in this example).
+>Figure 13 Edges with a corridor attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the ``corridorRefPoint`` parameter.
 
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary. 
-The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be within the defined boundaries.
+The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
 The boundaries of the edges must be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node. 
 
 The vehicle's motion control software must constantly check that the vehicle is within the defined boundaries.
 If not, the vehicle must stop because it is out of the allowed navigation space and report an error.
 The MC can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
-(*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.*)
+*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.*
 
 See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
@@ -863,23 +847,22 @@ Additional parameters can be defined, if they are needed to execute an action su
 If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that must be used by master control.
 
 
-
 ### 6.8.1 Predefined action definition, their parameters, effects and scope
 
-general |  | scope 
+general | | scope 
 :---:|--- | :---:
-action, counter action, Description, idempotent, Parameter | linked state |  instant, node, edge 
+action, counter action, Description, idempotent, Parameter | linked state | instant, node, edge 
 
-action | counter action | Description | idempotent | Parameter | linked state | instant | node | edge
+action | counter action | Description | Idempotent | Parameter | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many AGVs can be paused by using a hardware switch. <br>No more AGV driving movements - reaching next node is not necessary.<br>Actions can continue. <br>Order is resumable. | yes | - | paused | yes | no | no 
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no 
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given parameters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set use the already enabled version of map/mapId. | yes | x  (float64)<br>y  (float64)<br>theta  (float64)<br>mapId  (string)<br>mapVersion (string, optional)<br>lastNodeId  (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
-enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId  (string)mapVersion (string) | .maps | yes | yes | no
-downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verification of successful download. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string, optional)<br>mapHash   (string, optional) | .maps | yes | no | no
-deleteMap  | - | Trigger the removal of a map from the vehicle memory.  | yes | mapId  (string)<br>mapVersion (string) | .maps | yes | no | no
+initPosition | - | Resets (overrides) the pose of the AGV with the given parameters. Can be used to initialize vehicles on a new map by sending the updated mapId (see 6.16). <br>Optional mapVersion: if not set use the already enabled version of map/mapId. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>mapVersion (string, optional)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
+enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
+downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string, optional)<br>mapHash (string, optional) | .maps | yes | no | no
+deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g. LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as running in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g. conveyor | .load | no | yes | yes 
@@ -891,12 +874,11 @@ cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately o
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no 
 
 
-
 ### 6.8.2 Predefined action definitions, description of their states 
 
 action | action states 
 ---|---
-  | initializing, running, paused, finished, failed 
+ | | initializing, running, paused, finished, failed |
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
@@ -905,12 +887,13 @@ stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV suppo
 startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error. 
 stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error. 
 initPosition | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
-| downloadMap | Initialize   the connection to the map server.    | AGV is downloading the map, until download finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to DISABLED. | Download failed, updated in vehicle state. Connection lost, Map server unreachable, mapId/mapVersion not existing on map server |
-| deleteMap   | - | AGV deletes map with requested mapId and mapVersion from its internal memory.    | - | AGV removes mapId/mapVersion from its state. |    Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
+| downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to DISABLED. | Download failed, updated in vehicle state. Connection lost, Map server unreachable, mapId/mapVersion not existing on map server |
+| enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapState of the requested map to ENABLED and the other versions with same mapId to DISABLED. | The requested mapId/mapVersion combination does not exist.|
+| deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
 stateRequest | - | - | - | The state has been communicated | - 
 logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
 pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
-drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied.  <br>Failed drop operations should correspond with an error. 
+drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied. <br>Failed drop operations should correspond with an error. 
 detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object. 
 finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached. 
 waitForTrigger | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled. 
@@ -918,8 +901,7 @@ cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | 
 factsheetRequest | - | - | - | The factsheet has been communicated | - 
 
 
-
-## 6.9 Topic: "instantActions" (from master to control to AGV)
+## 6.9 Topic: "instantActions" (from master control to AGV)
 
 In certain cases, it is necessary to send actions to the AGV, that need to be performed immediately. 
 This is made possible by publishing an instantAction message to the topic instantActions.
@@ -930,21 +912,20 @@ Some examples for which instant actions could be relevant are:
 - resume order after pause ;
 - activate signal (optical, audio, etc.).
 
-For additional information, see chapter 8 Best practices.
+For additional information, see chapter 7 Best practices.
 
-Object structure | | Data type | Description 
----|---|---|---
-headerId | | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., “2017-04-15T11:40:03.12Z”)
-version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-manufacturer | | string | Manufacturer of the AGV. 
-serialNumber | | string | Serial number of the AGV.
-actions [action] | | array | Array of actions that need to be performed immediately and are not part of the regular order. 
+Object structure | Data type | Description 
+---|---|---
+headerId | uint32 | header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. 
+timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., “2017-04-15T11:40:03.12Z”)
+version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
+manufacturer | string | Manufacturer of the AGV. 
+serialNumber | string | Serial number of the AGV.
+actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order. 
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an actionStatus.
-
 
 
 ## 6.10 Topic: "state" (from AGV to master control)
@@ -968,8 +949,7 @@ There should be an effort to curb the amount of communication.
 If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the node- and edgeStates; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
 
 
-
-### 6.10.1 Concept and Logic 
+### 6.10.1 Concept and logic 
 
 The order progress is tracked by the `nodeStates` and `edgeStates`. 
 Additionally, if the AGV is able to derive its current position, it can publish its position via the “position” field.
@@ -1010,14 +990,12 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
 
-
 ### 6.10.4 Information 
 
 The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
 
 Master control must not use the info messages for logic, it must only be used for visualization and debugging purposes.
-
 
 
 ### 6.10.5 Errors 
@@ -1029,7 +1007,6 @@ A `FATAL` error needs human intervention.
 Errors can pass references that help with finding the cause of the error via the errorReferences array.
 
 
-
 ### 6.10.6 Implementation
 
 Object structure | Unit | Data type | Description 
@@ -1039,27 +1016,27 @@ timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.�
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
-*maps[map]* | | array | Array of map-objects, that are currently stored on the vehicle (see 6.16 for further information). 
-orderId|  | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available. 
-orderUpdateId |  | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
-*zoneSetId* |  |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
-lastNodeId |  | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., „node7”). Empty string (""), if no lastNodeId is available.
-lastNodeSequenceId |  | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"0" if no lastNodeSequenced is available.
-**nodeStates [nodeState]** |  |array | Array of nodeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
-**edgeStates [edgeState]** |  |array | Array of edgeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
-***agvPosition*** |  | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGV without the capability to localize themselves, e.g., line guided AGVs.
-***velocity*** |  | JSON-object | The AGV velocity in vehicle coordinates. 
-***loads [load]*** |  | array | Loads, that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
-driving |  | boolean | “true”: indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
-*paused* |  | boolean | “true”: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>“false”: The AGV is currently not in a paused state.
-*newBaseRequest* |  | boolean | “true”: AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
+*maps[map]* | | array | Array of map-objects, that are currently stored on the vehicle. 
+orderId| | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available. 
+orderUpdateId | | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
+*zoneSetId* | |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
+lastNodeId | | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., „node7”). Empty string (""), if no lastNodeId is available.
+lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
+**nodeStates [nodeState]** | |array | Array of nodeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
+**edgeStates [edgeState]** | |array | Array of edgeState-Objects, that need to be traversed for fulfilling the order<br>(empty list if idle)
+***agvPosition*** | | JSON-object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGV without the capability to localize themselves, e.g., line guided AGVs.
+***velocity*** | | JSON-object | The AGV velocity in vehicle coordinates. 
+***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
+driving | | boolean | “true”: indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>“false”: indicates that the AGV is neither driving nor rotating.
+*paused* | | boolean | “true”: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>“false”: The AGV is currently not in a paused state.
+*newBaseRequest* | | boolean | “true”: AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>“false”: no base update required.
 *distanceSinceLastNode* | meter | float64 | Used by line guided vehicles to indicate the distance it has been driving past the „lastNodeId“. <br>Distance is in meters.
-**actionStates [actionState]** |  | array | Contains a List of all actions from the current order and all received instantActions since the last order. The action state is kept until a new order is received. States for running instant actions are kept. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription.
-**batteryState** |  | JSON-object | Contains all battery-related information.
-operatingMode |  | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL,  SERVICE,  TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6. 
-**errors [error]** |  | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
-***information [info]*** |  | array | Array of info-objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
-**safetyState** |  | JSON-object | Contains all safety-related information. 
+**actionStates [actionState]** | | array | Contains a list of all actions from the current order and all received instantActions since the last order. The action state is kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription.
+**batteryState** | | JSON-object | Contains all battery-related information.
+operatingMode | | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL, SERVICE, TEACHIN}<br>For additional information, see the table OperatingModes in the chapter 6.10.6. 
+**errors [error]** | | array | Array of error-objects. <br>All active errors of the AGV should be in the list.<br>An empty array indicates that the AGV has no active errors.
+***information [info]*** | | array | Array of info-objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
+**safetyState** | | JSON-object | Contains all safety-related information. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
@@ -1067,126 +1044,122 @@ Object structure | Unit | Data type | Description
 mapId | | string | ID of the map describing a defined area of the vehicles workspace.
 mapVersion | | string | Version of the map.
 *mapDescription* | | string | Additional information on the map.
-mapStatus <br>}| | string | Enum {ENABLED, READY}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>READY: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.
-
-
-Object structure | Unit | Data type | Description 
----|---|---|---
-**nodeState** { | JSON-object |  |
-nodeId |  | string | Unique node identification.
-sequenceId |  | uint32 | sequenceId to discern multiple nodes with same nodeId.
-*nodeDescription* |  | string | Additional information on the node.
-released|  | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
-***nodePosition***<br><br>}|  | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
+mapStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**edgeState** { |  | JSON-object |  |
-edgeId |  | string | Unique edge identification.
-sequenceId |  | uint32 | sequenceId to differentiate between multiple edges with the same edgeId.
-*edgeDescription* |  | string | Additional information on the edge.
-released |  | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
-***trajectory*** <br><br>} |  | JSON-object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.4<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
+**nodeState** { | JSON-object | |
+nodeId | | string | Unique node identification.
+sequenceId | | uint32 | sequenceId to discern multiple nodes with same nodeId.
+*nodeDescription* | | string | Additional information on the node.
+released| | boolean | “true” indicates that the node is part of the base.<br>“false” indicates that the node is part of the horizon.
+***nodePosition***<br><br>}| | JSON-object | Node position. <br>The object is defined in chapter 6.6 <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e. g. for debugging purposes.
+
+Object structure | Unit | Data type | Description 
+---|---|---|---
+**edgeState** { | | JSON-object | |
+edgeId | | string | Unique edge identification.
+sequenceId | | uint32 | sequenceId to differentiate between multiple edges with the same edgeId.
+*edgeDescription* | | string | Additional information on the edge.
+released | | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
+***trajectory*** <br><br>} | | JSON-object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.4<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**agvPosition** { |  | JSON-object | Defines the position on a map in world coordinates. Each floor has its own map.
-positionInitialized |  | boolean | “true”: position is initialized.<br>“false”: position is not initialized.
-*localizationScore* |  | float64 | Range: [0.0 ... 1.0]<br><br>Describes the quality of the localization and therefore, can be used, e.g. by SLAM-AGV to describe, how accurate the current position information is.<br><br>0.0: position unknown<br>1.0: position known<br><br>Optional for vehicles, that cannot estimate their localization score.<br><br>Only for logging and visualization purposes. 
+**agvPosition** { | | JSON-object | Defines the position on a map in world coordinates. Each floor has its own map.
+positionInitialized | | boolean | “true”: position is initialized.<br>“false”: position is not initialized.
+*localizationScore* | | float64 | Range: [0.0 ... 1.0]<br><br>Describes the quality of the localization and therefore, can be used, e.g. by SLAM-AGV to describe, how accurate the current position information is.<br><br>0.0: position unknown<br>1.0: position known<br><br>Optional for vehicles, that cannot estimate their localization score.<br><br>Only for logging and visualization purposes. 
 *deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br><br>Optional for vehicles that cannot estimate their deviation e.g. grid-based localization.<br><br>Only for logging and visualization purposes.
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
-theta |  | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV. 
-mapId |  | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-*mapVersion* |  | string | Use map with mapId and mapVersion.<br> Optional: if not set use active version of map/mapId.
-*mapDescription*<br>} |  | string | Additional information on the map. 
+theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV. 
+mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*mapDescription*<br>} | | string | Additional information on the map. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**velocity** { |  | JSON-object |  
+**velocity** { | | JSON-object | 
 *vx* | m/s | float64 | The AGVs velocity in its x direction.
 *vy* | m/s | float64 | The AGVs velocity in its y direction.
 *omega*<br>}| Rad/s | float64 | The AGVs turning speed around its z axis.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**load** { |  | JSON-object |  
-*loadId* |  | string | Unique identification number of the load (e.g., barcode or RFID).<br><br>Empty field, if the AGV can identify the load, but didn’t identify the load yet.<br><br>Optional, if the AGV cannot identify the load.
-*loadType* |  | string | Type of load.
-*loadPosition* |  | string | Indicates, which load handling/carrying unit of the AGV is used, e.g., in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
-***boundingBoxReference*** |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
-***loadDimensions*** |  | JSON-object | Dimensions of the load´s bounding box in meters. 
+**load** { | | JSON-object | 
+*loadId* | | string | Unique identification number of the load (e.g., barcode or RFID).<br><br>Empty field, if the AGV can identify the load, but didn’t identify the load yet.<br><br>Optional, if the AGV cannot identify the load.
+*loadType* | | string | Type of load.
+*loadPosition* | | string | Indicates, which load handling/carrying unit of the AGV is used, e.g., in case the AGV has multiple spots/positions to carry loads.<br><br>For example: “front”, “back”, “positionC1”, etc.<br><br>Optional for vehicles with only one loadPosition
+***boundingBoxReference*** | | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
+***loadDimensions*** | | JSON-object | Dimensions of the load´s bounding box in meters. 
 *weight*<br><br>} | kg | float64 | Range: [0.0 ... float64.max]<br><br>Absolute weight of the load measured in kg. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**boundingBoxReference** { |  | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
-x |  | float64 | x-coordinate of the point of reference. 
-y |  | float64 | y-coordinate of the point of reference.
-z |  | float 64 | z-coordinate of the point of reference. 
-*theta*<br> } |  | float64 | Orientation of the loads bounding box. <br>Important for tugger, trains, etc. 
+**boundingBoxReference** { | | JSON-object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.
+x | | float64 | x-coordinate of the point of reference. 
+y | | float64 | y-coordinate of the point of reference.
+z | | float 64 | z-coordinate of the point of reference. 
+*theta*<br> } | | float64 | Orientation of the loads bounding box. <br>Important for tugger, trains, etc. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**loadDimensions** { |  | JSON-object | Dimensions of the load´s bounding box in meters. 
+**loadDimensions** { | | JSON-object | Dimensions of the load´s bounding box in meters. 
 length | m | float64 | Absolute length of the load´s bounding box. 
 width | m | float64 | Absolute width of the load´s bounding box. 
 *height* <br><br><br><br>}| m | float64 | Absolute height of the load´s bounding box.<br><br>Optional:<br><br>Set value only if known.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**actionState** { |  | JSON-object |  
-actionId |  |string  | action_ID
-*actionType* |  | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
-*actionDescription* |  | string | Additional information on the current action. 
-actionStatus |  | string | Enum {WAITING; INITIALIZING; RUNNING; PAUSED; FINISHED; FAILED}<br><br>WAITING: waiting for the trigger<br>(passing the mode, entering the edge)<br> PAUSED: paused by instantAction or external trigger<br>FAILED: action could not be performed. 
-*resultDescription*<br><br><br><br>} |  | string | Description of the result, e.g., the result of a RFID-read.<br><br>Errors will be transmitted in errors.<br><br>Examples for results are given in 6.5
+**actionState** { | | JSON-object | 
+actionId | |string | action_ID
+*actionType* | | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
+*actionDescription* | | string | Additional information on the current action. 
+actionStatus | | string | Enum {WAITING; INITIALIZING; RUNNING; PAUSED; FINISHED; FAILED}<br><br>WAITING: waiting for the trigger<br>(passing the mode, entering the edge)<br> PAUSED: paused by instantAction or external trigger<br>FAILED: action could not be performed. 
+*resultDescription*<br>} | | string | Description of the result, e.g., the result of a RFID-read.<br><br>Errors will be transmitted in errors.<br><br>Examples for results are given in 6.5
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**batteryState** { |  | JSON-object |  
+**batteryState** { | | JSON-object | 
 batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery Voltage.
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State of Health. 
-charging |  | boolean | “true”: charging in progress.<br>“false”: AGV is currently not charging.
-*reach* <br><br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated reach with current State of Charge. 
+charging | | boolean | “true”: charging in progress.<br>“false”: AGV is currently not charging.
+*reach* <br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated reach with current State of Charge. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**error** { |  | JSON-object |  
-errorType |  | string | Type/name of error 
-***errorReferences [errorReference]*** |  | array | Array of references (e.g. nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see „Best practices“ chapter 8.
-*errorDescription* |  | string | Verbose description providing details and possible causes of the error. 
-*errorHint* |  | string | Hint on how to approach or solve the reported error. 
-errorLevel <br><br> }|  | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
+**error** { | | JSON-object | 
+errorType | | string | Type/name of error 
+***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see „Best practices“ chapter 8.
+*errorDescription* | | string | Verbose description providing details and possible causes of the error. 
+*errorHint* | | string | Hint on how to approach or solve the reported error. 
+errorLevel <br> }| | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
 
-<a id="errorReferenceImpl"></a>
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**errorReference** { |  | JSON-object |  
-referenceKey |  | string | Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.).
-referenceValue <br>} |  | string | The value that belongs to the reference key. For example, the id of the node where the error occurred.
+**errorReference** { | | JSON-object | 
+referenceKey | | string | Specifies the type of reference used (e.g., "nodeId", "edgeId", "orderId", "actionId", etc.).
+referenceValue <br>} | | string | The value that belongs to the reference key. For example, the id of the node where the error occurred.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|--- 
-**info** { |  | JSON-object |  
-infoType |  | string | Type/name of information. 
-*infoReferences [infoReference]* |  | array | Array of references. 
-*infoDescription* |  | string | Info of description. 
-infoLevel <br><br><br>}|  | string | Enum {DEBUG,INFO}<br><br>DEBUG: used for debugging.<br> INFO: used for visualization. 
+**info** { | | JSON-object | 
+infoType | | string | Type/name of information. 
+*infoReferences [infoReference]* | | array | Array of references. 
+*infoDescription* | | string | Info of description. 
+infoLevel <br>}| | string | Enum {DEBUG,INFO}<br><br>DEBUG: used for debugging.<br> INFO: used for visualization. 
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**infoReference** { |  | JSON-object |  
-referenceKey |  | string | References the type of reference (e.g., headerId, orderId, actionId, etc.).
-referenceValue <br>} |  | string | References the value, which belongs to the reference key.
-
+**infoReference** { | | JSON-object | 
+referenceKey | | string | References the type of reference (e.g., headerId, orderId, actionId, etc.).
+referenceValue <br>} | | string | References the value, which belongs to the reference key.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---
-**safetyState** { |  | JSON-object |  
-eStop |  | string | Enum {AUTOACK,MANUAL,REMOTE,NONE}<br><br>Acknowledge-Type of eStop:<br>AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>MANUAL: e-stop hast to be acknowledged manually at the vehicle.<br>REMOTE: facility e-stop has to be acknowledged remotely.<br>NONE: no e-stop activated.
-fieldViolation<br><br>} |  | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
+**safetyState** { | | JSON-object | 
+eStop | | string | Enum {AUTOACK,MANUAL,REMOTE,NONE}<br><br>Acknowledge-Type of eStop:<br>AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>MANUAL: e-stop hast to be acknowledged manually at the vehicle.<br>REMOTE: facility e-stop has to be acknowledged remotely.<br>NONE: no e-stop activated.
+fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
 The following description lists the operatingMode of the topic "states".
@@ -1198,7 +1171,6 @@ SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and e
 MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
 SERVICE | Master control is not in control of the AGV. <br>Master control doesn’t send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV. 
 TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
-
 
 
 ## 6.11 actionStates
@@ -1215,7 +1187,7 @@ WAITING | Action was received by AGV but the node where it triggers was not yet 
 INITIALIZING | Action was triggered, preparatory measures are initiated.
 RUNNING | The action is running.
 PAUSED | The action is paused because of a pause instantAction or external trigger (pause button on AGV)
-FINISHED | The action is finished. <br>A result is reported via the result.
+FINISHED | The action is finished. <br>A result is reported via the resultDescription.
 FAILED | Action could not be finished for whatever reason.
 
 >Table 1 The acceptable values for the actionStatus field
@@ -1224,7 +1196,6 @@ A state transition diagram is provided in Figure 16.
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
-
 
 
 ## 6.12 Action Blocking Types and Sequence 
@@ -1248,7 +1219,6 @@ If there are multiple actions on the same node with different blocking types, Fi
 >Figure 17 Handling multiple actions
 
 
-
 ## 6.13 Topic "visualization" 
 
 For a near real-time position update the AGV can broadcast its position and velocity on the subtopic `visualization`.
@@ -1256,7 +1226,6 @@ For a near real-time position update the AGV can broadcast its position and velo
 The structure of the position message is the same as the position and velocity message in the state.
 For additional information see chapter 6.10 Implementation. 
 The update rate for this topic is defined by the integrator.
-
 
 
 ## 6.14 Topic "connection"
@@ -1302,6 +1271,7 @@ All messages on this topic shall be sent with a retained flag.
 
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: „uagv/v2/manufacturer/SN/connection“ with the field `connectionState` set to `CONNECTIONBROKEN`.
 
+
 ## 6.15 Topic "factsheet"
 
 The factsheet provides basic information about a specific AGV type series.
@@ -1312,216 +1282,216 @@ The values for some fields in the AGV factsheet can only be specified during sys
 
 The factsheet is both intended as a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
 
-The MC can request the factsheet from the AGV by sending the instant action:  `factsheetRequest`
+The MC can request the factsheet from the AGV by sending the instant action: `factsheetRequest`
 
 All messages on this topic shall be sent with a retained flag.
+
 
 ### 6.15.1 Factsheet JSON structure
 The factsheet consists of the JSON-objects listed in the following table.
 
-| **Field**                  | **data type** | **description**                                              |
-| -------------------------- | ------------- | ------------------------------------------------------------ |
-| headerId                   | uint32        | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
-| timestamp                  | string        | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g.“2017-04-15T11:40:03.12Z”). |
-| version                    | string        | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2). |
-| manufacturer               | string        | Manufacturer of the AGV.                                     |
-| serialNumber               | string        | Serial number of the AGV.                                     |
-| **typeSpecification**      | JSON-object   | These parameters generally specify the class and the capabilities of the AGV. |
-| **physicalParameters**     | JSON-object   | These parameters specify the basic physical properties of the AGV. |
-| **protocolLimits**         | JSON-object   | Limits for length of identifiers, arrays, strings and similar in MQTT communication. |
-| **protocolFeatures**       | JSON-object   | Supported features of VDA5050 protocol.                      |
-| **agvGeometry**            | JSON-object   | Detailed definition of AGV geometry.                         |
-| **loadSpecification**      | JSON-object   | Abstract specification of load capabilities.                 |
-| **localizationParameters** | JSON-object   | Detailed specification of localization.                      |
-| ***vehicleConfig*** | JSON-object   | Summary of current software and hardware versions on the vehicle and optional network information.                      |
+| **Field** | **data type** | **description** |
+| --- | --- | --- |
+| headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
+| timestamp | string | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g.“2017-04-15T11:40:03.12Z”). |
+| version | string | Version of the protocol [Major].[Minor].[Patch] (e.g. 1.3.2). |
+| manufacturer | string | Manufacturer of the AGV. |
+| serialNumber | string | Serial number of the AGV. |
+| **typeSpecification** | JSON-object | These parameters generally specify the class and the capabilities of the AGV. |
+| **physicalParameters** | JSON-object | These parameters specify the basic physical properties of the AGV. |
+| **protocolLimits** | JSON-object | Limits for length of identifiers, arrays, strings and similar in MQTT communication. |
+| **protocolFeatures** | JSON-object | Supported features of VDA5050 protocol. |
+| **agvGeometry** | JSON-object | Detailed definition of AGV geometry. |
+| **loadSpecification** | JSON-object | Abstract specification of load capabilities. |
+| **localizationParameters** | JSON-object | Detailed specification of localization. |
+| ***vehicleConfig*** | JSON-object | Summary of current software and hardware versions on the vehicle and optional network information. |
 
 #### typeSpecification
 
 This JSON object describes general properties of the AGV type.
 
-| **Field**           | **data type**   | **description** |
-|---------------------|-----------------|-----------------|
-| seriesName          | string          | Free text generalized series name as specified by manufacturer. |
-| *seriesDescription* | string          | Free text human readable description of the AGV type series.    |
-| agvKinematic        | string          | Simplified description of AGV kinematics-type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive<br/>OMNI: omni-directional vehicle<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics |
-| agvClass            | string          | Simplified description of AGV class.<br/>[FORKLIFT, CONVEYOR, TUGGER, CARRIER]<br/>FORKLIFT: forklift.<br/>CONVEYOR: AGV with conveyors on it.</br>TUGGER: tugger.<br/>CARRIER: load carrier with or without lifting unit. |
-| maxLoadMass         | float64         | [kg], Maximum loadable mass. |
-| localizationTypes   | array of string  | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
-| navigationTypes     | array of string | List of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
+| **Field** | **data type** | **description** |
+|---|---|---|
+| seriesName | string | Free text generalized series name as specified by manufacturer. |
+| *seriesDescription* | string | Free text human readable description of the AGV type series. |
+| agvKinematic | string | Simplified description of AGV kinematics-type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive<br/>OMNI: omni-directional vehicle<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics |
+| agvClass | string | Simplified description of AGV class.<br/>[FORKLIFT, CONVEYOR, TUGGER, CARRIER]<br/>FORKLIFT: forklift.<br/>CONVEYOR: AGV with conveyors on it.</br>TUGGER: tugger.<br/>CARRIER: load carrier with or without lifting unit. |
+| maxLoadMass | float64 | [kg], Maximum loadable mass. |
+| localizationTypes | array of string | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks;<br/>REFLECTOR: laser reflectors;<br/>RFID: RFID-tags;<br/>DMC: data matrix code;<br/>SPOT: magnetic spots;<br/>GRID: magnetic grid.<br/>
+| navigationTypes | array of string | List of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: No path planning, AGV follows physical installed paths.<br/>VIRTUAL_LINE_GUIDED: AGV goes fixed (virtual) paths.<br/>AUTONOMOUS: AGV plans its path autonomously.|
 
 #### physicalParameters
 
 This JSON-object describes physical properties of the AGV.
 
-| **Field**       | **data type** | **description**                                       |
-|-----------------|---------------|-------------------------------------------------------|
-| speedMin        | float64       | [m/s] Minimal controlled continuous speed of the AGV.  |
-| speedMax        | float64       | [m/s] Maximum speed of the AGV.                        |
-| *angularSpeedMin*        | float64       | [Rad/s] Minimal controlled continuous rotation speed of the AGV.  |
-| *angularSpeedMax*        | float64       | [Rad/s] Maximum rotation speed of the AGV.                        |
-| accelerationMax | float64       | [m/s²] Maximum acceleration with maximum load.         |
-| decelerationMax | float64       | [m/s²] Maximum deceleration with maximum load.         |
-| heightMin       | float64       | [m] Minimum height of AGV.                             |
-| heightMax       | float64       | [m] Maximum height of AGV.                             |
-| width           | float64       | [m] Width of AGV.                                      |
-| length          | float64       | [m] Length of AGV.                                     |
+| **Field** | **data type** | **description** |
+|---|---|---|
+| speedMin | float64 | [m/s] Minimal controlled continuous speed of the AGV. |
+| speedMax | float64 | [m/s] Maximum speed of the AGV. |
+| *angularSpeedMin* | float64 | [Rad/s] Minimal controlled continuous rotation speed of the AGV. |
+| *angularSpeedMax* | float64 | [Rad/s] Maximum rotation speed of the AGV. |
+| accelerationMax | float64 | [m/s²] Maximum acceleration with maximum load. |
+| decelerationMax | float64 | [m/s²] Maximum deceleration with maximum load. |
+| heightMin | float64 | [m] Minimum height of AGV. |
+| heightMax | float64 | [m] Maximum height of AGV. |
+| width | float64 | [m] Width of AGV. |
+| length | float64 | [m] Length of AGV. |
 
 #### protocolLimits
 
 This JSON-object describes the protocol limitations of the AGV.
 If a parameter is not defined or set to zero then there is no explicit limit for this parameter.
 
-| **Field**                     | **data type** | **description**                             |
-|-------------------------------|---------------|---------------------------------------------|
-| **maxStringLens** {           | JSON-object   | Maximum lengths of strings.                 |
-| &emsp;*msgLen*                      | uint32        | Maximum MQTT message length                 |
-| &emsp;*topicSerialLen*              | uint32        | Maximum length of serial-number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber   |
-| &emsp;*topicElemLen*                | uint32        | Maximum length of all other parts in MQTT-topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
-| &emsp;*idLen*                       | uint32        | Maximum length of ID-Strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>order.zoneSetId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
-| &emsp;*idNumericalOnly*             | boolean          | If "true" ID-strings need to contain numerical values only. |
-| &emsp;*enumLen*                     | uint32        | Maximum length of ENUM- and Key-Strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState                                               |
-| &emsp;*loadIdLen*                   | uint32        | Maximum length of loadId Strings |
-| }                             |               |                                  |
-| **maxArrayLens** {            | JSON-object   | Maximum lengths of arrays.                                 |
-| &emsp;*order.nodes*                 | uint32        | Maximum number of nodes per order processable by the AGV.  |
-| &emsp;*order.edges*                 | uint32        | Maximum number of edges per order processable by the AGV.  |
-| &emsp;*node.actions*                | uint32        | Maximum number of actions per node processable by the AGV. |
-| &emsp;*edge.actions*                | uint32        | Maximum number of actions per edge processable by the AGV. |
-| &emsp;*actions.actionsParameters*   | uint32        | Maximum number of parameters per action processable by the AGV. |
-| &emsp;*instantActions*              | uint32        | Maximum number of instant actions per message processable by the AGV. |
-| &emsp;*trajectory.knotVector*       | uint32        | Maximum number of knots per trajectory processable by the AGV. |
-| &emsp;*trajectory.controlPoints*    | uint32        | Maximum number of control points per trajectory processable by the AGV. |
-| &emsp;*state.nodeStates*            | uint32        | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
-| &emsp;*state.edgeStates*            | uint32        | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
-| &emsp;*state.loads*                 | uint32        | Maximum number of load-objects sent by the AGV.                |
-| &emsp;*state.actionStates*          | uint32        | Maximum number of actionStates sent by the AGV.                |
-| &emsp;*state.errors*                | uint32        | Maximum number of errors sent by the AGV in one state-message. |
-| &emsp;*state.information*          | uint32        | Maximum number of information sent by the AGV in one state-message.    |
-| &emsp;*error.errorReferences*       | uint32        | Maximum number of error references sent by the AGV for each error.      |
-| &emsp;*information.infoReferences* | uint32        | Maximum number of info references sent by the AGV for each information. |
-| }                             |               |                                                                        |
-| **timing** {                  | JSON-object   | Timing information.                                            |
-| &emsp;minOrderInterval              | float32       | [s], Minimum interval sending order messages to the AGV.        |
-| &emsp;minStateInterval              | float32       | [s], Minimum interval for sending state-messages.               |
-| &emsp;*defaultStateInterval*        | float32       | [s], Default interval for sending state-messages, *if not defined, the default value from the main document is used*. |
-|  &emsp;*visualizationInterval*      | float32       | [s], Default interval for sending messages on visualization topic.       |
-| }                             |               |                                                               |
+| **Field** | **data type** | **description** |
+|---|---|---|
+| **maxStringLens** { | JSON-object | Maximum lengths of strings. |
+| &emsp;*msgLen* | uint32 | Maximum MQTT message length |
+| &emsp;*topicSerialLen* | uint32 | Maximum length of serial-number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber |
+| &emsp;*topicElemLen* | uint32 | Maximum length of all other parts in MQTT-topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
+| &emsp;*idLen* | uint32 | Maximum length of ID-Strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>order.zoneSetId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
+| &emsp;*idNumericalOnly* | boolean | If "true" ID-strings need to contain numerical values only. |
+| &emsp;*enumLen* | uint32 | Maximum length of ENUM- and Key-Strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState |
+| &emsp;*loadIdLen* | uint32 | Maximum length of loadId Strings |
+| } | | |
+| **maxArrayLens** { | JSON-object | Maximum lengths of arrays. |
+| &emsp;*order.nodes* | uint32 | Maximum number of nodes per order processable by the AGV. |
+| &emsp;*order.edges* | uint32 | Maximum number of edges per order processable by the AGV. |
+| &emsp;*node.actions* | uint32 | Maximum number of actions per node processable by the AGV. |
+| &emsp;*edge.actions* | uint32 | Maximum number of actions per edge processable by the AGV. |
+| &emsp;*actions.actionsParameters* | uint32 | Maximum number of parameters per action processable by the AGV. |
+| &emsp;*instantActions* | uint32 | Maximum number of instant actions per message processable by the AGV. |
+| &emsp;*trajectory.knotVector* | uint32 | Maximum number of knots per trajectory processable by the AGV. |
+| &emsp;*trajectory.controlPoints* | uint32 | Maximum number of control points per trajectory processable by the AGV. |
+| &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
+| &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
+| &emsp;*state.loads* | uint32 | Maximum number of load-objects sent by the AGV. |
+| &emsp;*state.actionStates* | uint32 | Maximum number of actionStates sent by the AGV. |
+| &emsp;*state.errors* | uint32 | Maximum number of errors sent by the AGV in one state-message. |
+| &emsp;*state.information* | uint32 | Maximum number of information sent by the AGV in one state-message. |
+| &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the AGV for each error. |
+| &emsp;*information.infoReferences* | uint32 | Maximum number of info references sent by the AGV for each information. |
+| } | | |
+| **timing** { | JSON-object | Timing information. |
+| &emsp;minOrderInterval | float32 | [s], Minimum interval sending order messages to the AGV. |
+| &emsp;minStateInterval | float32 | [s], Minimum interval for sending state-messages. |
+| &emsp;*defaultStateInterval* | float32 | [s], Default interval for sending state-messages, *if not defined, the default value from the main document is used*. |
+| &emsp;*visualizationInterval* | float32 | [s], Default interval for sending messages on visualization topic. |
+| } | | |
 
 #### protocolFeatures
 
 This JSON object defines actions and parameters which are supported by the AGV.
 
-| **Field**    | **data type** | **description**  |
-|--------------|---------------|------------------|
+| **Field** | **data type** | **description** |
+|---|---|---|
 | **optionalParameters** [**optionalParameter**] | array of JSON-object | List of supported and/or required optional parameters.<br/>Optional parameters, that are not listed here, are assumed to be not supported by the AGV. |
-| {            |               |                  |
-| &emsp;parameter    | string        | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
-| &emsp;support      | enum      | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
-| &emsp;*description*| string        | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned integer-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
-| }            |               |                  |
+| { | | |
+| &emsp;parameter | string | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
+| &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
+| &emsp;*description*| string | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned integer-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
+| } | | |
 | **agvActions** [**agvAction**] | array of JSON-object | List of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
-| {            |               |                  |
-| &emsp;actionType   | string        | Unique actionType corresponding to action.actionType. |
-| &emsp;*actionDescription* | string  | Free-form text: description of the action. |
-| &emsp;actionScopes | array of enum  | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
+| { | | |
+| &emsp;actionType | string | Unique actionType corresponding to action.actionType. |
+| &emsp;*actionDescription* | string | Free-form text: description of the action. |
+| &emsp;actionScopes | array of enum | List of allowed scopes for using this action-type.<br/><br/>INSTANT: usable as instantAction.<br/>NODE: usable on nodes.<br/>EDGE: usable on edges.<br/><br/>For example: ```[„INSTANT“, „NODE“]```|
 | &emsp;***actionParameters** [**actionParameter**]* | array of JSON-object | List of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Chapter 6.7 within nodes and edges.|
-|&emsp;*{*     |               |                  |
-|&emsp;&emsp;key     | string        | Key-String for Parameter. |
-|&emsp;&emsp;valueDataType | enum    | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
-|&emsp;&emsp;*description* | string  | Free-form text: description of the parameter. |
-|&emsp;&emsp;*isOptional*  | boolean    | "true": optional parameter. |
-|&emsp;*}*           |         |                          |
-|*resultDescription* | string  | Free-form text: description of the resultDescription. |
-|*blockingTypes* | array of enum  | Array of possible blocking types for defined Action. </br> Enum {NONE, SOFT, HARD} |
-|*}*                 |         |                          |
+|&emsp;*{* | | |
+|&emsp;&emsp;key | string | Key-String for Parameter. |
+|&emsp;&emsp;valueDataType | enum | Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY. |
+|&emsp;&emsp;*description* | string | Free-form text: description of the parameter. |
+|&emsp;&emsp;*isOptional* | boolean | "true": optional parameter. |
+|&emsp;*}* | | |
+|*resultDescription* | string | Free-form text: description of the resultDescription. |
+|*blockingTypes* | array of enum | Array of possible blocking types for defined Action. </br> Enum {NONE, SOFT, HARD} |
+|*}* | | |
 
 ### agvGeometry
 
 This JSON object defines the geometry properties of the AGV, e.g., outlines and wheel positions.
 
-| **Field**                            | **data type**        | **description**                                        |
-|--------------------------------------|----------------------|--------------------------------------------------------|
+| **Field** | **data type** | **description** |
+|---|---|---|
 | ***wheelDefinitions** [**wheelDefinition**]* | array of JSON-object | List of wheels, containing wheel-arrangement and geometry. |
-| {                                    |                      |                                                        |
-| &emsp;type                                 | enum                 | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```.     |
-| &emsp;isActiveDriven                       | boolean                 | "true": wheel is actively driven.       |
-| &emsp;isActiveSteered                      | boolean                 | "true": wheel is actively steered.    |
-| &emsp;**position** {                           | JSON-object          |                                                        |
-|&emsp;&emsp; x                              | float64              | [m], x-position in AGV-coordinate. system          |
-|&emsp;&emsp; y                              | float64              | [m], y-position in AGV-coordinate. system          |
-|&emsp;&emsp; *theta*                        | float64              | [rad], orientation of wheel in AGV-coordinate system Necessary for fixed wheels. |
-| &emsp;}                                    |                      |                                                        |
-| &emsp;diameter                             | float64              | [m], nominal diameter of wheel.                          |
-| &emsp;width                                | float64              | [m], nominal width of wheel.                             |
-| &emsp;*centerDisplacement*                 | float64              | [m], nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0.            |
-| &emsp;*constraints*                        | string               | Free-form text: can be used by the manufacturer to define constraints. |
-| }                                    |                      |                                                        |
-| ***envelopes2d** [**envelope2d**]*   | array of JSON-object | List of AGV-envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
-| {                                    |                      |                                                        |
-| &emsp;set                             | string               | Name of the envelope curve set.                         |
-| &emsp;**polygonPoints**  **[polygonPoint]**         | array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
-| &emsp;{                                    |                      |                                                        |
-|&emsp;&emsp; x                              | float64              | [m], x-position of polygon-point.                        |
-|&emsp;&emsp; y                              | float64              | [m], y-position of polygon-point.                        |
-| &emsp;}                                    |                      |                                                        |
-| &emsp;*description*                        | string               | Free-form text: description of envelope curve set.   |
-| *}*                                  |                      |                                                        |
-| ***envelopes3d [envelope3d]***       | array of JSON-object | List of AGV-envelope curves in 3D. |
-| *{*                                  |                      |                                                        |
-| &emsp;set                                  | string               | Name of the envelope curve set.                         |
-| &emsp;format                               | string               | Format of data, e.g., DXF.                                |
-| &emsp;***data***                           | JSON-object          | 3D-envelope curve data, format specified in 'format'.   |
-| &emsp;*url*                                | string               | Protocol and url-definition for downloading the 3D-envelope curve data, e.g. <ftp://xxx.yyy.com/ac4dgvhoif5tghji>. |
-| &emsp;*description*                        | string               | Free-form text: description of envelope curve set           |
-| *}*                                  |                      |                                                        |
+| { | | |
+| &emsp;type | enum | Wheel type<br/>```DRIVE, CASTER, FIXED, MECANUM```. |
+| &emsp;isActiveDriven | boolean | "true": wheel is actively driven. |
+| &emsp;isActiveSteered | boolean | "true": wheel is actively steered. |
+| &emsp;**position** { | JSON-object | |
+|&emsp;&emsp; x | float64 | [m], x-position in AGV-coordinate. system |
+|&emsp;&emsp; y | float64 | [m], y-position in AGV-coordinate. system |
+|&emsp;&emsp; *theta* | float64 | [rad], orientation of wheel in AGV-coordinate system Necessary for fixed wheels. |
+| &emsp;} | | |
+| &emsp;diameter | float64 | [m], nominal diameter of wheel. |
+| &emsp;width | float64 | [m], nominal width of wheel. |
+| &emsp;*centerDisplacement* | float64 | [m], nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0. |
+| &emsp;*constraints* | string | Free-form text: can be used by the manufacturer to define constraints. |
+| } | | |
+| ***envelopes2d** [**envelope2d**]* | array of JSON-object | List of AGV-envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| { | | |
+| &emsp;set | string | Name of the envelope curve set. |
+| &emsp;**polygonPoints** **[polygonPoint]** | array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
+| &emsp;{ | | |
+|&emsp;&emsp; x | float64 | [m], x-position of polygon-point. |
+|&emsp;&emsp; y | float64 | [m], y-position of polygon-point. |
+| &emsp;} | | |
+| &emsp;*description* | string | Free-form text: description of envelope curve set. |
+| *}* | | |
+| ***envelopes3d [envelope3d]*** | array of JSON-object | List of AGV-envelope curves in 3D. |
+| *{* | | |
+| &emsp;set | string | Name of the envelope curve set. |
+| &emsp;format | string | Format of data, e.g., DXF. |
+| &emsp;***data*** | JSON-object | 3D-envelope curve data, format specified in 'format'. |
+| &emsp;*url* | string | Protocol and url-definition for downloading the 3D-envelope curve data, e.g. <ftp://xxx.yyy.com/ac4dgvhoif5tghji>. |
+| &emsp;*description* | string | Free-form text: description of envelope curve set |
+| *}* | | |
 
 #### loadSpecification
 
 This JSON object specifies load handling and supported load types of the AGV.
 
-| **Field**                        | **data type**        | **description**                                                      |
-|----------------------------------|----------------------|----------------------------------------------------------------------|
-| *loadPositions*         | array of string      | List of load positions / load handling devices.<br/>This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
-| ***loadSets [loadSet]*** | array of JSON-object | list of load-sets that can be handled by the AGV                     |
-| {                                    |                      |                                                        |
-|&emsp; setName                 | string               | Unique name of the load set, e.g., DEFAULT, SET1, etc.                 |
-|&emsp; loadType                | string               | Type of load, e.g., EPAL, XLT1200, etc.                                  |
-|&emsp; *loadPositions*         | array of string      | List of load positions btw. load handling devices, this load-set is valid for.<br/>*If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.* |
-|&emsp; ***boundingBoxReference***  | JSON-object          | Bounding box reference as defined in parameter loads[] in state-message. |
-|&emsp; ***loadDimensions***        | JSON-object          | Load dimensions as defined in parameter loads[] in state-message.     |
-|&emsp; *maxWeight*             | float64              | [kg], maximum weight of load type.                                      |
-|&emsp; *minLoadhandlingHeight* | float64              | [m], minimum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
-|&emsp;  *maxLoadhandlingHeight* | float64              | [m], maximum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
-|&emsp; *minLoadhandlingDepth*  | float64              | [m], minimum allowed depth for this load-type and –weight<br/>references to boundingBoxReference. |
-|&emsp; *maxLoadhandlingDepth*  | float64              | [m], maximum allowed depth for this load-type and –weight<br/>references to boundingBoxReference. |
-|&emsp; *minLoadhandlingTilt*   | float64              | [rad], minimum allowed tilt for this load-type and –weight.            |
-|&emsp; *maxLoadhandlingTilt*   | float64              | [rad], maximum allowed tilt for this load-type and –weight.            |
-|&emsp; *agvSpeedLimit*         | float64              | [m/s], maximum allowed speed for this load-type and –weight.           |
-|&emsp; *agvAccelerationLimit*  | float64              | [m/s²], maximum allowed acceleration for this load-type and –weight.   |
-|&emsp; *agvDecelerationLimit*  | float64              | [m/s²], maximum allowed deceleration for this load-type and –weight.   |
-|&emsp; *pickTime*              | float64              | [s], approx. time for picking up the load                  |
-|&emsp; *dropTime*              | float64              | [s], approx. time for dropping the load.                    |
-|&emsp; *description*           | string               | Free-form text: description of the load handling set.            |
-| }                       |                      |                                                           |
+| **Field** | **data type** | **description** |
+|---|---|---|
+| *loadPositions* | array of string | List of load positions / load handling devices.<br/>This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
+| ***loadSets [loadSet]*** | array of JSON-object | List of load-sets that can be handled by the AGV |
+| { | | |
+|&emsp; setName | string | Unique name of the load set, e.g., DEFAULT, SET1, etc. |
+|&emsp; loadType | string | Type of load, e.g., EPAL, XLT1200, etc. |
+|&emsp; *loadPositions* | array of string | List of load positions btw. load handling devices, this load-set is valid for.<br/>*If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.* |
+|&emsp; ***boundingBoxReference*** | JSON-object | Bounding box reference as defined in parameter loads[] in state-message. |
+|&emsp; ***loadDimensions*** | JSON-object | Load dimensions as defined in parameter loads[] in state-message. |
+|&emsp; *maxWeight* | float64 | [kg], maximum weight of load type. |
+|&emsp; *minLoadhandlingHeight* | float64 | [m], minimum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
+|&emsp; *maxLoadhandlingHeight* | float64 | [m], maximum allowed height for handling of this load-type and –weight<br/>references to boundingBoxReference. |
+|&emsp; *minLoadhandlingDepth* | float64 | [m], minimum allowed depth for this load-type and –weight<br/>references to boundingBoxReference. |
+|&emsp; *maxLoadhandlingDepth* | float64 | [m], maximum allowed depth for this load-type and –weight<br/>references to boundingBoxReference. |
+|&emsp; *minLoadhandlingTilt* | float64 | [rad], minimum allowed tilt for this load-type and –weight. |
+|&emsp; *maxLoadhandlingTilt* | float64 | [rad], maximum allowed tilt for this load-type and –weight. |
+|&emsp; *agvSpeedLimit* | float64 | [m/s], maximum allowed speed for this load-type and –weight. |
+|&emsp; *agvAccelerationLimit* | float64 | [m/s²], maximum allowed acceleration for this load-type and –weight. |
+|&emsp; *agvDecelerationLimit* | float64 | [m/s²], maximum allowed deceleration for this load-type and –weight. |
+|&emsp; *pickTime* | float64 | [s], approx. time for picking up the load |
+|&emsp; *dropTime* | float64 | [s], approx. time for dropping the load. |
+|&emsp; *description* | string | Free-form text: description of the load handling set. |
+| } | | |
 
 #### vehicleConfig
 
 This JSON-object details the software and hardware versions running on the vehicle, as well as a quick summary of network information.
 
-| **Field**       | **data type** | **description**                                       |
-|-----------------|---------------|-------------------------------------------------------|
-| *versions[versionInfo]*       | array of JSON-object       | List of key-value pair objects containing software and hardware information.  |
-| {                               |                      |                                                        |
-|&emsp; key                              | string              | Key of the software/hardware version used. (E.g softwareVersion)         |
-|&emsp; value                              | string              | The version corresponding to the key. (E.g v1.12.4-beta)         |
-| }                                    |                      |                                                        |
-| *network*  {      | JSON-object       | Information about the vehicle's network connection. The listed information shall not be updated while the vehicle is operating.                       |
-|&emsp;&emsp; *dnsServers*                              | array of string              | List of Domain Name Servers (DNS) used by the vehicle.          |
-|&emsp;&emsp; *ntpServers*                              | array of string              | List of Network Time Protocol (NTP) servers used by the vehicle.         |
-|&emsp;&emsp; *localIpAddress*                       | string              | A priori assigned IP address. Note that this IP address should not modified/changed during operations. |
-|&emsp;&emsp; *netmask*                       | string              | The subnet mask used in the network configuration |
-|&emsp;&emsp; *defaultGateway*                       | string              | The default gateway used by the vehicle |
-| &emsp;}                                    |                      |                                                        |
+| **Field** | **data type** | **description** |
+|---|---|---|
+| *versions[versionInfo]* | array of JSON-object | List of key-value pair objects containing software and hardware information.| | { | | |
+|&emsp; key | string | Key of the software/hardware version used. (E.g softwareVersion) |
+|&emsp; value | string | The version corresponding to the key. (E.g v1.12.4-beta) |
+| } | | |
+| *network* { | JSON-object | Information about the vehicle's network connection. The listed information shall not be updated while the vehicle is operating. |
+|&emsp;&emsp; *dnsServers* | array of string | List of Domain Name Servers (DNS) used by the vehicle. |
+|&emsp;&emsp; *ntpServers* | array of string | List of Network Time Protocol (NTP) servers used by the vehicle. |
+|&emsp;&emsp; *localIpAddress* | string | A priori assigned IP address used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations. |
+|&emsp;&emsp; *netmask* | string | The subnet mask used in the network configuration corresponding to the local IP address.|
+|&emsp;&emsp; *defaultGateway* | string | The default gateway used by the vehicle, corresponding to the local IP address. |
+| &emsp;} | | |
 
 
 # 7 Best practice
@@ -1550,10 +1520,16 @@ Sample for the actionParameter of an action “someAction” with key-value-pair
 
 "actionParameters":[
 {"key":"stationType", "value": "floor"},
+{"key":"weight", "value": 8.5},
 {"key": "loadType", "value": "pallet_eu"}
 ]
 
-The reason for using the proposed scheme of “key”: “actualKey”, “value”: “actualValue” is to keep the implementation generic. The ”actualValue” can be of any possible JSON data type, type, such as float, bool, and even an object. This was thoroughly and controversially discussed in multiple meetings.
+actionParameter | | array | Array of actionParameter-objects for the indicated action, e.g., deviceId, loadId, external Triggers. <br><br> An example implementation can be found in "7.2 Format of parameters".
+---|---|---|---
+key | | string | Array of
+value | | "array","boolean", "number","string", "object" | Array of
+
+The reason for using the proposed scheme of “key”: “actualKey”, “value”: “actualValue” is to keep the implementation generic. The ”actualValue” can be of any possible JSON data type, such as float, bool, and even an object.
 
 
 

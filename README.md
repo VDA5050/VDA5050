@@ -1,4 +1,14 @@
+# Release Candidate V 2.1.0
+This version of the document is the release candidate for Version 2.1.0. It is currently under review for publication.
+
+Major changes:
+- Added **corridors**:
+- Added **map distribution**:
+- Added **Error hints** to AGV state:
+- Added **Vehicle Configuration** to factsheet
+
 # VDA5050
+
 An open standard for communication between AGV fleets and a central master control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the Mechanical Engineering Industry Association (www.vdma.org), as well as the Institute for Material Flow and Logistics (IFL) at KIT (www.ifl.kit.edu) and many contributors from the AMR industry.
 
 **DISCLAIMER**: We are constantly working to improve the VDA 5050. If there are any differences between the markdown document/JSON schemas on GitHub and the published document by the VDA, the PDF on the VDA website is valid. The current version of the official VDA 5050 document can be found here ([German](https://www.vda.de/de/suche#"5050")/[English](https://www.vda.de/en/search#"5050")).
