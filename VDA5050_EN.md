@@ -649,7 +649,7 @@ Resolution:
 4. The vehicle continues with the executing the previous order. 
 
 If the AGV receives an order with the same orderId and orderUpdateId twice, the second order will be ignored. 
-This might happen, if the master control sends the order again, because the status message came too late and the master control could not verify that the first order was received.
+This might happen, if the master control sends the order again, because the state message came too late and the master control could not verify that the first order was received.
 
 ### 6.6.7 Corridors
 
@@ -743,7 +743,7 @@ endNodeId | | string | nodeId of endNode.
 ***trajectory*** | | JSON-object | Trajectory JSON-object for this edge as NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position. 
 ***corridor*** | | JSON-object | Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.<br><br> Optional<br>
-**actions [action]**<br><br><br> } | | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**action [action]**<br><br><br> } | | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description 
 ---|---|---|---

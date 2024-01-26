@@ -46,7 +46,7 @@ endif
                         #lightgreen:clear horizon, if vehicle has one;
                         #lightgreen:- accept order update\n- set orderUpdateId\n- append states to the ones\ncurrently running/planned (9);
                 else (no)
-                    if ((8) is the received update a valid\ncontinuation of the previous\ncompleted actions?) then (no)
+                    if ((8) is the received update a valid\ncontinuation of the previous\ncompleted order?) then (no)
                         #orange:reject order\nthrow error;
                         stop;
                     endif
