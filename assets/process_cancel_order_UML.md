@@ -2,7 +2,7 @@ This markdown file is the original UML diagram from which process_cancel_order.p
 
 ```
 @startuml
-scale 0.65
+skinparam dpi 400
 skinparam defaultTextAlignment center
 start
 :AGV has order;
@@ -13,11 +13,11 @@ else (no)
     #lightgreen: Finish the actions and report\n their respective state (<B>RUNNING</B>,\n <B>FAILED</B>, <B>FINISHED</B>);
 endif
     if (Can vehicle stop\n in between\n nodes?) then (no)
-        #lightgreen: AGV drives to next node where it should \n be able to receive a new order \n <B>cancelOrder</B> action state is set to <B>RUNNING</B> \n The nodeState for the node the AGV is driving to is kept. All other nodeStates and edgeStates are deleted.;
-        #orange: AGV arrives at the node where it stops.\n This node is removed from the nodeStates, and lastNodeId and lastNodeSequenceId must be updated accordingly. \n  actionStates are kept. \n <B>cancelOrder</B> action state is set\n to <B>FINISHED</B>.;
+        #lightgreen: AGV drives to next node where it should \n be able to receive a new order \n <B>cancelOrder</B> action state is set to <B>RUNNING</B> \n The nodeState for the node the AGV is driving to is kept. \nAll other nodeStates and edgeStates are deleted.;
+        #lightgreen: AGV arrives at the node where it stops.\n This node is removed from the nodeStates,\n and lastNodeId and lastNodeSequenceId\n must be updated accordingly. \n  actionStates are kept. \n <B>cancelOrder</B> action state is set to <B>FINISHED</B>.;
         stop
     else (yes)
-        #orange: AGV stops gracefully\n and deletes nodeStates and\n edgeStates. \n actionStates are kept. \n <B>cancelOrder</B> action state is set \n to <B>FINISHED</B>;
+        #lightgreen: AGV stops gracefully\n and deletes nodeStates and\n edgeStates. \n actionStates are kept. \n <B>cancelOrder</B> action state is set \n to <B>FINISHED</B>;
     stop
 @enduml
 ```

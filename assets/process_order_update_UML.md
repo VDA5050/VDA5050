@@ -2,7 +2,7 @@ This markdown file is the original UML diagram from which processing_order_updat
 
 ```
 @startuml
-scale 0.65
+skinparam dpi 250
 start
 #lightgreen:Order arrives via MQTT;
 #lightgreen:Validate JSON;
