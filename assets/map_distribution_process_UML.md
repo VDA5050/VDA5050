@@ -28,10 +28,10 @@ AGV -> "Master Control": Send updated state\n with new map in maps array
 deactivate AGV
 end
 
-group enable downloaded map
+group enable map
 "Master Control" -> "AGV": Trigger instant action "enableMap"
 activate AGV
-AGV -> AGV: Set map with requested mapId and\n mapVersion to ENABLED,\n set other maps with same mapId\n and different versions to DISABLED
+AGV -> AGV: Set map with requested mapId and\n mapVersion to ENABLED,\n set other maps with same mapId\n and different mapVersions to DISABLED
 "Master Control" <- "AGV": Send updated state
 deactivate AGV
 end
