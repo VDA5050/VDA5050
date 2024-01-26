@@ -2,7 +2,7 @@ This markdown file is the original UML diagram from which handling_multiple_acti
 
 ```
 @startuml
-scale 0.65
+skinparam dpi 400
 skinparam defaultTextAlignment center
 start
 :AGV arrives at node \nwith multiple actions;

@@ -801,7 +801,7 @@
                         },
                         "localIpAddress": {
                             "type": "string",
-                            "description": "A priori assigned IP address. Note that this IP address should not modified/changed during operations."
+                            "description": "A priori assigned IP address used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
                         },
                         "ntpServers": {
                             "type": "array",
