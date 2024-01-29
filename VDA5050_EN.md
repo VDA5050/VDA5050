@@ -37,6 +37,7 @@ If you encounter any inaccuracies in the application of the proposals or the pos
 **Publisher**
 Verband der Automobilindustrie e.v. (VDA)
 Behrenstrasse 35, 10117 Berlin 
+Germany	
 www.vda.de
 
 **Copyright**
