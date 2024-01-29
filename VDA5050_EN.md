@@ -22,13 +22,13 @@ This recommendation describes the communication interface for exchanging order a
 ### Disclaimer 
 
 The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGV) and master control and one that is freely applicable to everyone and is non-binding.
-Those who apply them must ensure that they are applied properly in the specific case.
+Those who apply them shall ensure that they are applied properly in the specific case.
 
 They shall take into account the state of the art prevailing at the time of each issue.
 By applying the proposals, no one is evasive of responsibility for their own actions. 
 The statements do not claim to be exhaustive or to the exact interpretation of the existing legislation.
 They may not replace the study of relevant policies, laws and regulations. 
-Furthermore, the special features of the respective products as well as their different possible applications must be taken into account.
+Furthermore, the special features of the respective products as well as their different possible applications shall be taken into account.
 Everyone acts at his own risk in this regard.
 Liability of the VDA and those involved in the development or application of the proposals is excluded.
 
@@ -36,7 +36,8 @@ If you encounter any inaccuracies in the application of the proposals or the pos
 
 **Publisher**
 Verband der Automobilindustrie e.v. (VDA)
-Behrenstrasse 35, 10117 Berlin 
+Behrenstrasse 35, 10117 Berlin, 
+Germany	
 www.vda.de
 
 **Copyright**
@@ -77,22 +78,22 @@ Version 2.1.0
 [6.8.3 Map download](#683-map-download)<br>
 [6.8.4 Enable downloaded maps](#684-enable-downloaded-maps)<br>
 [6.8.5 Delete maps on vehicle](#685-delete-maps-on-vehicle)<br>
-[6.9 Actions](#68-actions)<br>
-[6.9.1 Predefined action definitions, their parameters, effects and scope](#681-predefined-action-definition-their-parameters-effects-and-scope)<br>
-[6.9.2 Predefined action definitions, their parameters, effects and scope](#682-predefined-action-definitions-description-of-their-states)<br>
-[6.10 Topic: "instantActions" (from master control to AGV)](#69-topic-instantactions-from-master-to-control-to-agv)<br>
-[6.11 Topic: "state" (from AGV to master control)](#610-topic-state-from-agv-to-master-control)<br>
-[6.11.1 Concept and logic](#6101-concept-and-logic)<br>
-[6.11.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
-[6.11.3 Base request](#6103-base-request)<br>
-[6.11.4 Information](#6104-information)<br>
-[6.11.5 Errors](#6105-errors)<br>
-[6.11.6 Implementation](#6106-implementation)<br>
-[6.12 actionStates](#611-actionstates)<br>
-[6.13 Action blocking types and sequence](#612-action-blocking-types-and-sequence)<br>
-[6.14 Topic "visualization"](#613-topic-visualization)<br>
-[6.15 Topic "connection"](#614-topic-connection)<br>
-[6.16 Topic "factsheet"](#615-topic-factsheet)<br>
+[6.9 Actions](#69-actions)<br>
+[6.9.1 Predefined action definitions, their parameters, effects and scope](#691-predefined-action-definition-their-parameters-effects-and-scope)<br>
+[6.9.2 Predefined action definitions, their parameters, effects and scope](#692-predefined-action-definitions-description-of-their-states)<br>
+[6.10 Topic: "instantActions" (from master control to AGV)](#610-topic-instantactions-from-master-to-control-to-agv)<br>
+[6.11 Topic: "state" (from AGV to master control)](#611-topic-state-from-agv-to-master-control)<br>
+[6.11.1 Concept and logic](#6111-concept-and-logic)<br>
+[6.11.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
+[6.11.3 Base request](#6113-base-request)<br>
+[6.11.4 Information](#6114-information)<br>
+[6.11.5 Errors](#6115-errors)<br>
+[6.11.6 Implementation](#6116-implementation)<br>
+[6.12 actionStates](#612-actionstates)<br>
+[6.13 Action blocking types and sequence](#613-action-blocking-types-and-sequence)<br>
+[6.14 Topic "visualization"](#614-topic-visualization)<br>
+[6.15 Topic "connection"](#615-topic-connection)<br>
+[6.16 Topic "factsheet"](#616-topic-factsheet)<br>
 [7 Best practice](#7-best-practice)<br>
 [7.1 Error reference](#71-error-reference)<br>
 [7.2 Format of parameters](#72-format-of-parameters)<br>
@@ -207,7 +208,7 @@ Routes can be one-way streets, restricted for certain vehicle groups (based on t
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined. 
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV must communicate this information via the subtopic `factsheet` in a specific way that is defined in the [Factsheet section](#615-topic-factsheet) of this document.
+The AGV shall communicate this information via the subtopic `factsheet` in a specific way that is defined in the [Factsheet section](#615-topic-factsheet) of this document.
 
 The configuration of routes and the route network described above is not part of this document.
 It forms the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed. 
@@ -232,9 +233,9 @@ Functions of the AGV are:
 - Navigation along associated routes (guided or autonomous) 
 - Continuous transmission of vehicle status 
 
-In addition, the integrator must take into account the following when configuring the overall system (incomplete list): 
+In addition, the integrator shall take into account the following when configuring the overall system (incomplete list): 
 
-- Map configuration: The coordinate systems of the master control and the AGV must be matched.
+- Map configuration: The coordinate systems of the master control and the AGV shall be matched.
 - Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g., it may be different for an AGV carrying a load and for an AGV that does not carry a load.
 
 
@@ -278,7 +279,7 @@ Master control shall only send optional information that the AGV supports.
 Example: Trajectories are optional. 
 If an AGV cannot process trajectories, master control shall not send a trajectory to the vehicle.
 
-The AGV must communicate which optional parameters it needs via an AGV factsheet message.
+The AGV shall communicate which optional parameters it needs via an AGV factsheet message.
 
 
 ### 6.1.2 Permitted characters and field lengths
@@ -288,21 +289,21 @@ The recommendation is that IDs should only use the following characters:
 
 A-Z a-z 0-9 _ - . :
 
-A maximum message length is not defined. 
+A maximum message length is not defined, but limited by the MQTT protocol specification and perhabs by technial constraints defined inside the fact-sheet. 
 If an AGV memory is insufficient to process an incoming order, it is to reject the order.
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
-For ease of integration, AGV vendors must supply an AGV factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
+For ease of integration, AGV vendors shall supply an AGV factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
 
 
 ### 6.1.3 Notation of enumerations 
 
-Enumerations must be written in uppercase. 
+Enumerations shall be written in uppercase. 
 This includes keywords such as the states of the actions (WAITING, FINISHED, etc...) or values of the "direction" field (LEFT, RIGHT, 443MHZ, etc...).
 
 
 ### 6.1.4 JSON datatypes 
 
-Where possible, JSON data types must be used.
+Where possible, JSON data types shall be used.
 A Boolean value is thus encoded by "true / false", NOT with an enumeration (TRUE, FALSE) or magic numbers.
 Numerical data types are specified with type and precision, e.g. float64 or uint32. Special number values from the IEEE 754 like NaN and infinity are not supported.
 
@@ -344,7 +345,7 @@ manufacturer | string | Manufacturer of the AGV (e.g., RobotCompany)
 serialNumber | string | Unique AGV Serial Number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g. Order or System State) see Section "[Subtopics for Communication](#65-subtopics-for-communication)"
 
-Note: Since the `/` character is used to define topic hierarchies, it must not be used in any of the aforementioned fields.
+Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
 
@@ -418,17 +419,17 @@ However, due to the different sizes and specifications of AGV, it might be neces
 >Figure 3 Graph representation in Master Control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
-The lists order also governs in which sequence the nodes and edges must be traversed.
+The lists order also governs in which sequence the nodes and edges shall be traversed.
 
-For a valid order, at least one node must be present. 
+For a valid order, at least one node shall be present. 
 The number of acceptable edges is the number of nodes minus one, not more or less.
 
-The first node of an order must be trivially reachable for the AGV. 
+The first node of an order shall be trivially reachable for the AGV. 
 This means either that the AGV is already standing on the node, or that the AGV is in the nodes deviation range.
 
 Nodes and edges both have a boolean attribute “released”.
 If a node or edge is released, the AGV is expected to traverse it. 
-If a node or edge is not released, the AGV must not traverse it.
+If a node or edge is not released, the AGV shall not traverse it.
 
 An edge only can be released, if both the start and end node of the edge are released.
 
@@ -451,9 +452,9 @@ To support traffic management, master control can split the path communicated vi
 - *"Base"*: This is the defined route that the AGV is allowed to travel. All nodes and edges of the base route have already been released by the master control for the vehicle. The last node of the base is called decision point.
 - *"Horizon"*: This is the route currently planned by master control for the AGV to travel after the decision point. The horizon route has not yet been released by the master control.
 
-The AGV must stop at the decision point if no further nodes and edges are added to the base. In order to ensure a fluent movement, the master control should extend the base before the AGV reaches the decision point, if the traffic situation allows.
+The AGV shall stop at the decision point if no further nodes and edges are added to the base. In order to ensure a fluent movement, the master control should extend the base before the AGV reaches the decision point, if the traffic situation allows.
 
-Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable the base cannot be changed. The master control must therefore assume that the base has already been executed by the AGV. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
+Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable the base cannot be changed. The master control shall therefore assume that the base has already been executed by the AGV. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
 
 
 The master control has the possibility to change the horizon by sending an updated route to the AGV which includes the changed list of nodes and edges. The procedure for changing the horizon route is shown in Figure 4.
@@ -517,7 +518,7 @@ Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
 It is important, that the contents of the stitching node (node g in the example case) are not changed. 
-For actions, deviation range, etc. the AGV must use the instructions provided in the first order (Figure 5, orderUpdateId 0).
+For actions, deviation range, etc. the AGV shall use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension
@@ -569,15 +570,15 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 
 ### 6.6.3 Order cancellation (by master control)
 
-In the event of an unplanned change in the base nodes, the order must be canceled by using the instantAction cancelOrder.
+In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction cancelOrder.
 
 After receiving the instantAction cancelOrder, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
-If there are actions scheduled, these actions must be cancelled and should report “failed” in their actionState. 
+If there are actions scheduled, these actions shall be cancelled and should report “failed” in their actionState. 
 If there are running actions, those actions should be cancelled and also be reported as failed.
 If the action cannot be interrupted, the actionState of that action should reflect that by reporting “running” while it is running, and after that the respective state (“finished”, if successful and “failed”, if not).
-While actions are running, the cancelOrder action must report “running”, until all actions are cancelled/finished. 
-After all vehicle movements and all actions are stopped, the cancelOrder action status must report “finished”.
+While actions are running, the cancelOrder action shall report “running”, until all actions are cancelled/finished. 
+After all vehicle movements and all actions are stopped, the cancelOrder action status shall report “finished”.
 
 The orderId and orderUpdateId is kept. 
 
@@ -589,30 +590,30 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 #### 6.6.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the vehicle must be in a state to receive a new order. 
+After the cancellation of an order, the vehicle shall be in a state to receive a new order. 
 
 In the case of an AGV that localizes itself on nodes via a tag, the new order has to begin on the node the AGV is now standing on (see also Figure 5).
 
 In case of an AGV that can stop in-between nodes, the choice is up to master control how the next order should be started. 
-The AGV must accept both methods.
+The AGV shall accept both methods.
 
 There are two options:
 
-- Send an order, where the first node is a temporary node that is positioned where the AGV currently stands. The AGV must then realize that this node is trivially reachable and accept the order.
-- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV must realize that this node must be counted as traversed and accept the order.
+- Send an order, where the first node is a temporary node that is positioned where the AGV currently stands. The AGV shall then realize that this node is trivially reachable and accept the order.
+- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV shall realize that this node shall be counted as traversed and accept the order.
 
 
 #### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
-If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action must report as failed.
+If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action shall report as failed.
 
-The AGV must report a “noOrderToCancel” error with the errorLevel set to warning. 
-The actionId of the instantAction must be passed as an errorReference.
+The AGV shall report a “noOrderToCancel” error with the errorLevel set to warning. 
+The actionId of the instantAction shall be passed as an errorReference.
 
 
 ### 6.6.4 Order rejection
 
-There are several scenarios, when an order must be rejected. 
+There are several scenarios, when an order shall be rejected. 
 These are explained in Figure 8.
 
 
@@ -622,7 +623,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer. 
 2. The vehicle reports the warning "validationError"
-3. The warning must be reported until the vehicle has accepted a new order.
+3. The warning shall be reported until the vehicle has accepted a new order.
 
 
 #### 6.6.4.2 Vehicle receives an order with actions it cannot perform or with fields that it cannot use
@@ -636,7 +637,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer 
 2. Vehicle reports the warning "orderError" with the wrong fields as error references
-3. The warning must be reported until the vehicle has accepted a new order. 
+3. The warning shall be reported until the vehicle has accepted a new order. 
 
 
 #### 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
@@ -667,15 +668,15 @@ Depending on the internal state of the vehicle, the selected trajectory may vary
 
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary. 
 The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
-The boundaries of the edges must be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node. 
+The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node. 
 
-The vehicle's motion control software must constantly check that the vehicle is within the defined boundaries.
-If not, the vehicle must stop because it is out of the allowed navigation space and report an error.
+The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
+If not, the vehicle shall stop because it is out of the allowed navigation space and report an error.
 The MC can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
-*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance must be considered during initial operation, and when MC makes a traffic control decision based on the vehicle's footprint. MC must also consider the possible deviation from the trajectory.*
+*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if MC makes a traffic control decision based on the vehicle's footprint. MC shall also consider the possible deviation from the trajectory.*
 
-See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
+See also section [6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
 
 ## 6.7 Implementation of the order message
@@ -705,10 +706,10 @@ released | | boolean | "true" indicates that the node is part of the base. <br> 
 
 Object structure | Unit | Data type | Description 
 ---| --- |--- | ---
-**nodePosition** { | | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps must use the same project specific global origin. 
+**nodePosition** { | | JSON-object | Defines the position on a map in a global project specific world coordinate system. <br>Each floor has its own map. <br>All maps shall use the same project specific global origin. 
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation. 
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV must rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
 *allowedDeviationXY* | m | float64 | Indicates how exact an AGV has to drive over a node in order for it to count as traversed. <br><br> If = 0.0: no deviation is allowed. (no deviation means within the normal tolerance of the AGV manufacturer)<br><br> If > 0.0: allowed deviation-radius in meters. <br>If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how big the deviation of theta angle can be. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId | | string | Unique identification of the map in which the position is referenced. <br> Each map has the same project specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
@@ -763,8 +764,8 @@ y | | float64 | Y coordinate described in the world coordinate system.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 _**corridor**_ { | | JSON-object |
-leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
-rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (see Figure 13). Value must be equal or greater zero [0... float64.maxValue].
+leftWidth | m | float64 | Defines the width of the corridor in meter to the left related to the trajectory of the vehicle (see Figure 13). Value shall be equal or greater zero [0... float64.maxValue].
+rightWidth | m | float64 | Defines the width of the corridor in meter to the right related to the trajectory of the vehicle (see Figure 13). Value shall be equal or greater zero [0... float64.maxValue].
 *corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicle kinematic center (= "KC") .<br> Enum { KC , CONTOUR }
 
 ### 6.8 Maps
@@ -779,8 +780,8 @@ This is in accordance with chapter 2.11 in DIN ISO 8855.
 ![Figure 10 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 10 Coordinate system with sample AGV and orientation
 
-The X, Y and Z coordinates must be in meters. 
-The orientation must be in radians and must be within +Pi and –Pi.
+The X, Y and Z coordinates shall be in meters. 
+The orientation shall be in radians and shall be within +Pi and –Pi.
 
 ![Figure 11 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
 >Figure 11 Coordinate systems for map and vehicle
@@ -792,9 +793,9 @@ To enable an automatic map distribution and intelligent management of restarting
 
 The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an instantAction.
 
-Each map is uniquely identified by a combination of a mapId and a mapVersion. The mapId describes a specific area of the vehicle's workspace, and the mapVersion indicates updates to previous versions. Before accepting a new order, the vehicle must check that there is a map on the vehicle for each mapId in the requested order. The master control is responsible for ensuring that the vehicle has the necessary map and has enabled the correct versions of them.
+Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the vehicle's workspace, and the map version indicates updates to previous versions. Before accepting a new order, the vehicle shall check that there is a map on the vehicle for each map identifier in the requested order. The master control is responsible for ensuring that the vehicle has the necessary map and has enabled the correct versions of them.
 
-In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the master control sends an instantAction. In this case, any other map with the same mapId but a different mapVersion is automatically disabled. Maps can be deleted by the master control with another instantAction. The result of this process is shown in the vehicle state.
+In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the master control sends an instant action. In this case, any other map with the same map identifier but a different map version is automatically disabled. Maps can be deleted by the master control with another instant action. The result of this process is shown in the vehicle state.
 
 The map distribution process is shown in Figure 12.
 
@@ -803,16 +804,16 @@ The map distribution process is shown in Figure 12.
 
 #### 6.8.2 Maps in the vehicle state
 
-The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the 'maps' array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields 'mapId', 'mapVersion', and 'mapStatus', which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map must not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
+The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
 
-Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the 'maps' array is empty, this means that there are currently no maps available on the vehicle.
+Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the vehicle.
 
 
 #### 6.8.3 Map download
 
-The map download is triggered by the 'downloadMap' instant action from the Master Control. This command contains the mandatory parameters 'mapId' and 'mapDownloadLink' under which the map is stored on the map server and which can be accessed by the vehicle.
+The map download is triggered by the `downloadMap` instant action from the Master Control. This command contains the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the vehicle.
 
-The AGV sets the 'actionStatus' to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the 'actionStatus' is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map must be added to the array of `maps` in the state. Maps must not be reported in the state, before they are ready to be enabled.
+The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable or disable any existing maps on the vehicle.
 
@@ -821,15 +822,15 @@ It is important to ensure that the process of downloading a map does not modify,
 
 There are two ways to enable a map on a vehicle:
 
-1. **Master control enables map**: Use the 'enableMap' instant action to set a map to ENABLED on the vehicle. 
-2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result must be reported in the vehicle state.
+1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. 
+2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
-It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle
+It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle.
 If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
 
 
 #### 6.8.5 Delete maps on vehicle
-The master control can request the deletion of a specific map from a vehicle. This is done with the instant action 'deleteMap'. When a vehicle runs out of memory, it should report this to the master control, which can then initiate the deletion of maps. The vehicle itself is not allowed to delete maps.
+The master control can request the deletion of a specific map from a vehicle. This is done with the instant action `deleteMap`. When a vehicle runs out of memory, it should report this to the master control, which can then initiate the deletion of maps. The vehicle itself is not allowed to delete maps.
 After successfully deleting a map, it is important to remove that map's entry from the vehicle's array of maps in the vehicle state.
 
 
@@ -837,16 +838,16 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic instantActions (see "[6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)").
 
-Actions that are to be executed on an edge must only run while the AGV is on the edge (see "[6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)").
+Actions that are to be executed on an edge shall only run while the AGV is on the edge (see "[6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)").
 
 Actions that are triggered on nodes can run as long as they need to run. 
 Actions on nodes should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or should be formulated pairwise (e.g., activateWarningLights and deactivateWarningLights), although there may be exceptions. 
 
-The following section presents predefined actions that must be used by the AGV, if the AGVs capabilities map to the action description.
-If there is a sensible way to use the defined parameters, they must be used. 
+The following section presents predefined actions that shall be used by the AGV, if the AGVs capabilities map to the action description.
+If there is a sensible way to use the defined parameters, they shall be used. 
 Additional parameters can be defined, if they are needed to execute an action successfully.
 
-If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that must be used by master control.
+If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that shall be used by master control.
 
 
 ### 6.9.1 Predefined action definition, their parameters, effects and scope
@@ -863,7 +864,7 @@ startCharging | stopCharging | Activates the charging process. <br>Charging can 
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be “false”, when AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
 initPosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no 
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
-downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string, optional)<br>mapHash (string, optional) | .maps | yes | no | no
+downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no 
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no 
@@ -907,7 +908,7 @@ factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 In certain cases, it is necessary to send actions to the AGV, that need to be performed immediately. 
 This is made possible by publishing an instantAction message to the topic instantActions.
-instantActions must not conflict with the content of the AGV’s current order (e.g., instantAction to lower fork, while order says to raise fork).
+instantActions shall not conflict with the content of the AGV’s current order (e.g., instantAction to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are: 
 - pause the AGV without changing anything in the current order;
@@ -945,7 +946,7 @@ Events that trigger the transmission of the state message are:
 - Driving over a node 
 - Switching the operating mode 
 - Change in the "driving" field 
-- Change in the nodeStates, edgeStates or actionStates 
+- Change in the nodeStates, edgeStates, actionStates or maps 
 
 There should be an effort to curb the amount of communication.
 If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the node- and edgeStates; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
@@ -954,12 +955,12 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 ### 6.11.1 Concept and logic 
 
 The order progress is tracked by the `nodeStates` and `edgeStates`. 
-Additionally, if the AGV is able to derive its current position, it can publish its position via the “position” field.
+Additionally, if the AGV is able to derive its current position, it can publish its position via the `position` field.
 
-If the AGV plans the path by itself, it must communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field must not be sent.
+If the AGV plans the path by itself, it shall communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless master control cannot use this field and it was agreed during integration, that this field shall not be sent.
 After nodes are released by master control, the AGV is not allowed to change its trajectory.
 
-The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still must traverse.
+The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still shall traverse.
 
 ![Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png) 
 >Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
@@ -974,13 +975,13 @@ If the edge attribute `corridor` of the subsequent edge is set, these boundaries
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node’s values.
 
-As soon as the AGV reports the node as traversed, the AGV must trigger the actions associated with the node, if any.
+As soon as the AGV reports the node as traversed, the AGV shall trigger the actions associated with the node, if any.
 
 The traversal of a node also marks the leaving of the edge leading up to the node. 
-The edge must then be removed from the `edgeStates` and the actions that were active on the edge must be finished.
+The edge shall then be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
 
 The traversal of the node also marks the moment, when the AGV enters the following edge, if there is one.
-The edges actions must now be triggered. 
+The edges actions shall now be triggered. 
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
 ![Figure 15 nodeStates, edgeStates, actionStates during order handling](./assets/states_during_order_handling.png)
@@ -997,7 +998,7 @@ If the AGV detects, that its base is running low, it can set the `newBaseRequest
 The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
 
-Master control must not use the info messages for logic, it must only be used for visualization and debugging purposes.
+Master control shall not use the info messages for logic, it shall only be used for visualization and debugging purposes.
 
 
 ### 6.11.5 Errors 
@@ -1021,7 +1022,7 @@ serialNumber | | string | Serial number of the AGV.
 *maps[map]* | | array | Array of map-objects, that are currently stored on the vehicle. 
 orderId| | string | Unique order identification of the current order or the previous finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available. 
 orderUpdateId | | uint32 | Order Update Identification to identify, that an order update has been accepted by the AGV. <br>“0” if no previous orderUpdateId is available. 
-*zoneSetId* | |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Must be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
+*zoneSetId* | |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>shall be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId | | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., „node7”). Empty string (""), if no lastNodeId is available.
 lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
 **nodeStates [nodeState]** | |array | Array of nodeState-Objects, that need to be traversed for fulfilling the order<br>(empty array if idle)
@@ -1037,7 +1038,7 @@ driving | | boolean | “true”: indicates, that the AGV is driving and/or rota
 **batteryState** | | JSON-object | Contains all battery-related information.
 operatingMode | | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL, SERVICE, TEACHIN}<br>For additional information, see the table OperatingModes in the section "[6.11.6 Implementation](#6116-implementation)". 
 **errors [error]** | | array | Array of error-objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
-***information [info]*** | | array | Array of info-objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it must not be used for logic in master control.
+***information [info]*** | | array | Array of info-objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in master control.
 **safetyState** | | JSON-object | Contains all safety-related information. 
 
 Object structure | Unit | Data type | Description 
@@ -1177,7 +1178,7 @@ TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn’t 
 
 ## 6.12 actionStates
 
-When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it must represent this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
 
 `actionStates` describe in the field `actionStatus` at which stage of the actions lifecycle the action is.
 
@@ -1210,8 +1211,8 @@ Actions can have three distinct blocking types, described in Table 2.
 blockingType | Description 
 ---|---
 NONE | Action can be executed in parallel with other actions and while the vehicle is driving.
-SOFT | Action can be executed in parallel with other actions. Vehicle must not drive.
-HARD | Action must not be executed in parallel with other actions. Vehicle must not drive.
+SOFT | Action can be executed in parallel with other actions. Vehicle shall not drive.
+HARD | Action shall not be executed in parallel with other actions. Vehicle shall not drive.
 
 >Table 2 action blocking types
 
@@ -1390,7 +1391,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | { | | |
 | &emsp;parameter | string | Full name of optional parameter, e.g. “*order.nodes.nodePosition.allowedDeviationTheta”*.|
 | &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>SUPPORTED: optional parameter is supported like specified.<br/>REQUIRED: optional parameter is required for proper AGV-operation. |
-| &emsp;*description*| string | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ must contain unsigned integer-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
+| &emsp;*description*| string | Free-form text: description of optional parameter, e.g.:<ul><li>Reason, why the optional parameter ‘direction’ is necessary for this AGV-type and which values it can contain.</li><li>The parameter ‘nodeMarker’ shall contain unsigned integer-numbers only.</li><li>NURBS-Support is limited to straight lines and circle segments.</li>|
 | } | | |
 | **agvActions** [**agvAction**] | array of JSON-object | Array of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
@@ -1432,7 +1433,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | ***envelopes2d** [**envelope2d**]* | array of JSON-object | Array of AGV-envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | { | | |
 | &emsp;set | string | Name of the envelope curve set. |
-| &emsp;**polygonPoints** **[polygonPoint]** | array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting. |
+| &emsp;**polygonPoints** **[polygonPoint]** | array of JSON-object | Envelope curve as a x/y-polygon polygon is assumed as closed and shall be non-self-intersecting. |
 | &emsp;{ | | |
 |&emsp;&emsp; x | float64 | [m], x-position of polygon-point. |
 |&emsp;&emsp; y | float64 | [m], y-position of polygon-point. |
