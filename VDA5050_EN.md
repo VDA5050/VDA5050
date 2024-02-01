@@ -840,7 +840,7 @@ actions [action] | | array | Array of actions that need to be performed immediat
 
 When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV state.
 The actionStatus is updated according to the progress of the action.
-See also Figure 12 for the different transitions of an actionStatus.
+See also Figure 14 for the different transitions of an actionStatus.
 
 
 
