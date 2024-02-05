@@ -787,7 +787,7 @@ The orientation shall be in radians and shall be within +Pi and –Pi.
 >Figure 11 Coordinate systems for map and vehicle
 
 
-### 6.8.1 Map Distribution
+### 6.8.1 Map distribution
 
 To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
@@ -854,9 +854,9 @@ If there is no way to map some action to one of the actions of the following sec
 
 general | | scope
 :---:|--- | :---:
-action, counter action, Description, idempotent, Parameter | linked state | instant, node, edge
+action, counter action, description, idempotent, parameters | linked state | instant, node, edge
 
-action | counter action | Description | Idempotent | Parameter | linked state | instant | node | edge
+action | counter action | description | idempotent | parameters | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many AGVs can be paused by using a hardware switch. <br>No more AGV driving movements - reaching next node is not necessary.<br>Actions can continue. <br>Order is resumable. | yes | - | paused | yes | no | no
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no
@@ -899,7 +899,7 @@ pick | Initializing of the pick process, e.g., outstanding lift operations. | Th
 drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied. <br>Failed drop operations should correspond with an error.
 detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object.
 finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached.
-waitForTrigger | - | AGV is waiting for the Trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
+waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
 cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | -
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 
@@ -1259,7 +1259,7 @@ connectionState | string | Enum {`ONLINE`, `OFFLINE`, `CONNECTIONBROKEN`}<br><br
 The last will message will not be sent, when a connection is ended in a graceful way by using an MQTT disconnection command.
 The last will message is only sent by the broker, if the connection is unexpectedly interrupted.
 
-**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT Broker.
+**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT broker.
 As a result, the timestamp and headerId fields will always be outdated.
 
 AGV wants to disconnect gracefully:
