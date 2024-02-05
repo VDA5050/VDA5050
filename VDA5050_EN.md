@@ -565,7 +565,7 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 
 8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
 
-9)	populate/ append states	refers to the action-/node-/edgeStates.
+9)	populate/append states	refers to the action-/node-/edgeStates.
 
 
 ### 6.6.3 Order cancellation (by master control)
@@ -912,7 +912,7 @@ instantActions shall not conflict with the content of the AGV's current order (e
 
 Some examples for which instant actions could be relevant are:
 - pause the AGV without changing anything in the current order;
-- resume order after pause ;
+- resume order after pause;
 - activate signal (optical, audio, etc.).
 
 For additional information, see chapter [7 Best practice](#7-best-practice).
@@ -1142,15 +1142,15 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **errorReference** { | | JSON object |
 referenceKey | | string | Specifies the type of reference used (e.g., "nodeId", "edgeId", "orderId", "actionId", etc.).
-referenceValue <br>} | | string | The value that belongs to the reference key. For example, the id of the node where the error occurred.
+referenceValue <br>} | | string | The value that belongs to the reference key. For example, the ID of the node where the error occurred.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **info** { | | JSON object |
 infoType | | string | Type/name of information.
 *infoReferences [infoReference]* | | array | Array of references.
-*infoDescription* | | string | Info of description.
-infoLevel <br>}| | string | Enum {DEBUG,INFO}<br><br>DEBUG: used for debugging.<br> INFO: used for visualization.
+*infoDescription* | | string | Description of the information.
+infoLevel <br>}| | string | Enum {DEBUG, INFO}<br><br>DEBUG: used for debugging.<br> INFO: used for visualization.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
