@@ -29,7 +29,7 @@ By applying the proposals, no one is evasive of responsibility for their own act
 The statements do not claim to be exhaustive or to the exact interpretation of the existing legislation.
 They may not replace the study of relevant policies, laws and regulations.
 Furthermore, the special features of the respective products as well as their different possible applications shall be taken into account.
-Everyone acts at his own risk in this regard.
+Everyone acts at their own risk in this regard.
 Liability of the VDA and those involved in the development or application of the proposals is excluded.
 
 If you encounter any inaccuracies in the application of the proposals or the possibility of an incorrect interpretation, please inform the VDA immediately so that any defects can be rectified.
@@ -199,7 +199,7 @@ During implementation or modification, the AGV and master control are manually c
 >Figure 2 Structure of the Information Flow
 
 During the implementation phase, the driverless transport systems (DTS) consisting of master control and AGV is set up.
-The necessary framework conditions are defined by the operator and the required information is either entered manually by him or stored in the master control by importing from other systems.
+The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the master control by importing from other systems.
 Essentially, this concerns the following content:
 
 - Definition of routes: Using CAD import, routes can be taken over in the master control.
@@ -431,7 +431,7 @@ Nodes and edges both have a boolean attribute "released".
 If a node or edge is released, the AGV is expected to traverse it.
 If a node or edge is not released, the AGV shall not traverse it.
 
-An edge only can be released, if both the start and end node of the edge are released.
+An edge can be released only if both the start and the end node of the edge are released.
 
 After an unreleased edge, no released nodes or edges can follow in the sequence.
 
@@ -1285,7 +1285,7 @@ The factsheet also includes information about AGV communication interfaces which
 
 The values for some fields in the AGV factsheet can only be specified during system integration, for example the assignment of project-specific load and station types, together with the list of station and load types which are supported by this AGV.
 
-The factsheet is both intended as a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
+The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
 
 The MC can request the factsheet from the AGV by sending the instant action: `factsheetRequest`
 
