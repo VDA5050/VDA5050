@@ -35,8 +35,8 @@ Liability of the VDA and those involved in the development or application of the
 If you encounter any inaccuracies in the application of the proposals or the possibility of an incorrect interpretation, please inform the VDA immediately so that any defects can be rectified.
 
 **Publisher**
-Verband der Automobilindustrie e.v. (VDA)
-Behrenstrasse 35, 10117 Berlin,
+Verband der Automobilindustrie e.V. (VDA)
+Behrenstraße 35, 10117 Berlin,
 Germany
 www.vda.de
 
@@ -103,8 +103,8 @@ Version 2.1.0
 
 # 1 Foreword
 
-The interface was established in cooperation between the Verband der Automobilindustrie e. V. (German abbreviation VDA) and Verband Deutscher Maschinen-und Anlagenbau e. V. (German abbreviation VDMA).
-The aim of both parties is to create an universally applicable interface.
+The interface was established in cooperation between the Verband der Automobilindustrie e.V. (VDA) and Verband Deutscher Maschinen- und Anlagenbau e. V. (VDMA).
+The aim of both parties is to create a universally applicable interface.
 Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
 The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
