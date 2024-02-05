@@ -70,7 +70,7 @@ Version 2.1.0
 [6.6.2 Orders and order updates](#662-orders-and-order-update)<br>
 [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control)<br>
 [6.6.4 Order rejection](#664-order-rejection)<br>
-[6.6.5 Corridors](#6)<br>
+[6.6.5 Corridors](#667-corridors)<br>
 [6.7 Implementation of the order message](#67-implementation-of-the-order-message)<br>
 [6.8 Maps](#68-maps)<br>
 [6.8.1 Map distribution](#681-map-distribution)<br>
@@ -80,8 +80,8 @@ Version 2.1.0
 [6.8.5 Delete maps on vehicle](#685-delete-maps-on-vehicle)<br>
 [6.9 Actions](#69-actions)<br>
 [6.9.1 Predefined action definitions, their parameters, effects and scope](#691-predefined-action-definition-their-parameters-effects-and-scope)<br>
-[6.9.2 Predefined action definitions, their parameters, effects and scope](#692-predefined-action-definitions-description-of-their-states)<br>
-[6.10 Topic: "instantActions" (from master control to AGV)](#610-topic-instantactions-from-master-to-control-to-agv)<br>
+[6.9.2 Predefined action states](#692-predefined-action-states)<br>
+[6.10 Topic: "instantActions" (from master control to AGV)](#610-topic-instantactions-from-master-control-to-agv)<br>
 [6.11 Topic: "state" (from AGV to master control)](#611-topic-state-from-agv-to-master-control)<br>
 [6.11.1 Concept and logic](#6111-concept-and-logic)<br>
 [6.11.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
@@ -107,7 +107,7 @@ The interface was established in cooperation between the Verband der Automobilin
 The aim of both parties is to create an universally applicable interface.
 Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
 The contribution to this document via GitHub is greatly appreciated.
-The Repository can be found at the following link: http://github.com/vda5050/vda5050.
+The repository can be found at the following link: https://github.com/vda5050/vda5050.
 
 
 # 2 Objective of the document
@@ -877,7 +877,7 @@ cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately o
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 
 
-### 6.9.2 Predefined action definitions, description of their states
+### 6.9.2 Predefined action states
 
 action | action states
 ---|---
@@ -915,7 +915,7 @@ Some examples for which instant actions could be relevant are:
 - resume order after pause ;
 - activate signal (optical, audio, etc.).
 
-For additional information, see chapter 7 Best practices.
+For additional information, see chapter [7 Best practice](#7-best-practice).
 
 Object structure | Data type | Description
 ---|---|---
@@ -1064,8 +1064,8 @@ Object structure | Unit | Data type | Description
 edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | sequenceId to differentiate between multiple edges with the same edgeId.
 *edgeDescription* | | string | Additional information on the edge.
-released | | boolean | “true” indicates that the edge is part of the base.<br>“false” indicates that the edge is part of the horizon.
-***trajectory*** <br><br>} | | JSON-object | The trajectory is to be communicated as NURBS and is defined in section "[6.4](#64)"<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
+released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
+***trajectory*** <br><br>} | | JSON object | The trajectory is to be communicated as NURBS and is defined in section "[6.7 Implementation of the order message](#67-implementation-of-the-order-message)"<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1133,7 +1133,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON-object |
 errorType | | string | Type/name of error
-***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see „Best practices“ chapter 8.
+***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 *errorHint* | | string | Hint on how to approach or solve the reported error.
 errorLevel <br> }| | string | Enum {WARNING, FATAL}<br><br>WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).<br>FATAL: AGV is not in running condition, user intervention required (e.g. laser scanner is contaminated).
@@ -1170,10 +1170,12 @@ The following description lists the operatingMode of the topic "states".
 Identifier | Description
 ---|---
 AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control.
-SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can’t exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
-MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
-SERVICE | Master control is not in control of the AGV. <br>Master control doesn’t send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV.
-TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn’t send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
+SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
+MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
+SERVICE | Master control is not in control of the AGV. <br>Master control doesn't send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV.
+TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
+
+>Table 1 The operating modes and their meaning
 
 
 ## 6.12 actionStates
@@ -1182,7 +1184,7 @@ When an AGV receives an `action` (either attached to a `node` or `edge` or via a
 
 `actionStates` describe in the field `actionStatus` at which stage of the actions lifecycle the action is.
 
-Table 1 describes, which value the enum `actionStatus` can hold.
+Table 2 describes, which value the enum `actionStatus` can hold.
 
 actionStatus | Description
 ---|---
@@ -1193,7 +1195,7 @@ PAUSED | The action is paused because of a pause instantAction or external trigg
 FINISHED | The action is finished. <br>A result is reported via the resultDescription.
 FAILED | Action could not be finished for whatever reason.
 
->Table 1 The acceptable values for the actionStatus field
+>Table 2 The acceptable values for the actionStatus field
 
 A state transition diagram is provided in Figure 16.
 
@@ -1206,7 +1208,7 @@ A state transition diagram is provided in Figure 16.
 The order of multiple actions in a list define the sequence, in which those actions are to be executed.
 The parallel execution of actions is governed by their respective `blockingType`.
 
-Actions can have three distinct blocking types, described in Table 2.
+Actions can have three distinct blocking types, described in Table 3.
 
 blockingType | Description
 ---|---
@@ -1214,7 +1216,7 @@ NONE | Action can be executed in parallel with other actions and while the vehic
 SOFT | Action can be executed in parallel with other actions. Vehicle shall not drive.
 HARD | Action shall not be executed in parallel with other actions. Vehicle shall not drive.
 
->Table 2 action blocking types
+>Table 3 action blocking types
 
 If there are multiple actions on the same node with different blocking types, Figure 17 describes how the AGV should handle these actions.
 
