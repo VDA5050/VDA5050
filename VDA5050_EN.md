@@ -318,7 +318,7 @@ If the AGV disconnects from the broker, it keeps all the order information and f
 
 Protocol security needs to be taken into account by broker configuration.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `state`, `factsheet` and `visualization`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `instantActions`, `state`, `factsheet` and `visualization`.
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
@@ -351,7 +351,7 @@ The `$` character is also used in some MQTT brokers for special internal topics,
 
 ## 6.4 Protocol header
 
-Each JSON starts with a header.
+Each JSON message starts with a header.
 In the following sections, the following fields will be referenced as header for readability.
 The header consists of the following individual elements.
 The header is not a JSON object.
@@ -1228,7 +1228,7 @@ If there are multiple actions on the same node with different blocking types, Fi
 
 For a near real-time position update the AGV can broadcast its position and velocity on the subtopic `visualization`.
 
-The structure of the position message is the same as the position and velocity message in the state.
+The structure of the position object is the same as the position and velocity object in the state.
 For additional information see section "[6.11.6 Implementation](#6116-implementation)" for the vehicle state.
 The update rate for this topic is defined by the integrator.
 
