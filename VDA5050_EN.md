@@ -289,7 +289,7 @@ The recommendation is that IDs should only use the following characters:
 
 A-Z a-z 0-9 _ - . :
 
-A maximum message length is not defined, but limited by the MQTT protocol specification and perhabs by technial constraints defined inside the fact-sheet.
+A maximum message length is not defined, but limited by the MQTT protocol specification and perhaps by technical constraints defined inside the factsheet.
 If an AGV memory is insufficient to process an incoming order, it is to reject the order.
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
 For ease of integration, AGV vendors shall supply an AGV factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
@@ -1165,7 +1165,7 @@ eStop | | string | Enum {AUTOACK, MANUAL, REMOTE, NONE}<br><br>Acknowledge-Type 
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
-The following description lists the operatingMode of the topic "states".
+The following description lists the operatingMode of the topic "state".
 
 Identifier | Description
 ---|---
