@@ -60,7 +60,7 @@ Version 2.1.0
 [6.1.1 Optional fields](#611-optional-fields)<br>
 [6.1.2 Permitted characters and field lengths](#612-permitted-characters-and-field-lengths)<br>
 [6.1.3 Notation of enumerations](#613-notation-of-enumerations) <br>
-[6.1.4 JSON datatypes](#614-json-datatypes)<br>
+[6.1.4 JSON data types](#614-json-data-types)<br>
 [6.2 MQTT connection handling, security and QoS](#62-mqtt-connection-handling-security-and-qos)<br>
 [6.3 MQTT-topic levels](#63-mqtt-topic-levels)<br>
 [6.4 Protocol header](#64-protocol-header)<br>
@@ -121,7 +121,7 @@ In detail, this should be achieved by the following points:
 - Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains.
 - Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g., order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
 - Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
-- Increase in manufacturers independence using common interfaces between vehicle control and coordination level.
+- Increase in manufacturers' independence using common interfaces between vehicle control and coordination level.
 - Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf. Figure 1).
 
 ![Figure 1 Integration of DTS inventory systems](./assets/concept_VDA5050.png)
@@ -140,16 +140,16 @@ This creates the basis for operating any combination of AGV in a master control.
 The master control provides orders and coordinates the AGV traffic.
 
 The interface is based on the requirements from production and plant logistics in the automotive industry.
-According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control free navigating vehicles and guided vehicles.
+According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control of freely navigating vehicles and guided vehicles.
 
 In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards.
-Autonomous properties such as the independent bypassing of obstacles can be fulfilled by free navigating vehicles as well as guided vehicles.
-However, as soon as the path planning is carried out on the vehicle itself, this document describes free navigating vehicles (see glossary).
+Autonomous properties such as the independent bypassing of obstacles can be fulfilled by freely navigating vehicles as well as guided vehicles.
+However, as soon as the path planning is carried out on the vehicle itself, this document describes freely navigating vehicles (see glossary).
 Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
 
 For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
 This should enable a complete coverage of the master control for vehicles that are guided.
-Vehicles that are free navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
+Vehicles that are freely navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
 
 For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
 
@@ -210,8 +210,8 @@ Within the routes, stations for loading and unloading, battery charging stations
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
 The AGV shall communicate this information via the subtopic `factsheet` in a specific way that is defined in the [Factsheet section](#615-topic-factsheet) of this document.
 
-The configuration of routes and the route network described above is not part of this document.
-It forms the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed.
+The configuration of routes and the route network described above are not part of this document.
+They form the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed.
 The resulting orders for an AGV are then transferred to the vehicle via an MQTT message broker.
 This then continuously reports its status to the master control in parallel with the execution of the job.
 This is also done using the MQTT message broker.
@@ -419,13 +419,13 @@ However, due to the different sizes and specifications of AGV, it might be neces
 >Figure 3 Graph representation in Master Control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
-The lists order also governs in which sequence the nodes and edges shall be traversed.
+The lists' order also governs in which sequence the nodes and edges shall be traversed.
 
 For a valid order, at least one node shall be present.
 The number of acceptable edges is the number of nodes minus one, not more or less.
 
 The first node of an order shall be trivially reachable for the AGV.
-This means either that the AGV is already standing on the node, or that the AGV is in the nodes deviation range.
+This means either that the AGV is already standing on the node, or that the AGV is in the node's deviation range.
 
 Nodes and edges both have a boolean attribute "released".
 If a node or edge is released, the AGV is expected to traverse it.
@@ -463,7 +463,7 @@ The master control has the possibility to change the horizon by sending an updat
 >Figure 4 Procedure for changing the driving route "Horizon"
 
 In Figure 4, an initial job is first sent by the control panel at time t = 1.
-Figure 5 shows the pseudo code of a possible job.
+Figure 5 shows the pseudocode of a possible job.
 For the sake of readability, a complete JSON example has been omitted here.
 
 ```
@@ -485,7 +485,7 @@ For the sake of readability, a complete JSON example has been omitted here.
 	]
 }
 ```
->Figure 5 Pseudo code of an order
+>Figure 5 Pseudocode of an order
 
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6).
 Note that the "orderUpdateId" is incremented and that the first node of the job update corresponds to the last shared base node of the previous order message.
@@ -509,7 +509,7 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 	]
 }
 ```
->Figure 6 Pseudo code of an order update. Please look out for the change of the "orderUpdateId"
+>Figure 6 Pseudocode of an order update. Please look out for the change of the "orderUpdateId"
 
 This also aids in the event that an orderUpdate goes missing (because of unreliable wireless network).
 The AGV can always check that the last known base node has the same nodeId (and nodeSequenceId, more on that later) as the first new base node.
@@ -555,7 +555,7 @@ Is `orderId` of the received order different to `orderId` of order the vehicle c
 3)	**is vehicle still executing an order or waiting for an update?**:
 Is `nodeStates` not empty or is `actionStates` containing states which are neither `FAILED` nor `FINISHED`? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore waiting for an update and executing an order.
 
-4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is it in the nodes deviation range (see section "[Concept and logic](#661-concept-and-logic)")?
+4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is it in the node's deviation range (see section "[Concept and logic](#661-concept-and-logic)")?
 
 5) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the vehicle?
 
@@ -563,7 +563,7 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 
 7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order equal to the current decision point (last node of the current base)? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-8)	**is the received update a valid continuation of the previously completed order?**: Is `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
+8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
 
 9)	populate/ append states	refers to the action-/node-/edgeStates.
 
@@ -647,7 +647,7 @@ Resolution:
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the PREVIOUS order in its buffer.
 3. The vehicle reports the warning "orderUpdateError"
-4. The vehicle continues with the executing the previous order.
+4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same orderId and orderUpdateId twice, the second order will be ignored.
 This might happen, if the master control sends the order again, because the state message came too late and the master control could not verify that the first order was received.
@@ -843,7 +843,7 @@ Actions that are to be executed on an edge shall only run while the AGV is on th
 Actions that are triggered on nodes can run as long as they need to run.
 Actions on nodes should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or should be formulated pairwise (e.g., activateWarningLights and deactivateWarningLights), although there may be exceptions.
 
-The following section presents predefined actions that shall be used by the AGV, if the AGVs capabilities map to the action description.
+The following section presents predefined actions that shall be used by the AGV, if the AGV's capabilities map to the action description.
 If there is a sensible way to use the defined parameters, they shall be used.
 Additional parameters can be defined, if they are needed to execute an action successfully.
 
@@ -885,11 +885,11 @@ action | action states
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
-startPause | - | Activation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode can not be activated for some reason (e.g., overridden by hardware switch).
-stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode can not be deactivated for some reason (e.g., overwritten by hardware switch).
+startPause | - | Activation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: true. | The pause mode cannot be activated for some reason (e.g., overridden by hardware switch).
+stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: false. | The pause mode cannot be deactivated for some reason (e.g., overwritten by hardware switch).
 startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: true. | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error.
 stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: false | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error.
-initPosition | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or can not be reset. <br>General localization problems should correspond with an error.
+initPosition | - | Initializing of the new pose in progress (confidence checks etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
 | downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapState to DISABLED. | Download failed, updated in vehicle state. Connection lost, Map server unreachable, mapId/mapVersion not existing on map server |
 | enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapState of the requested map to ENABLED and the other versions with same mapId to DISABLED. | The requested mapId/mapVersion combination does not exist.|
 | deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
@@ -1102,7 +1102,7 @@ Object structure | Unit | Data type | Description
 x | | float64 | x-coordinate of the point of reference.
 y | | float64 | y-coordinate of the point of reference.
 z | | float 64 | z-coordinate of the point of reference.
-*theta*<br> } | | float64 | Orientation of the loads bounding box. <br>Important for tugger, trains, etc.
+*theta*<br> } | | float64 | Orientation of the loads bounding box. <br>Important for tuggers, trains, etc.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1182,7 +1182,7 @@ TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't se
 
 When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
 
-`actionStates` describe in the field `actionStatus` at which stage of the actions lifecycle the action is.
+`actionStates` describe in the field `actionStatus` at which stage of the action's life cycle the action is.
 
 Table 2 describes, which value the enum `actionStatus` can hold.
 
@@ -1256,7 +1256,7 @@ manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
 connectionState | string | Enum {`ONLINE`, `OFFLINE`, `CONNECTIONBROKEN`}<br><br>`ONLINE`: connection between AGV and broker is active.<br><br>`OFFLINE`: connection between AGV and broker has gone offline in a coordinated way. <br><br> `CONNECTIONBROKEN`: The connection between AGV and broker has unexpectedly ended.
 
-The last will message will not be sent, when a connection is ended in a graceful way by using a MQTT disconnection command.
+The last will message will not be sent, when a connection is ended in a graceful way by using an MQTT disconnection command.
 The last will message is only sent by the broker, if the connection is unexpectedly interrupted.
 
 **Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT Broker.
@@ -1505,7 +1505,7 @@ This section includes additional information, which helps in facilitating a comm
 
 ## 7.1 Error reference
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the fields errorReference (see [6.10.6 Implementation](#6116-implementation)of the state topic).
+If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the field errorReferences (see [6.10.6 Implementation](#6116-implementation) of the state topic).
 This can include the following information:
 
 - headerId
