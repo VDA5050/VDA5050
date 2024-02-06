@@ -669,6 +669,7 @@ Depending on the internal state of the vehicle, the selected trajectory may vary
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
 The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node.
+Instead of setting the corridor boundaries to zero, MC shall not use the corridor attribute if the vehicle shall not deviate from the trajectory.
 
 The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
 If not, the vehicle shall stop because it is out of the allowed navigation space and report an error.
