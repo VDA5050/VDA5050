@@ -62,7 +62,7 @@ Version 2.1.0
 [6.1.3 Notation of enumerations](#613-notation-of-enumerations) <br>
 [6.1.4 JSON data types](#614-json-data-types)<br>
 [6.2 MQTT connection handling, security and QoS](#62-mqtt-connection-handling-security-and-qos)<br>
-[6.3 MQTT-topic levels](#63-mqtt-topic-levels)<br>
+[6.3 MQTT topic levels](#63-mqtt-topic-levels)<br>
 [6.4 Protocol header](#64-protocol-header)<br>
 [6.5 Subtopics for communication](#65-subtopics-for-communication)<br>
 [6.6 Topic: "order" (from master control to AGV)](#66-topic-orderfrom-master-control-to-agv)<br>
@@ -186,7 +186,7 @@ The parameters are described in English to ensure that the protocol is readable,
 
 # 5 Process and content of communication
 
-As shown in the information flow to the operation of AGV, there are at least the following participants (see Figure 2):
+There are at least the following participants for the operation of AGVs:
 
 - the operator provides basic information
 - the master control organizes and manages the operation
@@ -524,7 +524,7 @@ For actions, deviation range, etc. the AGV shall use the instructions provided i
 >Figure 7 Regular update process - order extension
 
 Figure 7 describes how an order should be extended.
-It shows the information, that is currently available on the AGV.
+It shows the information that is currently available on the AGV.
 The orderId stays the same and the orderUpdateId is incremented.
 
 The last node of the previous base is the first base node in the updated order.
@@ -565,7 +565,7 @@ Is `nodeStates` not empty or is `actionStates` containing states which are neith
 
 8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
 
-9)	populate/append states	refers to the action-/node-/edgeStates.
+9)	populate/append states refers to the action-/node-/edgeStates.
 
 
 ### 6.6.3 Order cancellation (by master control)
@@ -574,13 +574,13 @@ In the event of an unplanned change in the base nodes, the order shall be cancel
 
 After receiving the instantAction cancelOrder, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
-If there are actions scheduled, these actions shall be cancelled and report "failed" in their actionState.
-If there are running actions, those actions should be cancelled and also be reported as failed.
-If the action cannot be interrupted, the actionState of that action should reflect that by reporting "running" while it is running, and after that the respective state ("finished", if successful and "failed", if not).
-While actions are running, the cancelOrder action shall report "running", until all actions are cancelled/finished.
-After all vehicle movements and all actions are stopped, the cancelOrder action status shall report "finished".
+If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their actionState.
+If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
+If the action cannot be interrupted, the actionState of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
+After all vehicle movements and all actions are stopped, the cancelOrder action status shall report 'FINISHED'.
 
-The orderId and orderUpdateId is kept.
+The orderId and orderUpdateId are kept.
 
 Figure 9 shows the expected behavior for different AGV capabilities.
 
@@ -605,9 +605,9 @@ There are two options:
 
 #### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
-If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action shall report as failed.
+If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the cancelOrder action shall report as 'FAILED'.
 
-The AGV shall report a "noOrderToCancel" error with the errorLevel set to warning.
+The AGV shall report a "noOrderToCancel" error with the errorLevel set to 'WARNING'.
 The actionId of the instantAction shall be passed as an errorReference.
 
 
@@ -645,7 +645,7 @@ Resolution:
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
-2. Vehicle keeps the PREVIOUS order in its buffer.
+2. Vehicle keeps the previous order in its buffer.
 3. The vehicle reports the warning "orderUpdateError"
 4. The vehicle continues with executing the previous order.
 
@@ -690,8 +690,8 @@ manufacturer | | string | Manufacturer of the AGV
 serialNumber | | string | Serial number of the AGV
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
 orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message.
-zoneSetId | | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used.
-**nodes [node]** | | array | Array of nodes objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty for that case.
+*zoneSetId* | | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGV do not understand zones.<br> Do not add to message, if no zones are used.
+**nodes [node]** | | array | Array of node objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty for that case.
 **edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty for that case.
 
 Object structure | Unit | Data type | Description
@@ -738,20 +738,20 @@ endNodeId | | string | nodeId of endNode.
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the edge. The value *orientationType* defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to "true".<br>If rotationAllowed is "false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory.
 *orientationType* | | string | Enum {`GLOBAL`, `TANGENTIAL`}: <br>"GLOBAL"- relative to the global project specific map coordinate system;<br>"TANGENTIAL"- tangential to the edge.<br><br>If not defined, the default value is "TANGENTIAL".
-*direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left, right, straight, 433MHz.
+*direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: left, right, straight.
 *rotationAllowed* | | boolean | "true": rotation is allowed on the edge.<br>"false": rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the curve, on which the AGV should move between startNode and endNode.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
 ***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br><br> Optional<br>
-**action [action]**<br><br><br> } | | array | Array of actionIds to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**action [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **trajectory** { | | JSON object |
 degree | | float64 | Range: [1.0 ... float64.max]<br><br>Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity.<br><br>If not defined, the default value is 1.
 **knotVector [float64]** | | array | Range: [0.0 ... 1.0]<br><br>Sequence of parameter values that determines where and how the control points affect the NURBS curve.<br><br>knotVector has size of number of control points + degree + 1.
-**controlPoints [controlPoint]**<br><br> } | | array | Array of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
+**controlPoints [controlPoint]**<br><br> } | | array | Array of controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -770,7 +770,7 @@ rightWidth | m | float64 | Defines the width of the corridor in meter to the rig
 
 ### 6.8 Maps
 
-To ensure consistent navigation among different types of AGV, the position is always specified in reference to the local map coordinate system (see Figure 10).
+To ensure consistent navigation among different types of AGV, the position is always specified in reference to the project-specific global origin (see Figure 10).
 For the differentiation between different levels a unique mapId is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
@@ -804,9 +804,9 @@ The map distribution process is shown in Figure 12.
 
 #### 6.8.2 Maps in the vehicle state
 
-The .agvPosition.mapId field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
+The `.agvPosition.mapId` field of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
 
-Note that multiple maps with different mapIds can be enabled at the same time. There can only be one version of maps with the same mapId enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the vehicle.
+Note that multiple maps with different `mapId` can be enabled at the same time. There can only be one version of maps with the same `mapId` enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the vehicle.
 
 
 #### 6.8.3 Map download
@@ -822,7 +822,7 @@ It is important to ensure that the process of downloading a map does not modify,
 
 There are two ways to enable a map on a vehicle:
 
-1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle.
+1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. Other Versions of the same `mapId` with different `mapVersion` are 'DISABLED'.
 2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
 It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle.
@@ -881,7 +881,7 @@ factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes 
 
 action | action states
 ---|---
- | | initializing, running, paused, finished, failed |
+ | | 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED' |
 
 action | initializing | running | paused | finished | failed
 ---|---|---|---|---|---
@@ -906,7 +906,7 @@ factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 ## 6.10 Topic: "instantActions" (from master control to AGV)
 
-In certain cases, it is necessary to send actions to the AGV, that need to be performed immediately.
+In certain cases, it is necessary to send actions to the AGV that need to be performed immediately.
 This is made possible by publishing an instantAction message to the topic instantActions.
 instantActions shall not conflict with the content of the AGV's current order (e.g., instantAction to lower fork, while order says to raise fork).
 
@@ -970,7 +970,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still s
 ### 6.11.2 Traversal of nodes and entering/leaving edges, triggering of actions
 
 The AGV decides on its own, when a node should count as traversed.
-Generally, the AGV's control point should be within the node's `deviationRangeXY` and its orientation within `deviationRangeTheta`.
+Generally, the AGV's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
@@ -981,7 +981,7 @@ The traversal of a node also marks the leaving of the edge leading up to the nod
 The edge shall then be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
 
 The traversal of the node also marks the moment, when the AGV enters the following edge, if there is one.
-The edges actions shall now be triggered.
+The edge's actions shall now be triggered.
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
 ![Figure 15 nodeStates, edgeStates, actionStates during order handling](./assets/states_during_order_handling.png)
@@ -990,7 +990,7 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 ### 6.11.3 Base request
 
-If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
+If the AGV detects that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
 
 
 ### 6.11.4 Information
@@ -1019,22 +1019,22 @@ timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g.,
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
-*maps[map]* | | array | Array of map objects, that are currently stored on the vehicle.
+*maps[map]* | | array | Array of map objects that are currently stored on the vehicle.
 orderId| | string | Unique order identification of the current order or the previously finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available.
 orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the AGV. <br>"0" if no previous orderUpdateId is available.
 *zoneSetId* | |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>shall be the same as the one used in the order, otherwise the AGV has to reject the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId | | string | Node ID of last reached node or, if AGV is currently on a node, current node (e.g., "node7"). Empty string (""), if no lastNodeId is available.
 lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
-**nodeStates [nodeState]** | |array | Array of nodeState objects, that need to be traversed for fulfilling the order<br>(empty array if idle)
-**edgeStates [edgeState]** | |array | Array of edgeState objects, that need to be traversed for fulfilling the order<br>(empty array if idle)
+**nodeStates [nodeState]** | |array | Array of nodeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
+**edgeStates [edgeState]** | |array | Array of edgeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 ***agvPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional:<br><br>Can only be omitted for AGV without the capability to localize themselves, e.g., line-guided AGVs.
 ***velocity*** | | JSON object | The AGV velocity in vehicle coordinates.
-***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
+***loads [load]*** | | array | Loads that are currently handled by the AGV.<br><br>Optional: If AGV cannot determine load state, leave the array out of the state. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
 driving | | boolean | "true": indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>"false": indicates that the AGV is neither driving nor rotating.
 *paused* | | boolean | "true": AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>"false": The AGV is currently not in a paused state.
 *newBaseRequest* | | boolean | "true": AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>"false": no base update required.
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the "lastNodeId". <br>Distance is in meters.
-**actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action state is kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription.
+**actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {AUTOMATIC, SEMIAUTOMATIC, MANUAL, SERVICE, TEACHIN}<br>For additional information, see Table 1 in section "[6.11.6 Implementation](#6116-implementation)".
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
@@ -1117,7 +1117,7 @@ Object structure | Unit | Data type | Description
 actionId | |string | action_ID
 *actionType* | | string | actionType of the action.<br><br>Optional: Only for informational or visualization purposes. Order knows the type.
 *actionDescription* | | string | Additional information on the current action.
-actionStatus | | string | Enum {WAITING; INITIALIZING; RUNNING; PAUSED; FINISHED; FAILED}<br><br>WAITING: waiting for the trigger<br>(passing the mode, entering the edge)<br> PAUSED: paused by instantAction or external trigger<br>FAILED: action could not be performed.
+actionStatus | | string | Enum {WAITING, INITIALIZING, RUNNING, PAUSED, FINISHED, FAILED}<br><br>'WAITING': waiting for the trigger<br>(passing the mode, entering the edge)<br> 'PAUSED': paused by instantAction or external trigger<br>'FAILED': action could not be performed.
 *resultDescription*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
 
 Object structure | Unit | Data type | Description
