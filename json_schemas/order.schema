@@ -208,13 +208,7 @@
                     },
                     "direction": {
                         "type": "string",
-                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).",
-                        "examples": [
-                            "left",
-                            "right",
-                            "straight",
-                            "433MHz"
-                        ]
+                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual)."
                     },
                     "rotationAllowed": {
                         "type": "boolean",
