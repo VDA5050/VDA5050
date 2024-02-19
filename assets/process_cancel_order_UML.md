@@ -14,7 +14,7 @@ else (no)
 endif
 
 if (Can vehicle stop\n in between\n nodes?) then (no)
-    #lightgreen: AGV drives to next node where it should \n be able to receive a new order \n <B>cancelOrder</B> action state is set to <B>RUNNING</B> \n The nodeState for the node the AGV is driving to is kept. \nAll other nodeStates and edgeStates are deleted.;
+    #lightgreen: AGV drives to next node where it should \n be able to receive a new order \n <B>cancelOrder</B> action state is set to <B>RUNNING</B> \n The nodeState for the node the AGV \nis driving to is kept. \nAll other nodeStates and edgeStates \nare deleted.;
     #lightgreen: AGV arrives at the node where it stops.\n lastNodeId and lastNodeSequenceId\n must be updated accordingly.;
 else (yes)
     #lightgreen: AGV stops.;
