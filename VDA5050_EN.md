@@ -834,7 +834,7 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 ## 6.8 Actions
 
-If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic instantActions (see "[6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)").
+If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic instantActions (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
 
 Actions that are to be executed on an edge shall only run while the AGV is on the edge (see Section [6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 
@@ -1063,7 +1063,7 @@ edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | sequenceId to differentiate between multiple edges with the same edgeId.
 *edgeDescription* | | string | Additional information on the edge.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
-***trajectory*** <br><br>} | | JSON object | The trajectory is to be communicated as NURBS and is defined in Section "[6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)"<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
+***trajectory*** <br><br>} | | JSON object | The trajectory is to be communicated as NURBS and is defined in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)<br><br>Trajectory segments are from the point, where the AGV starts to enter the edge, until the point, where it reports, that the next node was traversed.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
