@@ -15,11 +15,11 @@ endif
 
 if (Can vehicle stop\n in between\n nodes?) then (no)
     #lightgreen: AGV drives to next node where it should \n be able to receive a new order \n <B>cancelOrder</B> action state is set to <B>RUNNING</B> \n The nodeState for the node the AGV is driving to is kept. \nAll other nodeStates and edgeStates are deleted.;
-    #lightgreen: AGV arrives at the node where it stops.\n This node is removed from the nodeStates,\n and lastNodeId and lastNodeSequenceId\n must be updated accordingly.;
+    #lightgreen: AGV arrives at the node where it stops.\n lastNodeId and lastNodeSequenceId\n must be updated accordingly.;
 else (yes)
-    #lightgreen: AGV stops gracefully\n and deletes nodeStates and\n edgeStates.;
+    #lightgreen: AGV stops.;
 endif
-#lightgreen: actionStates are kept. \n <B>cancelOrder</B> action state is set to <B>FINISHED</B>.;
+#lightgreen: All nodeStates and edgeStates are deleted.\nactionStates are kept. \n <B>cancelOrder</B> action state is set to <B>FINISHED</B>.;
 stop
 @enduml
 ```
