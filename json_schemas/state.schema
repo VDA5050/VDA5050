@@ -65,7 +65,7 @@
                 "properties": {
                     "mapId": {
                         "type": "string",
-                        "description": "ID of the map describing a defined area of the vehicles workspace."
+                        "description": "ID of the map describing a defined area of the vehicle's workspace."
                     },
                     "mapVersion": {
                         "type": "string",
