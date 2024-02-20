@@ -284,12 +284,12 @@
                         "properties": {
                             "leftWidth": {
                                 "type": "number",
-                                "description": "Defines the width of the corridor in meter to the left related to the trajectory of the vehicle.",
+                                "description": "Defines the width of the corridor in meters to the left related to the trajectory of the vehicle.",
                                 "minimum": 0.0
                             },
                             "rightWidth": {
                                 "type": "number",
-                                "description":"Defines the width of the corridor in meter to the right related to the trajectory of the vehicle.",
+                                "description":"Defines the width of the corridor in meters to the right related to the trajectory of the vehicle.",
                                 "minimum": 0.0
                             },
                             "corridorRefPoint": {
