@@ -735,12 +735,12 @@ endNodeId | | string | nodeId of the last node within the order.
 *maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the edge. The value `orientationType` defines if it has to be interpreted relative to the global project-specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation, if `rotationAllowed` is set to "true".<br>If `rotationAllowed` is "false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory.
-*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL: relative to the global project-specific map coordinate system;<br>'TANGENTIAL': tangential to the edge.<br><br>If not defined, the default value is 'TANGENTIAL'.
+*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system;<br>'TANGENTIAL': tangential to the edge.<br><br>If not defined, the default value is 'TANGENTIAL'.
 *direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: "left", "right", "straight".
 *rotationAllowed* | | boolean | "true": rotation is allowed on the edge.<br>"false": rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.
-*length* | m | float64 | Length of the path from startNode to endNode<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
+*length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
 ***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
 **action [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
@@ -883,7 +883,7 @@ action | action states
 ---|:---:
  | | 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED' |
 
-action | INITIALIZING | RUNNING | PAUSED | FINISHED | FAILED
+action | 'INITIALIZING' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'FAILED'
 ---|---|---|---|---|---
 startPause | - | Activation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All actions will be paused. <br>The pause mode is activated. <br>The AGV reports .paused: "true". | The pause mode cannot be activated for some reason (e.g., overridden by hardware switch).
 stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions will be resumed. <br>The AGV reports .paused: "false". | The pause mode cannot be deactivated for some reason (e.g., overwritten by hardware switch).
