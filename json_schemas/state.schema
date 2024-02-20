@@ -53,7 +53,7 @@
         },
         "maps":{
             "type": "array",
-            "description": "Array of map-objects, that are currently stored on the vehicle.",
+            "description": "Array of map-objects that are currently stored on the vehicle.",
             "items": {
                 "type": "object",
                 "title": "map",
@@ -77,7 +77,7 @@
                     },
                     "mapStatus": {
                         "type": "string",
-                        "description": "Information on the status of the map indicating, if a map is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "description": "Information on the status of the map indicating, if a map version is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.",
                         "enum": [
                             "ENABLED",
                             "DISABLED"
@@ -503,7 +503,7 @@
                             "properties": {
                                 "referenceKey": {
                                     "type": "string",
-                                    "description":"Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.)."
+                                    "description":"Specifies the type of reference used (e.g. nodeId, edgeId, orderId, actionId, etc.)."
                                 },
                                 "referenceValue": {
                                     "type": "string",
