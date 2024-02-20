@@ -24,7 +24,7 @@ endif
             endif
             ->yes;
                 #lightgreen:delete states of previous order;
-                #lightgreen:accept order\nset orderId and orderUpdateId\npopulate states of new order (9);
+                #lightgreen:- accept order\n- set orderId and orderUpdateId\n- populate states of new order (9);
           #lightgreen: execute order;
      else (no - received order is update of current order)
         if ((5) is received order update deprecated?) then (yes)
