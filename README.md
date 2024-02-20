@@ -14,8 +14,8 @@ An open standard for communication between AGV fleets and a central master contr
 **DISCLAIMER**: We are constantly working to improve the VDA 5050. If there are any differences between the markdown document/JSON schemas on GitHub and the published document by the VDA, the PDF on the VDA website is valid. The current version of the official VDA 5050 document can be found here ([German](https://www.vda.de/de/suche#"5050")/[English](https://www.vda.de/en/search#"5050")).
 
 # How to contribute
-If you work at an VDA / VDMA member, check with your contact person if you can join the working group.
-Everyone is free to raise issues or offer new improvements for the protocol.
+If you work for a VDA / VDMA member, ask your contact person if you can join the working group.
+Everyone is free to raise issues or suggest new improvements to the protocol.
 
 Anyone is free to raise issues or suggest new improvements to the protocol using the Github issues. Github issues will be marked by the VDA/VDMA team as **VD(M)A in progress** if the issue is discussed in the monthly VDA 5050 meetings. If the issue has been accepted by the team, it will receive a milestone tag indicating when the change will be added to the document, according to
 

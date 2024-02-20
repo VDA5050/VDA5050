@@ -11,7 +11,10 @@ start
 repeat
     if (action:\n blockingType) then (HARD)
         #lightgreen: stop driving;
-        #lightgreen: Execute actions in \n parallel execution list\n in parallel (if any);
+        if (parallel\n execution list\n empty?) then(Yes)
+        else(No)
+        #lightgreen: Execute actions from\n parallel execution list;
+        endif
         #lightgreen: Execute HARD action;
     else
         if () then(SOFT)

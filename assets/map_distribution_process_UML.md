@@ -23,7 +23,7 @@ activate "Map Server"
 deactivate "Map Server"
 AGV -> AGV: Check, if download\n was successful
 AGV -> AGV: Processing the map\n to make it ready for use
-AGV -> "Master Control": Report instant action as finished
+AGV -> "Master Control": Report instant action as FINISHED
 AGV -> "Master Control": Send updated state\n with new map in maps array
 deactivate AGV
 end
@@ -40,7 +40,7 @@ group delete map on vehicle
 "Master Control" -> "AGV": Trigger instant action "deleteMap"
 activate AGV
 AGV -> AGV: Remove map with\n requested mapId and mapVersion\n from vehicle memory
-"Master Control" <- "AGV": Send updated state
+"Master Control" <- "AGV": Send updated state with \nmap removed from maps array
 deactivate AGV
 end
 @enduml
