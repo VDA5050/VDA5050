@@ -125,7 +125,7 @@ In detail, this should be achieved by the following points:
 - Increase in manufacturers' independence using common interfaces between vehicle control and coordination level.
 - Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf. Figure 1).
 
-![Figure 1 Integration of DTS inventory systems](./assets/concept_VDA5050.png)
+![Figure 1 Integration of DTS inventory systems](./assets/concept_DTS.png)
 >Figure 1 Integration of DTS inventory systems
 
 In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
@@ -540,7 +540,7 @@ This is necessary to determine on AGV side to which node the master control refe
 
 Figure 8 describes the process of accepting an order or orderUpdate.
 
-![Figure 8 The process of accepting an order or orderUpdate](./assets/processing_order_update.png)
+![Figure 8 The process of accepting an order or orderUpdate](./assets/process_order_update.png)
 >Figure 8 The process of accepting an order or orderUpdate
 
 1)	**is received order valid?**:
@@ -660,8 +660,8 @@ An edge inside an order defines a logical connection between two nodes and not n
 Depending on the vehicle type, the trajectory that a vehicle takes between the start and end nodes is either defined by master control via the trajectory edge attribute or assigned to the vehicle as a predefined trajectory.
 Depending on the internal state of the vehicle, the selected trajectory may vary.*
 
-![Figure 13 Edges with corridor attribute.](./assets/edges_with_corridors.png)
->Figure 13 Edges with a corridor attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorRefPoint` parameter.
+![Figure 10 Edges with corridor attribute.](./assets/edges_with_corridors.png)
+>Figure 10 Edges with a corridor attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorRefPoint` parameter.
 
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
 The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
@@ -769,21 +769,21 @@ rightWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the widt
 
 ### 6.7 Maps
 
-To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 10).
+To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 11).
 For the differentiation between different levels of a site or location, a unique mapId is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
 The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
 This is in accordance with Section 2.11 in DIN ISO 8855.
 
-![Figure 10 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
->Figure 10 Coordinate system with sample AGV and orientation
+![Figure 11 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
+>Figure 11 Coordinate system with sample AGV and orientation
 
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within +Pi and –Pi.
 
-![Figure 11 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
->Figure 11 Coordinate systems for map and vehicle
+![Figure 12 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
+>Figure 12 Coordinate systems for map and vehicle
 
 
 ### 6.7.1 Map distribution
@@ -796,10 +796,10 @@ Each map is uniquely identified by a combination of a map identifier (field `map
 
 In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the master control sends an instant action. In this case, any other map with the same map identifier but a different map version is automatically disabled. Maps can be deleted by the master control with another instant action. The result of this process is shown in the vehicle state.
 
-The map distribution process is shown in Figure 12.
+The map distribution process is shown in Figure 13.
 
-![Figure 12 Map distribution process](./assets/map_distribution_process.png)
->Figure 12 Communication required between master control, AGV and map server to download, enable, and delete a map.
+![Figure 13 Map distribution process](./assets/map_distribution_process.png)
+>Figure 13 Communication required between master control, AGV and map server to download, enable, and delete a map.
 
 #### 6.7.2 Maps in the vehicle state
 
