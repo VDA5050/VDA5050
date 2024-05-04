@@ -189,9 +189,9 @@ The parameters are described in English to ensure that the protocol is readable,
 
 There are at least the following participants for the operation of AGVs:
 
-- the operator of the AGV system provides basic information
-- the master control organizes and manages the operation
-- the AGV carries out the orders
+- The operator of the AGV system provides basic information
+- The master control organizes and manages the operation
+- The AGV carries out the orders
 
 Figure 2 describes the communication content during the operational phase.
 During implementation or modification, the AGV and master control are manually configured.
@@ -224,7 +224,7 @@ Functions of the master control are:
 - Detection and resolution of blockages ("deadlocks")
 - Energy management: Charging orders can interrupt transfer orders
 - Traffic control: Buffer routes and waiting positions
-- (temporary) changes in the environment, such as freeing certain areas or changing the maximum speed
+- (Temporary) changes in the environment, such as freeing certain areas or changing the maximum speed
 - Communication with peripheral systems such as doors, gates, elevators, etc.
 - Detection and resolution of communication errors
 
