@@ -962,8 +962,8 @@ After nodes are released by master control, the AGV is not allowed to change its
 
 The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still shall traverse.
 
-![Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
->Figure 14 Order Information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
+![Figure 14 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
+>Figure 14 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
 
@@ -984,8 +984,8 @@ The traversal of the node also marks the moment, when the AGV enters the followi
 The edge's actions shall now be triggered.
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
-![Figure 15 nodeStates, edgeStates, actionStates during order handling](./assets/states_during_order_handling.png)
->Figure 15 nodeStates, edgeStates, actionStates during order handling
+![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
+>Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling
 
 
 ### 6.10.3 Base request
