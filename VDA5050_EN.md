@@ -270,7 +270,7 @@ All enumerations are in UPPERCASE.
 
 ### 6.1.1 Optional fields
 
-If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field trajectory within the edge object of the order can be omitted).
+If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
 If the AGV receives a message that contains a field which is marked as optional in this protocol, the AGV is expected to act accordingly and cannot ignore the field.
 If the AGV cannot process the message accordingly then the expected behavior is to communicate this within an error message and to reject the order.
@@ -280,7 +280,7 @@ Master control shall only send optional information that the AGV supports.
 Example: Trajectories are optional.
 If an AGV cannot process trajectories, master control shall not send a trajectory to the vehicle.
 
-The AGV shall communicate which optional parameters it needs via an AGV factsheet message.
+The AGV shall communicate which optional parameters it needs via an AGV `factsheet` message.
 
 
 ### 6.1.2 Permitted characters and field lengths
