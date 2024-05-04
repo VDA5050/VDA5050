@@ -1178,7 +1178,7 @@ TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't se
 >Table 1 The operating modes and their meaning
 
 
-## 6.11 actionStates
+## 6.11 Action states
 
 When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
 
