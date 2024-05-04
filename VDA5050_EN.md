@@ -666,13 +666,13 @@ Depending on the internal state of the vehicle, the selected trajectory may vary
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
 The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node.
-Instead of setting the corridor boundaries to zero, MC shall not use the corridor attribute if the vehicle shall not deviate from the trajectory.
+Instead of setting the corridor boundaries to zero, master control shall not use the corridor attribute if the vehicle shall not deviate from the trajectory.
 
 The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
 If not, the vehicle shall stop because it is out of the allowed navigation space and report an error.
-The MC can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
+The master control can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
-*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if MC makes a traffic control decision based on the vehicle's footprint.*
+*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if the master control makes a traffic control decision based on the vehicle's footprint.*
 
 See also Section [6.10.2 Traversal of nodes and entering/leaving edges](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
@@ -1115,7 +1115,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **actionState** { | | JSON object |
 actionId | |string | Unique identifier of the action.
-*actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. MC is aware of action type as dispatched in the order.
+*actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Master control is aware of action type as dispatched in the order.
 *actionDescription* | | string | Additional information on the current action.
 actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.11 actionStates](#611-actionstates).
 *resultDescription*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
@@ -1287,7 +1287,7 @@ The values for some fields in the AGV factsheet can only be specified during sys
 
 The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
 
-The MC can request the factsheet from the AGV by sending the instant action: `factsheetRequest`
+The master control can request the factsheet from the AGV by sending the instant action: `factsheetRequest`
 
 All messages on this topic shall be sent with a retained flag.
 
