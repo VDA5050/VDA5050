@@ -1004,10 +1004,10 @@ Master control shall not use the info messages for logic, it shall only be used 
 ### 6.10.5 Errors
 
 The AGV reports errors via the `errors` array.
-Errors have two levels: `WARNING` and `FATAL`.
-A `WARNING` is a self-resolving error, e.g., a field violation.
-A `FATAL` error needs human intervention.
-Errors can pass references that help with finding the cause of the error via the errorReferences array.
+Errors have two levels: 'WARNING' and 'FATAL'.
+A 'WARNING' is a self-resolving error, e.g., a field violation.
+A 'FATAL' error needs human intervention.
+Errors can pass references that help with finding the cause of the error via the `errorReferences` array.
 
 
 ### 6.10.6 Implementation of the state message
