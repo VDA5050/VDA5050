@@ -601,10 +601,10 @@ There are two options:
 
 #### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
-If the AGV receives a cancelOrder action but the AGV currently has no order, or the previous order was cancelled, the `cancelOrder` action shall report as 'FAILED'.
+If the AGV receives a `cancelOrder` action but, the AGV currently has no order, or the previous order was canceled, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report a "noOrderToCancel" error with the errorLevel set to 'WARNING'.
-The actionId of the instantAction shall be passed as an errorReference.
+The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
+The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
 ### 6.6.4 Order rejection
