@@ -718,7 +718,7 @@ actionType | | string | Name of action as described in the first column of "Acti
 actionId | | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
 *actionDescription* | | string | Additional information on the action
 blockingType | | string | Enum {'NONE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
-***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter-objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
+***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1120,7 +1120,7 @@ actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**batteryState** { | | JSON-object | 
+**batteryState** { | | JSON object | 
 batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery voltage.
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
