@@ -610,7 +610,7 @@ The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 ### 6.6.4 Order rejection
 
 There are several scenarios, when an order shall be rejected.
-These are explained in Figure 8.
+These scenarios are shown in Figure 8 and described below.
 
 
 #### 6.6.4.1 Vehicle gets a malformed new order
@@ -645,7 +645,7 @@ Resolution:
 3. The vehicle reports the warning "orderUpdateError"
 4. The vehicle continues with executing the previous order.
 
-If the AGV receives an order with the same orderId and orderUpdateId twice, the second order will be ignored. 
+If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
 
 ### 6.6.5 Corridors
