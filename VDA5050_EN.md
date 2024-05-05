@@ -650,9 +650,8 @@ This might happen, if the master control resends the order because the state mes
 
 ### 6.6.5 Corridors
 
-The optional corridor edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
-In this context, the trajectory is the pre-planned path that the vehicle would follow if no corridor attribute were defined.
-The behavior of a vehicle using the corridor attribute is still the behavior of a line-guided vehicle with the exception that it's allowed to temporarily deviate from a trajectory to avoid obstacles.
+The optional `corridor` edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
+To use the `corridor` attribute, a predefined trajectory is required that the vehicle would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the vehicle known to the master control or the trajectory sent in an order. The behavior of a vehicle using the `corridor` attribute is still the behavior of a line-guided vehicle, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles.
 
 *Remark:
 An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
@@ -660,12 +659,12 @@ Depending on the vehicle type, the trajectory that a vehicle takes between the s
 Depending on the internal state of the vehicle, the selected trajectory may vary.*
 
 ![Figure 10 Edges with corridor attribute.](./assets/edges_with_corridors.png)
->Figure 10 Edges with a corridor attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorRefPoint` parameter.
+>Figure 10 Edges with a `corridor` attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorRefPoint` parameter.
 
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
 The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node.
-Instead of setting the corridor boundaries to zero, master control shall not use the corridor attribute if the vehicle shall not deviate from the trajectory.
+Instead of setting the corridor boundaries to zero, master control shall not use the `corridor` attribute if the vehicle shall not deviate from the trajectory.
 
 The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
 If not, the vehicle shall stop because it is out of the allowed navigation space and report an error.
