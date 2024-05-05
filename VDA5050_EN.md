@@ -296,10 +296,11 @@ The matching of maximum field lengths, string lengths or value ranges is up to t
 For ease of integration, AGV vendors shall supply an AGV factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
 
 
-### 6.1.3 Notation of enumerations
+### 6.1.3 Notation of fields, topics and enumerations
 
-Enumerations shall be written in uppercase. These values are enclosed in the document with single quotes.
-This includes keywords as in `actionStatus` ('WAITING', 'FINISHED', etc.).
+Topics and fields in this document are highlighted in the following style: `exampleField` and `exampleTopic`.
+Enumerations shall be written in uppercase. These values are enclosed in single quotation marks in the document.
+This includes keywords such as in the `actionStatus` field ('WAITING', 'FINISHED', etc.).
 
 
 ### 6.1.4 JSON data types
