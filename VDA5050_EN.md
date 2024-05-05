@@ -753,8 +753,8 @@ degree | | float64 | Range: [1.0 ... float64.max]<br><br>Degree of the NURBS cur
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **controlPoint** { | | JSON object |
-x | | float64 | X coordinate described in the world coordinate system.
-y | | float64 | Y coordinate described in the world coordinate system.
+x | | float64 | X-coordinate described in the world coordinate system.
+y | | float64 | Y-coordinate described in the world coordinate system.
 *weight* | | float64 | Range: [0.0 ... float64.max]<br><br>The weight of the control point on the curve.<br>When not defined, the default will be 1.0.
 } | | |
 
@@ -763,12 +763,12 @@ Object structure | Unit | Data type | Description
 _**corridor**_ { | | JSON object |
 leftWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
 rightWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
-*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center (= 'KC') .<br> Enum { 'KC' , 'CONTOUR' }
+*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center (= 'KC').<br> Enum { 'KC' , 'CONTOUR' }
 
 ### 6.7 Maps
 
 To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 11).
-For the differentiation between different levels of a site or location, a unique mapId is used.
+For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
 The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
