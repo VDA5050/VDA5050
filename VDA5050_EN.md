@@ -419,13 +419,12 @@ The master control only includes edges in an AGV order which the concerning AGV 
 The nodes and edges are passed as two lists in the order message.
 The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed.
 
-For a valid order, at least one node shall be present. 
-For a valid order, the number of edges must equal the number of nodes minus one.
+For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
 The first node of an order shall be trivially reachable for the AGV.
 This means either that the AGV is already standing on the node, or that the AGV is in the node's deviation range.
 
-Nodes and edges both have a boolean attribute "released".
+Nodes and edges both have a boolean attribute `released`.
 If a node or edge is released, the AGV is expected to traverse it.
 If a node or edge is not released, the AGV shall not traverse it.
 
@@ -439,7 +438,7 @@ The set of unreleased nodes and edges are called the "horizon".
 It is valid to send an order without a horizon.
 
 An order message does not necessarily describe the full transport order.
-For traffic control and to accommodate resource constrained vehicles, the full transport order (which might consist of many nodes and edges) can be split up into many sub-orders, which are connected via their orderId and orderUpdateId.
+For traffic control and to accommodate resource constrained vehicles, the full transport order (which might consist of many nodes and edges) can be split up into many sub-orders, which are connected via their `orderId` and `orderUpdateId`.
 The process of updating an order is described in the next section.
 
 
