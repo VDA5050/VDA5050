@@ -451,8 +451,7 @@ To support traffic management, master control can split the path communicated vi
 
 The AGV shall stop at the decision point if no further nodes and edges are added to the base. In order to ensure a fluent movement, the master control should extend the base before the AGV reaches the decision point, if the traffic situation allows for it.
 
-Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable the base cannot be changed. The master control shall therefore assume that the base has already been executed by the AGV. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
-
+Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, the base cannot be changed. The master control shall therefore assume that the base has already been executed by the AGV. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
 
 The master control has the possibility to change the horizon by sending an updated route to the AGV which includes the changed list of nodes and edges. The procedure for changing the horizon route is shown in Figure 4.
 
@@ -482,12 +481,12 @@ For the sake of readability, a complete JSON example has been omitted here.
 	]
 }
 ```
->Figure 5 Pseudocode of an order
+>Figure 5 Pseudocode of an order.
 
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6).
-Note that the "orderUpdateId" is incremented and that the first node of the job update corresponds to the last shared base node of the previous order message.
+Note that the `orderUpdateId` is incremented and that the first node of the order update corresponds to the last shared base node of the previous order message.
 
-This ensures that the AGV can also perform the job update, i.e., that the first node of the job update is reachable by executing the edges already known to the AGV.
+This ensures that the AGV can also perform the order update, i.e., that the first node of the job update is reachable by executing the edges already known to the AGV.
 
 ```
 {
@@ -506,10 +505,10 @@ This ensures that the AGV can also perform the job update, i.e., that the first 
 	]
 }
 ```
->Figure 6 Pseudocode of an order update. Please look out for the change of the "orderUpdateId"
+>Figure 6 Pseudocode of an order update. Note the change of the `orderUpdateId`.
 
-This also aids in the event that an orderUpdate goes missing (because of unreliable wireless network).
-The AGV can always check that the last known base node has the same nodeId (and nodeSequenceId, more on that later) as the first new base node.
+This also aids in the event that an order update is lost (e.g., due to an unreliable wireless network).
+The AGV can always check that the last known base node has the same `nodeId` (and `nodeSequenceId`, more on that later) as the first new base node.
 
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
@@ -518,11 +517,11 @@ It is important, that the contents of the stitching node (node g in the example 
 For actions, deviation range, etc., the AGV shall use the instructions provided in the first order (Figure 5, orderUpdateId 0).
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
->Figure 7 Regular update process - order extension
+>Figure 7 Regular update process - order extension.
 
 Figure 7 describes how an order should be extended.
 It shows the information that is currently available on the AGV.
-The orderId stays the same and the orderUpdateId is incremented.
+The `orderId` stays the same and the `orderUpdateId` is incremented.
 
 The last node of the previous base is the first base node in the updated order.
 With this node the AGV can add the updated order onto the current order (stitching).
@@ -531,17 +530,17 @@ The other nodes and edges from the previous base are not resent.
 Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
-To allow loops in orders (like going from node a to b and then back to a) a sequenceId is assigned to the node and edge objects.
-This sequenceId runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on).
+To allow loops in orders (like going from node a to b and then back to a) a `sequenceId` is assigned to the node and edge objects.
+This `sequenceId` runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on).
 This allows for easier tracking of the order progress.
 
-Once a sequenceId is assigned, it does not change with order updates (see Figure 7).
+Once a `sequenceId` is assigned, it does not change with order updates (see Figure 7).
 This is necessary to determine on AGV side to which node the master control refers to.
 
-Figure 8 describes the process of accepting an order or orderUpdate.
+Figure 8 describes the process of accepting an order or order update.
 
 ![Figure 8 The process of accepting an order or orderUpdate](./assets/process_order_update.png)
->Figure 8 The process of accepting an order or orderUpdate
+>Figure 8 The process of accepting an order or order update.
 
 1)	**is received order valid?**:
 All formatting and JSON data types are correct?
@@ -562,7 +561,7 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
 
-9)	populate/append states refers to the action-/node-/edgeStates.
+9)	populate/append states refers to the `actionStates`/`nodeStates`/`edgeStates`.
 
 
 ### 6.6.3 Order cancellation (by master control)
