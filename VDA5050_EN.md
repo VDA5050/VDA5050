@@ -566,22 +566,22 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 ### 6.6.3 Order cancellation (by master control)
 
-In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction cancelOrder.
+In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
-After receiving the instantAction cancelOrder, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
+After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
-If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their actionState.
+If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
-If the action cannot be interrupted, the actionState of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
 After all movement of the vehicle and all of its actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 
-The orderId and orderUpdateId are kept.
+The `orderId` and `orderUpdateId` are kept.
 
 Figure 9 shows the expected behavior for different AGV capabilities.
 
 ![Figure 9 Expected behavior after a cancelOrder](./assets/process_cancel_order.png)
->Figure 9 Expected behavior after a cancelOrder
+>Figure 9 Expected behavior after a `cancelOrder`.
 
 
 #### 6.6.3.1 Receiving a new order after cancellation
