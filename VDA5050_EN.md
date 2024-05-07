@@ -1392,13 +1392,13 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | { | | |
 | &emsp;parameter | string | Full name of optional parameter, e.g., "*order.nodes.nodePosition.allowedDeviationTheta"*.|
 | &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper AGV operation. |
-| &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter `direction` is necessary for this AGV type and which values it can contain.</li><li>The parameter `nodeMarker` shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
+| &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this AGV type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
 | } | | |
 | **agvActions** [**agvAction**] | array of JSON object | Array of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
-| &emsp;actionScopes | array of enum | Array of allowed scopes for using this action type.<br/><br/>'INSTANT': usable as instantAction.<br/>'NODE': usable on nodes.<br/>'EDGE': usable on edges.<br/><br/>For example: `['INSTANT', 'NODE']`|
+| &emsp;actionScopes | array of enum | Array of allowed scopes for using this action type.<br/><br/>'INSTANT': usable as instantAction.<br/>'NODE': usable on nodes.<br/>'EDGE': usable on edges.<br/><br/>For example: ['INSTANT', 'NODE']|
 | &emsp;***actionParameters** [**actionParameter**]* | array of JSON object | Array of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message) within nodes and edges.|
 |&emsp;*{* | | |
 |&emsp;&emsp;key | string | Key string for parameter. |
@@ -1507,10 +1507,10 @@ This section includes additional information, which helps in facilitating a comm
 If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the field errorReferences (see Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message) of the state topic).
 This can include the following information:
 
-- headerId
-- Topic (order or instantAction)
-- orderId and orderUpdateId if error was caused by an order update
-- actionId if error was caused by an action
+- `headerId`
+- Topic (`order` or `instantAction`)
+- `orderId` and `orderUpdateId` if error was caused by an order update
+- `actionId` if error was caused by an action
 - List of parameters if error was caused by erroneous action parameters
 
 If an action cannot be completed because of external factors (e.g., no load at expected position), the actionId should be referenced.
@@ -1522,11 +1522,11 @@ Parameters for errors, information and actions are designed as an array of JSON 
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-actionParameter { | JSON object | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers.
+**actionParameter** { | JSON object | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers.
 key | string | The key of the parameter.
 value</br>} | One of:</br>array,</br>boolean,</br>number,</br>string,</br>object | The value of the parameter that belongs to the key.
 
-Examples for the actionParameter of an action "someAction" with key-value pairs for stationType and loadType:
+Examples for the `actionParameter` of an action "someAction" with key-value pairs for stationType and loadType:
 
 "actionParameters":[
 {"key":"stationType", "value": "floor"},
