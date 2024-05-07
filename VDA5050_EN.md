@@ -904,8 +904,8 @@ factsheetRequest | - | - | - | The factsheet has been communicated | -
 ## 6.9 Topic: "instantActions" (from master control to AGV)
 
 In certain cases, it is necessary to send actions to the AGV that need to be performed immediately.
-This is made possible by publishing an instantAction message to the topic instantActions.
-instantActions shall not conflict with the content of the AGV's current order (e.g., instantAction to lower fork, while order says to raise fork).
+This is made possible by publishing an `instantAction` message to the topic `instantActions`.
+These shall not conflict with the content of the AGV's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are:
 - pause the AGV without changing anything in the current order;
@@ -923,9 +923,9 @@ manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
 actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
-When an AGV receives an instantAction, an appropriate actionStatus is added to the actionStates array of the AGV's state.
-The actionStatus is updated according to the progress of the action.
-See also Figure 16 for the different transitions of an actionStatus.
+When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `actionStates` array of the AGV's state.
+The `actionStatus` is updated according to the progress of the action.
+See also Figure 16 for the different transitions of an `actionStatus`.
 
 
 ## 6.10 Topic: "state" (from AGV to master control)
