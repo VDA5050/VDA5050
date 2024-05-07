@@ -834,12 +834,11 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 ## 6.8 Actions
 
-If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic instantActions (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
+If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic `instantActions` (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
 
 Actions that are to be executed on an edge shall only run while the AGV is on the edge (see Section [6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 
-Actions that are triggered on nodes can run as long as they need to run.
-Actions on nodes should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or should be formulated pairwise (e.g., activateWarningLights and deactivateWarningLights), although there may be exceptions.
+Actions that are triggered on nodes can run as long as they need to run and should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or formulated pairwise (e.g., "activateWarningLights" and "deactivateWarningLights"), although there may be exceptions.
 
 The following section presents predefined actions that shall be used by the AGV, if the AGV's capabilities map to the action description.
 If there is a sensible way to use the defined parameters, they shall be used.
