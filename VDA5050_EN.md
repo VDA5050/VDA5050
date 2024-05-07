@@ -1140,7 +1140,7 @@ errorLevel <br> }| | string | Enum {'WARNING', 'FATAL'}<br><br>'WARNING': the AG
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **errorReference** { | | JSON object |
-referenceKey | | string | Specifies the type of reference used (e.g., "nodeId", "edgeId", "orderId", "actionId", etc.).
+referenceKey | | string | Specifies the type of reference used (e.g., nodeId, edgeId, orderId, actionId, etc.).
 referenceValue <br>} | | string | The value that belongs to the reference key. For example, the ID of the node where the error occurred.
 
 Object structure | Unit | Data type | Description
@@ -1215,7 +1215,7 @@ NONE | Action can be executed in parallel with other actions and while the vehic
 SOFT | Action can be executed in parallel with other actions. Vehicle shall not drive.
 HARD | Action shall not be executed in parallel with other actions. Vehicle shall not drive.
 
->Table 3 action blocking types
+>Table 3 Action blocking types
 
 If there are multiple actions on the same node with different blocking types, Figure 17 describes how the AGV should handle these actions.
 
