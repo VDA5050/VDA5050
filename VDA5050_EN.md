@@ -176,7 +176,7 @@ Vehicles should transfer their status at a regular interval or when their status
 
 Communication is done over wireless networks, taking into account the effects of connection failures and loss of messages.
 
-The message log is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
+The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
 MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
 MQTT allows the distribution of messages to subchannels, which are called "topics".
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
