@@ -945,10 +945,10 @@ Events that trigger the transmission of the state message are:
 - Switching the operating mode
 - Change in the `driving` field
 - Change in the `nodeStates`, `edgeStates` or `actionStates`
-- Changes in the `maps` field
+- Change in the `maps` field
 
 There should be an effort to curb the amount of communication.
-If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the node- and edgeStates; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
+If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
 
 
 ### 6.10.1 Concept and logic
