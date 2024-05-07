@@ -413,8 +413,8 @@ The graph representation in the master control contains restrictions, e.g., whic
 These restrictions will not be communicated to the AGV.
 The master control only includes edges in an AGV order which the concerning AGV is allowed to traverse.
 
-![Figure 3 Graph representation in Master Control and graph transmitted in orders](./assets/graph_representation_transmission.png)
->Figure 3 Graph representation in Master Control and graph transmitted in orders
+![Figure 3 Graph representation in master control and graph transmitted in orders](./assets/graph_representation_transmission.png)
+>Figure 3 Graph representation in master control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
 The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed.
@@ -788,7 +788,7 @@ The orientation shall be in radians and shall be within +Pi and –Pi.
 
 To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
-The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an instantAction.
+The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an `instantAction`.
 
 Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the vehicle's physical workspace, and the map version indicates updates to previous versions. Before accepting a new order, the vehicle shall check that there is a map on the vehicle for each map identifier in the requested order. It is the responsibility of the master control to ensure that the correct maps are activated to operate the vehicle.
 
@@ -808,7 +808,7 @@ Note that multiple maps with different `mapId` can be enabled at the same time. 
 
 #### 6.7.3 Map download
 
-The map download is triggered by the `downloadMap` instant action from the Master Control. This command contains the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the vehicle.
+The map download is triggered by the `downloadMap` instant action from the master control. This command contains the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the vehicle.
 
 The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
@@ -823,7 +823,7 @@ There are two ways to enable a map on a vehicle:
 1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. Other Versions of the same `mapId` with different `mapVersion` are set to 'DISABLED'.
 2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
-It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding mapId as part of a nodePosition in an order.
+It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding mapId as part of a `nodePosition` in an order.
 If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
 
 
