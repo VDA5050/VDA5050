@@ -130,7 +130,7 @@ In detail, this should be achieved by the following points:
 
 In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
 
-Other interfaces required for operation between AGV and master control (e.g., for exchanging map information, taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document.
+Other interfaces required for operation between AGV and master control (e.g., taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document.
 
 
 # 3 Scope
