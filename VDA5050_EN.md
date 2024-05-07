@@ -261,6 +261,7 @@ Identification | Description
 standard | Variable is an elementary data type
 **bold** | Variable is a non-elementary data type (e.g., JSON object or array) and defined separately
 *italic* | Variable is optional
+***italic and bold***| Variable is optional and a non-elementary data type
 [Square brackets] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is squareBrackets)
 
 All keywords are case sensitive.
@@ -943,7 +944,7 @@ Events that trigger the transmission of the state message are:
 - Driving over a node
 - Switching the operating mode
 - Change in the `driving` field
-- Change in the `nodeStates`, `edgeStates`, actionStates or maps
+- Change in the `nodeStates`, `edgeStates`, `actionStates` or maps
 
 There should be an effort to curb the amount of communication.
 If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the node- and edgeStates; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
