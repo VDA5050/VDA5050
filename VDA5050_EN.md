@@ -232,6 +232,7 @@ Functions of the AGVs are:
 
 - Localization
 - Navigation along associated routes (guided or autonomous)
+- Execution of actions
 - Continuous transmission of vehicle status
 
 In addition, the integrator shall take into account the following when configuring the overall system (incomplete list):
