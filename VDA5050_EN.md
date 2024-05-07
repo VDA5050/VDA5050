@@ -984,7 +984,7 @@ The edge's actions shall now be triggered.
 An exception to this rule is, if the AGV has to pause on the edge (because of a soft or hard blocking edge, or otherwise) – then the AGV enters the edge after it begins moving again.
 
 ![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
->Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling
+>Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
 
 
 ### 6.10.3 Base request
@@ -1032,8 +1032,8 @@ lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the 
 driving | | boolean | "true": indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br><br>"false": indicates that the AGV is neither driving nor rotating.
 *paused* | | boolean | "true": the AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>"false": the AGV is currently not in a paused state.
 *newBaseRequest* | | boolean | "true": the AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>"false": no base update required.
-*distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the "lastNodeId". <br>Distance is in meters.
-**actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding `resultDescription`.
+*distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
+**actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table 1 in Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
@@ -1042,7 +1042,7 @@ operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVIC
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**map**{ | | JSON object|
+***map***{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the vehicle's workspace.
 mapVersion | | string | Version of the map.
 *mapDescription* | | string | Additional information on the map.
