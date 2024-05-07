@@ -790,7 +790,7 @@ The orientation shall be in radians and shall be within +Pi and –Pi.
 
 To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
 
-The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control issuing a download command using an `instantAction`.
+The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control triggering a download command using an `instantAction`.
 
 Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the vehicle's physical workspace, and the map version indicates updates to previous versions. Before accepting a new order, the vehicle shall check that there is a map on the vehicle for each map identifier in the requested order. It is the responsibility of the master control to ensure that the correct maps are activated to operate the vehicle.
 
