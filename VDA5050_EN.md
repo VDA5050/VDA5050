@@ -250,7 +250,7 @@ Communication between the AGV and peripheral equipment, e.g., between the AGV an
 The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
 
 In addition, JSON schemas are available for validation in the public git repository (https://github.com/VDA5050/VDA5050).
-The JSON schemas are updated with every release of the VDA5050.
+The JSON schemas are updated with every release of the VDA5050. If there are differences between the JSON schemas and this document, the variant in this document applies.
 
 
 ## 6.1 Symbols of the tables and meaning of formatting
