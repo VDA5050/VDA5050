@@ -263,7 +263,7 @@ standard | Variable is an elementary data type
 **bold** | Variable is a non-elementary data type (e.g., JSON object or array) and defined separately
 *italic* | Variable is optional
 ***italic and bold***| Variable is optional and a non-elementary data type
-[Square brackets] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is squareBrackets)
+arrayName[arrayDataType] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is arrayDataType)
 
 All keywords are case sensitive.
 All field names are in camelCase.
@@ -1043,7 +1043,7 @@ operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVIC
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-***map***{ | | JSON object|
+**map**{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the vehicle's workspace.
 mapVersion | | string | Version of the map.
 *mapDescription* | | string | Additional information on the map.
