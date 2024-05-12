@@ -1481,7 +1481,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 
 #### vehicleConfig
 
-This JSON object details the software and hardware versions running on the vehicle, as well as a quick summary of network information.
+This JSON object details the software and hardware versions running on the vehicle, as well as a brief summary of network information.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
