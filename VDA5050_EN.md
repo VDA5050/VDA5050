@@ -825,7 +825,7 @@ There are two ways to enable a map on a vehicle:
 1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. Other Versions of the same `mapId` with different `mapVersion` are set to 'DISABLED'.
 2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
-It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding mapId as part of a `nodePosition` in an order.
+It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding `mapId` as part of a `nodePosition` in an order.
 If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
 
 
