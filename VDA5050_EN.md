@@ -762,9 +762,9 @@ y | | float64 | Y-coordinate described in the world coordinate system.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-_**corridor**_ { | | JSON object |
-leftWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
-rightWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
+***corridor*** { | | JSON object |
+leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
+rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
 *corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATIC_CENTER' , 'CONTOUR' }
 
 ### 6.7 Maps
