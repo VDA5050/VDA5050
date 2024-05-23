@@ -267,7 +267,7 @@ arrayName[arrayDataType] | Variable (here arrayName) is an array of the data typ
 
 All keywords are case sensitive.
 All field names are in camelCase.
-All enumerations are in UPPERCASE.
+All enumerations are in UPPERCASE without underscores.
 
 
 ### 6.1.1 Optional fields
@@ -765,7 +765,7 @@ Object structure | Unit | Data type | Description
 ***corridor*** { | | JSON object |
 leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
 rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
-*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATIC_CENTER' , 'CONTOUR' }
+*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
 
 ### 6.7 Maps
 
