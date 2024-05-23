@@ -1,6 +1,6 @@
 ![logo](./assets/logo.png)
 
-# :warning: **Release Candidate V2.1.0 – Released version can be found on the VDA website!** :warning:
+# :warning: **Release Candidate - Accepted by the joint working groups of VDA and VDMA on May 13, 2024 - Officially published document will be available soon on the VDA website!** :warning:
 
 # Interface for the communication between automated guided vehicles (AGV) and a master control
 
@@ -113,10 +113,10 @@ The repository can be found at the following link: https://github.com/vda5050/vd
 
 # 2 Objective of the document
 
-The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGVs) system when used in the automotive industry and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
+The objective of the recommendation is to simplify the connection of new vehicles to an existing master control system and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
-Uniform interface between master control and AGV shall be defined.
-In detail, this should be achieved by the following points:
+A uniform interface between a master control and AGVs shall be defined.
+This should be achieved by the following points:
 
 - Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
 - Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains.
@@ -157,12 +157,12 @@ For the integration of proprietary stock systems, individual definitions of the 
 
 ## 3.1 Other applicable documents
 
-Document | Description
----|---
-VDI Guideline 2510 | Driverless transport systems (DTS)
-VDI Guideline 4451 Sheet 7 | Compatibility of driverless transport systems (DTS) - DTS master control
-DIN EN ISO 3691-4 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
-
+Document | Version | Description
+---|---|---
+VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
+VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - DTS master control
+DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
+LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system.
 
 # 4 Requirements and protocol definition
 
@@ -263,11 +263,11 @@ standard | Variable is an elementary data type
 **bold** | Variable is a non-elementary data type (e.g., JSON object or array) and defined separately
 *italic* | Variable is optional
 ***italic and bold***| Variable is optional and a non-elementary data type
-[Square brackets] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is squareBrackets)
+arrayName[arrayDataType] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is arrayDataType)
 
 All keywords are case sensitive.
 All field names are in camelCase.
-All enumerations are in UPPERCASE.
+All enumerations are in UPPERCASE without underscores.
 
 
 ### 6.1.1 Optional fields
@@ -708,8 +708,8 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how precisely an AGV has to meet a node's position in order for it to count as traversed. <br><br> If = 0.0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).<br><br> If > 0.0: allowed deviation radius in meters. <br>If the AGV passes a node within the deviation radius, the node is considered traversed.
-*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how percise the orientation defined in theta has to be met on the node by the AGV. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
+*allowedDeviationXY* | m | float64 | Indicates how precisely an AGV shall match the position of a node for it to be considered traversed. <br><br> If = 0.0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).<br><br> If > 0.0: allowed deviation radius in meters. <br>If the AGV passes a node within the deviation radius, the node can be considered traversed.
+*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how precise the orientation defined in theta has to be met on the node by the AGV. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } | | string | Additional information on the map.
 
@@ -762,10 +762,10 @@ y | | float64 | Y-coordinate described in the world coordinate system.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-_**corridor**_ { | | JSON object |
-leftWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
-rightWidth | m | float64 | Range: [0.0 ... float64.maxValue]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
-*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATIC_CENTER' , 'CONTOUR' }
+***corridor*** { | | JSON object |
+leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
+rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
+*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
 
 ### 6.7 Maps
 
@@ -815,7 +815,7 @@ The map download is triggered by the `downloadMap` instant action from the maste
 The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable, or disable any existing maps on the vehicle.
-The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error shall be reported and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
+The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
 
 
 #### 6.7.4 Enable downloaded maps
@@ -825,7 +825,7 @@ There are two ways to enable a map on a vehicle:
 1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. Other Versions of the same `mapId` with different `mapVersion` are set to 'DISABLED'.
 2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
-It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding mapId as part of a `nodePosition` in an order.
+It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding `mapId` as part of a `nodePosition` in an order.
 If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
 
 
@@ -1043,7 +1043,7 @@ operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVIC
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-***map***{ | | JSON object|
+**map**{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the vehicle's workspace.
 mapVersion | | string | Version of the map.
 *mapDescription* | | string | Additional information on the map.
@@ -1481,7 +1481,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 
 #### vehicleConfig
 
-This JSON object details the software and hardware versions running on the vehicle, as well as a quick summary of network information.
+This JSON object details the software and hardware versions running on the vehicle, as well as a brief summary of network information.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
