@@ -113,7 +113,7 @@ The repository can be found at the following link: https://github.com/vda5050/vd
 
 # 2 Objective of the document
 
-The objective of the recommendation is to simplify the connection of new vehicles to an existing master control and thus to integrate into an existing automated guided vehicles (AGVs) system when used in the automotive industry and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
+The objective of the recommendation is to simplify the connection of new vehicles to an existing master control system and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
 
 Uniform interface between master control and AGV shall be defined.
 In detail, this should be achieved by the following points:
