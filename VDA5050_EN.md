@@ -1,6 +1,6 @@
 ![logo](./assets/logo.png)
 
-# :warning: **Release Candidate V2.1.0 – Released version can be found on the VDA website!** :warning:
+# :warning: **Release Candidate - Accepted by the joint working groups of VDA and VDMA on August 13, 2024 - Officially published document will be available soon on the VDA website!** :warning:
 
 # Interface for the communication between automated guided vehicles (AGV) and a master control
 
