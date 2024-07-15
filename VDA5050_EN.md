@@ -1362,7 +1362,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 
 | **Field**                        | **data type**        | **description**                                                      |
 |----------------------------------|----------------------|----------------------------------------------------------------------|
-| *loadPositions*         | Array of String      | List of load positions / load handling devices.<br/>This lists contains the valid values for the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
+| *loadPositions*         | Array of String      | List of load positions / load handling devices.<br/>This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop.<br/>*If this list doesn’t exist or is empty, the AGV has no load handling device.* |
 | ***loadSets [loadSet]*** | Array of JSON-object | list of load-sets that can be handled by the AGV                     |
 | {                                    |                      |                                                        |
 |&emsp; setName                 | string               | Unique name of the load set, e.g., DEFAULT, SET1, etc.                 |
