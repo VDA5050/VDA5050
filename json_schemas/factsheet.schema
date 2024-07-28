@@ -659,7 +659,7 @@
                                         "description": "z-coordinate of the point of reference."
                                     },
                                     "theta": {
-                                        "type": "integer",
+                                        "type": "number",
                                         "description": "Orientation of the loads bounding box. Important for tugger trains, etc."
                                     }
                                 }
