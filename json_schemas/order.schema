@@ -52,10 +52,6 @@
             "type": "integer",
             "minimum": 0
         },
-        "zoneSetId": {
-            "description": "Unique identifier of the zone set that the AGV has to use for navigation or that was used by MC for planning.\nOptional: Some MC systems do not use zones. Some AGVs do not understand zones. Do not add to message if no zones are used.",
-            "type": "string"
-        },
         "nodes": {
             "description": "Array of nodes objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "type": "array",
