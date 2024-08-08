@@ -592,7 +592,7 @@
             "properties": {
                 "eStop": {
                     "type": "string",
-                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop hast to be acknowledged manually at the vehicle. REMOTE: facility e-stop has to be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
                         "AUTOACK",
                         "MANUAL",
