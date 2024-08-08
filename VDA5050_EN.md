@@ -747,7 +747,7 @@ endNodeId | | string | nodeId of the last node within the order.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **trajectory** { | | JSON object |
-degree | | float64 | Range: [1.0 ... float64.max]<br><br>Degree of the NURBS curve defining the trajectory.<br><br>If not defined, the default value is 1.
+degree | |uint32 | Range: [1 ... uint32.max]<br>Degree of the NURBS curve defining the trajectory.<br><br>If not defined, the default value is 1.
 **knotVector [float64]** | | array | Range: [0.0 ... 1.0]<br><br>Array of knot values of the NURBS.<br><br>knotVector has size of number of control points + degree + 1.
 **controlPoints [controlPoint]**<br><br> } | | array | Array of controlPoint objects defining the control points of the NURBS, explicitly including the start and end point.
 
