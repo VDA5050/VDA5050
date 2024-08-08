@@ -363,7 +363,7 @@ The header is not a JSON object.
 Object structure/Identifier | Data type | Description
 ---|---|---
 headerId | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
+timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
@@ -682,7 +682,7 @@ See also Section [6.10.2 Traversal of nodes and entering/leaving edges](#6102-tr
 Object structure | Unit | Data type | Description
 ---|---|---|---
 headerId | | uint32 | Header ID of the message.<br> The header ID is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z")
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2)
 manufacturer | | string | Manufacturer of the AGV
 serialNumber | | string | Serial number of the AGV
@@ -919,7 +919,7 @@ For additional information, see Section [7 Best practice](#7-best-practice).
 Object structure | Data type | Description
 ---|---|---
 headerId | uint32 | Header ID of the message.<br> The header ID is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z")
+timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
@@ -1015,7 +1015,7 @@ Errors can pass references that help with finding the cause of the error via the
 Object structure | Unit | Data type | Description
 ---|---|---|---
 headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
+timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
@@ -1250,7 +1250,7 @@ The last will message is defined as a JSON encapsulated message with the followi
 Identifier | Data type | Description
 ---|---|---
 headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-timestamp | string | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g., "2017-04-15T11:40:03.12Z").
+timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
@@ -1298,7 +1298,7 @@ The factsheet consists of the JSON objects listed in the following table.
 | **Field** | **data type** | **description** |
 | --- | --- | --- |
 | headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
-| timestamp | string | Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ(e.g., "2017-04-15T11:40:03.12Z"). |
+| timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z"). |
 | version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2). |
 | manufacturer | string | Manufacturer of the AGV. |
 | serialNumber | string | Serial number of the AGV. |
