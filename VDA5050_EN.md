@@ -650,6 +650,23 @@ Resolution:
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
 
+#### 6.6.4.4 Clearing the order
+
+In some situations the vehicle has to stop executing the current order.
+
+- The vehicle is changing the operating mode (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message))
+- For the vehicle it isn't possible to continuing the executing for different reasons.
+
+In this case the vehicle has to clear the order which means that similar zu a cancellation:
+
+- If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
+- If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
+- If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+- The `orderId`, `orderUpdateId`, `nodeStates` and `edgeStates` are kept.
+
+In case that the vehicle don't change the operating mode the vehicle shall set an error to signal MC that the order was cleared and shall wait until the MC has canceled the order via `cancelOrder` action.
+
+
 ### 6.6.5 Corridors
 
 The optional `corridor` edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
