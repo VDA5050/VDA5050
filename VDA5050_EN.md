@@ -1188,9 +1188,9 @@ Identifier | Description
 ---|---
 AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control.
 SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
-MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When the AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
-SERVICE | Master control is not in control of the AGV. <br>Master control doesn't send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV.
-TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
+MANUAL | Master control is not in control of the AGV. <br>Master control doesn't send driving orders or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control.<br>When the AGV enters or leaves this mode, it immediately clears the current order (safe HMI required).<br>If the vehicle detects that it is being moved during in this mode, it will set the `lastNodeId` to an empty string ("") or, if capable, to the correct node identifier.
+SERVICE | Master control is not in control of the AGV. <br>Master control doesn't send driving orders or actions to the AGV. <br>When the AGV enters or leaves this mode, it immediately clears the current order.<br>The vehicle set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the AGV.
+TEACHIN | Master control is not in control of the AGV. <br>Master control doesn't send driving order or actions to the AGV. <br>When the AGV enters or leaves this mode, it immediately clears the current order.<br>The vehicle set `lastNodeId` to an empty string ("").<br>The AGV is being taught, e.g., mapping is done by a master control.
 
 >Table 1 The operating modes and their meaning
 
