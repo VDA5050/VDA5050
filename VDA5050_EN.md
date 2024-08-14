@@ -708,10 +708,17 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how precisely an AGV shall match the position of a node for it to be considered traversed. <br><br> If = 0.0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).<br><br> If > 0.0: allowed deviation radius in meters. <br>If the AGV passes a node within the deviation radius, the node can be considered traversed.
+*allowedDeviationXY* | m | JSON<br>object | Indicates how precisely an AGV shall match the position of a node for it to be considered traversed.
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how precise the orientation defined in theta has to be met on the node by the AGV. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } | | string | Additional information on the map.
+
+Object structure | Unit | Data type | Description
+---| --- |--- | ---
+**allowedDeviationXY** { | | JSON object | Indicates how precisely an AGV shall match the position of a node for it to be considered traversed.<br>`allowedDeviationXY` describes an ellipse with the node position as central point. At that time the vehicle reports the node as traversed the vehicle central point shall be inside these ellipse.<br>If `a` = `b` the allowed deviation is specified by a circle with the radius of `a` and the value of `theta` is irrelevant.<br>If `a` = `b` = 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if `a` and `b` are smaller than the technical tolerance of the vehicle. If the vehicle supports this attribute, but it's not defined for this node by MC the vehicle shall assume the value of `a` and `b` as 0.0.
+a | m | float64 | length of the ellipse semi-major axis.
+b | m | float64 | length of the ellipse semi-minor axis.
+theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis)
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
