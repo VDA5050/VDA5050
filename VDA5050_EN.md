@@ -720,6 +720,9 @@ a | m | float64 | length of the ellipse semi-major axis.
 b | m | float64 | length of the ellipse semi-minor axis.
 theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis)
 
+![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
+>Figure xx allowedDeviation ellipse
+ 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **action** { | | JSON object | Describes an action that the AGV can perform.
