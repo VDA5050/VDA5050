@@ -200,7 +200,7 @@
                         },
                         "idLen": {
                             "type": "integer",
-                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
                         "idNumericalOnly": {
                             "type": "boolean",

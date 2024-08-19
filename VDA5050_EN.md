@@ -686,7 +686,6 @@ manufacturer | | string | Manufacturer of the AGV
 serialNumber | | string | Serial number of the AGV
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
 orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message.
-*zoneSetId* | | string | Unique identifier of the zone set, that the AGV has to use for navigation or that was used by master control for planning. <br> <br> Optional: Some master control systems do not use zones.<br> Some AGVs do not understand zones.<br> Do not add to message, if no zones are used.
 **nodes [node]** | | array | Array of node objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 **edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 
@@ -746,7 +745,7 @@ endNodeId | | string | nodeId of the last node within the order.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **trajectory** { | | JSON object |
-degree | | float64 | Range: [1.0 ... float64.max]<br><br>Degree of the NURBS curve defining the trajectory.<br><br>If not defined, the default value is 1.
+degree | |uint32 | Range: [1 ... uint32.max]<br>Degree of the NURBS curve defining the trajectory.<br><br>If not defined, the default value is 1.
 **knotVector [float64]** | | array | Range: [0.0 ... 1.0]<br><br>Array of knot values of the NURBS.<br><br>knotVector has size of number of control points + degree + 1.
 **controlPoints [controlPoint]**<br><br> } | | array | Array of controlPoint objects defining the control points of the NURBS, explicitly including the start and end point.
 
@@ -865,7 +864,7 @@ downloadMap | - | Trigger the download of a new map. Active during the download.
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no
-pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
+pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string, optional)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
 drop | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
 detectObject | - | AGV detects object (e.g., load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes
 finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge.<br>InstantAction: AGV starts positioning exactly on a target. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
@@ -1020,7 +1019,6 @@ serialNumber | | string | Serial number of the AGV.
 *maps[map]* | | array | Array of map objects that are currently stored on the vehicle.
 orderId| | string | Unique order identification of the current order or the previously finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available.
 orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the AGV. <br>"0" if no previous orderUpdateId is available.
-*zoneSetId* | |string | Unique ID of the zone set, that the AGV currently uses for path planning. <br>Shall be the same as the one used in the order.<br><br>Optional: If the AGV does not use zones, this field can be omitted.
 lastNodeId | | string | Node ID of last reached node or, if the AGV is currently on a node, current node (e.g., "node7"). Empty string (""), if no `lastNodeId` is available.
 lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
 **nodeStates [nodeState]** | |array | Array of nodeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
@@ -1044,7 +1042,6 @@ Object structure | Unit | Data type | Description
 **map**{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the vehicle's workspace.
 mapVersion | | string | Version of the map.
-*mapDescription* | | string | Additional information on the map.
 mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.
 
 Object structure | Unit | Data type | Description
@@ -1159,7 +1156,7 @@ referenceValue <br>} | | string | References the value, which belongs to the ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **safetyState** { | | JSON object |
-eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of eStop:<br>'AUTOACK': auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>'MANUAL': e-stop hast to be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop has to be acknowledged remotely.<br>'NONE': no e-stop activated.
+eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of eStop:<br>'AUTOACK': auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
@@ -1350,7 +1347,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*msgLen* | uint32 | Maximum MQTT message length. |
 | &emsp;*topicSerialLen* | uint32 | Maximum length of serial number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber |
 | &emsp;*topicElemLen* | uint32 | Maximum length of all other parts in MQTT topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
-| &emsp;*idLen* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>order.zoneSetId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
+| &emsp;*idLen* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
 | &emsp;*idNumericalOnly* | boolean | If "true" ID strings need to contain numerical values only. |
 | &emsp;*enumLen* | uint32 | Maximum length of enum and key strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState |
 | &emsp;*loadIdLen* | uint32 | Maximum length of loadId strings. |
