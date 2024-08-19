@@ -31,7 +31,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -51,6 +51,41 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
+        "maps":{
+            "type": "array",
+            "description": "Array of map-objects that are currently stored on the vehicle.",
+            "items": {
+                "type": "object",
+                "title": "map",
+                "required": [
+                    "mapId",
+                    "mapVersion",
+                    "mapStatus"
+                ],
+                "properties": {
+                    "mapId": {
+                        "type": "string",
+                        "description": "ID of the map describing a defined area of the vehicle's workspace."
+                    },
+                    "mapVersion": {
+                        "type": "string",
+                        "description": "Version of the map."
+                    },
+                    "mapDescription": {
+                        "type": "string",
+                        "description": "Additional information on the map."
+                    },
+                    "mapStatus": {
+                        "type": "string",
+                        "description": "Information on the status of the map indicating, if a map version is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "enum": [
+                            "ENABLED",
+                            "DISABLED"
+                        ]
+                    }
+                }
+            }
+        },
         "orderId": {
             "type": "string",
             "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
@@ -69,7 +104,7 @@
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node.\nâ€œ0â€ if no lastNodeSequenceId is available. "
+            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node. \"0\" if no lastNodeSequenceId is available. "
         },
         "driving": {
             "type": "boolean",
@@ -468,7 +503,7 @@
                             "properties": {
                                 "referenceKey": {
                                     "type": "string",
-                                    "description":"Specifies the type of reference used (e.g. "nodeId", "edgeId", "orderId", "actionId", etc.)."
+                                    "description":"Specifies the type of reference used (e.g. nodeId, edgeId, orderId, actionId, etc.)."
                                 },
                                 "referenceValue": {
                                     "type": "string",

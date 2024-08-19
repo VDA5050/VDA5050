@@ -1,8 +1,8 @@
-This markdown file is the original UML diagram from which Figure8.png was created. Changes in the diagram can be tracked via changes in this file.
+This markdown file is the original UML diagram from which process_order_update.png was created. Changes in the diagram can be tracked via changes in this file.
 
 ```
 @startuml
-scale 0.65
+skinparam dpi 250
 start
 #lightgreen:Order arrives via MQTT;
 #lightgreen:Validate JSON;
@@ -24,7 +24,7 @@ endif
             endif
             ->yes;
                 #lightgreen:delete states of previous order;
-                #lightgreen:accept order\nset orderId and orderUpdateId\npopulate states of new order (9);
+                #lightgreen:- accept order\n- set orderId and orderUpdateId\n- populate states of new order (9);
           #lightgreen: execute order;
      else (no - received order is update of current order)
         if ((5) is received order update deprecated?) then (yes)
@@ -46,7 +46,7 @@ endif
                         #lightgreen:clear horizon, if vehicle has one;
                         #lightgreen:- accept order update\n- set orderUpdateId\n- append states to the ones\ncurrently running/planned (9);
                 else (no)
-                    if ((8) is the received update a valid\ncontinuation of the previous\ncompleted actions?) then (no)
+                    if ((8) is the received update a valid\ncontinuation of the previous\ncompleted order?) then (no)
                         #orange:reject order\nthrow error;
                         stop;
                     endif

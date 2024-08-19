@@ -2,3 +2,4 @@
 .project
 .vscode
 *.pdf
+.DS_Store

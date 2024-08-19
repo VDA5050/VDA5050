@@ -24,7 +24,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -426,6 +426,15 @@
                             "resultDescription": {
                                 "type": "string",
                                 "description": "free text: description of the resultDescription"
+                            },
+                            "blockingTypes": {
+                                "type": "array",
+                                "description": "Array of possible blocking types for defined action.",
+                                "enum": [
+                                                "NONE",
+                                                "SOFT",
+                                                "HARD"
+                                ]
                             }
                         }
                     }
@@ -650,7 +659,7 @@
                                         "description": "z-coordinate of the point of reference."
                                     },
                                     "theta": {
-                                        "type": "integer",
+                                        "type": "number",
                                         "description": "Orientation of the loads bounding box. Important for tugger trains, etc."
                                     }
                                 }
@@ -745,10 +754,6 @@
                 }
             }
         },
-        "localizationParameters": {
-            "type": "integer",
-            "description": "Detailed specification of localization"
-        },
          "vehicleConfig": {
             "type": "object",
             "properties": {
@@ -796,7 +801,7 @@
                         },
                         "localIpAddress": {
                             "type": "string",
-                            "description": "A priori assigned IP address. Note that this IP address should not modified/changed during operations."
+                            "description": "A priori assigned IP address of the vehicle used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
                         },
                         "ntpServers": {
                             "type": "array",
