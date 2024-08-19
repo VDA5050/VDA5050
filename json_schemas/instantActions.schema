@@ -2,6 +2,14 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "instantActions",
     "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "actions"
+    ],
     "subtopic": "/instantActions",
     "type": "object",
     "properties": {
@@ -14,7 +22,7 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -92,7 +100,8 @@
                                         "array",
                                         "boolean",
                                         "number",
-                                        "string"
+                                        "string",
+                                        "object"
                                     ],
                                     "description": "The value of the action parameter",
                                     "examples": [

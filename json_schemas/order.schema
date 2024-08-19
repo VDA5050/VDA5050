@@ -23,7 +23,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -113,7 +113,7 @@
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
-                            "allowedDeviationXy": {
+                            "allowedDeviationXY": {
                                 "type": "number",
                                 "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
                                 "minimum": 0
@@ -208,13 +208,7 @@
                     },
                     "direction": {
                         "type": "string",
-                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).",
-                        "examples": [
-                            "left",
-                            "right",
-                            "straight",
-                            "433MHz"
-                        ]
+                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual)."
                     },
                     "rotationAllowed": {
                         "type": "boolean",
@@ -277,6 +271,34 @@
                                         "y"
                                     ]
                                 }
+                            }
+                        }
+                    },
+                    "corridor": {
+                        "description": "Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.",
+                        "type": "object",
+                        "required": [
+                            "leftWidth",
+                            "rightWidth"
+                        ],
+                        "properties": {
+                            "leftWidth": {
+                                "type": "number",
+                                "description": "Defines the width of the corridor in meters to the left related to the trajectory of the vehicle.",
+                                "minimum": 0.0
+                            },
+                            "rightWidth": {
+                                "type": "number",
+                                "description":"Defines the width of the corridor in meters to the right related to the trajectory of the vehicle.",
+                                "minimum": 0.0
+                            },
+                            "corridorRefPoint": {
+                                "type": "string",
+                                "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle.",
+                                "enum": [
+                                    "KINEMATICCENTER",
+                                    "CONTOUR"
+                                ]
                             }
                         }
                     },
@@ -347,7 +369,8 @@
                                     "array",
                                     "boolean",
                                     "number",
-                                    "string"
+                                    "string", 
+                                    "object"
                                 ],
                                 "description": "The value of the action parameter",
                                 "examples": [
