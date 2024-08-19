@@ -22,9 +22,9 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
