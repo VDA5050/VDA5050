@@ -115,14 +115,14 @@
                             },
                             "allowedDeviationXY": {
                                 "type": "number",
-                                "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
+                                "description": "Indicates how precisely an AGV shall match the position of a node for it to be considered traversed.",
                                 "minimum": 0
                             },
                             "allowedDeviationTheta": {
                                 "type": "number",
-                                "minimum": -3.141592654,
+                                "minimum": 0.0,
                                 "maximum": 3.141592654,
-                                "description": "Indicates how big the deviation of theta angle can be. \nThe lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta."
+                                "description": "If defined, indicates how precisely an AGV shall match the orientation of a node for it to be considered traversed."
                             },
                             "mapId": {
                                 "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
