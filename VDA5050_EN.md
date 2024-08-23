@@ -1183,15 +1183,15 @@ eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowled
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
-The following description lists the operatingMode of the topic "state".
+The following description lists the possible values of the field `operatingMode` in the "state" message".
 
 Identifier | Description
 ---|---
 AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle drives and executes actions based on orders from the master control.
 SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
 MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>HMI can be used to control the steering and velocity and handling device of the vehicle. <br>Location of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears the current order (safe HMI required).<br>If the vehicle detects during being in this mode that it is being moved to a position where the current `lastNodeId` cannot be used as a start node of a new order it will set the `lastNodeId` to an empty string ("") or, if capable, to the correct node identifier.
-SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
-TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send driving order or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by a master control.
+SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
+TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send driving order or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by a master control.
 
 >Table 1 The operating modes and their meaning
 
