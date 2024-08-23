@@ -654,7 +654,7 @@ This might happen, if the master control resends the order because the state mes
 
 In response to some events, not triggered by MC, the vehicle has to stop executing the current order.
 
-- The vehicle is changing the operating mode to `MANUAL`, `SERVICE` and `TEACHIN` (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message))
+- The vehicle is changing the operating mode to `MANUAL`, `SERVICE` or `TEACHIN` (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message))
 - The vehicle cannot determine its position anymore
 
 In this cases the vehicle has to clear the order which means that similar zu a cancellation:
@@ -664,7 +664,7 @@ In this cases the vehicle has to clear the order which means that similar zu a c
 - If an action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 - The `orderId`, `orderUpdateId` are kept. `nodeStates` and `edgeStates` are emptied.
 
-As long as the actions of an order are not in state `FINISHED` or `FAILED` the operating mode shall not switch.
+As long as the actions of an order are not in state `FINISHED` or `FAILED` the operating mode shall not switch to `MANUAL`, `SERVICE` or `TEACHIN`.
 
 ### 6.6.5 Corridors
 
