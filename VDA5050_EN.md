@@ -654,10 +654,10 @@ This might happen, if the master control resends the order because the state mes
 
 In response to some events, not triggered by Master Control, the vehicle has to stop executing the current order.
 
-- The vehicle is changing the operating mode to 'MANUAL', 'SERVICE' or 'TEACHIN' (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message))
-- The vehicle cannot determine its position anymore
+- The vehicle is changing the operating mode to 'MANUAL', 'SERVICE' or 'TEACHIN' (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message)).
+- The vehicle cannot determine its position anymore.
 
-In this cases the vehicle has to clear the order which means that similar zu a cancellation:
+In these cases the vehicle has to clear the order which means that similar to a cancellation:
 
 - If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 - If there are running actions, those actions should also be cancelled and be reported as 'FAILED'.
