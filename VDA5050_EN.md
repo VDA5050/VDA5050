@@ -490,7 +490,7 @@ This ensures that the AGV can also perform the order update, i.e., that the firs
 
 ```
 {
-	orderId: 1234,
+	orderId: "1234",
 	orderUpdateId: 1,
 	nodes: [
 		g {released: True},
