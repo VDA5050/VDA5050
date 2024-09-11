@@ -15,12 +15,12 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -34,7 +34,7 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the AGV."
         },
         "serialNumber": {
             "type": "string",
@@ -47,7 +47,7 @@
                 "OFFLINE",
                 "CONNECTIONBROKEN"
             ],
-            "description": "online: connection between AGV and broker is active.\noffline: connection between AGV and broker has gone offline in a coordinated way.\nconnectionBroken: The connection between AGV and broker has unexpectedly ended."
+            "description": "ONLINE: connection between AGV and broker is active. OFFLINE: connection between AGV and broker has gone offline in a coordinated way. CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended."
         }
     }
 }
