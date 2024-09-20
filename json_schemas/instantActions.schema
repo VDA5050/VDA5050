@@ -4,6 +4,14 @@
     "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
     "subtopic": "/instantActions",
     "type": "object",
+    "required": [
+        "headerId",
+        "timestamp",
+        "version",
+        "manufacturer",
+        "serialNumber",
+        "actions"
+    ],
     "properties": {
         "headerId": {
             "title": "headerId",
@@ -14,7 +22,7 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -39,31 +47,29 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Action Object",
+                "description": "Describes an action that the AGV can perform.",
                 "required": [
                     "actionId",
-                    "actionName",
+                    "actionType",
                     "blockingType"
                 ],
                 "properties": {
-                    "actionName": {
+                    "actionType": {
                         "type": "string",
-                        "title": "actionName",
-                        "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                        "description": "Name of action as described in the first column of Actions and Parameters Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
-                        "title": "actionId",
-                        "description": "ID to distinguish between multiple actions."
+                        "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                     },
                     "actionDescription": {
                         "type": "string",
-                        "title": "Additional Information on the action"
+                        "description": "Additional information on the action."
                     },
                     "blockingType": {
                         "type": "string",
                         "title": "blockingType",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions. NONE: action can happen in parallel with others, including movement. SOFT: action can happen simultaneously with others, but not while moving. HARD: no other actions can be performed while this action is running.",
                         "enum": [
                             "NONE",
                             "SOFT",
@@ -95,7 +101,8 @@
                                         "array",
                                         "boolean",
                                         "number",
-                                        "string"
+                                        "string",
+                                        "object"
                                     ],
                                     "description": "The value of the action parameter",
                                     "examples": [
