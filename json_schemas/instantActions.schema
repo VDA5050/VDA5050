@@ -56,12 +56,10 @@
                 "properties": {
                     "actionType": {
                         "type": "string",
-                        "title": "actionName",
-                        "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                        "description": "Name of action as described in the first column of Actions and Parameters Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
-                        "title": "actionId",
                         "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                     },
                     "actionDescription": {
@@ -71,7 +69,7 @@
                     "blockingType": {
                         "type": "string",
                         "title": "blockingType",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions. NONE: action can happen in parallel with others, including movement. SOFT: action can happen simultaneously with others, but not while moving. HARD: no other actions can be performed while this action is running.",
                         "enum": [
                             "NONE",
                             "SOFT",
