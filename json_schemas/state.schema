@@ -127,10 +127,9 @@
                         "required": [
                             "x",
                             "y",
-                            "theta",
                             "mapId"
                         ],
-                        "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV). Optional: Master control has this information. Can be sent additionally, e. g. for debugging purposes. ",
+                        "description": "Node position. The object is defined in chapter 6.7 Topic: Order (from master control to AGV). Optional: Master control has this information. Can be sent additionally, e. g. for debugging purposes. ",
                         "properties": {
                             "x": {
                                 "type": "number"
@@ -141,7 +140,16 @@
                             "theta": {
                                 "type": "number"
                             },
+                            "allowedDeviationXY":{
+                                "type": "number"
+                            },
+                            "allowedDeviationTheta":{
+                                "type": "number"
+                            },
                             "mapId": {
+                                "type": "string"
+                            },
+                            "mapDescription":{
                                 "type": "string"
                             }
                         }
@@ -182,16 +190,16 @@
                     },
                     "trajectory": {
                         "type": "object",
-                        "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 5.4 Topic: Order (from master control to AGV). Trajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed. ",
+                        "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Topic: Order (from master control to AGV). Trajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed. ",
                         "required": [
-                            "degree",
                             "knotVector",
                             "controlPoints"
                         ],
                         "properties": {
                             "degree": {
-                                "type": "integer",
-                                "description": "The degree of the NURBS."
+                                "type": "number",
+                                "description": "The degree of the NURBS.",
+                                "minimum": 1
                             },
                             "knotVector": {
                                 "type": "array",
@@ -210,7 +218,6 @@
                                     "required": [
                                         "x",
                                         "y",
-                                        "weight"
                                     ],
                                     "properties": {
                                         "x": {
@@ -259,11 +266,11 @@
                 },
                 "positionInitialized": {
                     "type": "boolean",
-                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                    "description": "True if the AGVs position is initialized, false, if position is not initialized."
                 },
                 "localizationScore": {
                     "type": "number",
-                    "description": "Describes the quality of the localization and therefore, can be used e. g. by SLAM-AGVs to describe how accurate the current position information is. 0.0: position unknown 1.0: position known Optional for vehicles that cannot estimate their localization score. Only for logging and visualization purposes",
+                    "description": "Describes the quality of the localization and therefore, can be used e. g. by SLAM-AGVs to describe how accurate the current position information is. 0.0: position unknown 1.0: position known. Optional for vehicles that cannot estimate their localization score. Only for logging and visualization purposes",
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
@@ -299,7 +306,7 @@
                 "properties": {
                     "loadId": {
                         "type": "string",
-                        "description": "Unique identification number of the load (e. g. barcode or RFID) Empty field if the AGV can identify the load but didn't identify the load yet. Optional if the AGV has cannot identify the load."
+                        "description": "Unique identification number of the load (e. g. barcode or RFID). Empty field if the AGV can identify the load but didn't identify the load yet. Optional if the AGV cannot identify the load."
                     },
                     "loadType": {
                         "type": "string"
@@ -315,7 +322,7 @@
                             "y",
                             "z"
                         ],
-                        "description": "Point of reference for the location of the bounding box. The point of reference is always the center of the bounding box’s bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.",
+                        "description": "Point of reference for the location of the bounding box. The point of reference is always the center of the bounding box bottom surface (at height = 0) and is described in coordinates of the AGV’s coordinate system.",
                         "properties": {
                             "x": {
                                 "type": "number"
@@ -363,7 +370,7 @@
         },
         "actionStates": {
             "type": "array",
-            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
+            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress. When an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
             "items": {
                 "type": "object",
                 "required": [
@@ -394,6 +401,7 @@
                             "WAITING",
                             "INITIALIZING",
                             "RUNNING",
+                            "PAUSED",
                             "FINISHED",
                             "FAILED"
                         ]
@@ -422,7 +430,7 @@
                     "description": "Battery voltage"
                 },
                 "batteryHealth": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "State of health in percent.",
                     "minimum":0,
                     "maximum":100
@@ -479,7 +487,7 @@
                     },
                     "errorLevel": {
                         "type": "string",
-                        "description": "warning: AGV is ready to drive without human intervention. fatal: AGV is not in running condition.",
+                        "description": "WARNING: AGV is ready to drive without human intervention. FATAL: AGV is not in running condition.",
                         "enum": [
                             "WARNING",
                             "FATAL"
