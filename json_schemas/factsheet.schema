@@ -19,7 +19,7 @@
     "type": "object",
     "properties":{
         "headerId": {
-            "type": "number",
+            "type": "integer",
             "description": "header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
             "minimum": 0
         },

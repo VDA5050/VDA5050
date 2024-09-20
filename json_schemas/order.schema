@@ -23,7 +23,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -116,11 +116,11 @@
                             "allowedDeviationXY": {
                                 "type": "number",
                                 "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed. If = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer). If > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
-                                "minimum": 0
+                                "minimum": 0.0
                             },
                             "allowedDeviationTheta": {
                                 "type": "number",
-                                "minimum": -3.141592654,
+                                "minimum": 0.0,
                                 "maximum": 3.141592654,
                                 "description": "Indicates how big the deviation of theta angle can be.  The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta."
                             },
@@ -186,7 +186,7 @@
                     },
                     "maxSpeed": {
                         "type": "number",
-                        "description": "permitted maximum speed of the agv on the edge in m/s. Speed is defined by the fastest point of the vehicle."
+                        "description": "Permitted maximum speed of the agv on the edge in m/s. Speed is defined by the fastest point of the vehicle."
                     },
                     "maxHeight": {
                         "type": "number",
@@ -226,11 +226,11 @@
                     },
                     "maxRotationSpeed": {
                         "type": "number",
-                        "description": "Maximum rotation speed Optional: No limit, if not set."
+                        "description": "Maximum rotation speed. Optional: No limit, if not set."
                     },
                     "length": {
                         "type": "number",
-                        "description": "Length of the path from startNode to endNode Optional: This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
+                        "description": "Length of the path from startNode to endNode. Optional: This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
                     },
                     "trajectory": {
                         "type": "object",
@@ -318,7 +318,7 @@
                 },
                 "blockingType": {
                     "type": "string",
-                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions. none: action can happen in parallel with others, including movement. soft: action can happen simultaneously with others, but not while moving. hard: no other actions can be performed while this action is running.",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions. NONE: action can happen in parallel with others, including movement. SOFT: action can happen simultaneously with others, but not while moving. HARD: no other actions can be performed while this action is running.",
                     "enum": [
                         "NONE",
                         "SOFT",

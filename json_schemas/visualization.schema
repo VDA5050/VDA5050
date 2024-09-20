@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "visualization",
-    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
+    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depending on the update rate for this topic, all fields are optional.",
     "subtopic": "/visualization",
     "type": "object",
     "properties": {
@@ -12,7 +12,7 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format.",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
             "examples": [
                 "1991-03-11T11:40:03.12Z"
             ]
@@ -58,7 +58,7 @@
                 },
                 "positionInitialized": {
                     "type": "boolean",
-                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                    "description": "True, if the AGVs position is initialized, false, if position is not initialized."
                 },
                 "localizationScore": {
                     "type": "number",
