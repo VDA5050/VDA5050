@@ -1190,7 +1190,15 @@ Identifier | Description
 ---|---
 AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle drives and executes actions based on orders from the master control.
 SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
+
+HALTED | Master control is not in control of the vehicle.
+<br>Master control is allowed to send driving orders, order updates or actions to the vehicle.
+The vehicle shall not clear the order.
+If the vehicle leaves this operating mode and switches not directly into AUTOMATIC or SEMI-AUTOMATIC mode the vehicle shall act according to new operating mode (MANUAL, SERVICE or TEACHIN).
+If the vehicle leaves this operating mode and switches directly into AUTOMATIC or SEMI-AUTOMATIC mode the vehicle shall continue executing the current order at the point the vehicle has entered operating mode HALTED. If the vehicle detects that such a continuation isn't possible while it is inside operating mode HALTED the vehicle shall switch into operating mode MANUAL and act accordingly.
+
 MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>HMI can be used to control the steering and velocity and handling device of the vehicle. <br>Location of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears the current order (safe HMI required).<br>If the vehicle detects during being in this mode that it is being moved to a position where the current `lastNodeId` cannot be used as a start node of a new order it will set the `lastNodeId` to an empty string ("").
+
 SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
 TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send driving order or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by a master control.
 
