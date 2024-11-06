@@ -571,6 +571,7 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
 After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
+A vehicle which plans and replans the trajectory between two nodes by itself shall stop right where it is and not only on the next node.
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
