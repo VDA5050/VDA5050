@@ -664,6 +664,7 @@ In these cases the vehicle has to clear the order which means that similar to a 
 - If there are running actions, those actions should also be cancelled and be reported as 'FAILED'.
 - If an action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 - The `orderId`, `orderUpdateId` are kept. `nodeStates` and `edgeStates` are emptied.
+- The vehicle shall remove all zone requests from the state.
 
 As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACHIN' is reported.
 
