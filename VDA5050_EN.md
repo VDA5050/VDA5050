@@ -1409,6 +1409,7 @@ Object structure | Unit | Data type | Description
 **batteryState** { | | JSON object | 
 batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery voltage.
+*batteryCurrent* | A | float64 | Battery current in Ampere (A).
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
 charging | | boolean | “true”: charging in progress.<br>“false”: the AGV is currently not charging.
 *reach* <br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated reach with current state of charge. 

@@ -542,6 +542,10 @@
                     "type": "number",
                     "description": "Battery voltage"
                 },
+                "batteryCurrent": {
+                    "type": "number",
+                    "description": "Battery current in Ampere (A)"
+                },
                 "batteryHealth": {
                     "type": "number",
                     "description": "State of health in percent.",
