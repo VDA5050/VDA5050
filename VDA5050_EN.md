@@ -832,10 +832,10 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 ## 6.x Zones
 
-Zones are used to define rules for specific areas of the vehicle workspace. In this way, zones allow vehicles to navigate freely between nodes while giving the Master Control the ability to manage traffic. Zones can be used to locally deny vehicles access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION'). 
-Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section 10.4.
-Some vehicles cannot process zones at all, while other vehicles might only be able to work with certain more basic zone types like Blocked. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
+Zones are used to define rules for specific areas of the vehicle workspace. In this way, zones allow vehicles to navigate freely between nodes while giving the Master Control the ability to manage traffic. Zones can be used to locally deny vehicles access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone type: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
+Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section 10.4.
+Some vehicles cannot process zones at all, while other vehicles might only be able to work with certain more basic zone types like 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided vehicles can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
 If a certain behavior can be archived by one of the defined zone types or a combination thereof, these shall be used and no proprietary versions shall be introduced.
 In its state message, each vehicles reports in the `activeZoneSetId` field for each `map` object in the `maps` array the `zoneSetId` that is currently in active use. There shall be no references to map or zone IDs that are not on the vehicle.
@@ -844,11 +844,11 @@ A zoneSet shall only be changed and distributed by master control to keep consis
 
 ### 6.x.1 Zone types
 
-This recommendation distinguishes between two types of zones: contour-based and kinematic center-based zones. This distinction accounts for the varying vehicle behaviors observed during zone entry and exit.
+This recommendation differentiates between two types of zones: contour-based and kinematic center-based zones. This differentiation is based on the different conditions for entering and exiting zones.
 
 #### Contour-based zones
 
-A zone is entered, when the contour/Bounding Box of the vehicle (including the load) traverses the edge of the zone. Exiting is, when every single part of the vehicle has exited the zone. These zones may not be entered by any part of the contour, if the master control does not allow it, e.g., a blocked zone may never be entered, a RELEASE zone may only be entered, if it is released by the master control, etc. or they lead to a defined behavior when entered, e.g., in the ACTION zone when entering all entryActions shall be executed and so on.
+For contour-based zones, the vehicles contour (including its load) decides the entry and exit of the zones. These zones shall not be entered by any part of the contour, if the master control does not allow it, e.g., a 'BLOCKED' zone may never be entered, a 'RELEASE' zone may only be entered, if it is released by the master control, etc. or they lead to a defined behavior when entered, e.g., in the ACTION zone when entering all entryActions shall be executed and so on.
 
 ![Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
 >Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)
@@ -860,11 +860,11 @@ The following contour-based zones are defined:
 | BLOCKED | none | - | Vehicles must not enter this zone. | 
 | LINE_GUIDED | none | - | No autonomous navigation is allowed in this zone. Vehicles are only allowed driving in a (virtually) line-guided way. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. | 
 | RELEASE | none | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | enum | 'STOP', 'EVACUATE'. 'STOP': Vehicle stops current movement, when in zone during releaseLoss. 'EVACUATE': Vehicle leaves zone on fastest way possible, use carefully with long or difficult to maneuver vehicles | 
+| | releaseLossBehavior | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
 | COORDINATED_REPLANNING | - | - | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their global or local path if granted by master control. | 
 | SPEED_LIMIT | | - | Vehicles must not drive faster than the defined maximum speed within this zone. | 
 | | maxSpeed | float64 | Maximum feasible speed for vehicles within the zone in m/s. The speed limit shall be reached when entering the zone.|
-| ACTION | | - | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. <mark>Change: Only actions that can be performed in the specific situations of entering, traversing, or exiting the zone shall be used here.</mark> |
+| ACTION | | - | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines, which actions can be executed when. |
 | | entryActions[action] | array | Actions to be triggered when entering the zone. Empty Array, if no Actions required. | 
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty Array, if no Actions required. | 
 | | exitActions[action] | array | Actions to be triggered when leaving the zone. Empty Array, if no Actions required. | 
@@ -872,11 +872,9 @@ The following contour-based zones are defined:
 
 #### Kinematic center-based zones
 
-
-PRIORITY and PENALTY zones represent zones, that are used for the path planning of the robots, but have, but have no effect on the behaviour of the robots when passing through.
-A PRIORITY zone defines an area on the map that should be considered with a lower associated cost when planning a route compared to an otherwise equivalent area with no zone on the map. With a maximum `priorityFactor` of 1.0, vehicles shall prefer this zone over all others with a lower factor, if possible. Setting a `priorityFactor` to 0.0 shall be the same as not having a PRIORITY zone. Setting a factor between 0.0 and 1.0 allows to define an intermediate level of priority between these behaviors.
-A PENALTY zone defines an area on the map that should be considered with a higher associated cost when planning a route compared to an otherwise equivalent area with no zone on the map. With a maximum `penaltyFactor` of 1.0, vehicles shall avoid this zone when possible and only use it if no other cheaper way exists. n this case, the zone is not yet fully restricted as a BLOCKED zone, but should be avoided. Setting a `penaltyFactor` to 0.0 shall be the same as not having a PENALTY zone. Setting a factor between 0.0 and 1.0 allows to define an intermediate level of penalty between these behaviors.
-The No Zone (i.e. the area that is without a PRIORITY/PENALTY zone) is treated in this case like a PRIORITY/PENALTY zone with a factor of 0.0. See chapter 10.5 for more detailed interactions.
+In kinematic center based-zones, the vehicle's kinematic center decides the entry and exit of the zones. When within a zone, the vehicle shall follow the defined behavior. 
+'PRIORITY' and 'PENALTY' zones represent zones, that are used for the influencing the movement of the robots by incetivising or penalizing certain areas of the map. They have no effect on the behavior of the robots when passing through.
+'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used.  Other directions shall be avoided. Additional parameters indicate the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the speed vector in the project specific coordinate system. 
 
 ![Figure x2 Depiction of a vehicle entering a zone based on its navigation point (left) and a loaded vehicle exiting a zone based on its navigation point (right)](./assets/navigation_point_entry.png)
 >Figure x2 Depiction of a vehicle entering a zone based on its navigation point (left) and a loaded vehicle exiting a zone based on its navigation point (right)
@@ -890,7 +888,7 @@ The No Zone (i.e. the area that is without a PRIORITY/PENALTY zone) is treated i
 | DIRECTED | | - | Vehicles shall (preferably) traverse this zone in specific directions of travel. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
 | | limitation | enum | ['NONE', 'OBSTACLE','STRICT']<\br>NONE: Vehicles may traverse against the direction of travel within the zone in the opposite direction if necessary, but shall avoid it (e.g. make sharp turns into islands or if otherwise completely blocked), OBSTACLE: Vehicles may not traverse against the direction of travel except to avoid obstacles, STRICT: Vehicles shall not traverse against the direction of travel within the zone. |
-| TWOWAY | | | While in this zone, vehicles shall only move in the direction of travel and the opposite, vehicles shall not cross this zone in any other directions. | 
+| BIDIRECTED | | | While in this zone, vehicles shall only move in the direction of travel and the opposite, vehicles shall not cross this zone in any other directions. | 
 | | direction | float64 | Allowed direction of travel within the zone in radians, the second allowed direction of travel is +/- Pi. The direction of travel is the speed vector in the project-specific coordinate system. | 
 | | limitation | enum | ['NONE', 'OBSTACLE']<\br>NONE: Vehicles may traverse in any direction other then the main driving directions, but shall avoid it (e.g. make sharp turns into islands or if otherwise completely blocked), OBSTACLE: Vehicles may not traverse in any direction other then the main driving directions except to avoid obstacles.|
 
@@ -904,7 +902,7 @@ The `intermediatePath` is defined as a polyline with an estimated time of arriva
 
 ### 6.x. Implementation of the zone set object for zone set transfer
 
-In contrast to the maps, the structure of the zones is predefined. This structure shall be maintained when downloading as well as sending the zones via the separate topic. This structure is not part of the state message of the vehicles.
+In contrast to the maps, the structure of the zones is predefined. This structure shall be maintained when downloading as well as sending the zones via the separate topic `zoneSet`. This structure is not part of the state message of the vehicles.
 
 A zoneSet shall only be changed and distributed by master control to keep consistency in the system.
 
@@ -926,14 +924,14 @@ A single zone object has the following structure:
 | --------------------- | ------------- | ------------------- |
 | zone{ | JSON object | |
 | zoneId | string | Locally (within the zone set) unique identifier. |
-| zoneType | string | Zone category. |
+| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
 | *zoneDescription* | string | User-defined human-readable name or descriptor. | 
 | *maxSpeed* | float64 | Required in SPEED_LIMIT zone.| 
-| ***entryActions[Action]*** | array | Array of actions to be executed when entering the zone.| 
-| ***duringActions[Action]*** | array | Actions to be executed while crossing the zone. Empty Array, if no Actions required.| 
-| ***exitActions[Action]*** | array | Actions to be triggered when leaving the zone. Empty Array, if no Actions required.| 
-| **vertices[vertex]** <br> } | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone. |
-| *releaseLossBehavior* <br> } | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for new order. |
+| ***entryActions[Action]*** | array | Array of actions to be executed when entering the zone. Empty array, if no actions required.| 
+| ***duringActions[Action]*** | array | Actions to be executed while crossing the zone. Empty array, if no actions required.| 
+| ***exitActions[Action]*** | array | Actions to be triggered when leaving the zone. Empty array, if no actions required.| 
+| **vertices[vertex]** | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone. |
+| *releaseLossBehavior* <br> } | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. |
 
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A minimum of three vertices must be defined to make-up a full polygon. If the first entry of the array of vertices is not identical to the last, implicitly the polygon is closed through a connection line to the first vertex. Only simple (meaning without any intersections) polygons are supported. The array of vertices defining a zone is provided as a list of x-y-tuples given in the globally defined project specific coordinate system: 
 
@@ -945,100 +943,107 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 ## 6.x.3 Interactive zones - Communication 
 
-For communicating and verifying requests for interactive zones, the state message is used by the vehicle to request an authorization and a the MQTT topic *zones* is used by master control to grant or revoke the authorization.
+For communicating and verifying requests for interactive zones ('RELEASE' and 'COORDINATED_REPLANNING'), the state message is used by the vehicle to request an authorization and a the MQTT topic `response` is used by master control to grant or revoke the authorization.
 The authorization request is related to the vehicle state in which the request is embedded.
 
-### Requests in the state message
-
-For a `RELEASE` zone, the vehicle requests access to the zone before entering the zone.
+For a 'RELEASE' zone, the vehicle requests access to the zone before entering the zone.
 The vehicle decides in which distance the access is requested.
 If the access isn't granted in time, the vehicle shall not enter the zone.
 
-During traversing a `COORDINATED REPLANNING` zone, the vehicle can request permission to replan the path through the zone if the vehicle cannot proceed on its previously planned path?.
+During traversing a 'COORDINATED_REPLANNING' zone, the vehicle can request a new path through the zone if the vehicle cannot proceed on its previously planned path.
 
 To request access or permission for a path change, the vehicle appends one or several zone requests related to interactive zones to its state message in `zoneRequests` array.
 
-Only requests to zones of `ENABLED` zone sets are valid. Tone requests can be made to zones that belong to maps that the vehicle is currently not on.
-If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not `ENABLED`, master control shall always reject the request.
+Only requests to zones of enabled zone sets are valid. Zone requests can be made to zones that belong to maps that the vehicle is currently not on.
+If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not enabled, master control shall always reject the request.
 
 The `requestID` allows master control to differentiate between different requests leading to new requests if the vehicle got denied once and allows the vehicle to request multiple alternatives at the same time.
 Each request shall use an unique identifier per robot. Ids can be reused after vehicle reboot.
 
-For requests related to a `RELEASE` zone, a `zoneRequest` object of `requestType` `ACCESS` shall be added to the state message.
-For permission to enter a COORINATED_REPLANNING zone with a planned path or for replanning its path within the this zone, the request type shall be set to `REPLANNING`.
+For requests related to a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
+For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the this zone, the request type shall be set to 'REPLANNING'.
 Request-specific parameters are added as optional parameters to the request.
-For `REPLANNING` request, the `trajectory` parameter is added to describe the requested path as type of trajectory from the state message.
+For 'REPLANNING' request, the `trajectory` parameter is added to describe the requested path as type of trajectory from the state message.
 
-The boolean `requestStatus` shall be initially set to REQUESTED by the vehicle for stating its request.
-If master control grants the request (as described in the following section) and the vehicle receives the corresponding message, it acknowledges that the vehicle has received the permission, by setting the `authorized` field to `true`.
-The vehicle has now the permission to enter the `RELEASE` zone.
+The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle for stating its request.
+If master control grants the request (as described in the following section) and the vehicle receives the corresponding message, it acknowledges that the vehicle has received the permission, by setting the `requestStatus` to 'GRANTED'. The vehicle can now enter the 'RELEASE' zone.
 
-While the vehicle remains in the `RELEASE` zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as ACCEPTED.
+While the vehicle remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED'.
 This way, master control is informed that the vehicle is still inside the zone.
 After leaving the zone the vehicle shall remove the corresponding `zoneRequest` entry from its state message.
 
 ![Figure x3 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
 >Figure x3 Zone request behavior for a RELEASE zone.
 
-Likewise, when a vehicle needs to replan while in a `COORDINATED_REPLANNING` zone, it adds a zone request object with `requestStatus` set to REQUESTED for the corresponding zone to its state message.
-If it receives permission, it reports `requestStatus` to REQUESTED and can navigate unrestrictedly until leaving the zone or master control revokes the permission.
-If the permission is revoked or the zone is left, the vehicle shall remove the zone request object from its state message.
-If there are multiple requests for the same coordinated replanning zone accepted by the master control, the vehicle shall only choose one of them that it will actually traverse and set it to true in its state and remove the other ones from its state.
+Likewise, when a vehicle needs to replan while in a 'COORDINATED_REPLANNING' zone, it adds a zone request object with `requestStatus` set to 'REQUESTED' for the corresponding zone to its state message.
+If it receives permission, it reports `requestStatus` to 'GRANTED' and can use the requested trajectory.
+If there are multiple requests for the same 'COORDINATED_REPLANNING' zone accepted by the master control, the vehicle shall only choose one of them that it will actually traverse and set it to true in its state and remove the other ones from its state.
+The vehicles driving trajectory shall only deviate from the released path by the vehicles precision.
 
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
 >Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.
 
-If the vehicle is not in operating mode `AUTOMATIC` it shall remove all requests from the state and shall not request any permissions to enter a `RELEASE` zone or for replanning inside a `COORDINATED_REPLANNING` zone.
+The operating mode is influencing the zone release behavior (Section [6.10.6 Implementation of the state message](#6106-Implementation-of-the-state-message)).
 
-
-### Granting and revoking of permission through master control
-
-Master control response to zone requests by sending a zone response message via the *response* topic.
+Master control response to zone requests by sending a zone response message via the `response` topic.
 A zone response message contains in addition to the usual header information an array of zone response objects. Each zone response object can only grant a single request at a time referenced by the `requestId`.
 A zone request can only be fully granted or rejected, master control cannot conditionally or partially accept a request.
 
-Each response object includes a lease time which specifies until which point in time a permission is valid.
-Additionally, master control has the option to revoke a permission once granted directly by sending a zone revoke message referencing the according `requestId` (`grantType` = `REVOKE`).
-When receiving a zone revoke message, the vehicle shall remove the related zone request object from its state message.
-The corresponding `requestId` shall not be reused to renew original request.
-master control shall assume a revoked request as still granted until receiving an updated state message from the vehicle with the request removed.
-If the vehicle is already inside the requested zone and receives a zone revoke message, it shall reporting a warning and react according to the `releaseLossBehavior` value defined in the zone definition.
+Each response object includes a lease time which specifies until what time a permission is valid. The master control shall resend a release message on the `response` topic before the lease time expires if the permission is still granted.
+Additionally, master control has the option to revoke a permission once granted directly by sending a message on the `response` topic referencing the `requestId` with `grantType` set to 'REVOKED'.
+When receiving a zone revoke message, the vehicle shall set the `requestStatus` to 'REVOKED'. If the vehicle is already inside the requested zone and receives a zone revoke message, it shall reporting a warning and react according to the `releaseLossBehavior` value defined in the zone definition.
+The corresponding `requestId` shall not be reused to renew initial request.
+The master control shall assume a revoked request as still granted until receiving an corresponding updated state message from the vehicle.
 
-If the vehicle is already inside the requested zone and the grant lease is expired the vehicle has to stop immediately and report a warning and act accordingly to the defined `releaseLossBehavior`.
+If the vehicle is already inside the requested zone and the grant lease is expired the vehicle shall report a warning and act accordingly to the defined `releaseLossBehavior`.
 
-When a vehicle within a `COORDINATED REPLANNING` zone receives a zone revoke or if the grant lease is expired after it has already initiated replanning, the vehicle shall stop and state a new request if required.
+When a vehicle within a 'COORDINATED_REPLANNING' zone receives a revoke message or if the grant lease is expired, the vehicle shall stop and state a new request if required.
 
 ### Grant message definitions
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-| responses[response] | array | Array of response objects. |
+|headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
+|timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
+|version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
+|manufacturer | | string | Manufacturer of the AGV.
+|serialNumber | | string | Serial number of the AGV.
+|responses[response] | array | Array of response objects. |
 
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-| response <br> { | JSON object | Object which contains the master control answer to a specific zone request. |
+| response <br> { | JSON object | Object which contains the master control answer to a specific request. |
 | requestId | string | Unique per vehicle identifier within all active requests. |
-| grantType | enum | Enumeration to specify the grant type {GRANT,PENDING,REVOKE,REJECT}<\br>GRANT: master control grants a request filed by the vehicle in relation to an interactive zone. REVOKE: master control revokes previously granted request related to an interactive zone. REJECT: master control rejects a request (e.g. the request is invalid.). PENDING: Acknowledge the vehicles request by the master control, but master control not made a decision yet, but the request was noted by the master control. |
-| *leaseExpiry* | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”) <mark> 
+| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<\br>'GRANTED': master control grants request. 'REVOKED': master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the vehicles request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
+| *leaseExpiry* | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
 
 ## 10.5 Potentially conflicts in orders for vehicles working with zones
 
-In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered.
+In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The Column No Zone defines the behavior for contour-based zones, where vehicles can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the vehicle can only be completely within or outside  the zone, so there is no interaction existing.
 
-| |**BLOCKED**|**LINE_GUIDED**|**COORDINATED_REPLANNING**|**SPEED_LIMIT**|**ACTION**|**PRIORITY**|**PENALTY**|**NO Zone**|**DIRECTED**|**EDGE-PROPERTIES**
----|---|---|---|---|---|---|---|---|---|---
-**BLOCKED**|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED
-**LINE_GUIDED**||LINE_GUIDED|LINE_GUIDED|No Conflict|No Conflict (Note: If actions from action zone would conflict with line guided behavior, throw a warning (order error) and stop)|Priority has no effect -> LINE-GUIDED|Penalty has no effect -> LINE-GUIDED|Must follow the edge (valid order consists of nodes and edges) – Nodes/Edges are part of the order|LINE_GUIDED -> Directed is ignored|No conflict
-**COORDINATED_REPLANNING**|||Multiple requests are necessary for each COORDINATED_REPLANNING Zone|No conflict|No conflict, because action shall not interfere with driving path of robot (check that again)|No conflict|No conflict|Coordinated replanning|No conflict|No conflict, If trajectory on your edge, announce trajectory.
-**SPEED_LIMIT** ||||Take slowest|No conflict, except action defines speed, then take slowest.|No conflict|No conflict|Take slowest, which means speed limit|No conflict|Take slowest
-**ACTION** |||||Execute all actions (Order?) à Beware of conflicts, leave open but similar to instant actions and actions|No conflict|No conflict|Action|No conflict|Same as two action zones
-**PRIORITY** ||||||Lower wins, explicitly not stacking|Penalty wins|No Priority is applied, because no zone is more restrictive than priority.|No conflict|No conflict
-**PENALTY** |||||||More restrictive wins|Restrictive zone wins|No conflict|No conflict
-**NO Zone** ||||||||Does not exist|No conflict|No conflict
-**DIRECTED** |DIRECTED||||||||If contour of vehicle is within --> Examples|No overlap allowed, because the behavior is not defined|Does a trajectory override the directed zone? Yes, since master control sends the trajectory on purpose. Define how master control is able to communicate trajectory on edge.
+| |**BLOCKED**|**LINE_GUIDED**|**COORDINATED_REPLANNING**|**SPEED_LIMIT**|**ACTION**|**PRIORITY**|**PENALTY**|**DIRECTED**|**BIDIRECTED**|**No Zone**|**EDGE-PROPERTIES**
+---|---|---|---|---|---|---|---|---|---|---|---
+**BLOCKED**|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED|BLOCKED
+**LINE_GUIDED**||No conflict|LINE_GUIDED|No Conflict| (1) |LINE_GUIDED|LINE_GUIDED|LINE_GUIDED|No conflict|LINE_GUIDED|No conflict
+**COORDINATED_REPLANNING**|||(2)|No conflict|(1)|No conflict|No conflict|No conflict|No conflict|COORDINATED_REPLANNING|(3)
+**SPEED_LIMIT** ||||(4)|No conflict|No conflict|No conflict|No conflict|No conflict|SPEED_LIMIT|(4)
+**ACTION** |||||(5)|No conflict|No conflict|No conflict|No conflict|ACTION|(5)
+**PRIORITY** ||||||(6)|(6)|No conflict|No conflict|(7)|No conflict
+**PENALTY** |||||||(6)|No conflict|No conflict|(7)|No conflict
+**DIRECTED** ||||||||(8)|(8)|(7)|(9)
+**BIDIRECTED** |||||||||(8)|(7)|(9)
 
+1) If actions from any action would conflict with other zones behavior, report a warning (order error) and stop the vehicle.
+2) Planned trajectory must be granted for all COORDINATED_REPLANNING zones.
+3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
+4) The lower of the two competing speeds applies.
+5) Execute all actions
+6) The more restrictive one is always selected here; for two PRIORITY zones, the lower priority factor is used; for one PRIORITY and one PENALTY zone, the penalty factor is used; for two PENALTY zones, the higher penalty factor is used.
+7) For kinematic center-based zones the vehicle can only be completely within or outside the zone, so this overlap is not possible.
+8) Zones shall not overlap, since the behavior is not defined.
+9) A trajectory as part of the edge properties shall override the directed and bidirected zone property.
 
 ## 6.8 Actions
 
@@ -1355,11 +1360,11 @@ Object structure | Unit | Data type | Description
 | --- | --- | --- |
 | zoneRequest <br> { | JSON object | Zone information sent by the vehicle to master control. |
 | requestId | string | Unique per vehicle identifier within all active requests. |
-| requestType | string | Enum specifying the type of zone the request relates to. Feasible values are ACCESS or REPLANNING. |
+| requestType | enum | Enum specifying the type of zone the request relates to. Feasible values are ACCESS or REPLANNING. |
 | zoneId | string | Locally (within the zone set) unique identifier referencing the zone the request is related to. |
 | zoneSetId | string | Due to the zoneId only being unique to a zoneSet, the zoneSetId is part of the request. |
-| requestStatus | enum | enum=[REQUESTED, ACCEPTED, REVOKED, or EXPIRED] Can be either REQUESTED, ACCEPTED, REVOKED, or EXPIRED.|
-| *trajectory* <br> } | object | Optional for COORDINATED_REPLANNING requests only with the planned trajectory through the zone. |
+| requestStatus | enum | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED.|
+| *trajectory* <br> } | object | Optional for 'COORDINATED_REPLANNING' requests only with the planned trajectory through the zone. |
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
