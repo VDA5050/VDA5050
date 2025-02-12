@@ -752,8 +752,8 @@ degree | |uint32 | Range: [1 ... uint32.max]<br>Degree of the NURBS curve defini
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **controlPoint** { | | JSON object |
-x | | float64 | X-coordinate described in the world coordinate system.
-y | | float64 | Y-coordinate described in the world coordinate system.
+x | | float64 | X-coordinate described in the project-specific coordinate system.
+y | | float64 | Y-coordinate described in the project-specific coordinate system.
 *weight* | | float64 | Range: [0.0 ... float64.max]<br><br>The weight of the control point on the curve.<br>When not defined, the default will be 1.0.
 } | | |
 
@@ -857,14 +857,14 @@ The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | - | Vehicles must not enter this zone. | 
+| BLOCKED | none | - | Vehicles shall not enter this zone. | 
 | LINE_GUIDED | none | - | No autonomous navigation is allowed in this zone. Vehicles are only allowed driving in a (virtually) line-guided way. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. | 
 | RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
+| | releaseLossBehavior | enum | When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continues its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
 | COORDINATED_REPLANNING | - | - | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their global or local path if granted by master control. | 
 | SPEED_LIMIT | | - | Vehicles must not drive faster than the defined maximum speed within this zone. | 
-| | maxSpeed | float64 | Maximum feasible speed for vehicles within the zone in m/s. The speed limit shall be reached when entering the zone.|
-| ACTION | | - | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines, which actions can be executed when. |
+| | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall be reached when entering the zone.|
+| ACTION | | - | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
 | | entryActions[action] | array | Actions to be triggered when entering the zone. Empty Array, if no Actions required. | 
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty Array, if no Actions required. | 
 | | exitActions[action] | array | Actions to be triggered when leaving the zone. Empty Array, if no Actions required. | 
@@ -872,8 +872,8 @@ The following contour-based zones are defined:
 
 #### Kinematic center-based zones
 
-In kinematic center based-zones, the vehicle's kinematic center decides the entry and exit of the zones. When within a zone, the vehicle shall follow the defined behavior. 
-'PRIORITY' and 'PENALTY' zones represent zones, that are used for the influencing the movement of the robots by incetivising or penalizing certain areas of the map. They have no effect on the behavior of the robots when passing through.
+In kinematic center-based zones, the vehicle's kinematic center decides the entry and exit of the zones. When the vehicle's kinematic center is within a zone, the vehicle shall follow the defined behavior. 
+'PRIORITY' and 'PENALTY' zones represent zones, that are used for the influencing the movement of the robots by incentivising or penalizing certain areas of the map. They have no effect on the behavior of the robots when passing through.
 'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used.  Other directions shall be avoided. Additional parameters indicate the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the speed vector in the project specific coordinate system. 
 
 ![Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
@@ -897,16 +897,16 @@ In kinematic center based-zones, the vehicle's kinematic center decides the entr
 Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the visualisation topic can be used. For this purpose the parameters `plannedPath` and `intermediatePath` are introduced, to be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState shall only be used to 'acknowledge' trajectories that have already been defined a priori within a layout or order and not during operations.
 
 This recommendation distinguishes between the `plannedPath`, which represents a longer path within the robot's currently active order that it is confident to share, and the `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors. Both paths start from the current position of the mobile robot (independent of any node that is part of the order the robot is currently executing) and go as far as the robot has what it considers to be reliable data, as it may also be situation dependent.
-The `plannedPath` is defined as a NURBS identical to the one defined in the `trajectory` field of the `edgeState`. In addition, the robot may contain an array of nodes (referenced by their `nodeId`) that are included in the current plan. 
-The `intermediatePath` is defined as a polyline with an estimated time of arrival defined by a `timestamp` and optionally the orientation of the mobile robot added to each shared waypoint. It is defined as an array of waypoints where the line segments of a `polyline` are linear. The exact length of the shared path is limited by the perception of its intermediate environment by its sensors.
+The `plannedPath` is defined as a NURBS identical to the one defined in the `trajectory` field of the `edgeState`. In addition, the planned path may contain an array of nodes (referenced by their `nodeId`) that will be traversed as part of the current path.
+The `intermediatePath` is defined as a polyline with an estimated time of arrival defined by a `timestamp` and optionally the orientation of the mobile robot added to each shared waypoint. It is defined as an array of waypoints where the line segments of a `polyline` are linear. The exact length of the shared path is limited by the robot's perception of its intermediate environment by its sensors.
 
 ### 6.x. Implementation of the zone set object for zone set transfer
 
-In contrast to the maps, the structure of the zones is predefined. This structure shall be maintained when downloading as well as sending the zones via the separate topic `zoneSet`. This structure is not part of the state message of the vehicles.
+In contrast to the maps, the structure of the zones is predefined. This structure shall be maintained when providing the download as well as sending the zones via the separate topic `zoneSet`. It is not part of the state message of the vehicles.
 
 A zoneSet shall only be changed and distributed by master control to keep consistency in the system.
 
-A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon master control to ensure that the right zone set is enabled for each map on the vehicle. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the device. Only a single zone set can be activated at a time for each `mapId` on the vehicle. Zones shall not extend beyond the spatial boundaries of a map.
+A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon master control to ensure that the right zone set is enabled for each map on the vehicle. As with maps, the `zoneSetStatus` indicates which zone sets is currently used by the device. Only a single zone set can be activated at a time for each `mapId` on the vehicle. Zones shall not extend beyond the spatial boundaries of a map.
 The content of a zone set with a unique zoneSetId shall not change. If changes are required within a zone set, it shall be identified by a new zoneSetId.
 
 
@@ -930,7 +930,7 @@ A single zone object has the following structure:
 | ***entryActions[Action]*** | array | Array of actions to be executed when entering the zone. Empty array, if no actions required.| 
 | ***duringActions[Action]*** | array | Actions to be executed while crossing the zone. Empty array, if no actions required.| 
 | ***exitActions[Action]*** | array | Actions to be triggered when leaving the zone. Empty array, if no actions required.| 
-| *releaseLossBehavior* | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. |
+| *releaseLossBehavior* | enum | When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. |
 | **vertices[vertex]** <br> } | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone clockwise. |
 
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A minimum of three vertices must be defined to make-up a full polygon. If the first entry of the array of vertices is not identical to the last, implicitly the polygon is closed through a connection line to the first vertex. Only simple (meaning without any intersections) polygons are supported. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a clockwise direction: 
@@ -983,10 +983,10 @@ The vehicles driving trajectory shall only deviate from the released path by the
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
 >Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.
 
-The operating mode is influencing the zone release behavior (Section [6.10.6 Implementation of the state message](#6106-Implementation-of-the-state-message)).
+The operating mode may influence the zone release behavior (Section [6.10.6 Implementation of the state message](#6106-Implementation-of-the-state-message)).
 
 Master control response to zone requests by sending a zone response message via the `response` topic.
-A zone response message contains in addition to the usual header information an array of zone response objects. Each zone response object can only grant a single request at a time referenced by the `requestId`.
+The response message contains an array of zone response objects. Each zone response object can only grant a single request at a time referenced by the `requestId`.
 A zone request can only be fully granted or rejected, master control cannot conditionally or partially accept a request.
 
 Each response object includes a lease time which specifies until what time a permission is valid. The master control shall resend a release message on the `response` topic before the lease time expires if the permission is still granted.
@@ -999,7 +999,7 @@ If the vehicle is already inside the requested zone and the grant lease is expir
 
 When a vehicle within a 'COORDINATED_REPLANNING' zone receives a revoke message or if the grant lease is expired, the vehicle shall stop and state a new request if required.
 
-### Grant message definitions
+### Response message definitions
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
@@ -1035,7 +1035,7 @@ In the following matrix possible interactions between zones are described. The m
 **DIRECTED** ||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** |||||||||(8)|(7)|(9)
 
-1) If actions from any action would conflict with other zones behavior, report a warning (order error) and stop the vehicle.
+1) If actions would conflict with other zones behavior, report a warning (order error) and stop the vehicle.
 2) Planned trajectory must be granted for all COORDINATED_REPLANNING zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
 4) The lower of the two competing speeds applies.
@@ -1305,8 +1305,8 @@ Object structure | Unit | Data type | Description
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **controlPoint** { | | JSON object |
-x | m | float64 | X-coordinate described in the world coordinate system.
-y | m | float64 | Y-coordinate described in the world coordinate system.
+x | m | float64 | X-coordinate described in the project-specific coordinate system.
+y | m | float64 | Y-coordinate described in the project-specific coordinate system.
 *weight* | | float64 | The weight of the control point on the curve.<br><br>Range: ]0.0 ... float64.max]<br>Default: 1.0
 } | | |
 
@@ -1320,9 +1320,9 @@ Object structure | Unit | Data type | Description
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **waypoint** { | | JSON object | Endpoint of a segment within a defined polyline.
-x | m | float64 | X-coordinate described in the world coordinate system.
-y | m | float64 | Y-coordinate described in the world coordinate system.
-*theta* | rad | float64 | Absolute orientation of the vehicle in the world coordinate system. <br> Range: [-Pi ... Pi] </br>
+x | m | float64 | X-coordinate described in the project-specific coordinate system.
+y | m | float64 | Y-coordinate described in the project-specific coordinate system.
+*theta* | rad | float64 | Absolute orientation of the vehicle in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
 ETA | | string | Estimated time of arrival/traversal. ETA is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
 } | | |
 
@@ -1498,7 +1498,7 @@ If there are multiple actions on the same node with different blocking types, Fi
 
 For a near real-time position and planned trajectory update the AGV can broadcast its position, velocity and planned trajectory on the topic `visualization`.
 
-The structure of the visualization object is the same as the position, velocity, planned path and intermediate path object in the state.
+The fields of the visualization object use the same structure as the position, velocity, planned path and intermediate path object in the state.
 For additional information see Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message) for the vehicle state.
 The update rate for this topic is defined by the integrator.
 
@@ -1593,7 +1593,7 @@ This JSON object describes general properties of the AGV type.
 | maxLoadMass | float64 | [kg], Maximum loadable mass. |
 | localizationTypes | array of string | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks,<br/>REFLECTOR: laser reflectors,<br/>RFID: RFID tags,<br/>DMC: data matrix code,<br/>SPOT: magnetic spots,<br/>GRID: magnetic grid.<br/>
 | navigationTypes | array of string | Array of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: no path planning, the AGV follows physical installed paths,<br/>VIRTUAL_LINE_GUIDED: the AGV follows fixed (virtual) paths,<br/>AUTONOMOUS: the AGV plans its path autonomously.|
-| *supportedZones* | array of string | Array of zone types supported by the vehicle.<br/>Enum {'BLOCKED', 'LINE-GUIDED', 'RELEASE', 'COORDINATED-REPLANNING', 'SPEED-LIMIT', 'ACTION'}.
+| *supportedZones* | array of string | Array of zone types supported by the vehicle.<br/>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
 
 #### physicalParameters
 
