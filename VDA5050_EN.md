@@ -894,9 +894,9 @@ In kinematic center based-zones, the vehicle's kinematic center decides the entr
 
 ## 6.x.2 Sharing of planned path for freely navigating mobile robots
 
-Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the visualisation topic can be used. For this purpose the parameters `plannedPath` and `intermediatePath` are introduced, to be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState should only be used to 'acknowledge' trajectories that have already been defined a priori within a layout and not during operations.
+Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the visualisation topic can be used. For this purpose the parameters `plannedPath` and `intermediatePath` are introduced, to be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState shall only be used to 'acknowledge' trajectories that have already been defined a priori within a layout or order and not during operations.
 
-This recommendation distinguishes between the `plannedPath`, which represents a longer path within the robot's currently active order that it is confident to share, and the `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors. Both paths start from the current position of the mobile robot (independent of any node that is part of the mission the robot is currently executing) and go as far as the robot has what it considers to be reliable data, as it may also be situation dependent.
+This recommendation distinguishes between the `plannedPath`, which represents a longer path within the robot's currently active order that it is confident to share, and the `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors. Both paths start from the current position of the mobile robot (independent of any node that is part of the order the robot is currently executing) and go as far as the robot has what it considers to be reliable data, as it may also be situation dependent.
 The `plannedPath` is defined as a NURBS identical to the one defined in the `trajectory` field of the `edgeState`. In addition, the robot may contain an array of nodes (referenced by their `nodeId`) that are included in the current plan. 
 The `intermediatePath` is defined as a polyline with an estimated time of arrival defined by a `timestamp` and optionally the orientation of the mobile robot added to each shared waypoint. It is defined as an array of waypoints where the line segments of a `polyline` are linear. The exact length of the shared path is limited by the perception of its intermediate environment by its sensors.
 
@@ -943,7 +943,7 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 ## 6.x.3 Interactive zones - Communication 
 
-For communicating and verifying requests for interactive zones ('RELEASE' and 'COORDINATED_REPLANNING'), the state message is used by the vehicle to request an authorization and a the MQTT topic `response` is used by master control to grant or revoke the authorization.
+For communicating and verifying requests for interactive zones ('RELEASE' and 'COORDINATED_REPLANNING'), the state message is used by the vehicle to request an authorization and the MQTT topic `response` is used by master control to grant or revoke the authorization.
 The authorization request is related to the vehicle state in which the request is embedded.
 
 For a 'RELEASE' zone, the vehicle requests access to the zone before entering the zone.
@@ -958,7 +958,7 @@ Only requests to zones of enabled zone sets are valid. Zone requests can be made
 If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not enabled, master control shall always reject the request.
 
 The `requestID` allows master control to differentiate between different requests leading to new requests if the vehicle got denied once and allows the vehicle to request multiple alternatives at the same time.
-Each request shall use an unique identifier per robot. Ids can be reused after vehicle reboot.
+Each request shall use an unique identifier per robot. Ids can be reused after a vehicle reboot.
 
 For requests related to a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
 For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the this zone, the request type shall be set to 'REPLANNING'.
@@ -977,7 +977,7 @@ After leaving the zone the vehicle shall remove the corresponding `zoneRequest` 
 
 Likewise, when a vehicle needs to replan while in a 'COORDINATED_REPLANNING' zone, it adds a zone request object with `requestStatus` set to 'REQUESTED' for the corresponding zone to its state message.
 If it receives permission, it reports `requestStatus` to 'GRANTED' and can use the requested trajectory.
-If there are multiple requests for the same 'COORDINATED_REPLANNING' zone accepted by the master control, the vehicle shall only choose one of them that it will actually traverse and set it to true in its state and remove the other ones from its state.
+If there are multiple requests for the same 'COORDINATED_REPLANNING' zone accepted by the master control, the vehicle shall only choose one of them that it will actually traverse and set it to 'GRANTED' in its state and remove the other ones from its state.
 The vehicles driving trajectory shall only deviate from the released path by the vehicles precision.
 
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
