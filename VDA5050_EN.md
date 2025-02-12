@@ -840,7 +840,7 @@ Also (virtually) line-guided vehicles can choose to support zone-based navigatio
 If a certain behavior can be archived by one of the defined zone types or a combination thereof, these shall be used and no proprietary versions shall be introduced.
 In its state message, each vehicles reports in the `activeZoneSetId` field for each `map` object in the `maps` array the `zoneSetId` that is currently in active use. There shall be no references to map or zone IDs that are not on the vehicle.
 
-A zoneSet shall only be changed and distributed by master control to keep consistency in the system.
+A zone set shall only be changed and distributed by master control to keep consistency in the system.
 
 ### 6.x.1 Zone types
 
@@ -859,7 +859,7 @@ The following contour-based zones are defined:
 | --- | --- | --- | --- |
 | BLOCKED | none | - | Vehicles must not enter this zone. | 
 | LINE_GUIDED | none | - | No autonomous navigation is allowed in this zone. Vehicles are only allowed driving in a (virtually) line-guided way. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. | 
-| RELEASE | none | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
+| RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
 | | releaseLossBehavior | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
 | COORDINATED_REPLANNING | - | - | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their global or local path if granted by master control. | 
 | SPEED_LIMIT | | - | Vehicles must not drive faster than the defined maximum speed within this zone. | 
@@ -876,14 +876,14 @@ In kinematic center based-zones, the vehicle's kinematic center decides the entr
 'PRIORITY' and 'PENALTY' zones represent zones, that are used for the influencing the movement of the robots by incetivising or penalizing certain areas of the map. They have no effect on the behavior of the robots when passing through.
 'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used.  Other directions shall be avoided. Additional parameters indicate the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the speed vector in the project specific coordinate system. 
 
-![Figure x2 Depiction of a vehicle entering a zone based on its navigation point (left) and a loaded vehicle exiting a zone based on its navigation point (right)](./assets/navigation_point_entry.png)
->Figure x2 Depiction of a vehicle entering a zone based on its navigation point (left) and a loaded vehicle exiting a zone based on its navigation point (right)
+![Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
+>Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| PRIORITY | | | Navigating through this zone is associated with a reduced cost for the vehicle's route compared to any other identical area on the map. This zone is intended to incentivise use by vehicles.| 
+| PRIORITY | | | Navigating through this zone is associated with a reduced cost for the vehicle's route compared to an otherwise equivalent area with no such zone on the map. This zone is intended to incentivise use by vehicles.| 
 | | priorityFactor | float64 | [0.0...1.0]<br> Relative factor, determining the zone's preference over an area with no zone. 0.0 means no preference, 1.0 is maximum preference. |
-| PENALTY | | | Navigating through this zone is associated with an increased cost for the vehicle's route compared to any other identical area on the map. This zone is intended to decentivise use by vehicles.| 
+| PENALTY | | | Navigating through this zone is associated with an increased cost for the vehicle's route compared to an otherwise equivalent area with no such zone on the map. This zone is intended to decentivise use by vehicles.| 
 | | penaltyFactor | float64 | [0.0...1.0]<br> Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, 1.0 is maximum penalty. | 
 | DIRECTED | | - | Vehicles shall (preferably) traverse this zone in specific directions of travel. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
@@ -924,16 +924,16 @@ A single zone object has the following structure:
 | --------------------- | ------------- | ------------------- |
 | zone{ | JSON object | |
 | zoneId | string | Locally (within the zone set) unique identifier. |
-| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
+| zoneType | enum | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
 | *zoneDescription* | string | User-defined human-readable name or descriptor. | 
 | *maxSpeed* | float64 | Required in SPEED_LIMIT zone.| 
 | ***entryActions[Action]*** | array | Array of actions to be executed when entering the zone. Empty array, if no actions required.| 
 | ***duringActions[Action]*** | array | Actions to be executed while crossing the zone. Empty array, if no actions required.| 
 | ***exitActions[Action]*** | array | Actions to be triggered when leaving the zone. Empty array, if no actions required.| 
-| **vertices[vertex]** | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone. |
-| *releaseLossBehavior* <br> } | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. |
+| *releaseLossBehavior* | enum | When the access to a releaseZone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops, sends an fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continue its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. |
+| **vertices[vertex]** <br> } | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone clockwise. |
 
-The shape of each zone object is defined through a polygon, which is communicated through its vertices. A minimum of three vertices must be defined to make-up a full polygon. If the first entry of the array of vertices is not identical to the last, implicitly the polygon is closed through a connection line to the first vertex. Only simple (meaning without any intersections) polygons are supported. The array of vertices defining a zone is provided as a list of x-y-tuples given in the globally defined project specific coordinate system: 
+The shape of each zone object is defined through a polygon, which is communicated through its vertices. A minimum of three vertices must be defined to make-up a full polygon. If the first entry of the array of vertices is not identical to the last, implicitly the polygon is closed through a connection line to the first vertex. Only simple (meaning without any intersections) polygons are supported. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a clockwise direction: 
 
 | **Object structure** | **Data type** | **Description** |
 | --------------------- | ------------- | ------------------- |
