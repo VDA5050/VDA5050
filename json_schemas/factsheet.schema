@@ -430,11 +430,14 @@
                             "blockingTypes": {
                                 "type": "array",
                                 "description": "Array of possible blocking types for defined action.",
-                                "enum": [
-                                                "NONE",
-                                                "SOFT",
-                                                "HARD"
-                                ]
+                                "items": {
+                                   "type":"string",
+                                   "enum": [
+                                      "NONE",
+                                      "SOFT",
+                                      "HARD"
+                                   ]
+                                }
                             }
                         }
                     }
@@ -593,7 +596,7 @@
                                 "description": "protocol and url-definition for downloading the 3D-envelope curve data e.g. ftp://xxx.yyy.com/ac4dgvhoif5tghji"
                             },
                             "description": {
-                                "type": "integer",
+                                "type": "string",
                                 "description": "free text: description of envelope curve set"
                             }
                         }
