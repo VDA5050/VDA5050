@@ -430,11 +430,14 @@
                             "blockingTypes": {
                                 "type": "array",
                                 "description": "Array of possible blocking types for defined action.",
-                                "enum": [
-                                                "NONE",
-                                                "SOFT",
-                                                "HARD"
-                                ]
+                                "items": {
+                                   "type":"string",
+                                   "enum": [
+                                      "NONE",
+                                      "SOFT",
+                                      "HARD"
+                                   ]
+                                }
                             }
                         }
                     }
