@@ -845,7 +845,7 @@ Zones are used to define rules for specific areas of the vehicle workspace. In t
 Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section 10.4.
 Some vehicles cannot process zones at all, while other vehicles might only be able to work with certain more basic zone types like 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided vehicles can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
-If a certain behavior can be archived by one of the defined zone types or a combination thereof, these shall be used and no proprietary versions shall be introduced.
+If a certain behavior can be achieved by one of the defined zone types or a combination thereof, these shall be used and no proprietary versions shall be introduced.
 In its state message, each vehicles reports in the `activeZoneSetId` field for each `map` object in the `maps` array the `zoneSetId` that is currently in active use. There shall be no references to map or zone IDs that are not on the vehicle.
 
 A zone set shall only be changed and distributed by master control to keep consistency in the system.
