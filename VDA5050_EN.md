@@ -1237,8 +1237,8 @@ lastNodeId | | string | Node ID of last reached node or, if the AGV is currently
 lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
 **nodeStates [nodeState]** | |array | Array of nodeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 **edgeStates [edgeState]** | |array | Array of edgeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
-***plannedPath*** | | JSON object |  
-***intermediatePath*** | | JSON object |  
+***plannedPath*** | | JSON object |  Represents a path within the robot's currently active order as NURBS.
+***intermediatePath*** | | JSON object |  Represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors.
 ***agvPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional: Can only be omitted for AGVs without the capability to localize themselves, e.g., line-guided AGVs.
 ***velocity*** | | JSON object | The AGV velocity in vehicle coordinates.
 ***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If the AGV cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
@@ -1265,7 +1265,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **ZoneSet**{ | | JSON object|
 zoneSetId | | string | Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map.
-mapId | | string | 
+mapId | | string | Identifier of the corresponding map.
 zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED.<br>DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.
 
 Object structure | Unit | Data type | Description
