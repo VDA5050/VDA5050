@@ -894,7 +894,7 @@ In kinematic center-based zones, the vehicle's kinematic center decides the entr
 | | penaltyFactor | float64 | [0.0...1.0]<br> Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if no other path is possible.  |
 | DIRECTED | | | Vehicles shall traverse this zone in a specific direction of travel. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
-  | | directedLimitation | string | Enum {'SOFT','RESTRICTED','STRICT'}<\br>SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall maintain the defined direction of travel as precise as possible. |
+| | directedLimitation | string | Enum {'SOFT','RESTRICTED','STRICT'}<\br>SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall maintain the defined direction of travel as precise as possible. |
 | BIDIRECTED | | | While in this zone, vehicles shall only move in the defined direction of travel and its direct opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
@@ -903,9 +903,9 @@ In kinematic center-based zones, the vehicle's kinematic center decides the entr
 
 In contrast to the maps, the structure of the zones is predefined. This structure shall be maintained when providing the download as well as sending the zones via the separate topic `zoneSet`. It is not part of the state message of the vehicles.
 
-A zoneSet shall only be changed and distributed by master control to keep consistency in the system.
+Zone sets shall only be changed and distributed by master control to keep consistency in the system.
 
-A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon master control to ensure that the right zone set is enabled for each map on the vehicle. As with maps, the `zoneSetStatus` indicates which zone sets is currently used by the device. Only a single zone set can be activated at a time for each `mapId` on the vehicle. Zones shall not extend beyond the spatial boundaries of a map.
+A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon master control to ensure that the right zone set is enabled for each map on the vehicle. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the vehicle. Only a single zone set can be active at once for each `mapId` on the vehicle. Zones shall not extend beyond the spatial boundaries of a map.
 The content of a zone set with a unique zoneSetId shall not change. If changes are required within a zone set, it shall be identified by a new zoneSetId.
 
 
@@ -925,20 +925,25 @@ A single zone object has the following structure:
 | zoneId | string | Locally (within the zone set) unique identifier. |
 | zoneType | enum | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
 | *zoneDescription* | string | User-defined human-readable name or descriptor. | 
-| **vertices[vertex]** <br> } | array | Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone clockwise. |
-| *maxSpeed* | float64 | Required in SPEED_LIMIT zone as defined in chapter 6.x.1.| 
-| ***entryActions[Action]*** | array | Required in ACTION zone as defined in chapter 6.x.1.| 
-| ***duringActions[Action]*** | array | Required in ACTION zone as defined in chapter 6.x.1.| 
-| ***exitActions[Action]*** | array | Required in ACTION zone as defined in chapter 6.x.1.| 
-| *releaseLossBehavior* | enum | Optional for a RELEASE zone as defined in chapter 6.x.1.|
+| **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a clockwise direction. |
+| maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter 6.x.1.| 
+| **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter 6.x.1.| 
+| **duringActions[Action]** | array | Required only for ACTION zone as defined in chapter 6.x.1.| 
+| **exitActions[Action]** | array | Required only for ACTION zone as defined in chapter 6.x.1.| 
+| *releaseLossBehavior* | enum | Optional only for RELEASE zone as defined in chapter 6.x.1.|
+| priorityFactor | float64 | Required only for PRIORITY zone as defined in chapter 6.x.1.|
+| penaltyFactor | float64 | Required only for PENALTY zone as defined in chapter 6.x.1.|
+| direction | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter 6.x.1.|
+| directedLimitation | string | Required only for a DIRECTED zone as defined in chapter 6.x.1.|
+| bidirectedLimitation | string | Required only for a BIDIRECTED zone as defined in chapter 6.x.1.|
 
-The shape of each zone object is defined through a polygon, which is communicated through its vertices. A minimum of three vertices must be defined to make-up a full polygon. If the first entry of the array of vertices is not identical to the last, implicitly the polygon is closed through a connection line to the first vertex. Only simple (meaning without any intersections) polygons are supported. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a clockwise direction: 
+The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a clockwise direction: 
 
 | **Object structure** | **Data type** | **Description** |
 | --------------------- | ------------- | ------------------- |
 | vertex{| JSON-object| |
-| x | float64 | X-coordinate described in the project specific coordinate system |
-| y <br>} | float64 | Y-coordinate described in the project specific coordinate system |
+| x | float64 | X-coordinate described in the project-specific coordinate system |
+| y <br>} | float64 | Y-coordinate described in the project-specific coordinate system |
 
 ## 6.x.3 Interactive zones - Communication 
 
@@ -947,23 +952,23 @@ The authorization request is related to the vehicle state in which the request i
 
 For a 'RELEASE' zone, the vehicle requests access to the zone before entering the zone.
 A request for entering the RELEASE zone is necessary, even if the order contains released nodes within the zone.
-The vehicle decides in which distance the access is requested.
+The vehicle decides at what distance to the zone it requests access.
 If the access isn't granted in time, the vehicle shall not enter the zone.
 
 During traversing a 'COORDINATED_REPLANNING' zone, the vehicle can request a new path through the zone if the vehicle cannot proceed on its previously planned path.
 
-To request access or permission for a path change, the vehicle appends one or several zone requests related to interactive zones to its state message in `zoneRequests` array.
+To request access or permission for a path change, the vehicle appends one or several zone requests related to interactive zones to its state message in the `zoneRequests` field.
 
 Only requests to zones of enabled zone sets are valid. Zone requests can be made to zones that belong to maps that the vehicle is currently not on.
 If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not enabled, master control shall always reject the request.
 
-The `requestID` allows master control to differentiate between different requests leading to new requests if the vehicle got denied once and allows the vehicle to request multiple alternatives at the same time.
+The `requestId` allows master control to distinguish between different requests and allows the vehicle to request multiple alternatives at the same time.
 Each request shall use an unique identifier per robot. Ids can be reused after a vehicle reboot.
 
 For requests related to a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
 For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the this zone, the request type shall be set to 'REPLANNING'.
 Request-specific parameters are added as optional parameters to the request.
-For 'REPLANNING' request, the `trajectory` parameter is added to describe the requested path as type of trajectory from the state message.
+For a 'REPLANNING' request, the planned path shall be added to the `trajectory` field.
 
 The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle for stating its request.
 If master control grants the request (as described in the following section) and the vehicle receives the corresponding message, it acknowledges that the vehicle has received the permission, by setting the `requestStatus` to 'GRANTED'. The vehicle can now enter the 'RELEASE' zone.
@@ -990,14 +995,15 @@ The response message contains an array of zone response objects. Each zone respo
 A zone request can only be fully granted or rejected, master control cannot conditionally or partially accept a request.
 
 Each response object includes a lease time which specifies until what time a permission is valid. The master control shall resend a release message on the `response` topic before the lease time expires if the permission is still granted.
-Additionally, master control has the option to revoke a permission once granted directly by sending a message on the `response` topic referencing the `requestId` with `grantType` set to 'REVOKED'.
+Master control has the option to revoke a permission once granted directly by sending a message on the `response` topic referencing the `requestId` with `grantType` set to 'REVOKED'.
 When receiving a zone revoke message, the vehicle shall set the `requestStatus` to 'REVOKED'. If the vehicle is already inside the requested zone and receives a zone revoke message, it shall reporting a warning and react according to the `releaseLossBehavior` value defined in the zone definition.
 The corresponding `requestId` shall not be reused to renew initial request.
-The master control shall assume a revoked request as still granted until receiving an corresponding updated state message from the vehicle.
+The master control shall assume a revoked request as still granted until receiving a corresponding updated state message from the vehicle.
 
 If the vehicle is already inside the requested zone and the grant lease is expired the vehicle shall report a warning and act accordingly to the defined `releaseLossBehavior`.
 
 When a vehicle within a 'COORDINATED_REPLANNING' zone receives a revoke message or if the grant lease is expired, the vehicle shall stop and state a new request if required.
+Master control can set the `requestStatus` to 'QUEUED' to acknowledge the vehicle's request without giving permission, telling the vehicle that its request is being processed.
 
 ### Response message definitions
 
@@ -1015,7 +1021,7 @@ Object structure/Identifier | Data type | Description
 | --- | --- | --- |
 | response <br> { | JSON object | Object which contains the master control answer to a specific request. |
 | requestId | string | Unique per vehicle identifier within all active requests. |
-| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<\br>'GRANTED': master control grants request. 'REVOKED': master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the vehicles request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
+| grantType | string | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<\br>'GRANTED': master control grants request. 'REVOKED': master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the vehicles request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
 | *leaseExpiry* | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
 
