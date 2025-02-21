@@ -947,17 +947,14 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 ## 6.x.3 Interactive zones - Communication 
 
-For communicating and verifying requests for interactive zones ('RELEASE' and 'COORDINATED_REPLANNING'), the state message is used by the vehicle to request an authorization and the MQTT topic `response` is used by master control to grant or revoke the authorization.
-The authorization request is related to the vehicle state in which the request is embedded.
+For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by master control to respond to these requests.
 
-For a 'RELEASE' zone, the vehicle requests access to the zone before entering the zone.
-A request for entering the RELEASE zone is necessary, even if the order contains released nodes within the zone.
-The vehicle decides at what distance to the zone it requests access.
-If the access isn't granted in time, the vehicle shall not enter the zone.
+Before entering an interactive zone, the vehicle shall state a request.
+A request before entry of an interactive zone is necessary, even if the order contains released nodes within the zone.
+The vehicle decides at which point before entering the zone to make its requests.
+If the response is not received in time, the vehicle shall not enter the zone.
 
-During traversing a 'COORDINATED_REPLANNING' zone, the vehicle can request a new path through the zone if the vehicle cannot proceed on its previously planned path.
 
-To request access or permission for a path change, the vehicle appends one or several zone requests related to interactive zones to its state message in the `zoneRequests` field.
 
 Only requests to zones of enabled zone sets are valid. Zone requests can be made to zones that belong to maps that the vehicle is currently not on.
 If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not enabled, master control shall always reject the request.
