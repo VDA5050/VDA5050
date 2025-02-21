@@ -843,10 +843,8 @@ The `intermediatePath` is defined as a polyline with an estimated time of arriva
 Zones are used to define rules for specific areas of the vehicle workspace. In this way, zones allow vehicles to navigate freely between nodes while giving the Master Control the ability to manage traffic. Zones can be used to locally deny vehicles access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone type: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
 Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section 10.4.
-Some vehicles cannot process zones at all, while other vehicles might only be able to work with certain more basic zone types like 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
+Some vehicles cannot process zones at all, while other vehicles might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided vehicles can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
-If a certain behavior can be achieved by one of the defined zone types or a combination thereof, these shall be used and no proprietary versions shall be introduced.
-In its state message, each vehicles reports in the `activeZoneSetId` field for each `map` object in the `maps` array the `zoneSetId` that is currently in active use. There shall be no references to map or zone IDs that are not on the vehicle.
 
 A zone set shall only be changed and distributed by master control to keep consistency in the system.
 
@@ -856,7 +854,7 @@ Two types of zones are distinguished: contour-based zones and kinematic center-b
 
 #### Contour-based zones
 
-For contour-based zones, the vehicles contour (including its load) decides the entry and exit of the zones. These zones shall not be entered by any part of the contour, if the master control does not allow it, e.g., a 'BLOCKED' zone may never be entered, a 'RELEASE' zone may only be entered, if it is released by the master control, etc. or they lead to a defined behavior when entered, e.g., in the ACTION zone when entering all entryActions shall be executed and so on.
+For contour-based zones, the contour of the vehicle (including its load) determines zone entry and exit. Any part of the contour entering the zone is considered a zone entry. A zone exit shall be reported only when no part of the contour is inside the zone. When a zone is reported as exited is decided by the mobile robot. 
 
 ![Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
 >Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)
@@ -865,14 +863,14 @@ The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | - | Vehicles shall not enter this zone. If a vehcile has entered the zone, it shall stop and throw a FATAl error.| 
-| LINE_GUIDED | none | - | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. When entering the zone, the mobile robot shall be on the trajectory of the edge between the last node outside the zone and the first node inside the zone on the edge when entering. The edges that enter and are within the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from their trajectory. | 
+| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw a FATAL error.| 
+| LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from the trajectory. | 
 | RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | enum | When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This Action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a fatal error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continues its path keeping the reservation of the vehicle in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
-| COORDINATED_REPLANNING | - | - | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their global or local path if granted by master control. | 
-| SPEED_LIMIT | | - | Vehicles must not drive faster than the defined maximum speed within this zone. | 
-| | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall be reached when entering the zone.|
-| ACTION | | - | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a FATAL error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continues its path keeping the release of the zone in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
+| COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their path if granted permission by master control. | 
+| SPEED_LIMIT | | | Vehicles must not drive faster than the defined maximum speed within this zone. | 
+| | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
+| ACTION | | | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
 | | entryActions[action] | array | Actions to be triggered when entering the zone. Empty Array, if no Actions required. | 
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty Array, if no Actions required. | 
 | | exitActions[action] | array | Actions to be triggered when leaving the zone. Empty Array, if no Actions required. | 
@@ -881,24 +879,24 @@ The following contour-based zones are defined:
 #### Kinematic center-based zones
 
 In kinematic center-based zones, the vehicle's kinematic center decides the entry and exit of the zones. When the vehicle's kinematic center is within a zone, the vehicle shall follow the defined behavior. 
-PRIORITY and PENALTY zones are zones which only influence the path planning of mobile robots.
-'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used.  Other directions shall be avoided. Additional parameters indicate the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the speed vector in the project specific coordinate system.
+'PRIORITY' and 'PENALTY' zones are zones which only influence the path planning of mobile robots.
+'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used. Other directions shall be avoided. Additional parameters indicate the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the speed vector in the project-specific coordinate system.
 
 ![Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
 >Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| PRIORITY | | | Navigating through this zone is associated with a reduced cost for the vehicle's route compared to an otherwise equivalent area with no such zone on the map. This zone is intended to incentivise use by vehicles.| 
+| PRIORITY | | | Navigating through this zone is associated with an incentivisation for the vehicle's route compared to an otherwise equivalent area with no such zone on the map.| 
 | | priorityFactor | float64 | [0.0...1.0]<br> Relative factor, determining the zone's preference over an area with no zone. 0.0 means no preference, as if there was no zone, 1.0 is maximum preference. |
 | PENALTY | | | Navigating through this zone is associated with an increased cost for the vehicle's route compared to an otherwise equivalent area with no such zone on the map. This zone is intended to decentivise use by vehicles.| 
 | | penaltyFactor | float64 | [0.0...1.0]<br> Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if no other path is possible.  |
-| DIRECTED | | - | Vehicles shall traverse this zone in specific directions of travel. | 
+| DIRECTED | | | Vehicles shall traverse this zone in a specific direction of travel. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
-| | limitation | enum | ['SOFT','RESTRICTED','STRICT']<\br>SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall not deviate from the defined direction of travel (within its precision). |
-| BIDIRECTED | | | While in this zone, vehicles shall only move in the direction of travel and the opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
-| | direction | float64 | Direction and its opposite direction (+ Pi) define the allowed directions of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
-| | limitation | enum | ['SOFT', 'RESTRICTED']<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, exept for obstacle avoidance.|
+  | | directedLimitation | string | Enum {'SOFT','RESTRICTED','STRICT'}<\br>SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall maintain the defined direction of travel as precise as possible. |
+| BIDIRECTED | | | While in this zone, vehicles shall only move in the defined direction of travel and its direct opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
+| | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system. | 
+| | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
 
 ## 6.x.2 Sharing of planned path for freely navigating mobile robots
 
