@@ -867,7 +867,7 @@ The following contour-based zones are defined:
 | BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw a FATAL error.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from the trajectory. | 
 | RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a FATAL error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continues its path keeping the release of the zone in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a CRITICAL error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the release in its state until the zone is left. CONTINUE: If the revoke/expiry happens, after the vehicle entered the zone, the vehicle continues its path keeping the release of the zone in its state. If the order ends inside the zone, the vehicle waits for a new order. | 
 | COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their path if granted permission by master control. | 
 | SPEED_LIMIT | | | Vehicles must not drive faster than the defined maximum speed within this zone. | 
 | | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
@@ -954,53 +954,44 @@ A request before entry of an interactive zone is necessary, even if the order co
 The vehicle decides at which point before entering the zone to make its requests.
 If the response is not received in time, the vehicle shall not enter the zone.
 
-
-
-Only requests to zones of enabled zone sets are valid. Zone requests can be made to zones that belong to maps that the vehicle is currently not on.
-If the vehicle requests access to a zone or permission for replanning in a zone within a zone set that is not enabled, master control shall always reject the request.
+Requests shall only be made for zones of enabled zone sets. Zone requests can also be made for zone sets belonging to maps that the vehicle is not currently on.
 
 The `requestId` allows master control to distinguish between different requests and allows the vehicle to request multiple alternatives at the same time.
-Each request shall use an unique identifier per robot. Ids can be reused after a vehicle reboot.
+Each request attempt shall use an unique identifier per mobile robot. Ids can be reused after a vehicle restart.
 
-For requests related to a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
-For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the this zone, the request type shall be set to 'REPLANNING'.
-Request-specific parameters are added as optional parameters to the request.
-For a 'REPLANNING' request, the planned path shall be added to the `trajectory` field.
+For requests to enter a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
+For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the zone, the `requestType` shall be set to 'REPLANNING'.
+For a 'REPLANNING' request, the planned path shall be added as NURBS to the `trajectory` field of the `zoneRequest`. Multiple requests with different trajectories for the same zone can be made.
 
-The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle for stating its request.
-If master control grants the request (as described in the following section) and the vehicle receives the corresponding message, it acknowledges that the vehicle has received the permission, by setting the `requestStatus` to 'GRANTED'. The vehicle can now enter the 'RELEASE' zone.
+The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle when stating its request.
 
-While the vehicle remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED'.
-This way, master control is informed that the vehicle is still inside the zone.
-After leaving the zone the vehicle shall remove the corresponding `zoneRequest` entry from its state message.
+Master control responds to zone requests via the `response` topic.
+The response message contains an array of `zoneResponse` objects. Each `zoneResponse` shall only respond to a single request referenced by the `requestId`.
+Each response has a `responseType` that is either 'GRANTED', 'QUEUED', 'REVOKED', or 'REJECTED'.
+If the `responseType` is 'GRANTED', the vehicle is allowed to enter the zone or use the requested trajectory.
+Master control can set the `responseType` to 'QUEUED' to acknowledge the vehicle's request without giving permission, informing the vehicle that its request is being processed.
+If the `responseType` is 'REJECTED', the vehicle shall not enter the zone or use the requested trajectory.
+The `responseType` 'REVOKED' indicates that the permission is no longer valid. The master control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the vehicle is set to 'REVOKED'.
+The `zoneResponse` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` master control can resend a response message with an updated `leaseExpiry` time.
+
+The vehicle shall acknowledge the master controls response by setting the `requestStatus` accordingly.
+
+The interaction between the mobile robot and the master control for 'RELEASE' zones shall be according to figure x3.
+
+While the vehicle remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform master control that it is still inside the zone. After vehicle has exited the zone, it shall remove the corresponding `zoneRequest` entry from its state message.
+When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'RELEASE' zone. When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall report a warning and react according to the `releaseLossBehavior` defined in the zone definition.
 
 ![Figure x3 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
 >Figure x3 Zone request behavior for a RELEASE zone.
 
-Likewise, when a vehicle needs to replan while in a 'COORDINATED_REPLANNING' zone, it adds a zone request object with `requestStatus` set to 'REQUESTED' for the corresponding zone to its state message.
-If it receives permission, it reports `requestStatus` to 'GRANTED' and can use the requested trajectory.
-If there are multiple requests for the same 'COORDINATED_REPLANNING' zone accepted by the master control, the vehicle shall only choose one of them that it will actually traverse and set it to 'GRANTED' in its state and remove the other ones from its state.
-The vehicles driving trajectory shall only deviate from the released path by the vehicles precision.
+The interaction between the mobile robot and the master control for 'COORDINATED_REPLANNING' zones shall be according to figure x4.
+
+The vehicle shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
+When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'COORDINATED_REPLANNING' zone.  When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop its movement and report a warning. To continue, the vehicle has to state a new request.
 
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
 >Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.
 
-The operating mode may influence the zone release behavior (Section [6.10.6 Implementation of the state message](#6106-Implementation-of-the-state-message)).
-
-Master control response to zone requests by sending a zone response message via the `response` topic.
-The response message contains an array of zone response objects. Each zone response object can only grant a single request at a time referenced by the `requestId`.
-A zone request can only be fully granted or rejected, master control cannot conditionally or partially accept a request.
-
-Each response object includes a lease time which specifies until what time a permission is valid. The master control shall resend a release message on the `response` topic before the lease time expires if the permission is still granted.
-Master control has the option to revoke a permission once granted directly by sending a message on the `response` topic referencing the `requestId` with `grantType` set to 'REVOKED'.
-When receiving a zone revoke message, the vehicle shall set the `requestStatus` to 'REVOKED'. If the vehicle is already inside the requested zone and receives a zone revoke message, it shall reporting a warning and react according to the `releaseLossBehavior` value defined in the zone definition.
-The corresponding `requestId` shall not be reused to renew initial request.
-The master control shall assume a revoked request as still granted until receiving a corresponding updated state message from the vehicle.
-
-If the vehicle is already inside the requested zone and the grant lease is expired the vehicle shall report a warning and act accordingly to the defined `releaseLossBehavior`.
-
-When a vehicle within a 'COORDINATED_REPLANNING' zone receives a revoke message or if the grant lease is expired, the vehicle shall stop and state a new request if required.
-Master control can set the `requestStatus` to 'QUEUED' to acknowledge the vehicle's request without giving permission, telling the vehicle that its request is being processed.
 
 ### Response message definitions
 

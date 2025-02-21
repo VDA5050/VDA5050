@@ -10,7 +10,7 @@
         "version", 
         "manufacturer", 
         "serialNumber", 
-        "responses"
+        "zoneResponses"
     ],
     "properties": {
         "headerId": {
@@ -35,9 +35,9 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
-        "responses": {
+        "zoneResponses": {
             "type": "array",
-            "description": "Array of response objects.",
+            "description": "Array of zone response objects.",
             "items": {
                 "type": "object",
                 "required": [

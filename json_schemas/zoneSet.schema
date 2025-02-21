@@ -127,6 +127,7 @@
                         }
                     },
                     "then": {
+                        "required": ["entryActions", "duringActions", "exitActions"],
                         "properties": {
                             "entryActions": {
                                 "type": "array",
@@ -179,7 +180,7 @@
                     "then": {
                         "required": ["penaltyFactor"],
                         "properties": {
-                            "priorityFactor ": {
+                            "penaltyFactor ": {
                                 "type": "number",
                                 "description": "Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if no other path is possible.",
                                 "minimum": 0.0,
