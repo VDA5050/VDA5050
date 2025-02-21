@@ -1015,7 +1015,7 @@ Object structure/Identifier | Data type | Description
 
 ### 6.x.4 Potentially conflicts in orders for vehicles working with zones
 
-In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The Column No Zone defines the behavior for contour-based zones, where vehicles can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the vehicle can only be completely within or outside  the zone, so there is no interaction existing.
+In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The column No Zone defines the behavior for contour-based zones, where vehicles can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the vehicle can only be completely within or outside the zone, so there is no possible interaction.
 
 | |**BLOCKED**|**RELEASE**|**LINE_GUIDED**|**COORDINATED_REPLANNING**|**SPEED_LIMIT**|**ACTION**|**PRIORITY**|**PENALTY**|**DIRECTED**|**BIDIRECTED**|**No Zone**|**EDGE-PROPERTIES**
 ---|---|---|---|---|---|---|---|---|---|---|---|---
@@ -1030,12 +1030,12 @@ In the following matrix possible interactions between zones are described. The m
 **DIRECTED** |||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** ||||||||||(8)|(7)|(9)
 
-1) If actions would conflict with other zones behavior, report a CRITICAL error (order error) and stop the vehicle.
-2) Planned trajectory must be granted for all COORDINATED_REPLANNING zones.
+1) If actions would conflict with other zones behavior, report a 'CRITICAL' error (order error) and stop the vehicle.
+2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
-4) The lower of the two competing speeds applies.
+4) The lowest of the competing speeds applies.
 5) Execute all actions
-6) The more restrictive one is always selected here; for two PRIORITY zones, the lower priority factor is used; for one PRIORITY and one PENALTY zone, the penalty factor is used; for two PENALTY zones, the higher penalty factor is used.
+6) The most restrictive one is always selected here; for PRIORITY zones, the lowest priority factor is used; for overlapping PRIORITY and PENALTY zones, the highest penalty factor is used; for overlapping PENALTY zones, the highest penalty factor is used.
 7) For kinematic center-based zones the vehicle can only be completely within or outside the zone, so this overlap is not possible.
 8) Zones shall not overlap, since the behavior is not defined.
 9) A trajectory as part of the edge properties shall override the directed and bidirected zone property.
