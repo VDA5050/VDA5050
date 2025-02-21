@@ -86,6 +86,37 @@
                 }
             }
         },
+        "zoneSets":{
+            "type": "array",
+            "description": "Array of ZoneSet objects that are currently stored on the vehicle.",
+            "items": {
+                "type": "object",
+                "title": "zoneSet",
+                "required": [
+                    "zoneSetId",
+                    "mapId",
+                    "zoneSetStatus"
+                ],
+                "properties": {
+                    "zoneSetId": {
+                        "type": "string",
+                        "description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map."
+                    },
+                    "mapId": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "zoneSetStatus": {
+                        "type": "string",
+                        "description": "ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED. DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.",
+                        "enum": [
+                            "ENABLED",
+                            "DISABLED"
+                        ]
+                    }
+                }
+            }
+        },
         "orderId": {
             "type": "string",
             "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
@@ -211,49 +242,65 @@
                         "description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
                     },
                     "trajectory": {
+                        "$ref": "#/definitions/trajectory"
+                    }
+                }
+            }
+        },
+        "plannedPath": {
+            "type": "object",
+            "required": [
+                "trajectory"
+            ],
+            "description": "Defines the position on a map in world coordinates. Each floor has its own map.",
+            "properties": {
+                "trajectory": {
+                    "$ref": "#/definitions/trajectory"
+                },
+                "traversedNodes": {
+                    "type": "array",
+                    "description": "Array of nodeIds as communicated in the currently executed order that are traversed within the shared planned path.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "intermediatePath": {
+            "type": "object",
+            "description": "",
+            "required": [
+                "polyline"
+            ],
+            "properties": {
+                "polyline": {
+                    "type": "array",
+                    "description": "Array of end points of segments of a polyline.",
+                    "items": {
                         "type": "object",
-                        "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
-                        "required": [
-                            "degree",
-                            "knotVector",
-                            "controlPoints"
-                        ],
+                        "description": "Endpoint of a segment within a defined polyline.",
+                        "required": ["x", "y", "ETA"],
                         "properties": {
-                            "degree": {
-                                "type": "integer",
-                                "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1."
+                            "x": {
+                                "type": "number",
+                                "description": "X-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
                             },
-                            "knotVector": {
-                                "type": "array",
-                                "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1",
-                                "items": {
-                                    "type": "number",
-                                    "maximum": 1.0,
-                                    "minimum": 0.0
-                                }
+                            "y": {
+                                "type": "number",
+                                "description": "Y-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
                             },
-                            "controlPoints": {
-                                "type": "array",
-                                "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
-                                "items": {
-                                    "type": "object",
-                                    "required": [
-                                        "x",
-                                        "y"
-                                    ],
-                                    "properties": {
-                                        "x": {
-                                            "type": "number"
-                                        },
-                                        "y": {
-                                            "type": "number"
-                                        },
-                                        "weight": {
-                                            "type": "number",
-                                            "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0."
-                                        }
-                                    }
-                                }
+                            "theta": {
+                                "type": "number",
+                                "description": "Absolute orientation of the vehicle in the project-specific coordinate system.",
+                                "unit": "rad",
+                                "minimum": -3.14159265359,
+                                "maximum": 3.14159265359
+                            },
+                            "ETA": {
+                                "type": "string",
+                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., '2017-04-15T11:40:03.12Z')."
                             }
                         }
                     }
@@ -394,6 +441,42 @@
                         "type": "number",
                         "description": "Absolute weight of the load measured in kg.",
                         "minimum":0.0
+                    }
+                }
+            }
+        },
+        "zoneRequests": {
+            "description": "Array of zoneRequest objects that are currently active on the AGV. Empty array if no zone requests are active.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Zone information sent by the vehicle to master control.",
+                "required": ["requestId", "requestType", "zoneId", "zoneSetId", "requestStatus"],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per vehicle identifier within all active requests."
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["ACCESS", "REPLANNING"],
+                        "description": "Enum specifying the type of zone the request relates to. Feasible values are ACCESS or REPLANNING."
+                    },
+                    "zoneId": {
+                        "type": "string",
+                        "description": "Locally (within the zone set) unique identifier referencing the zone the request is related to."
+                    },
+                    "zoneSetId": {
+                        "type": "string",
+                        "description": "Due to the zoneId only being unique to a zoneSet, the zoneSetId is part of the request."
+                    },
+                    "requestStatus": {
+                        "type": "string",
+                        "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                    },
+                    "trajectory": {
+                        "$ref": "#/definitions/trajectory"
                     }
                 }
             }
@@ -604,6 +687,55 @@
                 "fieldViolation": {
                     "type": "boolean",
                     "description": "Protective field violation. True: field is violated. False: field is not violated."
+                }
+            }
+        }
+    },
+    "definitions": {
+        "trajectory": {
+            "type": "object",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
+            "required": [
+                "degree",
+                "knotVector",
+                "controlPoints"
+            ],
+            "properties": {
+                "degree": {
+                    "type": "integer",
+                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1."
+                },
+                "knotVector": {
+                    "type": "array",
+                    "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1",
+                    "items": {
+                        "type": "number",
+                        "maximum": 1.0,
+                        "minimum": 0.0
+                    }
+                },
+                "controlPoints": {
+                    "type": "array",
+                    "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "x",
+                            "y"
+                        ],
+                        "properties": {
+                            "x": {
+                                "type": "number"
+                            },
+                            "y": {
+                                "type": "number"
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0."
+                            }
+                        }
+                    }
                 }
             }
         }
