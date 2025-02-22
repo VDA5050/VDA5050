@@ -568,7 +568,8 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
-After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
+After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
+<mark>(A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position and not only on the next node.)</mark>
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
@@ -647,6 +648,25 @@ Resolution:
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
+
+#### 6.6.4.4 Clearing the order
+
+In response to some events, not triggered by Master Control, the vehicle has to stop executing the current order.
+
+- The vehicle is changing the operating mode to 'MANUAL', 'SERVICE' or 'TEACHIN' (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message)).
+- The vehicle cannot determine its position anymore.
+
+In these cases the vehicle has to clear the order which means that similar to a cancellation:
+
+- If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
+- If there are running actions, those actions should also be cancelled and be reported as 'FAILED'.
+- If an action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+- The `orderId`, `orderUpdateId` are kept. `nodeStates` and `edgeStates` are emptied.
+- The vehicle shall remove all zone requests from the state.
+
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACHIN' is reported.
+
+<Sequence diagram>
 
 ### 6.6.5 Corridors
 
@@ -1160,15 +1180,16 @@ eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowled
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
-The following description lists the operatingMode of the topic "state".
+The following description lists the possible values of the field `operatingMode` in the "state" message".
 
 Identifier | Description
 ---|---
-AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control.
-SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
-MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When the AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
-SERVICE | Master control is not in control of the AGV. <br>Master control doesn't send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV.
-TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
+AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle drives and executes actions based on orders from the master control.
+SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
+HALTED | Master control is not in control of the vehicle.<br>Master control is allowed to send driving orders or order updates to the vehicle to be executed after changing back into operating mode `AUTOMATIC` or `SEMI-AUTOMATIC`. Master control shall not send any instant action except `cancelOrder`.<br>The vehicle shall not clear the order but shall remove all zone requests from the state, also if the vehicle is already inside a released zone.(*Remark: If necessary, the master control can continue to track the position of the vehicle and decide whether clearance for other vehicles is possible.*) The vehicle shall not request any permissions to enter a `RELEASE` zone or for replanning inside a `COORDINATED REPLANING` zone.<br>If entering operating mode `HALTED` has any impact on running actions the vehicle shall reflect this in the state message accordingly.<br>If the vehicle leaves this operating mode and doesn't directly switch into `AUTOMATIC` or `SEMI-AUTOMATIC` mode it shall act according to new operating mode. If the vehicle leaves this operating mode and switches directly into `AUTOMATIC` or `SEMI-AUTOMATIC` mode the vehicle shall continue executing the current order. If the vehicle detects during operating mode `HALTED` that such a continuation will not be possible the vehicle shall switch into operating mode `MANUAL` and act accordingly.
+MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>HMI can be used to control the steering and velocity and handling device of the vehicle.<br>Location of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears the current order (safe HMI required).<br>If the vehicle detects during being in this mode that it is being moved to a position where the current `lastNodeId` cannot be used as a start node of a new order it will set the `lastNodeId` to an empty string ("").
+SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
+TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send driving order or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by a master control.
 
 >Table 1 The operating modes and their meaning
 
