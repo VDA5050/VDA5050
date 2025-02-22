@@ -745,16 +745,17 @@ endNodeId | | string | nodeId of the last node within the order.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **trajectory** { | | JSON object |
-degree | |uint32 | Range: [1 ... uint32.max]<br>Degree of the NURBS curve defining the trajectory.<br><br>If not defined, the default value is 1.
-**knotVector [float64]** | | array | Range: [0.0 ... 1.0]<br><br>Array of knot values of the NURBS.<br><br>knotVector has size of number of control points + degree + 1.
-**controlPoints [controlPoint]**<br><br> } | | array | Array of controlPoint objects defining the control points of the NURBS, explicitly including the start and end point.
+*degree* | | uint32 | Degree of the NURBS curve defining the trajectory.<br><br>Range: [1 ... uint32.max]<br>Default: 1
+***knotVector [float64]*** | | array | Array of knot values of the NURBS.<br>The size of `knotVector` is exactly `degree` + 1 larger than the size of `controlPoints`.<br>The multiplicities of the first and last knot, both, must be `degree` + 1 (clamped NURBS).<br>The multiplicity of knots other than the first or last knot must not be greater than `degree` (continuity).<br><br>Range of knots: [0.0 ... 1.0]<br>Default: Equidistant knots from 0.0 to 1.0 with a multiplicity of `degree` + 1 for the first and last knot, and multiplicity 1 for all other knots (uniform knots).
+**controlPoints [controlPoint]** | | array | Array of controlPoint objects defining the control points of the NURBS, explicitly including the start and end point (clamped NURBS).<br>The number of control points needs to be at least `degree` + 1.
+} | | |
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **controlPoint** { | | JSON object |
-x | | float64 | X-coordinate described in the world coordinate system.
-y | | float64 | Y-coordinate described in the world coordinate system.
-*weight* | | float64 | Range: [0.0 ... float64.max]<br><br>The weight of the control point on the curve.<br>When not defined, the default will be 1.0.
+x | m | float64 | X-coordinate described in the world coordinate system.
+y | m | float64 | Y-coordinate described in the world coordinate system.
+*weight* | | float64 | The weight of the control point on the curve.<br><br>Range: ]0.0 ... float64.max]<br>Default: 1.0
 } | | |
 
 Object structure | Unit | Data type | Description
