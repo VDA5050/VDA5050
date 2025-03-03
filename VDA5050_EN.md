@@ -1215,11 +1215,15 @@ Master control shall not use the info messages for logic, it shall only be used 
 
 ### 6.10.5 Errors
 
-The AGV reports errors via the `errors` array.
-Errors have two levels: 'WARNING' and 'FATAL'.
-A 'WARNING' is a self-resolving error, e.g., a field violation.
-A 'FATAL' error needs human intervention.
-Errors can pass references that help with finding the cause of the error via the `errorReferences` array.
+
+ The mobile robot reports errors via the `errors` array.
+ Errors have three levels: 'WARNING', 'CRITICAL' and 'FATAL'.
+ 
+ - A 'WARNING' is an issue the mobile robot wants to inform the operator about, but does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g. a dirty LiDar-scanner.
+ - A 'CRITICAL' error is an issue that requires immediate attention, as the mobile robot might soon end up in a FATAL state, e.g. battery-level dropping below a certian threshold. The mobile robot can still continue with the currently active order and take new orders. 
+ - A 'FATAL' error requires user intervention, e.g. losing localization. The mobile robot can neither continue its currently active order nor take any new orders.
+
+ The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution.
 
 
 ### 6.10.6 Implementation of the state message
@@ -1407,7 +1411,7 @@ errorType | | string | Type/name of error
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 *errorHint* | | string | Hint on how to approach or solve the reported error.
-errorLevel <br> }| | string | Enum {'WARNING', 'FATAL'}<br><br>'WARNING': the AGV is ready to start (e.g., maintenance cycle expiration warning).<br>'FATAL': the AGV is not in running condition, user intervention required (e.g., laser scanner is contaminated).
+errorLevel <br> }| | string | Enum {'WARNING', 'CRITICAL', 'FATAL'}<br><br>'WARNING': the mobile robot can still operate but wants to highlight an issue.<br> 'CRITICAL': the mobile robot can still operate but has an issue that require immediate attention.<br> 'FATAL': the mobile robot cannot operate anymore, user intervention required.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
