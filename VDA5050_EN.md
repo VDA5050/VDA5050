@@ -1151,7 +1151,7 @@ The AGV state message will be published with occurrence of relevant events or at
 
 Events that trigger the transmission of the state message are:
 - Receiving an order
-- Receiving an order update
+- Receiving an order updatef
 - Changes in the load status
 - Errors or warnings
 - Driving over a node
@@ -1215,15 +1215,15 @@ Master control shall not use the info messages for logic, it shall only be used 
 
 ### 6.10.5 Errors
 
-
- The mobile robot reports errors via the `errors` array.
- Errors have three levels: 'WARNING', 'CRITICAL' and 'FATAL'.
+The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
+The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
  
- - A 'WARNING' is an issue the mobile robot wants to inform the operator about, but does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g. a dirty LiDar-scanner.
- - A 'CRITICAL' error is an issue that requires immediate attention, as the mobile robot might soon end up in a FATAL state, e.g. battery-level dropping below a certian threshold. The mobile robot can still continue with the currently active order and take new orders. 
- - A 'FATAL' error requires user intervention, e.g. losing localization. The mobile robot can neither continue its currently active order nor take any new orders.
+- A 'WARNING' is an issue that does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g. a dirty LiDar-scanner.
+- A 'URGENT' is an issue that requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order, and is able to take new orders.
+- A 'CRITICAL' error is an issue that requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot can not continue its current order, but is able to take new orders.
+- A 'FATAL' error requires user intervention, e.g. losing localization. The mobile robot can neither continue its currently active order nor take any new orders.
 
- The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution.
+The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the error level, the mobile robot shall never clear its order due to the error.
 
 
 ### 6.10.6 Implementation of the state message
