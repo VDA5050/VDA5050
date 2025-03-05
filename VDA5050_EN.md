@@ -830,7 +830,7 @@ If the vehicle is to be set to a specific position on a new map, the `initPositi
 The master control can request the deletion of a specific map from a vehicle. This is done with the instant action `deleteMap`. When a vehicle runs out of memory, it should report this to the master control, which can then initiate the deletion of maps. The vehicle itself is not allowed to delete maps.
 After successfully deleting a map, it is important to remove that map's entry from the vehicle's array of maps in the vehicle state.
 
-## 6.2 Sharing of planned path for freely navigating mobile robots (Standalone chapter)
+## 6.y Sharing of planned path for freely navigating mobile robots
 
 Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
 
