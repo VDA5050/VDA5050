@@ -4,7 +4,7 @@
 
 ## VDA 5050
 
-## Version 2.1.0
+## Version 3.0.0 - Draft (not released by the VDA)
 
 ![control system and automated guided vehicles](./assets/csagv.png)
 
@@ -42,7 +42,7 @@ www.vda.de
 Association of the Automotive Industry (VDA)
 Reproduction and any other form of reproduction is only permitted with specification of the source.
 
-Version 2.1.0
+Version 3.0.0
 
 
 ## Table of contents
