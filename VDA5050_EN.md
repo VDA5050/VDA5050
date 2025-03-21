@@ -964,7 +964,7 @@ Each request attempt shall use a unique identifier per mobile robot. Ids can be 
 For requests to enter a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
 For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the zone, the `requestType` shall be set to 'REPLANNING'.
 For a 'REPLANNING' request, the planned path shall be added as NURBS to the `trajectory` field of the `zoneRequest`. Multiple requests with different trajectories for the same zone can be made. Each path shall be requested with its own `zoneRequest` object.
-If a mobile robot requires access to a workspace covered by two or more 'RELEASE' zones, it shall request access and receive approval before entering the area.
+If a mobile robot requires access to a workspace covered by two or more 'RELEASE' zones, it shall request access and receive approval for all necessary zones before entering the area.
 
 If a mobile robot navigates through a workspace on the map that is covered by two or more 'COORDINATED REPLANNING' zones, it shall request its path within this area individually for each zone and receive approval from the master control before entering or changing paths.
 The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle when stating its request.
