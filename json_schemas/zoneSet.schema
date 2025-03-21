@@ -1,0 +1,334 @@
+{
+    "$schema": "http://json-schema.org/draft/2020-12/schema",
+    "title": "zoneSet",
+    "description": "Zone set detailing a dedicated map.",
+    "subtopic": "/zoneSet",
+    "type": "object",
+    "required": [
+        "headerId",
+        "timestamp", 
+        "version", 
+        "manufacturer", 
+        "serialNumber",
+        "mapId",
+        "zoneSetId",
+        "zones"
+    ],
+    "properties": {
+        "headerId": {
+            "type": "integer",
+            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
+            "examples": [
+                "1991-03-11T11:40:03.123Z"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the protocol [Major].[Minor].[Patch]",
+            "examples": [
+                "1.3.2"
+            ]
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the AGV"
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the AGV."
+        },
+        "zoneSetId": {
+            "type": "string",
+            "description": "Globally unique identifier of the zone set."
+        },
+        "mapId": {
+            "type": "string",
+            "description": "Globally unique identifier of the map the zone set particularizes."
+        },
+        "zoneSetDescription": {
+            "type": "string",
+            "description": "Human readable description of the zone set."
+        },
+        "zones": {
+            "type": "array",
+            "description": "Array of zone objects.",
+            "items": {
+                    "$ref": "#/definitions/zone"
+                }
+            }
+        },
+        "zone": {
+            "type": "object",
+            "required": [
+                "zoneId", 
+                "zoneType", 
+                "vertices"
+                ],
+            "properties": {
+                "zoneId": {
+                    "type": "string",
+                    "description": "Locally (within the zone set) unique identifier."
+                },
+                "zoneType": {
+                    "type": "string",
+                    "description": "Zone category.",
+                    "enum": [
+                        "BLOCKED", 
+                        "LINE_GUIDED", 
+                        "RELEASE", 
+                        "COORDINATED_REPLANNING", 
+                        "SPEED_LIMIT", 
+                        "ACTION",
+                        "PRIORITY",
+                        "PENALTY",
+                        "DIRECTED",
+                        "BIDIRECTED"
+                    ]
+                },
+                "zoneDescription": {
+                    "type": "string",
+                    "description": "User-defined human-readable name or descriptor."
+                },
+                "vertices": {
+                "type": "array",
+                "description": "Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone.",
+                "minItems": 3,
+                "items": {
+                    "$ref": "#/definitions/vertex"
+                }
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "SPEED_LIMIT" }
+                        }
+                    },
+                    "then": {
+                        "required": ["maxSpeed"],
+                        "properties": {
+                            "maxSpeed": {
+                                "type": "number",
+                                "description": "Required in SPEED_LIMIT zone."
+                            }
+                        }
+                    }
+                },
+                { 
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "ACTION" }
+                        }
+                    },
+                    "then": {
+                        "required": ["entryActions", "duringActions", "exitActions"],
+                        "properties": {
+                            "entryActions": {
+                                "type": "array",
+                                "description": "Array of actions to be executed when entering the zone.",
+                                "items": {
+                                    "$ref": "#/definitions/action"
+                                }
+                            },
+                            "duringActions": {
+                                "type": "array",
+                                "description": "Actions to be executed while crossing the zone. Empty Array, if no Actions required.",
+                                "items": {
+                                    "$ref": "#/definitions/action"
+                                }
+                            },
+                            "exitActions": {
+                                "type": "array",
+                                "description": "Actions to be triggered when leaving the zone. Empty Array, if no Actions required.",
+                                "items": {
+                                    "$ref": "#/definitions/action"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "PRIORITY" }
+                        }
+                    },
+                    "then": {
+                        "required": ["priorityFactor"],
+                        "properties": {
+                            "priorityFactor ": {
+                                "type": "number",
+                                "description": "Relative factor, determining the zone's preference over an area with no zone. 0.0 means no preference, as if there was no zone, 1.0 is maximum preference.",
+                                "minimum": 0.0,
+                                "maximum": 1.0
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "PENALTY" }
+                        }
+                    },
+                    "then": {
+                        "required": ["penaltyFactor"],
+                        "properties": {
+                            "penaltyFactor ": {
+                                "type": "number",
+                                "description": "Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if no other path is possible.",
+                                "minimum": 0.0,
+                                "maximum": 1.0
+                            }
+                        }
+                    }
+                },
+                { 
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "DIRECTED" }
+                        }
+                    },
+                    "then": {
+                        "required": ["direction", "limitation"],
+                        "properties": {
+                            "direction": {
+                                "type": "number",
+                                "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system."
+                            },
+                            "limitation": {
+                                "type": "string",
+                                "description": "SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall not deviate from the defined direction of travel (within its precision).",
+                                "enum": [
+                                    "SOFT","RESTRICTED","STRICT"
+                                ]
+                            }
+                        }
+                    }
+                },
+                { 
+                    "if": {
+                        "properties": {
+                            "zoneType": { "const": "BIDIRECTED" }
+                        }
+                    },
+                    "then": {
+                        "required": ["direction", "limitation"],
+                        "properties": {
+                            "direction": {
+                                "type": "number",
+                                "description": "Direction and its opposite direction (+ Pi) define the allowed directions of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system."
+                            },
+                            "limitation": {
+                                "type": "string",
+                                "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, exept for obstacle avoidance.",
+                                "enum": [
+                                    "SOFT","RESTRICTED"
+                                ]
+                            }
+                        }
+                    }
+                }
+
+            ]
+        },
+        "vertex": {
+            "type": "object",
+            "required": ["x", "y"],
+            "properties": {
+                "x": {
+                    "type": "number",
+                    "description": "X-coordinate described in the project specific coordinate system."
+                },
+                "y": {
+                    "type": "number",
+                    "description": "Y-coordinate described in the project specific coordinate system."
+                }
+            }
+        }, 
+        "action": {
+            "type": "object",
+            "description": "Describes an action that the AGV can perform.",
+            "required": [
+                "actionId",
+                "actionType",
+                "blockingType"
+            ],
+            "properties": {
+                "actionType": {
+                    "type": "string",
+                    "description": "Name of action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
+                },
+                "actionId": {
+                    "type": "string",
+                    "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
+                },
+                "actionDescription": {
+                    "type": "string",
+                    "description": "Additional information on the action."
+                },
+                "blockingType": {
+                    "type": "string",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                    "enum": [
+                        "NONE",
+                        "SOFT",
+                        "HARD"
+                    ]
+                },
+                "actionParameters": {
+                    "type": "array",
+                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                    "items": {
+                        "$ref": "#/definitions/actionParameter"
+                    }
+                }
+            }
+        },
+        "actionParameter":{
+            "type": "object",
+            "required": [
+                "key",
+                "value"
+            ],
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "description": "The key of the action parameter.",
+                    "examples": [
+                        "duration",
+                        "direction",
+                        "signal"
+                    ]
+                },
+                "value": {
+                    "type": [
+                        "array",
+                        "boolean",
+                        "number",
+                        "string", 
+                        "object"
+                    ],
+                    "description": "The value of the action parameter",
+                    "examples": [
+                        103.2,
+                        "left",
+                        true,
+                        [
+                            "arrays",
+                            "are",
+                            "also",
+                            "valid"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
