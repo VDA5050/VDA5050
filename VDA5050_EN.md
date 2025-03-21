@@ -396,6 +396,8 @@ state | AGV | master control | Communication of the AGV state | mandatory | stat
 visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
 connection | Broker/AGV | master control | Indicates when AGV connection is lost, not to be used by master control for checking the vehicle health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | AGV | master control | Parameters or vendor-specific information to assist set-up of the AGV in master control | mandatory | factsheet.schema
+zoneSet | master control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
+response | master control | mobile robot | Master controls responses to requests from within the mobile robots state. | optional | response.schema
 
 
 ## 6.6 Topic: "order" (from master control to AGV)
@@ -925,7 +927,7 @@ A single zone object has the following structure:
 | zoneId | string | Locally (within the zone set) unique identifier. |
 | zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
 | *zoneDescription* | string | User-defined human-readable name or descriptor. | 
-| **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a clockwise direction. |
+| **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
 | maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter 6.x.1.| 
 | **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter 6.x.1.| 
 | **duringActions[Action]** | array | Required only for ACTION zone as defined in chapter 6.x.1.| 
@@ -937,7 +939,7 @@ A single zone object has the following structure:
 | directedLimitation | string | Required only for a DIRECTED zone as defined in chapter 6.x.1.|
 | bidirectedLimitation | string | Required only for a BIDIRECTED zone as defined in chapter 6.x.1.|
 
-The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a clockwise direction: 
+The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a counterclockwise direction: 
 
 | **Object structure** | **Data type** | **Description** |
 | --------------------- | ------------- | ------------------- |
