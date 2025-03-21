@@ -320,7 +320,7 @@ If the AGV disconnects from the broker, it keeps all the order information and f
 
 Protocol security needs to be taken into account by broker configuration.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `instantActions`, `state`, `factsheet` and `visualization`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`.
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
