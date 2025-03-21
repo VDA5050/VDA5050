@@ -76,23 +76,30 @@ Version 2.1.0
 [6.7.3 Map download](#673-map-download)<br>
 [6.7.4 Enable downloaded maps](#674-enable-downloaded-maps)<br>
 [6.7.5 Delete maps on vehicle](#675-delete-maps-on-vehicle)<br>
-[6.8 Actions](#68-actions)<br>
-[6.8.1 Definition, parameters, effects and scope of predefined actions](#681-definition-parameters-effects-and-scope-of-predefined-actions)<br>
-[6.8.2 States of predefined actions](#682-states-of-predefined-actions)<br>
-[6.9 Topic: "instantActions" (from master control to AGV)](#69-topic-instantactions-from-master-control-to-agv)<br>
-[6.10 Topic: "state" (from AGV to master control)](#610-topic-state-from-agv-to-master-control)<br>
-[6.10.1 Concept and logic](#6101-concept-and-logic)<br>
-[6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
-[6.10.3 Base request](#6103-base-request)<br>
-[6.10.4 Information](#6104-information)<br>
-[6.10.5 Errors](#6105-errors)<br>
-[6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message)<br>
-[6.11 actionStates](#611-actionstates)<br>
-[6.12 Action blocking types and sequence](#612-action-blocking-types-and-sequence)<br>
-[6.13 Topic "visualization"](#613-topic-visualization)<br>
-[6.14 Topic "connection"](#614-topic-connection)<br>
-[6.15 Topic "factsheet"](#615-topic-factsheet)<br>
-[6.15.1 Factsheet JSON structure](#6151-factsheet-json-structure)<br>
+[6.8 Sharing of planned path for freely-navigating mobile robots](#68-sharing-of-planned-path-for-freely-navigating-mobile-robots)<br>
+[6.9 Zones](#69-zones)<br>
+[6.9.1 Zone types](#691-zone-types)<br>
+[6.9.2 Implementation of the zone set transfer](#692-implementation-of-the-zone-set-transfer)<br>
+[6.9.3 Communication for interactive zones](#693-communication-for-interactive-zones)<br>
+[6.9.4 Interaction between zones](#694-interactions-between-zones)<br>
+[6.9.4 Error handling within zones](#695-error-handling-within-zones)<br>
+[6.10 Actions](#610-actions)<br>
+[6.10.1 Definition, parameters, effects and scope of predefined actions](#6101-definition-parameters-effects-and-scope-of-predefined-actions)<br>
+[6.10.2 States of predefined actions](#6102-states-of-predefined-actions)<br>
+[6.11 Topic: "instantActions" (from master control to AGV)](#611-topic-instantactions-from-master-control-to-agv)<br>
+[6.12 Topic: "state" (from AGV to master control)](#612-topic-state-from-agv-to-master-control)<br>
+[6.12.1 Concept and logic](#6121-concept-and-logic)<br>
+[6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
+[6.12.3 Base request](#6123-base-request)<br>
+[6.12.4 Information](#6124-information)<br>
+[6.12.5 Errors](#6125-errors)<br>
+[6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message)<br>
+[6.13 actionStates](#613-action-states)<br>
+[6.14 Action blocking types and sequence](#614-action-blocking-types-and-sequence)<br>
+[6.15 Topic "visualization"](#615-topic-visualization)<br>
+[6.16 Topic "connection"](#616-topic-connection)<br>
+[6.17 Topic "factsheet"](#617-topic-factsheet)<br>
+[6.17.1 Factsheet JSON structure](#6171-factsheet-json-structure)<br>
 [7 Best practice](#7-best-practice)<br>
 [7.1 Error reference](#71-error-reference)<br>
 [7.2 Format of parameters](#72-format-of-parameters)<br>
@@ -207,7 +214,7 @@ Routes can be one-way streets, restricted for certain vehicle groups (based on t
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined.
 - Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV shall communicate this information via the topic `factsheet` in a specific way that is defined in Section [6.15 Topic "Factsheet"](#615-topic-factsheet) of this document.
+The AGV shall communicate this information via the topic `factsheet` in a specific way that is defined in Section [6.17 Topic "Factsheet"](#617-topic-factsheet) of this document.
 
 The configuration of routes and the route network described above are not part of this document.
 They form the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed.
@@ -314,7 +321,7 @@ Numerical data types are specified with type and precision, e.g., float64 or uin
 
 The MQTT protocol provides the option of setting a last will message for a client.
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
-The use of this feature is described in Section [6.14 Topic "connection"](#614-topic-connection).
+The use of this feature is described in Section [6.16 Topic "connection"](#616-topic-connection).
 
 If the AGV disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
@@ -674,7 +681,7 @@ The master control can decide if user interaction is required or if the vehicle 
 
 *Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if the master control makes a traffic control decision based on the vehicle's footprint.*
 
-See also Section [6.10.2 Traversal of nodes and entering/leaving edges](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
+See also Section [6.12.2 Traversal of nodes and entering/leaving edges](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
 
 ## 6.6.6 Implementation of the order message
@@ -832,7 +839,7 @@ If the vehicle is to be set to a specific position on a new map, the `initPositi
 The master control can request the deletion of a specific map from a vehicle. This is done with the instant action `deleteMap`. When a vehicle runs out of memory, it should report this to the master control, which can then initiate the deletion of maps. The vehicle itself is not allowed to delete maps.
 After successfully deleting a map, it is important to remove that map's entry from the vehicle's array of maps in the vehicle state.
 
-## 6.y Sharing of planned path for freely navigating mobile robots
+## 6.8 Sharing of planned path for freely navigating mobile robots
 
 Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
 
@@ -841,17 +848,17 @@ The `plannedPath` is defined as NURBS as defined in the `trajectory` field of th
 The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the vehicle and the `ETA` indicating the estimated time of arrival.
 The parameters `plannedPath` and `intermediatePath` shall be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState shall only be used to 'acknowledge' trajectories that have already been defined a priori within a layout or the order.
 
-## 6.x Zones
+## 6.9 Zones
 
 Zones are used to define rules for specific areas of the vehicle workspace. In this way, zones allow vehicles to navigate freely between nodes while giving the Master Control the ability to manage traffic. Zones can be used to locally deny vehicles access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone type: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
-Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section 6.x.
+Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.9.4](#694-interactions-between-zones) .
 Some vehicles cannot process zones at all, while other vehicles might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided vehicles can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
 
 A zone set shall only be changed and distributed by master control to keep consistency in the system.
 
-### 6.x.1 Zone types
+### 6.9.1 Zone types
 
 Two categories of zones are distinguished: contour-based zones and kinematic center-based zones. This distinction is based on the different conditions for when the vehicle is considered to be entering and exiting zones.
 
@@ -901,7 +908,7 @@ In kinematic center-based zones, the vehicle's kinematic center determines its e
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the velocity vector in the project-specific coordinate system. | 
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
  
-### 6.x. Implementation of the zone set object for zone set transfer
+### 6.9.2 Implementation of the zone set transfer
 
 While this guideline  does not explicitly define a map format, both a zone and a zone set are well-defined JSON objects. This structure shall be maintained when providing the download as well as sending the zones via the separate `zoneSet` topic. This structure is not part of the state message.
 
@@ -925,19 +932,19 @@ A single zone object has the following structure:
 | --------------------- | ------------- | ------------------- |
 | zone{ | JSON object | |
 | zoneId | string | Locally (within the zone set) unique identifier. |
-| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to Section 6.x.1 Zone types. |
+| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to section [6.9.1 Zone types](#691-zone-types). |
 | *zoneDescription* | string | User-defined human-readable name or descriptor. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
-| maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter 6.x.1.| 
-| **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter 6.x.1.| 
-| **duringActions[Action]** | array | Required only for ACTION zone as defined in chapter 6.x.1.| 
-| **exitActions[Action]** | array | Required only for ACTION zone as defined in chapter 6.x.1.| 
-| *releaseLossBehavior* | string | Optional only for RELEASE zone as defined in chapter 6.x.1.|
-| priorityFactor | float64 | Required only for PRIORITY zone as defined in chapter 6.x.1.|
-| penaltyFactor | float64 | Required only for PENALTY zone as defined in chapter 6.x.1.|
-| direction | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter 6.x.1.|
-| directedLimitation | string | Required only for a DIRECTED zone as defined in chapter 6.x.1.|
-| bidirectedLimitation | string | Required only for a BIDIRECTED zone as defined in chapter 6.x.1.|
+| maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
+| **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
+| **duringActions[Action]** | array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
+| **exitActions[Action]** | array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
+| *releaseLossBehavior* | string | Optional only for RELEASE zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
+| priorityFactor | float64 | Required only for PRIORITY zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
+| penaltyFactor | float64 | Required only for PENALTY zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
+| direction | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
+| directedLimitation | string | Required only for a DIRECTED zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
+| bidirectedLimitation | string | Required only for a BIDIRECTED zone as defined in chapter [6.9.1 Zone types](#691-zone-types).|
 
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a counterclockwise direction: 
 
@@ -947,7 +954,7 @@ The shape of each zone object is defined through a polygon, which is communicate
 | x | float64 | X-coordinate described in the project-specific coordinate system |
 | y <br>} | float64 | Y-coordinate described in the project-specific coordinate system |
 
-## 6.x.3 Interactive zones - Communication 
+## 6.9.3 Communication for interactive zones 
 
 For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by master control to respond to these requests.
 
@@ -1017,7 +1024,7 @@ Object structure/Identifier | Data type | Description
 | *leaseExpiry* | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
 
-### 6.x.4 Potentially conflicts in orders for vehicles working with zones
+### 6.9.4 Interactions between zones
 
 In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The column No Zone defines the behavior for contour-based zones, where vehicles can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the vehicle can only be completely within or outside the zone, so there is no possible interaction.
 
@@ -1044,15 +1051,15 @@ In the following matrix possible interactions between zones are described. The m
 8) Zones shall not overlap, since the behavior is not defined.
 9) A trajectory as part of the edge properties shall override the directed and bidirected zone property.
 
-### 6.x.5 Error handling within zones
+### 6.9.5 Error handling within zones
 
 If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a CRITICAL error to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
 
-## 6.8 Actions
+## 6.10 Actions
 
 If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic `instantActions` (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
 
-Actions that are to be executed on an edge shall only run while the AGV is on the edge (see Section [6.11.2 Traversal of nodes and entering/leaving edges](#6112-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+Actions that are to be executed on an edge shall only run while the AGV is on the edge (see Section [6.12.2 Traversal of nodes and entering/leaving edges](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 
 Actions that are triggered on nodes can run as long as they need to run and should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or formulated pairwise (e.g., "activateWarningLights" and "deactivateWarningLights"), although there may be exceptions.
 
@@ -1063,7 +1070,7 @@ Additional parameters can be defined, if they are needed to execute an action su
 If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that shall be used by master control.
 
 
-### 6.8.1 Definition, parameters, effects and scope of predefined actions
+### 6.10.1 Definition, parameters, effects and scope of predefined actions
 
 general | | scope
 :---:|--- | :---:
@@ -1090,7 +1097,7 @@ cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately o
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 
 
-### 6.8.2 States of predefined actions
+### 6.10.2 States of predefined actions
 
 action | action states
 ---|:---:
@@ -1117,7 +1124,7 @@ cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | 
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 
-## 6.9 Topic: "instantActions" (from master control to AGV)
+## 6.11 Topic: "instantActions" (from master control to AGV)
 
 In certain cases, it is necessary to send actions to the AGV that need to be performed immediately.
 This is made possible by publishing an `instantAction` message to the topic `instantActions`.
@@ -1144,7 +1151,7 @@ The `actionStatus` is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an `actionStatus`.
 
 
-## 6.10 Topic: "state" (from AGV to master control)
+## 6.12 Topic: "state" (from AGV to master control)
 
 The AGV state will be transmitted on only one topic.
 Compared to separate messages (e.g., for orders, battery state and errors) using one topic will reduce the workload of the broker and the master control for handling messages, while also keeping the information about the AGV state synchronized.
@@ -1166,7 +1173,7 @@ There should be an effort to curb the amount of communication.
 If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
 
 
-### 6.10.1 Concept and logic
+### 6.12.1 Concept and logic
 
 The order progress is tracked by the `nodeStates` and `edgeStates`.
 Additionally, if the AGV is able to derive its current position, it can publish its position via the `position` field.
@@ -1181,7 +1188,7 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still s
 
 
 
-### 6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions
+### 6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions
 
 The AGV decides on its own, when a node should count as traversed.
 Generally, the AGV's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
@@ -1202,12 +1209,12 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 >Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
 
 
-### 6.10.3 Base request
+### 6.12.3 Base request
 
 If the AGV detects that its base is running low, it can set the `newBaseRequest` flag to "true" to prevent unnecessary braking.
 
 
-### 6.10.4 Information
+### 6.12.4 Information
 
 The AGV can submit arbitrary additional information to master control via the `information` array.
 It is up to the AGV how long it reports information via an information message.
@@ -1215,7 +1222,7 @@ It is up to the AGV how long it reports information via an information message.
 Master control shall not use the info messages for logic, it shall only be used for visualization and debugging purposes.
 
 
-### 6.10.5 Errors
+### 6.12.5 Errors
 
 The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
@@ -1228,7 +1235,7 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
-### 6.10.6 Implementation of the state message
+### 6.12.6 Implementation of the state message
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1257,7 +1264,7 @@ driving | | boolean | "true": indicates, that the AGV is driving and/or rotating
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **batteryState** | | JSON object | Contains all battery-related information.
-operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table 1 in Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message).
+operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table 1 in Section [6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
 ***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in master control.
 **safetyState** | | JSON object | Contains all safety-related information.
@@ -1297,7 +1304,7 @@ released | | boolean | "true" indicates that the edge is part of the base.<br>"f
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **plannedPath** { | | JSON object |  
-**trajectory** | | JSON object | The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message. 
+**trajectory** | | JSON object | The trajectory is to be communicated as a NURBS and is defined in chapter [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message). 
 ***traversedNodes[nodeId]*** | | array | Array of `nodeId`s as communicated in the currently executed order that are traversed within the shared planned path. 
 } | | |
 
@@ -1394,7 +1401,7 @@ Object structure | Unit | Data type | Description
 actionId | |string | Unique identifier of the action.
 *actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Master control is aware of action type as dispatched in the order.
 *actionDescription* | | string | Additional information on the current action.
-actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.11 actionStates](#611-actionstates).
+actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.13 actionStates](#613-action-states).
 *resultDescription*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
 
 Object structure | Unit | Data type | Description
@@ -1455,7 +1462,7 @@ TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't se
 >Table 1 The operating modes and their meaning
 
 
-## 6.11 Action states
+## 6.13 Action states
 
 When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
 
@@ -1480,7 +1487,7 @@ A state transition diagram is provided in Figure 16.
 >Figure 16 All possible status transitions for actionStates
 
 
-## 6.12 Action blocking types and sequence
+## 6.14 Action blocking types and sequence
 
 The order of multiple actions in a list define the sequence, in which those actions are to be executed.
 The parallel execution of actions is governed by their respective `blockingType`.
@@ -1501,16 +1508,16 @@ If there are multiple actions on the same node with different blocking types, Fi
 >Figure 17 Handling multiple actions
 
 
-## 6.13 Topic "visualization"
+## 6.15 Topic "visualization"
 
 For a near real-time position and planned trajectory update the AGV can broadcast its position, velocity and planned trajectory on the topic `visualization`.
 
 The fields of the visualization object use the same structure as the position, velocity, planned path and intermediate path object in the state.
-For additional information see Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message) for the vehicle state.
+For additional information see Section [6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message) for the vehicle state.
 The update rate for this topic is defined by the integrator.
 
 
-## 6.14 Topic "connection"
+## 6.16 Topic "connection"
 
 During the connection of an AGV client to the broker, a last will topic and message can be set, which is published by the broker upon disconnection of the AGV client from the broker.
 Thus, the master control can detect a disconnection event by subscribing the connection topics of all AGVs.
@@ -1554,7 +1561,7 @@ All messages on this topic shall be sent with a retained flag.
 When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: "uagv/v2/manufacturer/SN/connection" with the field `connectionState` set to `CONNECTIONBROKEN`.
 
 
-## 6.15 Topic "factsheet"
+## 6.17 Topic "factsheet"
 
 The factsheet provides basic information about a specific AGV type series.
 This information allows comparison of different AGV types and can be applied for the planning, dimensioning, and simulation of an AGV system.
@@ -1569,7 +1576,7 @@ The master control can request the factsheet from the AGV by sending the instant
 All messages on this topic shall be sent with a retained flag.
 
 
-### 6.15.1 Factsheet JSON structure
+### 6.17.1 Factsheet JSON structure
 The factsheet consists of the JSON objects listed in the following table.
 
 | **Field** | **data type** | **description** |
@@ -1782,7 +1789,7 @@ This section includes additional information, which helps in facilitating a comm
 
 ## 7.1 Error reference
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the field errorReferences (see Section [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message) of the state topic).
+If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the field errorReferences (see Section [6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message) of the state topic).
 This can include the following information:
 
 - `headerId`
