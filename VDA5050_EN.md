@@ -1116,6 +1116,7 @@ finePositioning | - | On a node, AGV will position exactly on a target.<br>The A
 waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
 cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
+setCertificates | - | Request the AGV to download a new certificates set | yes | service (string)<br>caDownloadLink (string)<br>keyDownloadLink (string)<br>certDownloadLink (string, optional) | - | yes | no | no |
 
 
 ### 6.10.2 States of predefined actions
@@ -1144,7 +1145,13 @@ finePositioning | - | AGV positions itself exactly on a target. | The fine posit
 waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
 cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | <br>AGV has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
+setCertificates | - | Vehicle is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
 
+### 6.10.3 Set vehicle certificates
+
+For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g. MQTT) for which the certificates are to be used. The parameter `caDownloadLink` specifies the URL for the root certificate(s). The parameters `certDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
+
+It is recommended to secure the download via TLS as well, since the sender of the instantAction cannot be verified. It is also advisable to validate the certificate chain before it is activated.
 
 ## 6.11 Topic: "instantActions" (from master control to AGV)
 
