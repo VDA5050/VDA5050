@@ -488,6 +488,13 @@
                 "$ref": "#/definitions/actionState"     
             }
         },
+        "instantActionStates": {
+            "type": "array",
+            "description": "Contains an array of all instant actions that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
+            }
+        },
         "batteryState": {
             "type": "object",
             "required": [
