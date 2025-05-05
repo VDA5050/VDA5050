@@ -572,6 +572,9 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 9)	populate/append states refers to the `actionStates`/`nodeStates`/`edgeStates`.
 
+### 6.6.3 Idle state of the mobile robot
+
+A mobile robot is in idle state if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A vehicle in idle state is ready to receive a new order. In idle state a vehicle can execute instantActions.
 
 ### 6.6.3 Order cancellation (by master control)
 
@@ -584,6 +587,7 @@ If there are running actions, those actions should be cancelled and also be repo
 If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
 After all movement of the vehicle and all of its actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
+This means that the vehicle is in idle mode and ready to receive new orders.
 
 The `orderId` and `orderUpdateId` are kept.
 
@@ -595,7 +599,7 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 #### 6.6.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the vehicle shall be in a state to receive a new order.
+After the cancellation of an order, the vehicle shall be in idle state and ready to receive a new order.
 
 In the case of an AGV that localizes itself on nodes via a tag, the new order has to begin on the node the AGV is now standing on (see also Figure 5).
 
@@ -608,9 +612,9 @@ There are two options:
 - Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV shall realize that this node shall be counted as traversed and accept the order.
 
 
-#### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
+#### 6.6.3.2 Receiving a cancelOrder action when AGV is in idle state
 
-If the AGV receives a `cancelOrder` action but, the AGV currently has no order, or the previous order was canceled, the `cancelOrder` action shall be reported as 'FAILED'.
+If the AGV receives a `cancelOrder` action but the AGV is currently in idle state, or the previous order was canceled, the `cancelOrder` action shall be reported as 'FAILED'.
 
 The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
