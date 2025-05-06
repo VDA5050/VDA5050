@@ -1149,7 +1149,7 @@ updateCertificate | - | Vehicle is downloading and installing certificates | - |
 
 ### 6.10.3 Update vehicle certificate
 
-For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g. MQTT) for which the certificates are to be used. The parameter `caDownloadLink` specifies the URL for the root certificate(s). The parameters `certDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
+For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `caDownloadLink` specifies the URL for the root certificate(s). The parameters `certDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
 
 It is recommended to secure the download via TLS as well, since the sender of the instantAction cannot be verified. It is also advisable to validate the certificate chain before it is activated.
 
