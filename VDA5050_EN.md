@@ -1147,7 +1147,7 @@ cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | 
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 updateCertificate | - | Vehicle is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
 
-### 6.10.3 Set vehicle certificates
+### 6.10.3 Update vehicle certificate
 
 For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g. MQTT) for which the certificates are to be used. The parameter `caDownloadLink` specifies the URL for the root certificate(s). The parameters `certDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
 
