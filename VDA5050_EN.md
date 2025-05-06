@@ -1116,7 +1116,7 @@ finePositioning | - | On a node, AGV will position exactly on a target.<br>The A
 waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
 cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
-setCertificates | - | Request the AGV to download and activate a new certificate set | yes | service (string)<br>caDownloadLink (string)<br>keyDownloadLink (string)<br>certDownloadLink (string, optional) | - | yes | no | no |
+updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extendable enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>caDownloadLink (string, optional)<br>keyDownloadLink (string)<br>certDownloadLink (string) | - | yes | no | no |
 
 
 ### 6.10.2 States of predefined actions
