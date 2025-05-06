@@ -574,7 +574,7 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 ### 6.6.3 Idle state of the mobile robot
 
-A mobile robot is in idle state if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A vehicle in idle state is ready to receive a new order. In idle state a vehicle can execute instantActions.
+A mobile robot is in idle state if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A vehicle in idle state is ready to receive a new order or order updates. In idle state a vehicle can execute instantActions.
 
 ### 6.6.3 Order cancellation (by master control)
 
