@@ -1145,7 +1145,7 @@ finePositioning | - | AGV positions itself exactly on a target. | The fine posit
 waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
 cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | <br>AGV has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
-setCertificates | - | Vehicle is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
+updateCertificate | - | Vehicle is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
 
 ### 6.10.3 Set vehicle certificates
 
