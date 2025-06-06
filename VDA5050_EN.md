@@ -208,7 +208,8 @@ During the implementation phase, the driverless transport systems (DTS) consisti
 The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the master control by importing from other systems.
 Essentially, this concerns the following content:
 
-- Definition of routes: Using CAD import, routes can be imported to the master control.
+- Definition of routes:
+Using the Layout Interchange Format (LIF), routes can be imported to the master control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system (see section 3.1).
 Alternatively, routes can also be implemented manually in the master control by the operator.
 Routes can be one-way streets, restricted for certain vehicle groups (based on the size ratios), etc.
 - Route network configuration:
