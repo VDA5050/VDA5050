@@ -1483,7 +1483,16 @@ actionStatus | Description
 
 >Table 2 The acceptable values for the actionStatus field
 
-A state transition diagram is provided in Figure 16.
+All possible state transitions are represented in the following matrix and visualized in Figure 16.
+
+
+| **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **FAILED** | **FINISHED** |
+|---|---|---|---|---|---|---|
+| **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | action finishes immediately (e.g., setting a parameter) |
+| **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | aborted via cancel, switch to manual mode action | succeeds instantly, e.g., after reaching node/edge |
+| **INITIALIZING** | - | - | pause via startPause | initialization finished, action starting | initialization failed, aborted via cancel, switch to manual mode | - |
+| **PAUSED** | - | Resume initialization via stopPause | - | Resume running via stopPause | aborted via cancelOrder, switch to manual | - |
+| **RUNNING** | - | - | pause via startPause | - | aborted via cancel, switch to manual | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
