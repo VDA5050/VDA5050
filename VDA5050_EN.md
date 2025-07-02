@@ -807,9 +807,6 @@ This is in accordance with Section 2.11 in DIN ISO 8855.
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within +Pi and –Pi.
 
-![Figure 12 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
->Figure 12 Coordinate systems for map and vehicle
-
 
 ### 6.7.1 Map distribution
 
