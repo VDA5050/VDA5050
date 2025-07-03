@@ -857,12 +857,13 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 ## 6.8 Sharing of planned path for freely navigating mobile robots
 
-Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
+Vehicles shall communicate their planned movement to the master control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
 
 Vehicles share their `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors, and their `plannedPath`, which represents a longer path within the robot's currently active order. Both paths shall start from the mobile robot's current position, independent of any nodes that are part of the order. The robot can decide on the length of the shared paths, as it may be situation dependent.
 The `plannedPath` is defined as NURBS as defined in the `trajectory` field of the `edgeState`. The planned path can contain an array of nodes, referenced by their `nodeId`, that will be traversed as part of the current path.
 The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the vehicle and the `ETA` indicating the estimated time of arrival.
 The parameters `plannedPath` and `intermediatePath` shall be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState shall only be used to 'acknowledge' trajectories that have already been defined a priori within a layout or the order.
+If a vehicle is capable of sharing its planned movement, it shall always share both, the 'plannedPath' and the 'intermediatePath', in the state message.
 
 ## 6.9 Zones
 
