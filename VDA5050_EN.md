@@ -1,6 +1,6 @@
 ![logo](./assets/logo.png)
 
-# Interface for the communication between automated guided vehicles (AGV) and a master control
+# Interface for the communication between mobile robots and a master control
 
 ## VDA 5050
 
