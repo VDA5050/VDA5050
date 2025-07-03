@@ -727,7 +727,7 @@ actionId | | string | Unique ID to identify the action and map them to the actio
 *actionDescription* | | string | Additional information on the action
 blockingType | | string | Enum {'NONE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
-*retryable* | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails.
+*retriable* | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails. Default value if not defined "false"
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1096,7 +1096,7 @@ detectObject | - | AGV detects object (e.g., load, charging spot, free parking p
 finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
 waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
 retry | - | Mobile robot retries action defined via actionId that is currently in state RETRYABLE. | yes | actionId(string) | - | yes | no | no
-skipRetry | - | Mobile robot has to skip action defined via actionId that is currently in state RETRYABLE, setting action to failed. | yes | actionId(string) | - | yes | no | no
+skipRetry | - | Mobile robot has to skip action defined via actionId that is currently in state RETRIABLE, setting action to FAILED. | yes | actionId(string) | - | yes | no | no
 cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately or on the next node. <br>Then the order is deleted. All actions are canceled. | yes | - | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 
@@ -1487,17 +1487,17 @@ actionStatus | Description
 
 >Table 2 The acceptable values for the actionStatus field
 
-All possible state transitions are represented in the following matrix and visualized in Figure 16.
+All possible action state transitions are visualized in Figure 16 and examples are given in the following matrix:
 
 
 | **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **RETRIABLE** | **FAILED** | **FINISHED** |
 |---|---|---|---|---|---|---|---|
-| **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | - | action finishes immediately (e.g., setting a parameter) |
-| **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode action | succeeds instantly, e.g., after reaching node/edge |
-| **INITIALIZING** | - | - | pause via startPause/external trigger | initialization finished, action starting | - | initialization failed, aborted via cancel, switch to manual mode | - |
-| **PAUSED** | - | Resume initialization via stopPause/external trigger | - | Resume running via stopPause/external trigger | - | aborted via cancelOrder, switch to manual | - |
-| **RUNNING** | - | - | pause via startPause/external trigger | - | action failed due to not returning the desired results, but being defined as retriable in order. Vehicle decides if current action is actually retryable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
-| **RETRYABLE** | - | retrys action with initialization via retry instantAction | - | retrys action via retry instantAction | - | finally failed via skipRetry instantAction/external Trigger | Fixed by operator via external input |
+| **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | instantActions failed to execute (unknown to mobile robot, invalid parameters) | action finishes immediately (e.g., setting a parameter) |
+| **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode, action removed after changing horizon | action succeeds instantly, e.g., after reaching node/edge |
+| **INITIALIZING** | - | - | external trigger | initialization finished, action starting | initialization failed | initialization failed, aborted via cancel, switch to manual mode | switch to manual mode |
+| **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
+| **RUNNING** | - | - | external trigger | - | action failed due to not returning the desired results, but being defined as retriable in order. Vehicle decides if current action is actually retryable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
+| **RETRIABLE** | - | retries action with initialization via retry | - | retries action via retry, external trigger | - | finally failed via skipRetry, failed via cancelOrder, external trigger, switch to manual, | Fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
