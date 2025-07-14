@@ -577,6 +577,8 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
+MC can optionally pass an `orderId` to reference which order it wants to cancel.
+
 After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
@@ -610,7 +612,7 @@ There are two options:
 
 #### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
 
-If the AGV receives a `cancelOrder` action but, the AGV currently has no order, or the previous order was canceled, the `cancelOrder` action shall be reported as 'FAILED'.
+If the AGV receives a `cancelOrder` action while it has no active order, the previous order was already canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the action shall be reported as 'FAILED'.
 
 The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
@@ -1132,7 +1134,7 @@ drop | Initializing of the drop process, e.g., outstanding lift operations. | Th
 detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object.
 finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached.
 waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
-cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | -
+cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | <br>AGV has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 
