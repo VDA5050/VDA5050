@@ -776,7 +776,7 @@ rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of 
 
 ### 6.7 Maps
 
-To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 11).
+To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 11). The project-specific coordinate system shall be defined for the interaction between master control and the mobile robot.
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
