@@ -9,14 +9,17 @@ start
 #lightgreen:parallel execution list = [];
 #lightgreen:iterate over action list;
 repeat
-    if (action:\n blockingType) then (HARD)
+    if (action for \nparallel execution?) then (no)
+        if (action:\n blockingType) then (HARD)
         #lightgreen: stop driving;
+        else (SINGLE)
+        endif
         if (parallel\n execution list\n empty?) then(Yes)
         else(No)
         #lightgreen: Execute actions from\n parallel execution list;
         endif
         #lightgreen: Execute HARD action;
-    else
+    else (yes)
         if () then(SOFT)
         #lightgreen: stop driving;
         else(NONE)

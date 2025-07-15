@@ -454,6 +454,7 @@
                                    "enum": [
                                       "NONE",
                                       "SOFT",
+                                      "SINGLE",
                                       "HARD"
                                    ]
                                 }
