@@ -189,6 +189,11 @@ Participants in the MQTT network subscribe to these topics and receive informati
 The JSON structure allows for a future extension of the protocol with additional parameters.
 The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
 
+# 4.1 Terminology and Definitions
+
+To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
+
+
 
 # 5 Process and content of communication
 
