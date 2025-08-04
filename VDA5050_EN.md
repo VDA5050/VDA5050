@@ -189,10 +189,16 @@ Participants in the MQTT network subscribe to these topics and receive informati
 The JSON structure allows for a future extension of the protocol with additional parameters.
 The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
 
-# 4.1 Terminology and Definitions
+## 4.1 Terminology and Definitions
 
 To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
 
+Term | Definition
+---|---
+Movement | Any change in the spatial position or orientation of the vehicle or its components. This includes the motion of wheels, load handling devices, or the vehicle body.
+Driving | The vehicle is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
+Automatic Driving | The vehicle is driving without human intervention.
+Manual Driving | The vehicle is driving with human intervention.
 
 
 # 5 Process and content of communication
