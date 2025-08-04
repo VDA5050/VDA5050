@@ -1519,16 +1519,15 @@ The parallel execution of actions is governed by their respective `blockingType`
 
 Actions can have three distinct blocking types, described in Table 3.
 
-blockingType | Description
----|---
-NONE | Action can be executed in parallel with other actions and while the vehicle is driving.
-SOFT | Action can be executed in parallel with other actions. Vehicle shall not drive.
-SINGLE | Action shall not be executed in parallel with other actions. Vehicle can drive.
-HARD | Action shall not be executed in parallel with other actions. Vehicle shall not drive.
+-| Parallel execution allowed | Parallel execution not allowed
+---|---|---
+Automatic driving allowed | NONE | SINGLE
+Automatic driving not allowed | SOFT | HARD
 
->Table 3 Action blocking types
+>Table 3 Definition of action blocking types dependent on driving and parallel execution
 
-If there are multiple actions on the same node with different blocking types, Figure 17 describes how the AGV should handle these actions.
+If there are multiple actions to be executed, Figure 17 describes how the mobile robot shall handle them. When arriving at a point, where new actions are to be executed (reaching a node, edge or action zone), the actions are added to a waiting list in order of the actions array. Then the waiting list is processed as shown in Figure 17. Actions are added to the parallel execution list, if the action's blocking type is 'NONE' or 'SOFT'. If the blocking type is 'SOFT' or 'HARD', the mobile robot shall stop automatic driving before starting executing the actions. As soon as a action with blocking type 'SINGLE' or 'HARD' is to be added to the list, all other parallel actions have to be executed first. As soon, as there are no actions that stop driving left in the waiting list, the mobile robot can resume automatic driving.
+
 
 ![Figure 17 Handling multiple actions](./assets/handling_multiple_actions.png)
 >Figure 17 Handling multiple actions
