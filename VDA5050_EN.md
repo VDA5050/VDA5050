@@ -1523,6 +1523,7 @@ blockingType | Description
 ---|---
 NONE | Action can be executed in parallel with other actions and while the vehicle is driving.
 SOFT | Action can be executed in parallel with other actions. Vehicle shall not drive.
+SINGLE | Action shall not be executed in parallel with other actions. Vehicle can drive.
 HARD | Action shall not be executed in parallel with other actions. Vehicle shall not drive.
 
 >Table 3 Action blocking types
