@@ -577,6 +577,9 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 9)	populate/append states refers to the `actionStates`/`nodeStates`/`edgeStates`.
 
+### 6.6.3 Idle state of the mobile robot
+
+A mobile robot is idle if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
 
 ### 6.6.3 Order cancellation (by master control)
 
@@ -591,6 +594,7 @@ If there are running actions, those actions should be cancelled and also be repo
 If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
 After all movement of the vehicle and all of its actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
+This means that the vehicle is idle and ready to receive new orders.
 
 The `orderId` and `orderUpdateId` are kept.
 
@@ -602,7 +606,7 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 #### 6.6.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the vehicle shall be in a state to receive a new order.
+After the cancellation of an order, the vehicle is idle and shall be ready to receive a new order.
 
 In the case of an AGV that localizes itself on nodes via a tag, the new order has to begin on the node the AGV is now standing on (see also Figure 5).
 
@@ -615,9 +619,9 @@ There are two options:
 - Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV shall realize that this node shall be counted as traversed and accept the order.
 
 
-#### 6.6.3.2 Receiving a cancelOrder action when AGV has no order
+#### 6.6.3.2 Receiving a cancelOrder action when AGV is idle
 
-If the AGV receives a `cancelOrder` action while it has no active order, the previous order was already canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the action shall be reported as 'FAILED'.
+If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
 The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
@@ -1102,6 +1106,7 @@ initPosition | - | Resets (overrides) the pose of the AGV with the given paramet
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
 downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
+clearInstantActions | - | Removes all finished or failed instant actions states from the mobile robots. | yes | - | .instantActions | yes | yes | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string, optional)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
@@ -1129,6 +1134,7 @@ initPosition | - | Initializing of the new pose in progress (confidence checks, 
 | downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download is finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapStatus to 'DISABLED'. | The download failed, updated in vehicle state (e.g., connection lost, Map server unreachable, mapId/mapVersion not existing on map server). |
 | enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
 | deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
+| clearInstantActions | - | | - | The instant actions array has been cleaned from all FINISHED or FAILED instantActions. | -
 stateRequest | - | - | - | The state has been communicated | -
 logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
 pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
@@ -1279,6 +1285,7 @@ driving | | boolean | "true": indicates, that the AGV is driving and/or rotating
 ***zoneRequests [zoneRequest]*** | | array | Array of zoneRequest objects that are currently active on the AGV. <br>Empty array if no zone requests are active.
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
+**instantActionStates [actionState]** | | array | Contains an array of all instant action states that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table 1 in Section [6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
