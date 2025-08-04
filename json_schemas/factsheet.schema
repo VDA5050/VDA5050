@@ -3,6 +3,8 @@
     "title": "AGV Factsheet",
     "description": "The factsheet provides basic information about a specific AGV type series. This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system. The factsheet also includes information about AGV communication interfaces which are required for the integration of an AGV type series into a VD[M]A-5050-compliant master control.",
     "required": [
+        "headerId",
+        "timestamp",
         "version",
         "manufacturer",
         "serialNumber",
