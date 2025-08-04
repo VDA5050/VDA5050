@@ -189,6 +189,11 @@ Participants in the MQTT network subscribe to these topics and receive informati
 The JSON structure allows for a future extension of the protocol with additional parameters.
 The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
 
+# 4.1 Terminology and Definitions
+
+To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
+
+
 
 # 5 Process and content of communication
 
@@ -580,6 +585,8 @@ A mobile robot is idle if its nodeStates and edgeStates are empty and all action
 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
+MC can optionally pass an `orderId` to reference which order it wants to cancel.
+
 After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
@@ -614,7 +621,7 @@ There are two options:
 
 #### 6.6.3.2 Receiving a cancelOrder action when AGV is idle
 
-If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, the `cancelOrder` action shall be reported as 'FAILED'.
+If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
 The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
@@ -717,12 +724,23 @@ Object structure | Unit | Data type | Description
 **nodePosition** { | | JSON object | Defines the position on a map in a global project-specific world coordinate system. <br>Each floor has its own map. <br>All maps shall use the same project-specific global origin.
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation of the AGV on the node.<br> Optional: vehicle can plan the path by itself.<br>If defined, the AGV has to assume the theta angle on this node.<br>If previous edge disallows rotation, the AGV shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | float64 | Indicates how precisely an AGV shall match the position of a node for it to be considered traversed. <br><br> If = 0.0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).<br><br> If > 0.0: allowed deviation radius in meters. <br>If the AGV passes a node within the deviation radius, the node can be considered traversed.
-*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br> Indicates how precise the orientation defined in theta has to be met on the node by the AGV. <br>The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a vehicle shall match on a node for it to be considered traversed.<br> Optional: vehicle can plan the path by itself.<br>If defined, the vehicle has to assume the theta angle on this node.<br>If previous edge disallows rotation, the vehicle shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the vehicle is to rotate on the node to the edges desired rotation before entering the edge.
+*allowedDeviationXY* | m | JSON<br>object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a vehicle shall match the orientation of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the vehicle orientation.<br>If = 0.0: no deviation is allowed, which means the vehicle shall reach the node orientation as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master Control the vehicle shall assume this value as 0.0.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } | | string | Additional information on the map.
 
+Object structure | Unit | Data type | Description
+---| --- |--- | ---
+**allowedDeviationXY** { | | JSON object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br><br> If `a` = `b`= 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master Control the vehicle shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.<br>A point *(x,y)* is on or inside an ellipse if *b^2 x + a^2 y <= a^2 b^2*
+a | m | float64 | length of the ellipse semi-major axis	in meters.
+b | m | float64 | length of the ellipse semi-minor axis in meters.
+theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
+(*Remark: A MC system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*)
+
+![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
+>Figure xx allowedDeviation ellipse
+ 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **action** { | | JSON object | Describes an action that the AGV can perform.
@@ -792,9 +810,6 @@ This is in accordance with Section 2.11 in DIN ISO 8855.
 
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within +Pi and –Pi.
-
-![Figure 12 Coordinate systems for map and vehicle](./assets/coordinate_system_vehicle_map.png)
->Figure 12 Coordinate systems for map and vehicle
 
 
 ### 6.7.1 Map distribution
@@ -1099,7 +1114,7 @@ drop | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See acti
 detectObject | - | AGV detects object (e.g., load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes
 finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
 waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
-cancelOrder | - | AGV stops as soon as possible. <br>This could be immediately or on the next node. <br>Then the order is deleted. All actions are canceled. | yes | - | - | yes | no | no
+cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 
 
@@ -1127,7 +1142,7 @@ drop | Initializing of the drop process, e.g., outstanding lift operations. | Th
 detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object.
 finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached.
 waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
-cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | -
+cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | <br>AGV has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 
 
