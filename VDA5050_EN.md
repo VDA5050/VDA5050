@@ -1860,14 +1860,15 @@ Rotations on the spot should be represented in an order as edges between two nod
 
 Example:
 
-    "nodes": [
-        { "nodeId": "N1", "sequenceId": 4, "released": true, "actions": [], "nodePosition": { "x": 74.11, "y": 0.815, "mapId": "map1", "theta": 0 }},
-        { "nodeId": "N1", "sequenceId": 6, "released": true, "actions": [], "nodePosition": { "x": 74.11, "y": 0.815, "mapId": "map1", "theta": 1.570796 }}
-    ],
-    "edges": [
-        { "edgeId": "E1", "sequenceId": 5, "released": true, "startNodeId": "N1", "endNodeId": "N1", "actions": [] }
-    ]
-
+```
+"nodes": [
+  { "nodeId": "N1", "sequenceId": 4, "released": true, "actions": [], "nodePosition": { "x": 74.11, "y": 0.815, "mapId": "map1", "theta": 0 }},
+  { "nodeId": "N1", "sequenceId": 6, "released": true, "actions": [], "nodePosition": { "x": 74.11, "y": 0.815, "mapId": "map1", "theta": 1.570796 }}
+],
+"edges": [
+  { "edgeId": "E1", "sequenceId": 5, "released": true, "startNodeId": "N1", "endNodeId": "N1", "rotationAllowed": true, "actions": [] }
+]
+```
 
 # 8 Glossary
 
