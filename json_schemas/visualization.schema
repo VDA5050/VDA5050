@@ -56,6 +56,9 @@
                 "mapId": {
                     "type": "string"
                 },
+                "mapDescription": {
+                    "type": "string"
+                },
                 "positionInitialized": {
                     "type": "boolean",
                     "description": "True if the AGVs position is initialized, false, if position is not initizalized."
