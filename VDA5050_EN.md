@@ -1718,7 +1718,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 |&emsp;*}* | | |
 |*resultDescription* | string | Free-form text: description of the result. |
 |*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'HARD'} |
-|*atomic* | boolean | "true": action is atomic and can not be paused, "false": action is not atomic and can be paused. |
+|*atomic* | boolean | "true": action is atomic and cannot be paused, "false": action is not atomic and can be paused. |
 |*}* | | |
 
 ### agvGeometry
