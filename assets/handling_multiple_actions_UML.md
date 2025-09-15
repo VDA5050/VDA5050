@@ -6,7 +6,8 @@ skinparam dpi 400
 skinparam defaultTextAlignment center
 start
 :AGV arrives at node \nwith multiple actions;
-#lightgreen:parallel execution list = [];
+#lightgreen:empty parallel execution set;
+
 #lightgreen:iterate over action list;
 repeat
     if (action for \nparallel execution?) then (no)
