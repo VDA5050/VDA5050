@@ -1494,9 +1494,9 @@ All possible action state transitions are visualized in Figure 16 and examples a
 |---|---|---|---|---|---|---|---|
 | **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | instantActions failed to execute (unknown to mobile robot, invalid parameters) | action finishes immediately (e.g., setting a parameter) |
 | **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode, action removed after changing horizon | action succeeds instantly, e.g., after reaching node/edge |
-| **INITIALIZING** | - | - | external trigger | initialization finished, action starting | initialization failed | initialization failed, aborted via cancel, switch to manual mode | switch to manual mode |
+| **INITIALIZING** | - | - | external trigger | initialization finished, action starting | initialization failed | initialization failed, aborted via cancel, switch to manual mode | - |
 | **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
-| **RUNNING** | - | - | external trigger | - | action failed due to not returning the desired results, but being defined as retriable in order. Vehicle decides if current action is actually retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
+| **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
 | **RETRIABLE** | - | retries action with initialization via retry | - | retries action via retry, external trigger | - | finally failed via skipRetry, failed via cancelOrder, external trigger, switch to manual, | Fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
