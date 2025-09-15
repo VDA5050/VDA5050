@@ -1116,7 +1116,7 @@ finePositioning | - | On a node, AGV will position exactly on a target.<br>The A
 waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
 cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
-updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extendable enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>caDownloadLink (string, optional)<br>keyDownloadLink (string)<br>certDownloadLink (string) | - | yes | no | no |
+updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extensible enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>keyDownloadLink (string)<br>certificateDownloadLink (string)<br>certificateAuthorityDownloadLink (string, optional) | - | yes | no | no |
 
 
 ### 6.10.2 States of predefined actions
@@ -1149,7 +1149,7 @@ updateCertificate | - | Vehicle is downloading and installing certificates | - |
 
 ### 6.10.3 Update vehicle certificate
 
-For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `caDownloadLink` specifies the URL for the root certificate(s). The parameters `certDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
+For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `certificateAuthorityDownloadLink ` specifies the URL for the root certificate(s). The parameters `certificateDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
 
 It is recommended to secure the download via TLS as well, since the sender of the instantAction cannot be verified. It is also advisable to validate the certificate chain before it is activated.
 
