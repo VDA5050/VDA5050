@@ -7,7 +7,7 @@ start
 #lightgreen:Order arrives via MQTT;
 #lightgreen:Validate JSON;
 if ((1) is received order valid?) then (no)
-    #orange: reject order
+    #orange:reject order
     throw error;
     stop
 endif
