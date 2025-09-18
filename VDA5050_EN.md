@@ -1450,7 +1450,9 @@ Object structure | Unit | Data type | Description
 errorType | | string | Type/name of error
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
+***errorDescriptionTranslations[translation]*** || array of JSON object | Array of translations of the error description. 
 *errorHint* | | string | Hint on how to approach or solve the reported error.
+***errorHintTranslations[translation]*** || array of JSON object | Array of translations of the error hint. 
 errorLevel <br> }| | string | Enum {'WARNING', 'URGENT', 'CRITICAL', 'FATAL'}<br><br>'WARNING': No immediate attention required, mobile robot is able to continue active and accept new order.<br> 'URGENT': Immediate attention required, mobile robot is able to continue active and accept new order.<br> 'CRITICAL': Immediate attention required, mobile robot is unable to continue active order, but can accept new order.<br> 'FATAL': User intervention is required, mobile robot is unable to continue active or accept new order.
 
 Object structure | Unit | Data type | Description
@@ -1458,6 +1460,12 @@ Object structure | Unit | Data type | Description
 **errorReference** { | | JSON object |
 referenceKey | | string | Specifies the type of reference used (e.g., nodeId, edgeId, orderId, actionId, etc.).
 referenceValue <br>} | | string | The value that belongs to the reference key. For example, the ID of the node where the error occurred.
+
+Object structure | Unit | Data type | Description
+---|---|---|---
+**translation** { | | JSON object |
+translationKey | | string | Specifies the language of the translation according to ISO 639-1.
+translationValue <br>} | | string | Translation in language of translation key.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
