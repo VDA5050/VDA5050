@@ -1450,9 +1450,9 @@ Object structure | Unit | Data type | Description
 errorType | | string | Type/name of error
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
-***errorDescriptionTranslations[translation]*** || array of JSON object | Array of translations of the error description. 
+***errorDescriptionTranslations[translation]*** || array of JSON object | Array of translations of the error description. If a particular language is not included in the collection, the value of the errorDescription field, if present, shall be used as the default. 
 *errorHint* | | string | Hint on how to approach or solve the reported error.
-***errorHintTranslations[translation]*** || array of JSON object | Array of translations of the error hint. 
+***errorHintTranslations[translation]*** || array of JSON object | Array of translations of the error hint. If a particular language is not included in the collection, the value of the errorHint field, if present, shall be used as the default.
 errorLevel <br> }| | string | Enum {'WARNING', 'URGENT', 'CRITICAL', 'FATAL'}<br><br>'WARNING': No immediate attention required, mobile robot is able to continue active and accept new order.<br> 'URGENT': Immediate attention required, mobile robot is able to continue active and accept new order.<br> 'CRITICAL': Immediate attention required, mobile robot is unable to continue active order, but can accept new order.<br> 'FATAL': User intervention is required, mobile robot is unable to continue active or accept new order.
 
 Object structure | Unit | Data type | Description
