@@ -441,6 +441,7 @@ This means either that the AGV is already standing on the node, or that the AGV 
 Nodes and edges both have a boolean attribute `released`.
 If a node or edge is released, the AGV is expected to traverse it.
 If a node or edge is not released, the AGV shall not traverse it.
+The node with sequence Id 0 shall always be released.
 
 An edge can be released only if both the start and the end node of the edge are released.
 
