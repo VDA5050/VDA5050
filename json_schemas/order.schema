@@ -295,7 +295,19 @@
                                     "KINEMATICCENTER",
                                     "CONTOUR"
                                 ]
-                            }
+                            },
+                            "releaseRequired": {
+                                "type": "boolean",
+                                "description": "Optional flag that indicates if the robot must request approval from master control. If not defined, no release is required.",
+                            },
+                            "releaseLossBehaviour": {
+                                "type": "string",
+                                "description": "Defines how the robot shall behave in case its release of a corridor expires or gets revoked by master control.",
+                                "enum": [
+                                    'STOP' , 
+                                    'RETURN'
+                                ]
+                            },
                         }
                     },
                     "actions": {

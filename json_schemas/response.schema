@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "response",
-    "description": "Zone set detailing a dedicated map.",
+    "description": "Responses from master control to mobile robot's requests.",
     "subtopic": "/response",
     "type": "object",
     "required": [
@@ -10,7 +10,7 @@
         "version", 
         "manufacturer", 
         "serialNumber", 
-        "zoneResponses"
+        "responses"
     ],
     "properties": {
         "headerId": {
@@ -35,7 +35,7 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
-        "zoneResponses": {
+        "responses": {
             "type": "array",
             "description": "Array of zone response objects.",
             "items": {
