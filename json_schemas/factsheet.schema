@@ -698,7 +698,7 @@
                                 "properties": {
                                     "length": {
                                         "type": "number",
-                                        "description": "Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box in meters."
+                                        "description": "Absolute length (along the mobile robot’s coordinate system’s x-axis) of the load's bounding box in meters."
                                     },
                                     "width": {
                                         "type": "number",
