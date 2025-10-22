@@ -702,7 +702,7 @@
                                     },
                                     "width": {
                                         "type": "number",
-                                        "description": "Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box in meters."
+                                        "description": "Absolute width (along the mobile robot’s coordinate system’s y-axis) of the load's bounding box in meters."
                                     },
                                     "height": {
                                         "type": "number",
