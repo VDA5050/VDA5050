@@ -768,6 +768,7 @@ actionId | | string | Unique ID to identify the action and map them to the actio
 *actionDescription* | | string | Additional information on the action
 blockingType | | string | Enum {'NONE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
+*retriable* | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails. Default value if not defined "false"
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1135,6 +1136,8 @@ detectObject | - | AGV detects object (e.g., load, charging spot, free parking p
 finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
 waitForTrigger | - | Mobile robot has to wait for a trigger of the type defined in the array of strings in the triggerType parameter. Two values are predefined and shall be used if semantically appropriate: 'MASTER_CONTROL' if the trigger is expected to be sent by the master control and 'LOCAL' if the trigger is expected to be sent by an input on the vehicle (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Master control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType[string](array) | - | no | yes | no
 trigger | - | The mobile robot is notified by the master control that a waitForTrigger action has been released. The master control receives information from a third party system that the process the mobile robot was waiting for has finished. This can be used when there are several actions on a node and the vehicle should wait between the actions. | yes | - | - | yes | no | no
+retry | - | Mobile robot retries action defined via actionId that is currently in state RETRIABLE. | yes | actionId(string) | - | yes | no | no
+skipRetry | - | Mobile robot has to skip action defined via actionId that is currently in state RETRIABLE, setting action to FAILED. | yes | actionId(string) | - | yes | no | no
 cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extensible enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>keyDownloadLink (string)<br>certificateDownloadLink (string)<br>certificateAuthorityDownloadLink (string, optional) | - | yes | no | no |
@@ -1550,12 +1553,23 @@ actionStatus | Description
 'INITIALIZING' | Action was triggered, preparatory measures are initiated.
 'RUNNING' | The action is running.
 'PAUSED' | The action is paused because of a pause instantAction or external trigger (pause button on the AGV)
+'RETRIABLE' | Actions that failed, but can be retried, specified by the retriable parameter in the action of an order. Transition from this state is triggered by a retry or skipRetry instantAction or an external trigger.
 'FINISHED' | The action is finished. <br>A result is reported via the resultDescription.
 'FAILED' | Action could not be finished for whatever reason.
 
 >Table 2 The acceptable values for the actionStatus field
 
-A state transition diagram is provided in Figure 16.
+All possible action state transitions are visualized in Figure 16 and examples are given in the following matrix:
+
+
+| **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **RETRIABLE** | **FAILED** | **FINISHED** |
+|---|---|---|---|---|---|---|---|
+| **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | instantActions failed to execute (unknown to mobile robot, invalid parameters) | action finishes immediately (e.g., setting a parameter) |
+| **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode, action removed after changing horizon | action succeeds instantly, e.g., after reaching node/edge |
+| **INITIALIZING** | - | - | external trigger | initialization finished, action starting | initialization failed | initialization failed, aborted via cancel, switch to manual mode | - |
+| **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
+| **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
+| **RETRIABLE** | - | retries action with initialization via retry | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
