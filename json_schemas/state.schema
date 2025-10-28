@@ -644,16 +644,15 @@
         "safetyState": {
             "type": "object",
             "required": [
-                "eStop",
+                "activeEmergencyStop",
                 "fieldViolation"
             ],
             "description": "Contains all safety-related information.",
             "properties": {
-                "eStop": {
+                "activeEmergencyStop": {
                     "type": "string",
-                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
-                        "AUTOACK",
                         "MANUAL",
                         "REMOTE",
                         "NONE"
