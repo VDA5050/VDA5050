@@ -485,45 +485,21 @@
             "type": "array",
             "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
             "items": {
-                "type": "object",
-                "required": [
-                    "actionId",
-                    "actionStatus"
-                ],
-                "title": "actionState",
-                "properties": {
-                    "actionId": {
-                        "type": "string",
-                        "description": "Unique actionId",
-                        "examples": [
-                            "blink_123jdaimoim234"
-                        ]
-                    },
-                    "actionType": {
-                        "type": "string",
-                        "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
-                    },
-                    "actionDescription": {
-                        "type": "string",
-                        "description": "Additional information on the current action."
-                    },
-                    "actionStatus": {
-                        "type": "string",
-                        "description": "WAITING: waiting for the trigger (passing the mode, entering the edge) PAUSED: paused by instantAction or external trigger FAILED: action could not be performed.",
-                        "enum": [
-                            "WAITING",
-                            "INITIALIZING",
-                            "RUNNING",
-                            "PAUSED",
-                            "FINISHED",
-                            "FAILED"
-                        ]
-                    },
-                    "resultDescription": {
-                        "type": "string",
-                        "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
-                    }
-                }
+                "$ref": "#/definitions/actionState"     
+            }
+        },
+        "instantActionStates": {
+            "type": "array",
+            "description": "Contains an array of all instant action states that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
+            }
+        },
+        "zoneActionStates": {
+            "type": "array",
+            "description": "Contains an array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
             }
         },
         "batteryState": {
@@ -741,6 +717,47 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "actionState": {
+            "type": "object",
+            "required": [
+                "actionId",
+                "actionStatus"
+            ],
+            "title": "actionState",
+            "properties": {
+                "actionId": {
+                    "type": "string",
+                    "description": "Unique actionId",
+                    "examples": [
+                        "blink_123jdaimoim234"
+                    ]
+                },
+                "actionType": {
+                    "type": "string",
+                    "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
+                },
+                "actionDescription": {
+                    "type": "string",
+                    "description": "Additional information on the current action."
+                },
+                "actionStatus": {
+                    "type": "string",
+                    "description": "WAITING: waiting for the trigger (passing the mode, entering the edge) PAUSED: paused by instantAction or external trigger FAILED: action could not be performed.",
+                    "enum": [
+                        "WAITING",
+                        "INITIALIZING",
+                        "RUNNING",
+                        "PAUSED",
+                        "FINISHED",
+                        "FAILED"
+                    ]
+                },
+                "resultDescription": {
+                    "type": "string",
+                    "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
                 }
             }
         }
