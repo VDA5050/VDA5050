@@ -1484,7 +1484,7 @@ referenceValue <br>} | | string | References the value, which belongs to the ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **safetyState** { | | JSON object |
-activeEmergenceStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of activeEmergenceStop:'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
+activeEmergenceStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>EmergenceStopTypes <br> :'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
 fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or bumber).<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
