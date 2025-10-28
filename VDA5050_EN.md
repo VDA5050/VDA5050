@@ -685,7 +685,6 @@ In these cases the vehicle has to clear the order which means that similar to a 
 
 As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACHIN' is reported.
 
-<Sequence diagram>
 
 ### 6.6.5 Corridors
 
