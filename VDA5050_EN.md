@@ -1529,7 +1529,7 @@ SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACHIN | NO | YES | YES | YES | YES | NO | NO
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
-
+> Table 2:  Overview of operating modes and their allowed interactions between mobile robot and master control.
 
 ## 6.13 Action states
 
