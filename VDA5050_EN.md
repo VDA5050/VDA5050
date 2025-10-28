@@ -1192,7 +1192,6 @@ Events that trigger the transmission of the state message are:
 - Receiving an order update
 - Changes in the load status
 - Errors or warnings
-- Driving over a node
 - Switching the operating mode
 - Change in the `driving` field
 - Change in the `paused` field
@@ -1201,13 +1200,13 @@ Events that trigger the transmission of the state message are:
 - Change in the `lastNodeSequenceId` field
 - Change in the `zoneRequests` field
 - Change in the `batteryState.charging` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates`
+- Change in the `nodeStates`, `edgeStates` or `actionStates`  object
 - Change in the `zoneSets` object
 - Change in the `maps` field
 
 
 There should be an effort to curb the amount of communication.
-If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
+If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple. The minimal time between two consecutive state messages is defined by the factsheet ([6.17 Topic "factsheet"](#617-topic-factsheet) protocolLimits.timing.minStateInterval) . 
 
 
 ### 6.12.1 Concept and logic
