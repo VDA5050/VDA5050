@@ -1192,7 +1192,7 @@ Events that trigger the transmission of the state message are:
 - Receiving an order update
 - Changes in the load status
 - Change in the `errors` array
-- Switching the operating mode
+- Change in the `operatingMode` field
 - Change in the `driving` field
 - Change in the `paused` field
 - Change in the `safetyState` object
