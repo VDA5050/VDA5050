@@ -1296,7 +1296,34 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
-### 6.12.6 Implementation of the state message
+### 6.12.6 Operating Mode
+For regular order execution, master control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
+
+The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and master control:
+
+Operating Mode | Description
+---|---
+STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
+AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle moves and executes actions based on orders from the master control.
+SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle moves and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
+INTERVENED | Master control is not in control of the vehicle. The mobile robot is reporting its state correctly.<br>Master control is allowed to send orders or order updates to the vehicle to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Master control shall not send any instant action except `cancelOrder`.<br>The vehicle shall not clear the order but shall remove all zone requests from the state, also if the vehicle is already inside a 'RELEASE' zone. (*Remark: If necessary, the master control can continue to track the position of the vehicle and decide whether clearance for other vehicles is possible.*) The vehicle shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the vehicle shall reflect this in the state message accordingly.<br>If the vehicle leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the vehicle leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the vehicle shall continue executing any current order. If the vehicle detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the vehicle shall switch into operating mode 'MANUAL' and act accordingly.
+MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>HMI can be used to control the steering, velocity and handling devices of the vehicle.<br>The position of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the vehicle detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
+SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
+TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by an operator.
+
+
+Operating Mode | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
+--- | --- | --- | --- | --- | --- | --- | ---
+AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
+SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
+MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
+SERVICE | NO | YES | YES | YES | YES | NO | NO
+TEACHIN | NO | YES | YES | YES | YES | NO | NO
+STARTUP | NO | NO | YES | YES | YES | NO | NO
+INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
+
+
+### 6.12.7 Implementation of the state message
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1519,32 +1546,6 @@ Object structure | Unit | Data type | Description
 **safetyState** { | | JSON object |
 eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of eStop:<br>'AUTOACK': auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
-
-#### Operating Mode
-For regular order execution, master control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
-
-The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and master control:
-
-Operating Mode | Description
----|---
-STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
-AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle moves and executes actions based on orders from the master control.
-SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle moves and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
-INTERVENED | Master control is not in control of the vehicle. The mobile robot is reporting its state correctly.<br>Master control is allowed to send orders or order updates to the vehicle to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Master control shall not send any instant action except `cancelOrder`.<br>The vehicle shall not clear the order but shall remove all zone requests from the state, also if the vehicle is already inside a 'RELEASE' zone. (*Remark: If necessary, the master control can continue to track the position of the vehicle and decide whether clearance for other vehicles is possible.*) The vehicle shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the vehicle shall reflect this in the state message accordingly.<br>If the vehicle leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the vehicle leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the vehicle shall continue executing any current order. If the vehicle detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the vehicle shall switch into operating mode 'MANUAL' and act accordingly.
-MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>HMI can be used to control the steering, velocity and handling devices of the vehicle.<br>The position of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the vehicle detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
-SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
-TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by an operator.
-
-
-Operating Mode | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
---- | --- | --- | --- | --- | --- | --- | ---
-AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
-SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
-MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
-SERVICE | NO | YES | YES | YES | YES | NO | NO
-TEACHIN | NO | YES | YES | YES | YES | NO | NO
-STARTUP | NO | NO | YES | YES | YES | NO | NO
-INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
 
 
 ## 6.13 Action states
