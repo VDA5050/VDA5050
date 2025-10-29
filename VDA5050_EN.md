@@ -1200,7 +1200,7 @@ Events that trigger the transmission of the state message are:
 - Change in the `lastNodeSequenceId` field
 - Change in the `zoneRequests` field
 - Change in the `batteryState.charging` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates`  object
+- Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
 - Change in the `zoneSets` object
 - Change in the `maps` field
 
