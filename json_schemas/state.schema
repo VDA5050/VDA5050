@@ -153,8 +153,10 @@
             "type": "string",
             "description": "Current operating mode of the AGV.",
             "enum": [
+                "STARTUP",
                 "AUTOMATIC",
                 "SEMIAUTOMATIC",
+                "INTERVENED",
                 "MANUAL",
                 "SERVICE",
                 "TEACHIN"
