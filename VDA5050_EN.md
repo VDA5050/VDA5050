@@ -57,13 +57,13 @@ Version 3.0.0
 [6.1 Symbols of the tables and meaning of formatting](#61-symbols-of-the-tables-and-meaning-of-formatting)<br>
 [6.1.1 Optional fields](#611-optional-fields)<br>
 [6.1.2 Permitted characters and field lengths](#612-permitted-characters-and-field-lengths)<br>
-[6.1.3 Notation of enumerations](#613-notation-of-enumerations) <br>
+[6.1.3 Notation of fields, topics and enumerations](#613-notation-of-fields-topics-and-enumerations) <br>
 [6.1.4 JSON data types](#614-json-data-types)<br>
 [6.2 MQTT connection handling, security and QoS](#62-mqtt-connection-handling-security-and-qos)<br>
 [6.3 MQTT topic levels](#63-mqtt-topic-levels)<br>
 [6.4 Protocol header](#64-protocol-header)<br>
 [6.5 Topics for communication](#65-topics-for-communication)<br>
-[6.6 Topic: "order" (from master control to AGV)](#66-topic-orderfrom-master-control-to-agv)<br>
+[6.6 Topic: "order" (from master control to AGV)](#66-topic-order-from-master-control-to-agv)<br>
 [6.6.1 Concept and logic](#661-concept-and-logic)<br>
 [6.6.2 Orders and order updates](#662-orders-and-order-update)<br>
 [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control)<br>
@@ -1355,7 +1355,7 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 **instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed.
 **zoneActionStates [actionState]** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed.
 **batteryState** | | JSON object | Contains all battery-related information.
-operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6127-operating mode).
+operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6126-operating mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
 ***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in master control.
 **safetyState** | | JSON object | Contains all safety-related information.
