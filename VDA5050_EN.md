@@ -422,7 +422,7 @@ The order of the nodes and edges within those lists also governs in which sequen
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
 The first node of an order shall be trivially reachable for the AGV.
-This means either that the AGV is already standing on the node, or that the AGV is in the node's deviation range.
+This means either that the AGV is already standing on the node, or that the AGV is in the node's deviation range. As such, the first node will not be reported in the `nodeStates`.
 
 Nodes and edges both have a boolean attribute `released`.
 If a node or edge is released, the AGV is expected to traverse it.
