@@ -1213,11 +1213,11 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still s
 ### 6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions
 
 The AGV decides on its own, when a node should count as traversed.
-As a decision support, the AGV's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
-The allowedDeviationXY parameter enables the vehicle to drive through the node along a smoother path rather than reaching the node's exact position.
+A requirement for the traversal is that the mobile robot's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
+The allowedDeviationXY parameter enables the vehicle to logically traverse a node along a potentially smoother path rather than reaching the node's exact position.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
-For the first node of an order after a previous order was cancelled, the first node can have an extended allowedDeviation to include the vehicles current position.
+For the first node of an order after a previous order was cancelled, the first node can have an extended allowed deviation to include the vehicles current position.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
 
