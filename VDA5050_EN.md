@@ -1202,7 +1202,7 @@ Events that trigger the transmission of the state message are:
 - Change in the `batteryState.charging` field
 - Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
 - Change in the `zoneSets` array
-- Change in the `maps` field
+- Change in the `maps` array
 
 
 There should be an effort to curb the amount of communication.
