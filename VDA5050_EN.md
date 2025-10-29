@@ -1265,7 +1265,7 @@ The edge shall then also be removed from the `edgeStates` and the actions that w
 
 The traversal of the node also marks the moment when the AGV enters the following edge, if there is one.
 The edge's actions shall be triggered, if any.
-An exception to this rule is if the AGV must pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV enters the edge after it begins moving again.
+An exception to this rule is if the AGV must pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV only enters the following edge once it begins driving again.
 
 ![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
