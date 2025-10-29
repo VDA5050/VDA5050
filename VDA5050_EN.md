@@ -1197,7 +1197,7 @@ Events that trigger the transmission of the state message are:
 - Change in the `paused` field
 - Change in the `safetyState` object
 - Change in the `newBaseRequest` field
-- Change in the `lastNodeSequenceId` field
+- Change in the `lastNodeId` or `lastNodeSequenceId` field
 - Change in the `zoneRequests` field
 - Change in the `batteryState.charging` field
 - Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
