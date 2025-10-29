@@ -1251,20 +1251,21 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still s
 
 ### 6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions
 
-The AGV decides on its own, when a node should count as traversed.
-Generally, the AGV's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
-If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
+The AGV itself decides when a node shall count as traversed.
+Generally, the AGV's control point should reach the node's position, or fall within the node's `allowedDeviationXY`, if defined.
+If a node has `orientation` or `allowedDeviationTheta` defined, this shall also be taken into account.
+If the edge attribute `corridor` of the subsequent edge is set, these boundaries should additionally be met.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
 
 As soon as the AGV reports the node as traversed, the AGV shall trigger the actions associated with the node, if any.
 
-The traversal of a node also marks the leaving of the edge leading up to the node.
-The edge shall then be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
+The traversal of a node also necessarily means the leaving of the edge leading up to the node.
+The edge shall then also be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
 
-The traversal of the node also marks the moment, when the AGV enters the following edge, if there is one.
-The edge's actions shall now be triggered.
-An exception to this rule is, if the AGV has to pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV enters the edge after it begins moving again.
+The traversal of the node also marks the moment when the AGV enters the following edge, if there is one.
+The edge's actions shall be triggered, if any.
+An exception to this rule is if the AGV must pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV enters the edge after it begins moving again.
 
 ![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
@@ -1272,15 +1273,15 @@ An exception to this rule is, if the AGV has to pause on the node (because of a 
 
 ### 6.12.3 Base request
 
-If the AGV detects that its base is running low, it can set the `newBaseRequest` flag to "true" to prevent unnecessary braking.
+If the AGV detects that its base is running short, it can set the `newBaseRequest` flag to "true" to attempt to prevent unnecessary braking.
 
 
 ### 6.12.4 Information
 
-The AGV can submit arbitrary additional information to master control via the `information` array.
-It is up to the AGV how long it reports information via an information message.
+The AGV can submit arbitrary additional information to the master control via the `information` array.
+It is up to the AGV to decide how long it reports information via an information message.
 
-Master control shall not use the info messages for logic, it shall only be used for visualization and debugging purposes.
+The master control shall not use the info messages for logic; they shall only be used for visualization and debugging purposes.
 
 
 ### 6.12.5 Errors
