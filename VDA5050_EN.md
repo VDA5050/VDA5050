@@ -1223,15 +1223,22 @@ Events that trigger the transmission of the state message are:
 - Receiving an order
 - Receiving an order update
 - Changes in the load status
-- Errors or warnings
-- Driving over a node
-- Switching the operating mode
+- Change in the `errors` array
+- Change in the `operatingMode` field
 - Change in the `driving` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates`
-- Change in the `maps` field
+- Change in the `paused` field
+- Change in the `safetyState` object
+- Change in the `newBaseRequest` field
+- Change in the `lastNodeId` or `lastNodeSequenceId` field
+- Change in the `zoneRequests` field
+- Change in the `batteryState.charging` field
+- Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
+- Change in the `zoneSets` array
+- Change in the `maps` array
+
 
 There should be an effort to curb the amount of communication.
-If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
+If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple. The minimum time between two consecutive state messages is defined by the factsheet ([6.17 Topic "factsheet"](#617-topic-factsheet) protocolLimits.timing.minStateInterval) . 
 
 
 ### 6.12.1 Concept and logic
@@ -1306,7 +1313,7 @@ version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
 *maps[map]* | | array | Array of map objects that are currently stored on the vehicle.
-***ZoneSets[ZoneSet]*** | | Array of ZoneSet | Array of ZoneSet objects that are currently stored on the vehicle.
+***zoneSets[zoneSet]*** | | Array of zoneSet | Array of zoneSet objects that are currently stored on the vehicle.
 orderId| | string | Unique order identification of the current order or the previously finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available.
 orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the AGV. <br>"0" if no previous orderUpdateId is available.
 lastNodeId | | string | Node ID of last reached node or, if the AGV is currently on a node, current node (e.g., "node7"). Empty string (""), if no `lastNodeId` is available.
@@ -1341,7 +1348,7 @@ mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**ZoneSet**{ | | JSON object|
+**zoneSet**{ | | JSON object|
 zoneSetId | | string | Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map.
 mapId | | string | Identifier of the corresponding map.
 zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED.<br>DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.
