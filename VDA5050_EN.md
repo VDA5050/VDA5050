@@ -1520,8 +1520,10 @@ Object structure | Unit | Data type | Description
 eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of eStop:<br>'AUTOACK': auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
 fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
 
-#### Operating Mode Description
-The following list describes the possible values of the field `operatingMode` in the state message.
+#### Operating Mode
+For regular order execution, master control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
+
+The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and master control:
 
 Operating Mode | Description
 ---|---
@@ -1532,7 +1534,7 @@ INTERVENED | Master control is not in control of the vehicle. The mobile robot i
 MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>HMI can be used to control the steering, velocity and handling devices of the vehicle.<br>The position of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the vehicle detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
 SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
 TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears any current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by an operator.
-> Table 1: Operating modes and their meaning
+
 
 Operating Mode | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
@@ -1543,7 +1545,7 @@ SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACHIN | NO | YES | YES | YES | YES | NO | NO
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
-> Table 2: Operating modes and their allowed interactions between mobile robot and master control
+
 
 ## 6.13 Action states
 
