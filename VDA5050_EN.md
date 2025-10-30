@@ -189,10 +189,16 @@ Participants in the MQTT network subscribe to these topics and receive informati
 The JSON structure allows for a future extension of the protocol with additional parameters.
 The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
 
-# 4.1 Terminology and Definitions
+## 4.1 Terminology and Definitions
 
 To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
 
+Term | Definition
+---|---
+Movement | Any change in the spatial position or orientation of the vehicle or its components. This includes the motion of wheels, load handling devices, or the vehicle body.
+Driving | The vehicle is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
+Automatic Driving | The vehicle is driving without human intervention.
+Manual Driving | The vehicle is driving with human intervention.
 
 
 # 5 Process and content of communication
@@ -213,7 +219,8 @@ During the implementation phase, the driverless transport systems (DTS) consisti
 The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the master control by importing from other systems.
 Essentially, this concerns the following content:
 
-- Definition of routes: Using CAD import, routes can be imported to the master control.
+- Definition of routes:
+Using the Layout Interchange Format (LIF), routes can be imported to the master control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system (see section 3.1).
 Alternatively, routes can also be implemented manually in the master control by the operator.
 Routes can be one-way streets, restricted for certain vehicle groups (based on the size ratios), etc.
 - Route network configuration:
@@ -402,7 +409,7 @@ The AGV protocol uses the following topics for information exchange between mast
 
 Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 ---|---|---|---|---|---
-order | master control | AGV | Communication of driving orders from master control to the AGV | mandatory | order.schema
+order | master control | AGV | Communication of orders from master control to the mobile robot | mandatory | order.schema
 instantActions | master control | AGV | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | AGV | master control | Communication of the AGV state | mandatory | state.schema
 visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
@@ -441,6 +448,7 @@ This means either that the AGV is already standing on the node, or that the AGV 
 Nodes and edges both have a boolean attribute `released`.
 If a node or edge is released, the AGV is expected to traverse it.
 If a node or edge is not released, the AGV shall not traverse it.
+The node with `sequenceId` 0 shall always be released.
 
 An edge can be released only if both the start and the end node of the edge are released.
 
@@ -586,8 +594,8 @@ A mobile robot is idle if its nodeStates and edgeStates are empty and all action
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
 MC can optionally pass an `orderId` to reference which order it wants to cancel.
-
-After receiving the instantAction `cancelOrder`, the vehicle stops (based on its capabilities, e.g., right where it is or on the next node).
+After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
+A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position and not only on the next node.
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
@@ -667,6 +675,24 @@ Resolution:
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
+
+#### 6.6.4.4 Clearing the order
+
+In response to one of the following events, not triggered by Master Control, the vehicle has to stop executing the current order:
+
+- The vehicle is changing the operating mode to 'MANUAL', 'SERVICE' or 'TEACHIN' (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message)).
+- The vehicle cannot determine its position anymore.
+
+In these cases the vehicle has to clear the order which means that similar to a cancellation:
+
+- If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
+- If there are running actions, those actions should also be cancelled and be reported as 'FAILED'.
+- If an action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+- The `orderId`, `orderUpdateId` are kept. `nodeStates` and `edgeStates` are emptied.
+- The vehicle shall remove all zone requests from the state.
+
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACHIN' is reported.
+
 
 ### 6.6.5 Corridors
 
@@ -749,6 +775,7 @@ actionId | | string | Unique ID to identify the action and map them to the actio
 *actionDescription* | | string | Additional information on the action
 blockingType | | string | Enum {'NONE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
+*retriable* | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails. Default value if not defined "false"
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -762,10 +789,10 @@ endNodeId | | string | nodeId of the last node within the order.
 *maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
 *maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
 *minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
-*orientation* | rad | float64 | Orientation of the AGV on the edge. The value `orientationType` defines if it has to be interpreted relative to the global project-specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, rotate the vehicle on the edge to the desired orientation, if `rotationAllowed` is set to "true".<br>If `rotationAllowed` is "false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory.
-*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system;<br>'TANGENTIAL': tangential to the edge.<br><br>If not defined, the default value is 'TANGENTIAL'.
+*orientation* | rad | float64 | Orientation of the AGV on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the vehicle on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.
+*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional vehicles.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional vehicle, any orientation is possible, for differential drive vehicles, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>If not defined, the default value is 'TANGENTIAL'.
 *direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: "left", "right", "straight".
-*rotationAllowed* | | boolean | "true": rotation is allowed on the edge.<br>"false": rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
+*reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional vehicles. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Vehicle can rotate into the desired orientation on the edge.<br>Default: "false".
 *maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
@@ -1018,7 +1045,7 @@ When receiving a response with `responseType` 'REVOKED', the vehicle shall set t
 The interaction between the mobile robot and the master control for 'COORDINATED_REPLANNING' zones shall be according to figure x4.
 
 The vehicle shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
-When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop its movement and report a warning. To continue, the vehicle shall state a new request.
+When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop driving and report a warning. To continue, the vehicle shall state a new request.
 
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
 >Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.
@@ -1098,7 +1125,7 @@ action, counter action, description, idempotent, parameters | linked state | ins
 
 action | counter action | description | idempotent | parameters | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
-startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many AGVs can be paused by using a hardware switch. <br>No more AGV driving movements - reaching next node is not necessary.<br>Actions can continue. <br>Order is resumable. | yes | - | paused | yes | no | no
+startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Running atomic actions continue. Actions that can be paused, shall be paused. Order execution is resumed after stopPause. | yes | - | paused | yes | no | no
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Deactivates the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle / charging station, e.g., if the battery is full. <br>Battery state is only allowed to be "false", when the AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
@@ -1106,14 +1133,18 @@ initPosition | - | Resets (overrides) the pose of the AGV with the given paramet
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
 downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
-clearInstantActions | - | Removes all finished or failed instant actions states from the mobile robots. | yes | - | .instantActions | yes | yes | no
+clearInstantActions | - | Removes all finished or failed instant actions from the mobile robot state. | yes | - | .instantActions | yes | yes | no
+clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot state. | yes | - | .instantActions | yes | yes | no
 stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no
 logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no
 pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string, optional)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
 drop | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
 detectObject | - | AGV detects object (e.g., load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes
 finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
-waitForTrigger | - | AGV has to wait for a trigger on the AGV (e.g., button press, manual loading). <br>Master control is responsible to handle the timeout and has to cancel the order if necessary. | yes | triggerType(string) | - | no | yes | no
+waitForTrigger | - | Mobile robot has to wait for a trigger of the type defined in the array of strings in the triggerType parameter. Two values are predefined and shall be used if semantically appropriate: 'MASTER_CONTROL' if the trigger is expected to be sent by the master control and 'LOCAL' if the trigger is expected to be sent by an input on the vehicle (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Master control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType[string](array) | - | no | yes | no
+trigger | - | The mobile robot is notified by the master control that a waitForTrigger action has been released. The master control receives information from a third party system that the process the mobile robot was waiting for has finished. This can be used when there are several actions on a node and the vehicle should wait between the actions. | yes | - | - | yes | no | no
+retry | - | Mobile robot retries action defined via actionId that is currently in state RETRIABLE. | yes | actionId(string) | - | yes | no | no
+skipRetry | - | Mobile robot has to skip action defined via actionId that is currently in state RETRIABLE, setting action to FAILED. | yes | actionId(string) | - | yes | no | no
 cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
 factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
 updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extensible enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>keyDownloadLink (string)<br>certificateDownloadLink (string)<br>certificateAuthorityDownloadLink (string, optional) | - | yes | no | no |
@@ -1136,6 +1167,7 @@ initPosition | - | Initializing of the new pose in progress (confidence checks, 
 | enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
 | deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
 | clearInstantActions | - | | - | The instant actions array has been cleaned from all FINISHED or FAILED instantActions. | -
+| clearZoneActions | - | | - | The zone actions array has been cleaned from all FINISHED or FAILED instantActions. | -
 stateRequest | - | - | - | The state has been communicated | -
 logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
 pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
@@ -1191,15 +1223,22 @@ Events that trigger the transmission of the state message are:
 - Receiving an order
 - Receiving an order update
 - Changes in the load status
-- Errors or warnings
-- Driving over a node
-- Switching the operating mode
+- Change in the `errors` array
+- Change in the `operatingMode` field
 - Change in the `driving` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates`
-- Change in the `maps` field
+- Change in the `paused` field
+- Change in the `safetyState` object
+- Change in the `newBaseRequest` field
+- Change in the `lastNodeId` or `lastNodeSequenceId` field
+- Change in the `zoneRequests` field
+- Change in the `batteryState.charging` field
+- Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
+- Change in the `zoneSets` array
+- Change in the `maps` array
+
 
 There should be an effort to curb the amount of communication.
-If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple.
+If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple. The minimum time between two consecutive state messages is defined by the factsheet ([6.17 Topic "factsheet"](#617-topic-factsheet) protocolLimits.timing.minStateInterval) . 
 
 
 ### 6.12.1 Concept and logic
@@ -1274,11 +1313,11 @@ version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.
 manufacturer | | string | Manufacturer of the AGV.
 serialNumber | | string | Serial number of the AGV.
 *maps[map]* | | array | Array of map objects that are currently stored on the vehicle.
-***ZoneSets[ZoneSet]*** | | Array of ZoneSet | Array of ZoneSet objects that are currently stored on the vehicle.
+***zoneSets[zoneSet]*** | | Array of zoneSet | Array of zoneSet objects that are currently stored on the vehicle.
 orderId| | string | Unique order identification of the current order or the previously finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available.
 orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the AGV. <br>"0" if no previous orderUpdateId is available.
 lastNodeId | | string | Node ID of last reached node or, if the AGV is currently on a node, current node (e.g., "node7"). Empty string (""), if no `lastNodeId` is available.
-lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the AGV is currently on a node, Sequence ID of current node. <br>"0" if no `lastNodeSequenceId` is available.
+lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the AGV is currently on a node, Sequence ID of current node. <br>This value is only valid if `lastNodeId` is not an empty string (\"\"). If `lastNodeId` is an empty string (\"\"), the value of `lastNodeSequenceId` can be arbitrary and shall be ignored.
 **nodeStates [nodeState]** | |array | Array of nodeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 **edgeStates [edgeState]** | |array | Array of edgeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 ***plannedPath*** | | JSON object |  Represents a path within the robot's currently active order as NURBS.
@@ -1286,13 +1325,14 @@ lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the 
 ***agvPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional: Can only be omitted for AGVs without the capability to localize themselves, e.g., line-guided AGVs.
 ***velocity*** | | JSON object | The AGV velocity in vehicle coordinates.
 ***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If the AGV cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
-driving | | boolean | "true": indicates, that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.<br>"false": indicates that the AGV is neither driving nor rotating.
+driving | | boolean | "true": indicates, that the mobile robot is driving (manual or automatic). Other movements (e.g., lift movements) are not included here.<br>"false": indicates that the mobile robot is not driving.
 *paused* | | boolean | "true": the AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>"false": the AGV is currently not in a paused state.
 *newBaseRequest* | | boolean | "true": the AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>"false": no base update required.
 ***zoneRequests [zoneRequest]*** | | array | Array of zoneRequest objects that are currently active on the AGV. <br>Empty array if no zone requests are active.
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
-**instantActionStates [actionState]** | | array | Contains an array of all instant action states that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.
+**instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed.
+**zoneActionStates [actionState]** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {'AUTOMATIC', 'SEMIAUTOMATIC', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table 1 in Section [6.12.6 Implementation of the state message](#6126-implementation-of-the-state-message).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
@@ -1308,7 +1348,7 @@ mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**ZoneSet**{ | | JSON object|
+**zoneSet**{ | | JSON object|
 zoneSetId | | string | Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map.
 mapId | | string | Identifier of the corresponding map.
 zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED.<br>DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.
@@ -1488,19 +1528,30 @@ activeEmergencyStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>Emerge
 fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or bumber).<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
-The following description lists the operatingMode of the topic "state".
+The following description lists the possible values of the field `operatingMode` in the "state" message".
 
 Identifier | Description
 ---|---
 STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
-AUTOMATIC | AGV is under full control of the master control. <br>AGV drives and executes actions based on orders from the master control.
-SEMIAUTOMATIC | AGV is under control of the master control.<br> AGV drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control (non-safe HMI possible).
-MANUAL | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>HMI can be used to control the steering and velocity and handling device of the AGV. <br>Location of the AGV is sent to the master control. <br>When the AGV enters or leaves this mode, it immediately clears all the orders (safe HMI required).
-SERVICE | Master control is not in control of the AGV. <br>Master control doesn't send driving order or actions to the AGV. <br>Authorized personnel can reconfigure the AGV.
-TEACHIN | Master control is not in control of the AGV. <br>Supervisor doesn't send driving order or actions to the AGV. <br>The AGV is being taught, e.g., mapping is done by a master control.
+AUTOMATIC | Vehicle is under full control of the master control. <br>Vehicle drives and executes actions based on orders from the master control.
+SEMIAUTOMATIC | Vehicle is under control of the master control.<br> Vehicle drives and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
+INTERVENED | Master control is not in control of the vehicle, the mobile robot is reporting its state correctly.<br>Master control is allowed to send driving orders or order updates to the vehicle to be executed after changing back into operating mode `AUTOMATIC` or `SEMI-AUTOMATIC`. Master control shall not send any instant action except `cancelOrder`.<br>The vehicle shall not clear the order but shall remove all zone requests from the state, also if the vehicle is already inside a `RELEASE` zone. (*Remark: If necessary, the master control can continue to track the position of the vehicle and decide whether clearance for other vehicles is possible.*) The vehicle shall not request any permissions to enter a `RELEASE` zone or for replanning inside a `COORDINATED_REPLANING` zone.<br>If entering operating mode `INTERVENED` has any impact on running actions the vehicle shall reflect this in the state message accordingly.<br>If the vehicle leaves this operating mode and doesn't directly switch into `AUTOMATIC` or `SEMI-AUTOMATIC` mode it shall act according to new operating mode. If the vehicle leaves this operating mode and switches directly into `AUTOMATIC` or `SEMI-AUTOMATIC` mode the vehicle shall continue executing the current order. If the vehicle detects during operating mode `INTERVENED` that a continuation is not possible the vehicle shall switch into operating mode `MANUAL` and act accordingly.
+MANUAL | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>HMI can be used to control the steering and velocity and handling device of the vehicle.<br>Location of the vehicle is sent to the master control.<br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>If, while being in this mode, the vehicle detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
+SERVICE | Master control is not in control of the vehicle. <br>Master control shall not send driving orders or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the vehicle.
+TEACHIN | Master control is not in control of the vehicle. <br>Master control shall not send driving order or actions to the vehicle. <br>When the vehicle enters or leaves this mode, it immediately clears the current order.<br>The vehicle shall set `lastNodeId` to an empty string ("").<br>The vehicle is being taught, e.g., mapping is done by a master control.
 
 >Table 1 The operating modes and their meaning
 
+STATE | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
+--- | --- | --- | --- | --- | --- | --- | ---
+AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
+SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
+MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
+SERVICE | NO | YES | YES | YES | YES | NO | NO
+TEACHIN | NO | YES | YES | YES | YES | NO | NO
+STARTUP | NO | NO | YES | YES | YES | NO | NO
+INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
+> Table 2:  Overview of operating modes and their allowed interactions between mobile robot and master control.
 
 ## 6.13 Action states
 
@@ -1516,12 +1567,23 @@ actionStatus | Description
 'INITIALIZING' | Action was triggered, preparatory measures are initiated.
 'RUNNING' | The action is running.
 'PAUSED' | The action is paused because of a pause instantAction or external trigger (pause button on the AGV)
+'RETRIABLE' | Actions that failed, but can be retried, specified by the retriable parameter in the action of an order. Transition from this state is triggered by a retry or skipRetry instantAction or an external trigger.
 'FINISHED' | The action is finished. <br>A result is reported via the resultDescription.
 'FAILED' | Action could not be finished for whatever reason.
 
 >Table 2 The acceptable values for the actionStatus field
 
-A state transition diagram is provided in Figure 16.
+All possible action state transitions are visualized in Figure 16 and examples are given in the following matrix:
+
+
+| **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **RETRIABLE** | **FAILED** | **FINISHED** |
+|---|---|---|---|---|---|---|---|
+| **Initial state** | Queued for later execution | starts initialization immediately (e.g., instantAction) | - | starts immediately (e.g., instantAction) | - | instantActions failed to execute (unknown to mobile robot, invalid parameters) | action finishes immediately (e.g., setting a parameter) |
+| **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode, action removed after changing horizon | action succeeds instantly, e.g., after reaching node/edge |
+| **INITIALIZING** | - | - | external trigger | initialization finished, action starting | initialization failed | initialization failed, aborted via cancel, switch to manual mode | - |
+| **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
+| **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
+| **RETRIABLE** | - | retries action with initialization via retry | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
@@ -1642,7 +1704,7 @@ This JSON object describes general properties of the AGV type.
 |---|---|---|
 | seriesName | string | Free text generalized series name as specified by manufacturer. |
 | *seriesDescription* | string | Free text human-readable description of the AGV type series. |
-| agvKinematic | string | Simplified description of the AGV kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omni-directional vehicle,<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics. |
+| agvKinematic | string | Simplified description of the AGV kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omnidirectional vehicle,<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics. |
 | agvClass | string | Simplified description of the AGV class.<br/>[FORKLIFT, CONVEYOR, TUGGER, CARRIER]<br/>FORKLIFT: forklift,<br/>CONVEYOR: AGV with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
 | maxLoadMass | float64 | [kg], Maximum loadable mass. |
 | localizationTypes | array of string | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks,<br/>REFLECTOR: laser reflectors,<br/>RFID: RFID tags,<br/>DMC: data matrix code,<br/>SPOT: magnetic spots,<br/>GRID: magnetic grid.<br/>
