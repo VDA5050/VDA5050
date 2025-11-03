@@ -1914,11 +1914,11 @@ If an action cannot be completed because of external factors (e.g., no load at e
 
 Parameters for errors, information and actions are designed as an array of JSON objects with key-value pairs.
 
-| **Field** | **data type** | **description** |
-|---|---|---|
-**actionParameter** { | JSON object | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers.
-key | string | The key of the parameter.
-value</br>} | One of:</br>array,</br>boolean,</br>number,</br>string,</br>object | The value of the parameter that belongs to the key.
+| **Field**             | **data type**                                                                              | **description**                                                                      |
+|-----------------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| **actionParameter** { | JSON object                                                                                | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers. |
+| key                   | string                                                                                     | The key of the parameter.                                                            |
+| value</br>}           | One of:</br>array,</br>boolean,</br>number,</br>integer,</br>float,</br>string,</br>object | The value of the parameter that belongs to the key.                                  |
 
 Examples for the `actionParameter` of an action "someAction" with key-value pairs for stationType and loadType:
 
