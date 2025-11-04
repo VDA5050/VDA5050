@@ -674,7 +674,7 @@ This might happen, if the master control resends the order because the state mes
 ### 6.6.5 Corridors
 
 The optional `corridor` edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
-To use the `corridor` attribute, a predefined trajectory is required that the vehicle would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the vehicle known to the master control or the trajectory sent in an order. The behavior of a vehicle using the `corridor` attribute is still the behavior of a line-guided vehicle, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles. Note that a corridor communicated within an order is released for the mobile robot per default. If the releaseRequired flag is set to true, the robot must request approval by master control before using the corridor as described in chapter [6.12.4 Requesting obstacle avoidance](#6124-obstacle-avoidance-request).
+To use the `corridor` attribute, a predefined trajectory is required that the vehicle would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the vehicle known to the master control or the trajectory sent in an order. The behavior of a vehicle using the `corridor` attribute is still the behavior of a line-guided vehicle, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles. Note that a corridor communicated within an order is released for the mobile robot by default. If the releaseRequired flag is set to true, the robot must request approval from master control before using the corridor as described in chapter [6.12.4 Requesting obstacle avoidance](#6124-obstacle-avoidance-request).
 
 *Remark:
 An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
@@ -798,8 +798,8 @@ Object structure | Unit | Data type | Description
 leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
 rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
 *corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
-*releaseRequired* |  | boolean | Optional flag that indicates if the robot must request approval from master control. If not defined, no release is required.
-*releaseLossBehaviour* | | string | Defines how the robot shall behave in case its release of a corridor expires or gets revoked by master control.<br> Enum { 'STOP' , 'RETURN' }
+*releaseRequired* |  | boolean | Optional flag that indicates whether the robot must request approval from master control. It has a default value of false.
+*releaseLossBehaviour* | | string | Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the master control.<br> Enum { 'STOP' , 'RETURN' }
 
 ### 6.7 Maps
 
@@ -1254,9 +1254,9 @@ If the corridors within a mobile robot's currently active order have the `releas
 The `requestStatus` is set to REQUESTED and the combination of `edgeId` and `sequenceId` references the edge's trajectory the robot asks to deviate from. The mobile robot has the option to request the approval for several edges simulatenously as long as they are part of its current base. The usage of each corridor shall be requested in a dedicated `edgeRequest` and each request must be approved inidivdually by master control. 
 
 
-The robot shall remain on the predefined trajectory of its current edge until a `respone` is received from master control. Once the robot has received the approval to start maneuvering, it sets the `requestStatus` to 'GRANTED' and may now use the corridor. As long as the robot requires the corridor, it shall keep the `edgeRequest` in its state. If the mobile robot no longer requires the use of a corridor (e.g., because it might have successfully completed its avoidance procedure, no more need to avoid an obstacle, etc.), it indicates this to master control by removing the corresponding `edgeRequest` object from its state. From there on, the mobile robot shall act as a line-guided vehicle again. If it wishes to deviate from the predefined trajectory once more, its must issue a new `edgeRequest`. 
+The robot shall remain on the predefined trajectory of its current edge until a `respone` is received from the master control. Once the robot has received the approval to start maneuvering, it sets the `requestStatus` to 'GRANTED' and may now use the corridor. As long as the robot requires the corridor, it shall keep the `edgeRequest` in its state. If the mobile robot no longer requires the use of a corridor (e.g., because it might have successfully completed its avoidance procedure, no more need to avoid an obstacle, etc.), it indicates this to the master control by removing the corresponding `edgeRequest` object from its state. From there on, the mobile robot shall act as a line-guided vehicle again. If it wishes to deviate from the predefined trajectory once more, it shall issue a new `edgeRequest`. 
 
-If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and wishes to continue to the upcoming corridor, which is not yet released, it must stop at the border of its current `corridor`, send a dedicated edge request and await its approval through master control. If the robot's approval expires or master control revokes a granted request, it must initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
+If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and wishes to continue to the upcoming corridor, which is not yet released, it must stop at the border of its current `corridor`, send a dedicated edge request, and await its approval through the master control. If the robot's approval expires or the master control revokes a granted request, it must initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
 
 
 ### 6.12.4 Information
@@ -1636,12 +1636,12 @@ Object structure/Identifier | Data type | Description
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-| response <br> { | JSON object | Object which contains the master control answer to a specific request. |
+| response <br> { | JSON object | Object which contains the master control's answer to a specific request. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
-| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': master control grants request. 'REVOKED': master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
+| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The master control grants request. 'REVOKED': The master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
 | *leaseExpiry* <br><br> } | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
-Additionally, master control has the option to add a `leaseExpiry` timestamp to the response. If the robot hasn't finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
+Additionally, the master control has the option to add a `leaseExpiry` timestamp to the response. If the robot hasn't finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
 
 ## 6.17 Topic "factsheet"
 
