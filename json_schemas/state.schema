@@ -491,7 +491,7 @@
                 "properties": {
                     "requestId": {
                         "type": "string",
-                        "description": "Unique per vehicle identifier within all active requests."
+                        "description": "Unique per vehicle identifier across all active requests."
                     },
                     "requestType": {
                         "type": "string",
