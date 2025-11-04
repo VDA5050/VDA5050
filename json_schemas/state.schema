@@ -496,7 +496,7 @@
                     "requestType": {
                         "type": "string",
                         "enum": ["CORRIDOR"],
-                        "description": "Enum specifying the type of edge the request relates to. Feasible value is CORRIDOR."
+                        "description": "Enum specifying the type of edge the request relates to."
                     },
                     "edgeId": {
                         "type": "string",
