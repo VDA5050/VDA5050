@@ -1247,7 +1247,7 @@ An exception to this rule is, if the AGV has to pause on the node (because of a 
 
 If the AGV detects that its base is running low, it can set the `newBaseRequest` flag to "true" to prevent unnecessary braking.
 
-### 6.12.4 Requesting obstacle avoidance
+### 6.12.4 Request Use of Corridors
 
 If the corridors within a mobile robot's currently active order have the `releaseRequired` flag set to true, it shall issue a request prior to deviating from the predefined trajectory of an edge. For this purpose, the robot shall add an `edgeRequest` object to its state message. Note that the `requestId` shall be unique across all requests (e.g. `zoneRequest`, `edgeRequest`) issued by the mobile robot. Master control shall only release the corridor for edges that are part of the base.
 
