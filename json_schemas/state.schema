@@ -482,7 +482,7 @@
             }
         },
         "edgeRequests": {
-            "description": "Array of edgeRequest objects that are currently active on the AGV. Empty array if no edge requests are active.",
+            "description": "Array of edgeRequest objects that are currently active on the mobile robot. Empty array if no edge requests are active.",
             "type": "array",
             "items": {
                 "type": "object",
