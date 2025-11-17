@@ -1463,8 +1463,8 @@ z | | float 64 | Z-coordinate of the point of reference.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **loadDimensions** { | | JSON object | Dimensions of the load's bounding box in meters.
-length | m | float64 | Absolute length of the load's bounding box.
-width | m | float64 | Absolute width of the load's bounding box.
+length | m | float64 | Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box.
+width | m | float64 | Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box.
 *height* <br>}| m | float64 | Absolute height of the load's bounding box.<br><br>Optional:<br><br>Set value only if known.
 
 Object structure | Unit | Data type | Description
