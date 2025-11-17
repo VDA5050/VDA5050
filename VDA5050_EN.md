@@ -1113,8 +1113,10 @@ Actions that are triggered on nodes can run as long as they need to run and shou
 The following section presents predefined actions that shall be used by the AGV, if the AGV's capabilities map to the action description.
 If there is a sensible way to use the defined parameters, they shall be used.
 Additional parameters can be defined, if they are needed to execute an action successfully.
+The actions `cancelOrder`, `startPause` and `stopPause` shall be supported by every mobile robot.
 
 If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that shall be used by master control.
+
 
 
 ### 6.10.1 Definition, parameters, effects and scope of predefined actions
