@@ -638,8 +638,8 @@ These scenarios are shown in Figure 8 and described below.
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
-2. The AGV shall report a `validationError` error with the `errorLevel` set to 'WARNING'.
-3. The warning shall be reported until the vehicle has accepted a new order.
+2. The AGV shall report a 'validationError' error with the `errorLevel` set to 'WARNING'.
+3. The error shall be reported until the vehicle has received a new order.
 
 
 #### 6.6.4.2 Vehicle receives an order with actions it cannot perform or with fields that it cannot use
@@ -652,8 +652,8 @@ Examples:
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer
-2. The AGV shall report a `orderError` error with the `errorLevel` set to 'WARNING' with the wrong fields as error references.
-3. The warning shall be reported until the vehicle has accepted a new order.
+2. The AGV shall report an 'orderError' error with the `errorLevel` set to 'WARNING' with the wrong fields as error references.
+3. The error shall be reported until the vehicle has received a new order.
 
 
 #### 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
@@ -662,7 +662,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the previous order in its buffer.
-3. The AGV shall report a `orderUpdateError` error with the `errorLevel` set to 'WARNING'.
+3. The AGV shall report an 'orderUpdateError' error with the `errorLevel` set to 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
