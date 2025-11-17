@@ -418,6 +418,40 @@ factsheet | AGV | master control | Parameters or vendor-specific information to 
 zoneSet | master control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
 response | master control | mobile robot | Master controls responses to requests from within the mobile robots state. | optional | response.schema
 
+## 6.x Basic concepts
+
+### 6.x.1 Request/response mechanism
+
+Certain coordination tasks between mobile robots and master control require an explicit permission before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
+
+A request is always initiated by the mobile robot and communicated as part of the state message. The master control evaluates the request and returns its decision via the response topic.
+
+Each request is represented on the mobile robot by a request object (e.g. zoneRequest) that is included in the state message. The request object shall contain at least:
+	- a requestId that is unique per mobile robot for all currently active requests,
+	- a requestType that specifies the kind of operation the request refers to (access, replanning, use of corridor),
+	- a reference to the resource the request addresses (e.g. zone, zone set, map, edgeid, sequenceId), and
+	- a requestStatus.
+
+The field requestStatus describes the life cycle of the request and shall support the following values:
+	- 'GRANTED': master control grants request. 
+	- 'REVOKED': master control revokes previously granted request. 
+	- 'REJECTED': master control rejects a request. 
+	- 'QUEUED': Acknowledge the vehicle's request to the master control, but no permission is given yet. Request was added to some sort of a queue.
+
+Master control receives requests from the state topic and shall answer via the response topic containing a respone object that includes:
+	- The requestId of the corresponding request,
+	- a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
+	- optionally a leaseExpiry timestamp that limits the validity of a 'GRANTED' decision.
+
+If a request is answered with 'QUEUED', master control acknowledges reception of the request but does not yet grant permission. The mobile robot shall then continue to wait and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
+
+If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a leaseExpiry is present, the permission shall only be considered valid until this time. Master control can extend a lease by sending an updated response with the same requestId and a new leaseExpiry.
+
+If a request is answered with 'REVOKED', or if the leaseExpiry is reached, the mobile robot shall update the requestStatus accordingly ('REVOKED' or 'EXPIRED') and shall not initiate or continue the corresponding operation, unless the specific application layer defines a safe exception. The detailed behavior in these cases (e.g. stop, continue, evacuate) is defined by the respective application context (such as zones) and shall be specified in the corresponding chapter.
+
+If no response is received within the time frame required by the application, the mobile robot shall behave as if the request had not been granted and shall not perform the operation that requires explicit permission. The handling of timeouts and retries shall be defined during integration.
+
+A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from master control is required.
 
 ## 6.6 Topic: "order" (from master control to AGV)
 
