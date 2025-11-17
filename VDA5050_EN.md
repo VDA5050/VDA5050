@@ -1526,8 +1526,8 @@ referenceValue <br>} | | string | References the value, which belongs to the ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **safetyState** { | | JSON object |
-eStop | | string | Enum {'AUTOACK', 'MANUAL', 'REMOTE', 'NONE'}<br><br>Acknowledge-Type of eStop:<br>'AUTOACK': auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field.<br>'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
-fieldViolation<br>} | | boolean | Protective field violation.<br>"true":field is violated<br>"false":field is not violated.
+activeEmergencyStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>EmergencyStopTypes <br> :'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
+fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or bumber).<br>"true":field is violated<br>"false":field is not violated.
 
 #### Operating Mode Description
 The following description lists the possible values of the field `operatingMode` in the "state" message".
