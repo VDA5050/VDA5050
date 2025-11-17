@@ -116,7 +116,7 @@ The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
 
 
-# 2 Objective of the document
+# 2 Objective and Scope of the Document
 
 The objective of this recommendation is to simplify the integration and operation of systems consisting of mobile robots and master control systems. <note>Clarification needed?</note>
 The VDA 5050 defines a uniform, manufacturer-independent communication interface between a master control and a mobile robots to:
