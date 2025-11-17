@@ -118,47 +118,21 @@ The repository can be found at the following link: https://github.com/vda5050/vd
 
 # 2 Objective of the document
 
-The objective of the recommendation is to simplify the connection of new vehicles to an existing master control system and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
+The objective of this recommendation is to simplify the integration and operation of systems consisting of mobile robots and master control systems. <note>Clarification needed?</note>
+The VDA 5050 defines a uniform, manufacturer-independent communication interface between a master control and a mobile robots to:
+- reduce the complexity of integrating new mobile robots into existing master control systems,
+- enable mixed-fleet operation of mobile robots from different manufacturers in a shared environment, and
+- provide a technology-neutral toolkit that can be applied to all types of mobile robots, independent of navigation principle, vehicle size, load-handling device, and degree of autonomy and to all areas of use for mobile robots.
 
-A uniform interface between a master control and AGVs shall be defined.
-This should be achieved by the following points:
+The following aspects are not covered by this recommendation:
+- Safety requirements: This document is not a safety standard. It does not define functional safety concepts, safety functions, or measures required to fulfil legal or normative safety obligations.
+- Traffic management logic: The traffic management strategies and algorithms inside the master control (e.g., routing strategies, priority rules, deadlock resolution) are not defined.
+- Other communication interfaces: Communication between the master control and peripheral equipment (e.g., doors, gates, fire protection systems, conveyors, elevators) is not defined.
+- Overarching IT systems: Communication between the master control and higher-level IT systems (e.g., WMS, EWM, MES, ERP) is not defined.
+- Project coordination: Project management, integration processes, commissioning procedures, and acceptance criteria are outside the scope of this recommendation.
+- Operational responsibilities: The allocation of responsibilities between operator, integrator, vehicle manufacturer, and master-control supplier for planning, operation, maintenance, and safety is not specified.
 
-- Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
-- Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains.
-- Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g., order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
-- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
-- Increase in manufacturers' independence using common interfaces between vehicle control and coordination level.
-- Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf. Figure 1).
-
-![Figure 1 Integration of DTS inventory systems](./assets/concept_DTS.png)
->Figure 1 Integration of DTS inventory systems
-
-In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
-
-Other interfaces required for operation between AGV and master control (e.g., taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document.
-
-
-# 3 Scope
-
-This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and master control.
-The goal is to allow AGVs with different characteristics (e.g., underrun tractor or fork lift AGV) to communicate with master control in a uniform language. 
-This creates the basis for operating any combination of AGVs in a master control.
-The master control provides orders and coordinates the AGV traffic.
-
-The interface is based on the requirements from production and plant logistics in the automotive industry.
-According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control of freely navigating vehicles and guided vehicles.
-
-In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards.
-Autonomous properties such as the independent bypassing of obstacles can be fulfilled by freely navigating vehicles as well as guided vehicles.
-However, as soon as the path planning is carried out on the vehicle itself, this document describes freely navigating vehicles (see glossary).
-Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
-
-For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
-This should enable a complete coverage of the master control for vehicles that are guided.
-Vehicles that are freely navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
-
-For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
-
+<note>Comment on the development process needed? The interface is based on the requirements from production and plant logistics in the automotive industry.</note>
 
 ## 3.1 Other applicable documents
 
