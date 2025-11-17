@@ -285,7 +285,7 @@ All enumerations are in UPPERCASE without underscores.
 If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
 If the AGV receives a message that contains a field which is marked as optional in this protocol, the AGV is expected to act accordingly and cannot ignore the field.
-If the AGV cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'unsupportedParameter' and to reject the order.
+If the mobile robot cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
 Master control shall only send optional information that the AGV supports.
 
@@ -638,7 +638,7 @@ These scenarios are shown in Figure 8 and described below.
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
-2. The vehicle reports an error "validationError“ with the errorLevel 'WARNING‘
+2. The vehicle reports an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the vehicle has accepted a new order.
 
 
@@ -652,7 +652,7 @@ Examples:
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer
-2. Vehicle reports an error "orderError" with errorLevel 'WARNING' and the wrong fields as errorReferences
+2. Vehicle reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the wrong fields as errorReferences
 3. The warning shall be reported until the vehicle has accepted a new order.
 
 
@@ -687,7 +687,7 @@ The boundaries of the edges shall be defined in such a way that the vehicle is i
 Instead of setting the corridor boundaries to zero, master control shall not use the `corridor` attribute if the vehicle shall not deviate from the trajectory.
 
 The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
-If not, the vehicle shall stop because it is out of the allowed navigation space and report an error of type 'outsideOfCorridorError' with errorLevel 'CRITICAL'.
+If not, the vehicle shall stop because it is out of the allowed navigation space and report an error of type 'OUTSIDE_OF_CORRIDOR' with level 'CRITICAL'.
 The master control can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
 *Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if the master control makes a traffic control decision based on the vehicle's footprint.*
@@ -841,7 +841,7 @@ The map download is triggered by the `downloadMap` instant action from the maste
 The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable, or disable any existing maps on the vehicle.
-The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error  of type 'duplicateMapError' and errorLevel 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
+The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error  of type 'DUPLICATE_MAP' and level 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
 
 
 #### 6.7.4 Enable downloaded maps
@@ -1440,7 +1440,7 @@ charging | | boolean | “true”: charging in progress.<br>“false”: the AGV
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, some of which are predefined and shall be specified in the form of an expandable enum {'unsupportedParameter', 'noOrderToCancel', 'validationError', 'orderError', 'orderUpdateError', 'outsideOfCorridorError', 'duplicateMapError'}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'unsupportedParameter', 'noOrderToCancel', 'validationError', 'orderError', 'orderUpdateError', 'outsideOfCorridorError', 'duplicateMapError', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 *errorHint* | | string | Hint on how to approach or solve the reported error.
