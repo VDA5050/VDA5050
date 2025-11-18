@@ -109,20 +109,23 @@ Version 3.0.0
 
 # 1 Foreword
 
-The interface was established in cooperation between the Verband der Automobilindustrie e.V. (VDA) and Verband Deutscher Maschinen- und Anlagenbau e. V. (VDMA).
+The objective of this recommendation is to simplify the integration and operation of mobile robot fleets controlled by a centralized master control system. This is achieved through a uniform, vendor-independent communication interface between a master control system and each mobile robot.
+
+The interface was established in cooperation between the Verband der Automobilindustrie e.V. (VDA) and the VDMA e. V.
 The aim of both parties is to create a universally applicable interface.
-Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
+Proposals for changes to the interface are welcome. They shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
 The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
 
 
-# 2 Objective and Scope of the Document
+# 2 Scope of the Document
 
 The objective of this recommendation is to simplify the integration and operation of systems consisting of mobile robots and master control systems. <note>Clarification needed?</note>
-The VDA 5050 defines a uniform, manufacturer-independent communication interface between a master control and a mobile robots to:
-- reduce the complexity of integrating new mobile robots into existing master control systems,
-- enable mixed-fleet operation of mobile robots from different manufacturers in a shared environment, and
-- provide a technology-neutral toolkit that can be applied to all types of mobile robots, independent of navigation principle, vehicle size, load-handling device, and degree of autonomy and to all areas of use for mobile robots.
+This document defines a uniform, vendor-independent communication interface between a master control system and each mobile robot to:
+- reduce the complexity of integrating mobile robots with a master control system,
+- enable mixed-fleet operation of mobile robots from different vendors in a shared physical environment, and
+- provide a toolkit that can be applied to all types of mobile robots, e.g., navigation principles, vehicle sizes, load-handling or manipulation devices, level of autonomy. 
+- It is independent of proprietary interfaces and applicable to all areas of use for mobile robots.
 
 The following aspects are not covered by this recommendation:
 - Safety requirements: This document is not a safety standard. It does not define functional safety concepts, safety functions, or measures required to fulfil legal or normative safety obligations.
