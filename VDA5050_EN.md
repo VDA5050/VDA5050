@@ -1334,22 +1334,22 @@ The following lists describe the values of the field `operatingMode`, their mean
 
 Operating Mode | Description
 ---|---
-STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
 AUTOMATIC | Master control is in full control of the mobile robot. <br>Mobile robot moves and executes actions based on orders from the master control.
 SEMIAUTOMATIC | Master control is in control of the mobile robot.<br> Mobile robot moves and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
 INTERVENED | Master control is not in control of the Mobile robot. The mobile robot is reporting its state correctly.<br>Master control is allowed to send orders or order updates to the mobile robot to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Master control shall not send any instant action except `cancelOrder`.<br>The mobile robot shall not clear the order but shall remove all zone requests from the state, also if the mobile robot is already inside a 'RELEASE' zone. (*Remark: If necessary, the master control can continue to track the position of the mobile robot and decide whether clearance for other vehicles is possible.*) The mobile robot shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the mobile robot shall reflect this in the state message accordingly.<br>If the mobile robot leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the mobile robot leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the mobile robot shall continue executing any current order. If the mobile robot detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the mobile robot shall switch into operating mode 'MANUAL' and act accordingly.
 MANUAL | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>HMI can be used to control the steering, velocity and handling devices of the mobile robot.<br>The position of the mobile robot is sent to the master control.<br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the mobile robot detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
+STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
 SERVICE | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
 TEACHIN | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
 
 Operating Mode | Master Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
-STARTUP | NO | NO | YES | YES | YES | NO | NO
 AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
 SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
 INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
 MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
+STARTUP | NO | NO | YES | YES | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACHIN | NO | YES | YES | YES | YES | NO | NO
 
