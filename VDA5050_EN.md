@@ -1253,19 +1253,19 @@ The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still s
 
 The AGV itself decides when a node shall count as traversed.
 Generally, the AGV's control point should reach the node's position, or fall within the node's `allowedDeviationXY`, if defined.
-If a node has `orientation` or `allowedDeviationTheta` defined, this shall also be taken into account.
+If a `theta` or also `allowedDeviationTheta` is defined on the node, the mobile robot should also reach that orientation within the margin before reporting the node as traversed.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should additionally be met.
 
 The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
 
 As soon as the AGV reports the node as traversed, the AGV shall trigger the actions associated with the node, if any.
 
-The traversal of a node also necessarily means the leaving of the edge leading up to the node.
+The traversal of a node also necessarily implies leaving the edge that is leading up to the node.
 The edge shall then also be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
 
 The traversal of the node also marks the moment when the AGV enters the following edge, if there is one.
 The edge's actions shall be triggered, if any.
-An exception to this rule is if the AGV must pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV only enters the following edge once it begins driving again.
+An exception to this rule is if the AGV shall pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV only enters the following edge once it begins driving again.
 
 ![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
