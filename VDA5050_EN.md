@@ -1343,7 +1343,7 @@ SERVICE | Master control is not in control of the mobile robot. <br>Master contr
 TEACHIN | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
 
-Operating Mode | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
+Operating Mode | Master Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
