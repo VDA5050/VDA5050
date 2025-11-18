@@ -652,7 +652,7 @@ Examples:
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer
-2. Vehicle reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the wrong fields as errorReferences
+2. Vehicle reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the vehicle has accepted a new order.
 
 
@@ -662,7 +662,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the previous order in its buffer.
-3. The vehicle reports the error "OLD_ORDER_UPDATE" with level 'WARNING'.
+3. The vehicle reports the error "OUTDATED_ORDER_UPDATE" with level 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
@@ -893,7 +893,7 @@ The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw an 'INSIDE_BLOCKED_ZONE' error with level set to 'CRITICAL'.| 
+| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from the trajectory. | 
 | RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
 | | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a RELEASE_LOST error with level CRITICAL. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the vehicle has already entered the zone, the vehicle continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the vehicle waits for a new order.| 
@@ -1061,7 +1061,7 @@ In the following matrix possible interactions between zones are described. The m
 **DIRECTED** |||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** ||||||||||(8)|(7)|(9)
 
-1) If actions would conflict with other zones behavior, report an 'ACTION_CONFLICT error with level 'CRITICAL' (order error) and stop the vehicle.
+1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the vehicle.
 2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
 4) The lowest of the competing speeds applies.
@@ -1073,7 +1073,7 @@ In the following matrix possible interactions between zones are described. The m
 
 ### 6.9.5 Error handling within zones
 
-If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'GOAL_UNREACHABLE' error with level 'CRITICAL' to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
+If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
 
 ## 6.10 Actions
 
@@ -1184,7 +1184,7 @@ Events that trigger the transmission of the state message are:
 - Receiving an order
 - Receiving an order update
 - Changes in the load status
-- Errors
+- Errors of any error level
 - Driving over a node
 - Switching the operating mode
 - Change in the `driving` field
