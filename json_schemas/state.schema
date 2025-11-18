@@ -545,7 +545,7 @@
                 "properties": {
                     "errorType": {
                         "type": "string",
-                        "description": "Type/name of error."
+                        "description": "Error type, extensible enumeration including the following predefined values."
                     },
                     "errorReferences": {
                         "type": "array",

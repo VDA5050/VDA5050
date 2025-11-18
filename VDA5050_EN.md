@@ -1440,7 +1440,7 @@ charging | | boolean | “true”: charging in progress.<br>“false”: the AGV
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'OLD_ORDER_UPDATE', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'INSIDE_BLOCKED_ZONE', 'RELEASE_LOST', 'ACTION_CONFLICT', 'GOAL_UNREACHABLE', ...}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 *errorHint* | | string | Hint on how to approach or solve the reported error.
