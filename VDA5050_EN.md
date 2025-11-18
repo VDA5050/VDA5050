@@ -688,18 +688,19 @@ This might happen, if the master control resends the order because the state mes
 
 In response to one of the following events, not triggered by Master Control, the vehicle has to stop executing the current order:
 
-- The vehicle is changing the operating mode to 'MANUAL', 'SERVICE' or 'TEACHIN' (see also [6.10.6 Implementation of the state message](#6106-implementation-of-the-state-message)).
+- The vehicle is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
 - The vehicle cannot determine its position anymore.
 
-In these cases the vehicle has to clear the order which means that similar to a cancellation:
+In these cases the vehicle has to clear any current order which means that similar to a cancellation:
 
-- If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
-- If there are running actions, those actions should also be cancelled and be reported as 'FAILED'.
-- If an action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
-- The `orderId`, `orderUpdateId` are kept. `nodeStates` and `edgeStates` are emptied.
-- The vehicle shall remove all zone requests from the state.
+- Any scheduled actions for this order shall be cancelled and be reported as 'FAILED' in `actionStates`.
+- Any running actions for this order should also be cancelled and be reported as 'FAILED' in `actionStates`.
+- Any running action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
+- `orderId` and `orderUpdateId` are kept.
+- `nodeStates` and `edgeStates` are emptied.
+- Any requests shall be removed from the state.
 
-As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACHIN' is reported.
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN' is reported.
 
 
 ### 6.6.5 Corridors
