@@ -1943,11 +1943,11 @@ This JSON object details the software and hardware versions running on the vehic
 |&emsp;&emsp; *netmask* | string | The subnet mask used in the network configuration corresponding to the local IP address.|
 |&emsp;&emsp; *defaultGateway* | string | The default gateway used by the vehicle, corresponding to the local IP address. |
 | &emsp;} | | |
-| *battery* { | JSON object | Information about battery charging parameters. |
-| criticalLowChargingLevel | % | Specifies the critical charging level. Master control should only send orders that command the vehicle to a charging station. |
-| maxDesiredChargingLevel | % | Specifies the maximum desired charging level. |
-| minDesiredChargingLevel | % | Specifies the minimum desired charging level. |
-| *minChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
+| *batteryCharging* { | JSON object | Information about battery charging parameters. |
+| *criticalLowChargingLevel* | % | Specifies the critical charging level at or below which the master control should only send orders that command the vehicle to a charging station. |
+| *maximumDesiredChargingLevel* | % | Specifies the maximum desired charging level. |
+| *minimumDesiredChargingLevel* | % | Specifies the minimum desired charging level. |
+| *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
 | &emsp;} | | |
 
 
