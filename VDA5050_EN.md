@@ -583,7 +583,7 @@ A mobile robot is idle if its nodeStates and edgeStates are empty and all action
 
 ### 6.6.4 Reporting of horizon actions in the mobile robot's state
 
-The mobile robot's state shall always represent the full status of the order it currently has. Therefore, the robot shall report both the `actionsStates` of actions included in its base as well as horizon at all times. All horizon actions are reported as 'WAITING'. If the mobile robot receives an order update where part of its former horizon is removed or changed, all actions that were attached to these nodes and edges shall be removed from the `actionStates` again to reflect that. `actionStates` of base actions can never be removed in the context of an `orderUpdate` as the base cannot be modified once released.
+The mobile robot's state shall always represent the full status of the order it currently has. Therefore, the robot shall report both the `actionsStates` of actions included in its base as well as horizon at all times. All horizon actions are reported as 'WAITING'. If the mobile robot receives an order update where part of its former horizon is removed or changed, all actions that were attached to these nodes and edges shall be removed from the `actionStates` to reflect this. `actionStates` of base actions shall never be removed in the context of an `orderUpdate` as the base cannot be modified once released.
 
 ### 6.6.3 Order cancellation (by master control)
 
