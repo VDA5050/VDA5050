@@ -378,6 +378,7 @@
                                     "array",
                                     "boolean",
                                     "number",
+                                    "integer",
                                     "string", 
                                     "object"
                                 ],
