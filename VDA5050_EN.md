@@ -693,9 +693,9 @@ In response to one of the following events, not triggered by Master Control, the
 
 In these cases the vehicle has to clear any current order which means that similar to a cancellation:
 
-- Any scheduled actions for this order shall be cancelled and be reported as 'FAILED' in `actionStates`.
-- Any running actions for this order should also be cancelled and be reported as 'FAILED' in `actionStates`.
-- Any running action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
+- Any scheduled order related action shall be cancelled and be reported as 'FAILED' in `actionStates`.
+- Any running order related action should also be cancelled and be reported as 'FAILED' in `actionStates`.
+- Any running order related action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
 - `orderId` and `orderUpdateId` are kept.
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
