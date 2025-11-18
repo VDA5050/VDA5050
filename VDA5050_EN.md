@@ -740,7 +740,7 @@ endNodeId | | string | nodeId of the last node within the order.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
 ***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
-**action [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**actions [action]** <br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 
 Object structure | Unit | Data type | Description
