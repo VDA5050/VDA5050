@@ -1347,7 +1347,7 @@ Operating Mode | Master Control in control | Valid state message content | Clear
 --- | --- | --- | --- | --- | --- | --- | ---
 AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
 SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
-INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
+INTERVENED | NO | YES | NO | NO | YES | Only `cancelOrder` allowed | YES
 MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
