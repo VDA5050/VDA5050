@@ -1345,13 +1345,13 @@ TEACHIN | Master control is not in control of the mobile robot. <br>Master contr
 
 Operating Mode | Master Control in control | Valid state message | Clear order when entering | Set lastNodeId to empty | Clear zone requests when entering | Sending Instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
+STARTUP | NO | NO | YES | YES | YES | NO | NO
 AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
 SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
+INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
 MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACHIN | NO | YES | YES | YES | YES | NO | NO
-STARTUP | NO | NO | YES | YES | YES | NO | NO
-INTERVENED | NO | YES | NO | NO | YES | Only 'cancelOrder' allowed | YES
 
 
 ### 6.12.7 Implementation of the state message
