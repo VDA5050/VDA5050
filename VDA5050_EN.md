@@ -1842,7 +1842,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |---|---|---|
 | ***orderHandling*** [***orderHandling***] | array of JSON object | Defines the vehicle’s behavior and capabilities related to order processing, including special conditions such as HIBERNATING connection state. |
 | { | | |
-| &emsp;*clearOrderOnStopHibernation* | boolean | Indicates whether the vehicle retains its current order when entering the HIBERNATING connection state. If true, the AGV will keep the active order and will resume execution after returning to ONLINE. <br/>'If not defined, the default value is 'true'.|
+| &emsp;*clearOrderOnStopHibernation* | boolean | Indicates whether the vehicle retains its current order when entering the HIBERNATING connection state. If true, the AGV will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'true'.|
 | } | | |
 | **optionalParameters** [**optionalParameters**] | array of JSON object | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the AGV. |
 | { | | |
