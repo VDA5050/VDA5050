@@ -153,8 +153,10 @@
             "type": "string",
             "description": "Current operating mode of the AGV.",
             "enum": [
+                "STARTUP",
                 "AUTOMATIC",
                 "SEMIAUTOMATIC",
+                "INTERVENED",
                 "MANUAL",
                 "SERVICE",
                 "TEACHIN"
@@ -425,11 +427,11 @@
                         "properties": {
                             "length": {
                                 "type": "number",
-                                "description": "Absolute length of the loads bounding box in meter."
+                                "description": "Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box in meters."
                             },
                             "width": {
                                 "type": "number",
-                                "description": "Absolute width of the loads bounding box in meter."
+                                "description": "Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box in meters."
                             },
                             "height": {
                                 "type": "number",
@@ -477,6 +479,39 @@
                     },
                     "trajectory": {
                         "$ref": "#/definitions/trajectory"
+                    }
+                }
+            }
+        },
+        "edgeRequests": {
+            "description": "Array of edgeRequest objects that are currently active on the mobile robot. Empty array if no edge requests are active.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Edge request information sent by the vehicle to master control.",
+                "required": ["requestId", "requestType", "edgeId", "sequenceId", "requestStatus"],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per vehicle identifier across all active requests."
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["CORRIDOR"],
+                        "description": "Enum specifying the type of edge the request relates to."
+                    },
+                    "edgeId": {
+                        "type": "string",
+                        "description": "Globally unique identifier referencing the edge the request is related to."
+                    },
+                    "sequenceId": {
+                        "type": "integer",
+                        "description": "Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order."
+                    },
+                    "requestStatus": {
+                        "type": "string",
+                        "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
                     }
                 }
             }
@@ -651,16 +686,15 @@
         "safetyState": {
             "type": "object",
             "required": [
-                "eStop",
+                "activeEmergencyStop",
                 "fieldViolation"
             ],
             "description": "Contains all safety-related information.",
             "properties": {
-                "eStop": {
+                "activeEmergencyStop": {
                     "type": "string",
-                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
-                        "AUTOACK",
                         "MANUAL",
                         "REMOTE",
                         "NONE"
