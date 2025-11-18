@@ -199,7 +199,7 @@ To ensure a common understanding across all stakeholders and implementations, th
 
 Term | Definition
 ---|---
-Movement | Any change in the spatial position or orientation of the vehicle or its components. This includes the motion of wheels, load handling devices, or the vehicle body.
+Moving | Any change in the spatial position or orientation of the vehicle or its components. This includes the motion of wheels, load handling devices, or the vehicle body.
 Driving | The vehicle is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
 Automatic Driving | The vehicle is driving without human intervention.
 Manual Driving | The vehicle is driving with human intervention.
