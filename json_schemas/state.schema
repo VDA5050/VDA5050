@@ -244,7 +244,8 @@
                         "description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
                     },
                     "trajectory": {
-                        "$ref": "#/definitions/trajectory"
+                        "$ref": "#/definitions/trajectory",
+                        "decription": "Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order."
                     }
                 }
             }
