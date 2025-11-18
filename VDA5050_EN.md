@@ -120,24 +120,29 @@ The repository can be found at the following link: https://github.com/vda5050/vd
 
 # 2 Scope of the Document
 
-The objective of this recommendation is to simplify the integration and operation of systems consisting of mobile robots and master control systems. <note>Clarification needed?</note>
 This document defines a uniform, vendor-independent communication interface between a master control system and each mobile robot to:
 - reduce the complexity of integrating mobile robots with a master control system,
 - enable mixed-fleet operation of mobile robots from different vendors in a shared physical environment, and
 - provide a toolkit that can be applied to all types of mobile robots, e.g., navigation principles, vehicle sizes, load-handling or manipulation devices, level of autonomy. 
-- It is independent of proprietary interfaces and applicable to all areas of use for mobile robots.
 
-The following aspects are not covered by this recommendation:
-- Safety requirements: This document is not a safety standard. It does not define functional safety concepts, safety functions, or measures required to fulfil legal or normative safety obligations.
-- Traffic management logic: The traffic management strategies and algorithms inside the master control (e.g., routing strategies, priority rules, deadlock resolution) are not defined.
-- Other communication interfaces: Communication between the master control and peripheral equipment (e.g., doors, gates, fire protection systems, conveyors, elevators) is not defined.
-- Overarching IT systems: Communication between the master control and higher-level IT systems (e.g., WMS, EWM, MES, ERP) is not defined.
-- Project coordination: Project management, integration processes, commissioning procedures, and acceptance criteria are outside the scope of this recommendation.
-- Operational responsibilities: The allocation of responsibilities between operator, integrator, vehicle manufacturer, and master-control supplier for planning, operation, maintenance, and safety is not specified.
+It is independent of proprietary interfaces and applicable to all areas of use for mobile robots.
 
-<note>Comment on the development process needed? The interface is based on the requirements from production and plant logistics in the automotive industry.</note>
+It describes a base concept for a coordinated multi-robot setup to base traffic management upon and the necessary logic/expected behavior of the mobile robots.
 
-## 3.1 Other applicable documents
+The following aspects are not covered:
+- Safety requirements
+	- This document is not a safety standard.
+- Traffic management logic
+	- The traffic management strategies and algorithms (e.g., routing strategies, priority rules, deadlock resolution)
+- Other communication interfaces
+	- Any communication other than master control and a mobile robot (e.g., periphery, other IT systems)
+- Project coordination
+	- E.g., Project management, integration processes, commissioning procedures, and acceptance criteria
+- Operational responsibilities
+	- between operator, integrator, vehicle vendor, and master control supplier for planning, operation, maintenance, and safety
+
+
+## 3 Other applicable documents
 
 Document | Version | Description
 ---|---|---
@@ -148,25 +153,18 @@ LIF – Layout Interchange Format| March 2024 | Definition of a format of track 
 
 # 4 Requirements and protocol definition
 
-The communication interface is designed to support the following requirements:
+Mobile robots should transfer their state at a regular interval or when their state changes.
 
-- Control of min. 1000 vehicles
-- Enabling the integration of vehicles with different degrees of autonomy
-- Enable decision, e.g., with regard to the selection of routes or the behavior at intersections
+Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
 
-Vehicles should transfer their status at a regular interval or when their status changes.
-
-Communication is done over wireless networks, taking into account the effects of connection failures and loss of messages.
-
-The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
-MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
+The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON structure.
+MQTT 3.1.1 is the minimum required version for compatibility.
 MQTT allows the distribution of messages to subchannels, which are called "topics".
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
 
-The JSON structure allows for a future extension of the protocol with additional parameters.
-The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
+The JSON structure allows for future extensions of the protocol with additional parameters.
 
-## 4.1 Terminology and Definitions
+## 4.1 Definitions
 
 To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
 
