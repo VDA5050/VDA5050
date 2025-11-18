@@ -26,9 +26,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -117,6 +117,25 @@
                             "AUTONOMOUS"
                         ]
                     }
+                },
+                "supportedZones": {
+                    "type": "array",
+                    "description": "Array of zone types supported by the vehicle.",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "BLOCKED", 
+                            "LINE_GUIDED", 
+                            "RELEASE", 
+                            "COORDINATED_REPLANNING", 
+                            "SPEED_LIMIT", 
+                            "ACTION", 
+                            "PRIORITY", 
+                            "PENALTY", 
+                            "DIRECTED", 
+                            "BIDIRECTED"
+                        ]
+                    }
                 }
             }
         },
@@ -202,7 +221,7 @@
                         },
                         "idLen": {
                             "type": "integer",
-                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
                         "idNumericalOnly": {
                             "type": "boolean",
@@ -437,6 +456,7 @@
                                    "enum": [
                                       "NONE",
                                       "SOFT",
+                                      "SINGLE",
                                       "HARD"
                                    ]
                                 }
