@@ -1931,16 +1931,3 @@ Examples for the `actionParameter` of an action "someAction" with key-value pair
 ]
 
 The reason for using the proposed scheme of "key": "actualKey", "value": "actualValue" is to keep the implementation generic. The "actualValue" can be of any possible JSON data type, such as float, bool, and even an object.
-
-
-# 8 Glossary
-
-
-## 8.1 Definition
-
-Concept | Description
----|---
-Free navigation AGVs | Vehicles that use a map to plan their own path. <br>The master control sends only start and destination coordinates.<br>The vehicle sends its path to the master control.<br>When connection to the master control is broken, the vehicle is able to continue its journey.<br>Free-navigation vehicles may be allowed to bypass local obstacles.<br>It may also be possible that a fine adjustment of the receiving/dispensing position are made by the vehicle itself.
-Guided vehicles (physical or virtual) | Vehicles that get their path sent by the master control. <br>The calculation of the path takes place in the master control.<br>When communication to the master control is broken off, the vehicle terminates its released nodes and edges (the "base") and then stops.<br>Guided vehicles may be allowed to bypass local obstacles.<br>It may also be possible that fine adjustments of the receiving/dispensing position are made by the vehicle itself.
-Central map | The maps that will be held centrally in the master control.<br> This is initially created and then used.
-
