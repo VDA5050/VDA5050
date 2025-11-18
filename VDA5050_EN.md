@@ -25,7 +25,7 @@ Those who apply them shall ensure that they are applied properly in the specific
 They shall take into account the state of the art prevailing at the time of each issue.
 By applying the proposals, no one is evasive of responsibility for their own actions.
 The statements do not claim to be exhaustive or to the exact interpretation of the existing legislation.
-They may not replace the study of relevant policies, laws and regulations.
+They may not replace the study of relevant policies, laws, and regulations.
 Furthermore, the special features of the respective products as well as their different possible applications shall be taken into account.
 Everyone acts at their own risk in this regard.
 Liability of the VDA and those involved in the development or application of the proposals is excluded.
