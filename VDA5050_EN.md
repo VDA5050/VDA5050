@@ -109,37 +109,34 @@ Version 3.0.0
 
 # 1 Foreword
 
-The objective of this recommendation is to simplify the integration and operation of mobile robot fleets controlled by a centralized master control system. This is achieved through a uniform, vendor-independent communication interface between a master control system and each mobile robot.
-
-The interface was established in cooperation between the Verband der Automobilindustrie e.V. (VDA) and the VDMA e. V.
-The aim of both parties is to create a universally applicable interface.
-Proposals for changes to the interface are welcome. They shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
+The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized master control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the master control system and individual mobile robots.
+The specification for this interface was jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V..
+Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
 The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
 
 
-# 2 Scope of the Document
+# 2 Scope
+This document specifies a standardized, vendor-neutral communication interface between a master control system and individual mobile robots to:
+- Reduce integration complexity when connecting mobile robots to a master control system.
+- Enable heterogeneous fleet operation, allowing mobile robots from different manufacturers to operate collaboratively within a shared physical environment.
+- Provide a generic toolkit applicable across diverse mobile robot configurations, including variations in navigation principles, vehicle dimensions, load-handling or manipulation devices, and levels of autonomy.
 
-This document defines a uniform, vendor-independent communication interface between a master control system and each mobile robot to:
-- reduce the complexity of integrating mobile robots with a master control system,
-- enable mixed-fleet operation of mobile robots from different vendors in a shared physical environment, and
-- provide a toolkit that can be applied to all types of mobile robots, e.g., navigation principles, vehicle sizes, load-handling or manipulation devices, level of autonomy. 
+The interface is designed to be independent of proprietary solutions and applicable across all domains where mobile robots are deployed.
+The document also defines a foundational concept for coordinated multi-robot systems, serving as the basis for traffic management and specifying the required logic and expected behavior of mobile robots within such systems.
 
-It is independent of proprietary interfaces and applicable to all areas of use for mobile robots.
-
-It describes a base concept for a coordinated multi-robot setup to base traffic management upon and the necessary logic/expected behavior of the mobile robots.
-
-The following aspects are not covered:
-- Safety requirements
-	- This document is not a safety standard.
-- Traffic management logic
-	- The traffic management strategies and algorithms (e.g., routing strategies, priority rules, deadlock resolution)
-- Other communication interfaces
-	- Any communication other than master control and a mobile robot (e.g., periphery, other IT systems)
-- Project coordination
-	- E.g., Project management, integration processes, commissioning procedures, and acceptance criteria
-- Operational responsibilities
-	- between operator, integrator, vehicle vendor, and master control supplier for planning, operation, maintenance, and safety
+# 3 Exclusions
+The following aspects are explicitly outside the scope and are not covered:
+- Safety Requirements
+	- This document does not constitute a safety standard.
+- Traffic Management Logic
+	- Strategies and algorithms for traffic control (e.g., routing, prioritization, deadlock resolution).
+- Other Communication Interfaces
+	- Interfaces beyond master control and mobile robots (e.g., peripheral devices, external IT systems)
+- Project Coordination
+	- Topics such as project management, integration processes, commissioning procedures, and acceptance criteria
+- Operational Responsibilities
+	- Allocation of responsibilities among operators, integrators, vehicle manufacturers, and master control suppliers for planning, operation, maintenance, and safety
 
 
 ## 3 Other applicable documents
