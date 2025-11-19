@@ -296,7 +296,7 @@ All enumerations are in UPPERCASE without underscores.
 If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
 If the AGV receives a message that contains a field which is marked as optional in this protocol, the AGV is expected to act accordingly and cannot ignore the field.
-If the AGV cannot process the message accordingly then the expected behavior is to communicate this within an error message and to reject the order.
+If the mobile robot cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
 Master control shall only send optional information that the AGV supports.
 
@@ -639,7 +639,7 @@ There are two options:
 
 If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report a "noOrderToCancel" error with the `errorLevel` set to 'WARNING'.
+The AGV shall report a "NO_ORDER_TO_CANCEL" error with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
@@ -654,7 +654,7 @@ These scenarios are shown in Figure 8 and described below.
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
-2. The vehicle reports the warning "validationError"
+2. The vehicle reports an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the vehicle has accepted a new order.
 
 
@@ -668,7 +668,7 @@ Examples:
 Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer
-2. Vehicle reports the warning "orderError" with the wrong fields as error references
+2. Vehicle reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the vehicle has accepted a new order.
 
 
@@ -678,7 +678,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the previous order in its buffer.
-3. The vehicle reports the warning "orderUpdateError"
+3. The vehicle reports the error "OUTDATED_ORDER_UPDATE" with level 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
@@ -721,7 +721,7 @@ The boundaries of the edges shall be defined in such a way that the vehicle is i
 Instead of setting the corridor boundaries to zero, master control shall not use the `corridor` attribute if the vehicle shall not deviate from the trajectory.
 
 The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
-If not, the vehicle shall stop because it is out of the allowed navigation space and report an error.
+If not, the vehicle shall stop because it is out of the allowed navigation space and report an error of type 'OUTSIDE_OF_CORRIDOR' with level 'CRITICAL'.
 The master control can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
 
 *Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if the master control makes a traffic control decision based on the vehicle's footprint.*
@@ -878,7 +878,7 @@ The map download is triggered by the `downloadMap` instant action from the maste
 The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
 It is important to ensure that the process of downloading a map does not modify, delete, enable, or disable any existing maps on the vehicle.
-The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
+The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error  of type 'DUPLICATE_MAP' and level 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
 
 
 #### 6.7.4 Enable downloaded maps
@@ -930,10 +930,10 @@ The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw a CRITICAL error.| 
+| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from the trajectory. | 
 | RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a CRITICAL error. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the vehicle has already entered the zone, the vehicle continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the vehicle waits for a new order.| 
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a RELEASE_LOST error with level CRITICAL. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the vehicle has already entered the zone, the vehicle continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the vehicle waits for a new order.| 
 | COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their path if granted permission by master control. | 
 | SPEED_LIMIT | | | Vehicles must not drive faster than the defined maximum speed within this zone. | 
 | | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
@@ -1098,7 +1098,7 @@ In the following matrix possible interactions between zones are described. The m
 **DIRECTED** |||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** ||||||||||(8)|(7)|(9)
 
-1) If actions would conflict with other zones behavior, report a 'CRITICAL' error (order error) and stop the vehicle.
+1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the vehicle.
 2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
 4) The lowest of the competing speeds applies.
@@ -1110,7 +1110,7 @@ In the following matrix possible interactions between zones are described. The m
 
 ### 6.9.5 Error handling within zones
 
-If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a CRITICAL error to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
+If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
 
 ## 6.10 Actions
 
@@ -1548,7 +1548,7 @@ charging | | boolean | “true”: charging in progress.<br>“false”: the AGV
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Type/name of error
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., nodeId, edgeId, orderId, actionId, etc.) to provide more information related to the error.<br>For additional information see [7 Best practice](#7-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array of JSON object | Array of translations of the error description. If a particular language is not included in the collection, the value of the errorDescription field, if present, shall be used as the default. 
