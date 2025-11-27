@@ -1682,7 +1682,7 @@ timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., 
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
-connectionState | string | Enum {'ONLINE', 'OFFLINE', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between AGV and broker is active.<br><br>'OFFLINE': connection between AGV and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': connection between AGV and broker is active, but AGV stops sending state messages. This mode is intended for power-saving or communication reduction. The AGV can later resume to ONLINE when instructed.<br><br> 'CONNECTIONBROKEN': the connection between AGV and broker has unexpectedly ended.
+connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between AGV and broker is active.<br><br>'OFFLINE': connection between AGV and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': connection between AGV and broker is active, but AGV stops sending state messages. This mode is intended for power-saving or communication reduction. The AGV can later resume to ONLINE when instructed.<br><br> 'CONNECTIONBROKEN': the connection between AGV and broker has unexpectedly ended.
 
 The last will message will not be sent, when a connection is ended in a graceful way by using an MQTT disconnection command.
 The last will message is only sent by the broker, if the connection is unexpectedly interrupted.
