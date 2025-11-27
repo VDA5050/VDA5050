@@ -422,17 +422,18 @@ response | master control | mobile robot | Master controls responses to requests
 
 ### 6.x.1 Request/response mechanism
 
-Certain coordination tasks between mobile robots and master control require an explicit permission before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
+Certain coordination tasks between mobile robots and the master control require explicit permission from the master control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
 
 A request is always initiated by the mobile robot and communicated as part of the state message. The master control evaluates the request and returns its decision via the response topic.
 
-Each request is represented on the mobile robot by a request object (e.g. zoneRequest) that is included in the state message. The request object shall contain at least:
+Each request is represented on the mobile robot by a request object (e.g. zoneRequest) which is included in the state message. The request object shall contain at minimum:
 	- a requestId that is unique per mobile robot for all currently active requests,
 	- a requestType that specifies the kind of operation the request refers to (access, replanning, use of corridor),
-	- a reference to the resource the request addresses (e.g. zone, zone set, map, edgeid, sequenceId), and
+	- a reference to the resource the request addresses (e.g. zone, zone set, map, edgeId, sequenceId), and
 	- a requestStatus.
 
 The field requestStatus describes the life cycle of the request and shall support the following values:
+    - 'REQUESTED': Vehicle request. 
 	- 'GRANTED': master control grants request. 
 	- 'REVOKED': master control revokes previously granted request. 
 	- 'REJECTED': master control rejects a request. 
@@ -447,7 +448,7 @@ If a request is answered with 'QUEUED', master control acknowledges reception of
 
 If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a leaseExpiry is present, the permission shall only be considered valid until this time. Master control can extend a lease by sending an updated response with the same requestId and a new leaseExpiry.
 
-If a request is answered with 'REVOKED', or if the leaseExpiry is reached, the mobile robot shall update the requestStatus accordingly ('REVOKED' or 'EXPIRED') and shall not initiate or continue the corresponding operation, unless the specific application layer defines a safe exception. The detailed behavior in these cases (e.g. stop, continue, evacuate) is defined by the respective application context (such as zones) and shall be specified in the corresponding chapter.
+If a request is answered with 'REVOKED', or if the leaseExpiry is reached, the mobile robot shall update the requestStatus accordingly ('REVOKED' or 'EXPIRED') and shall act according to the releaseLossBehavior.
 
 If no response is received within the time frame required by the application, the mobile robot shall behave as if the request had not been granted and shall not perform the operation that requires explicit permission. The handling of timeouts and retries shall be defined during integration.
 
