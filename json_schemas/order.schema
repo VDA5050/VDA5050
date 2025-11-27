@@ -52,6 +52,10 @@
             "type": "integer",
             "minimum": 0
         },
+        "orderDescription": {
+            "description": "dditional human-readable information only for visualization purposes; this may not be used for any logical processes.",
+            "type": "string"
+        },
         "nodes": {
             "description": "Array of nodes objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "type": "array",
@@ -78,7 +82,7 @@
                         "minimum": 0,
                         "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
-                    "nodeDescription": {
+                    "nodeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the node."
                     },
@@ -124,7 +128,7 @@
                                 "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
                                 "type": "string"
                             },
-                            "mapDescription": {
+                            "mapDescriptor": {
                                 "description": "Additional information on the map.",
                                 "type": "string"
                             }
@@ -164,7 +168,7 @@
                         "minimum": 0,
                         "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
-                    "edgeDescription": {
+                    "edgeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the edge."
                     },
@@ -339,7 +343,7 @@
                     "type": "string",
                     "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
-                "actionDescription": {
+                "actionDescriptor": {
                     "type": "string",
                     "description": "Additional information on the action."
                 },

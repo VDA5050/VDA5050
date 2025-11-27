@@ -50,7 +50,7 @@
             "type": "string",
             "description": "Globally unique identifier of the map the zone set particularizes."
         },
-        "zoneSetDescription": {
+        "zoneSetDescriptor": {
             "type": "string",
             "description": "Human readable description of the zone set."
         },
@@ -90,7 +90,7 @@
                         "BIDIRECTED"
                     ]
                 },
-                "zoneDescription": {
+                "zoneDescriptor": {
                     "type": "string",
                     "description": "User-defined human-readable name or descriptor."
                 },
@@ -269,7 +269,7 @@
                     "type": "string",
                     "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
-                "actionDescription": {
+                "actionDescriptor": {
                     "type": "string",
                     "description": "Additional information on the action."
                 },

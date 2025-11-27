@@ -740,6 +740,7 @@ manufacturer | | string | Manufacturer of the AGV
 serialNumber | | string | Serial number of the AGV
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
 orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message.
+*orderDescription* | | string | Additional human-readable information only for visualization purposes; this may not be used for any logical processes.
 **nodes [node]** | | array | Array of node objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 **edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 
@@ -780,7 +781,7 @@ Object structure | Unit | Data type | Description
 **action** { | | JSON object | Describes an action that the AGV can perform.
 actionType | | string | Name of action as described in the first column of "Actions and Parameters". <br> Identifies the function of the action.
 actionId | | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
-*actionDescription* | | string | Additional information on the action
+*actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 blockingType | | string | Enum {'NONE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
 ***actionParameters [actionParameter]*** <br><br> } | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.2 Format of parameters](#72-format-of-parameters).
 *retriable* | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails. Default value if not defined "false"
@@ -790,7 +791,7 @@ Object structure | Unit | Data type | Description
 **edge** { | | JSON object | Directional connection between two nodes.
 edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
-*edgeDescription* | | string | Additional information on the edge.
+*edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId | | string | nodeId of first node within the order.
 endNodeId | | string | nodeId of the last node within the order.
@@ -980,7 +981,7 @@ The content of a zone set with a unique `zoneSetId` shall not change. If changes
 | zoneSet{ | JSON object | Zone set detailing a dedicated map. | 
 | mapId | string | Globally unique identifier of the map the zone set particularizes. | 
 | zoneSetId | string | Globally unique identifier of the zone set. |
-| *zoneSetDescription* | string | Human readable description of the zone set. | 
+| *zoneSetDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | zones[zone] <br> } | array | Array of zone objects. | 
 
 A single zone object has the following structure: 
@@ -990,7 +991,7 @@ A single zone object has the following structure:
 | zone{ | JSON object | |
 | zoneId | string | Locally (within the zone set) unique identifier. |
 | zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to section [6.9.1 Zone types](#691-zone-types). |
-| *zoneDescription* | string | User-defined human-readable name or descriptor. | 
+| *zoneDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
 | maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
 | **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
@@ -1410,7 +1411,7 @@ Object structure | Unit | Data type | Description
 **nodeState** { | JSON object | |
 nodeId | | string | Unique node identification.
 sequenceId | | uint32 | sequence ID to discern multiple nodes with same nodeId.
-*nodeDescription* | | string | Additional information on the node.
+*nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released| | boolean | "true" indicates that the node is part of the base.<br>"false" indicates that the node is part of the horizon.
 ***nodePosition***<br><br>}| | JSON object | Node position. <br>The object is defined in Section [6.6 Topic "order"](#66-topic-order-from-master-control-to-agv) <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e.g., for debugging purposes.
 
@@ -1419,7 +1420,7 @@ Object structure | Unit | Data type | Description
 **edgeState** { | | JSON object | |
 edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | sequence ID to differentiate between multiple edges with the same edgeId.
-*edgeDescription* | | string | Additional information on the edge.
+*edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
 ***trajectory*** <br><br>} | | JSON object | The trajectory is to be communicated as NURBS and is defined in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)<br><br>Trajectory segments start from the point, where the vehicle enters the edge, and terminate at the point, where the vehicle reports that the end node was traversed.
 
@@ -1473,7 +1474,7 @@ x | m | float64 | X-position on the map in reference to the map coordinate syste
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV.
 mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When an AGV uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
-*mapDescription*<br>} | | string | Additional information on the map.
+*mapDescriptor*<br>} | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1531,9 +1532,9 @@ Object structure | Unit | Data type | Description
 **actionState** { | | JSON object |
 actionId | |string | Unique identifier of the action.
 *actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Master control is aware of action type as dispatched in the order.
-*actionDescription* | | string | Additional information on the current action.
+*actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.13 actionStates](#613-action-states).
-*resultDescription*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
+*actionResult*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1573,7 +1574,7 @@ Object structure | Unit | Data type | Description
 **info** { | | JSON object |
 infoType | | string | Type/name of information.
 *infoReferences [infoReference]* | | array | Array of references.
-*infoDescription* | | string | Description of the information.
+*infoDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 infoLevel <br>}| | string | Enum {'DEBUG', 'INFO'}<br><br>'DEBUG': used for debugging.<br> 'INFO': used for visualization.
 
 Object structure | Unit | Data type | Description
