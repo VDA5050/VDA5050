@@ -434,7 +434,8 @@ Each request is represented on the mobile robot by a request object (e.g. zoneRe
 
 The field requestStatus describes the life cycle of the request and shall support the following values:
     - 'REQUESTED': Vehicle request. 
-	- 'GRANTED': master control grants request. 
+- 'GRANTED': The master control grants the request.
+- ```
 	- 'REVOKED': master control revokes previously granted request. 
 	- 'REJECTED': master control rejects a request. 
 	- 'QUEUED': Acknowledge the vehicle's request to the master control, but no permission is given yet. Request was added to some sort of a queue.
