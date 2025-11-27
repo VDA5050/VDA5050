@@ -71,7 +71,7 @@
                         "type": "string",
                         "description": "Version of the map."
                     },
-                    "mapDescription": {
+                    "mapDescriptor": {
                         "type": "string",
                         "description": "Additional information on the map."
                     },
@@ -180,7 +180,7 @@
                         "type": "integer",
                         "description": "sequenceId to discern multiple nodes with same nodeId."
                     },
-                    "nodeDescription": {
+                    "nodeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the node."
                     },
@@ -233,7 +233,7 @@
                         "type": "integer",
                         "description": "sequenceId of the edge."
                     },
-                    "edgeDescription": {
+                    "edgeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the edge."
                     },
@@ -330,7 +330,7 @@
                 "mapId": {
                     "type": "string"
                 },
-                "mapDescription": {
+                "mapDescriptor": {
                     "type": "string"
                 },
                 "positionInitialized": {
@@ -483,7 +483,7 @@
         },
         "actionStates": {
             "type": "array",
-            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
+            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
@@ -626,7 +626,7 @@
                             }
                         }
                     },
-                    "infoDescription": {
+                    "infoDescriptor": {
                         "type": "string",
                         "description": "Info of description."
                     },
@@ -732,7 +732,7 @@
                     "type": "string",
                     "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
                 },
-                "actionDescription": {
+                "actionDescriptor": {
                     "type": "string",
                     "description": "Additional information on the current action."
                 },
@@ -748,7 +748,7 @@
                         "FAILED"
                     ]
                 },
-                "resultDescription": {
+                "resultDescriptor": {
                     "type": "string",
                     "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
                 }
