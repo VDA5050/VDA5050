@@ -71,7 +71,7 @@
                         "type": "string",
                         "description": "Version of the map."
                     },
-                    "mapDescription": {
+                    "mapDescriptor": {
                         "type": "string",
                         "description": "Additional information on the map."
                     },
@@ -88,7 +88,7 @@
         },
         "zoneSets":{
             "type": "array",
-            "description": "Array of ZoneSet objects that are currently stored on the vehicle.",
+            "description": "Array of zoneSet objects that are currently stored on the vehicle.",
             "items": {
                 "type": "object",
                 "title": "zoneSet",
@@ -153,8 +153,10 @@
             "type": "string",
             "description": "Current operating mode of the AGV.",
             "enum": [
+                "STARTUP",
                 "AUTOMATIC",
                 "SEMIAUTOMATIC",
+                "INTERVENED",
                 "MANUAL",
                 "SERVICE",
                 "TEACHIN"
@@ -180,7 +182,7 @@
                         "type": "integer",
                         "description": "sequenceId to discern multiple nodes with same nodeId."
                     },
-                    "nodeDescription": {
+                    "nodeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the node."
                     },
@@ -233,7 +235,7 @@
                         "type": "integer",
                         "description": "sequenceId of the edge."
                     },
-                    "edgeDescription": {
+                    "edgeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the edge."
                     },
@@ -330,7 +332,7 @@
                 "mapId": {
                     "type": "string"
                 },
-                "mapDescription": {
+                "mapDescriptor": {
                     "type": "string"
                 },
                 "positionInitialized": {
@@ -425,11 +427,11 @@
                         "properties": {
                             "length": {
                                 "type": "number",
-                                "description": "Absolute length of the loads bounding box in meter."
+                                "description": "Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box in meters."
                             },
                             "width": {
                                 "type": "number",
-                                "description": "Absolute width of the loads bounding box in meter."
+                                "description": "Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box in meters."
                             },
                             "height": {
                                 "type": "number",
@@ -481,9 +483,42 @@
                 }
             }
         },
+        "edgeRequests": {
+            "description": "Array of edgeRequest objects that are currently active on the mobile robot. Empty array if no edge requests are active.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Edge request information sent by the vehicle to master control.",
+                "required": ["requestId", "requestType", "edgeId", "sequenceId", "requestStatus"],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per vehicle identifier across all active requests."
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["CORRIDOR"],
+                        "description": "Enum specifying the type of edge the request relates to."
+                    },
+                    "edgeId": {
+                        "type": "string",
+                        "description": "Globally unique identifier referencing the edge the request is related to."
+                    },
+                    "sequenceId": {
+                        "type": "integer",
+                        "description": "Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order."
+                    },
+                    "requestStatus": {
+                        "type": "string",
+                        "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                    }
+                }
+            }
+        },
         "actionStates": {
             "type": "array",
-            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
+            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
@@ -491,6 +526,13 @@
         "instantActionStates": {
             "type": "array",
             "description": "Contains an array of all instant action states that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
+            }
+        },
+        "zoneActionStates": {
+            "type": "array",
+            "description": "Contains an array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
@@ -545,7 +587,7 @@
                 "properties": {
                     "errorType": {
                         "type": "string",
-                        "description": "Type/name of error."
+                        "description": "Error type, extensible enumeration including the following predefined values."
                     },
                     "errorReferences": {
                         "type": "array",
@@ -626,7 +668,7 @@
                             }
                         }
                     },
-                    "infoDescription": {
+                    "infoDescriptor": {
                         "type": "string",
                         "description": "Info of description."
                     },
@@ -644,16 +686,15 @@
         "safetyState": {
             "type": "object",
             "required": [
-                "eStop",
+                "activeEmergencyStop",
                 "fieldViolation"
             ],
             "description": "Contains all safety-related information.",
             "properties": {
-                "eStop": {
+                "activeEmergencyStop": {
                     "type": "string",
-                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
-                        "AUTOACK",
                         "MANUAL",
                         "REMOTE",
                         "NONE"
@@ -732,7 +773,7 @@
                     "type": "string",
                     "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
                 },
-                "actionDescription": {
+                "actionDescriptor": {
                     "type": "string",
                     "description": "Additional information on the current action."
                 },
@@ -748,7 +789,7 @@
                         "FAILED"
                     ]
                 },
-                "resultDescription": {
+                "resultDescriptor": {
                     "type": "string",
                     "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
                 }

@@ -390,7 +390,7 @@
                                 "type": "string",
                                 "description": "unique actionType corresponding to action.actionType"
                             },
-                            "actionDescription": {
+                            "actionDescriptor": {
                                 "type": "string",
                                 "description": "free text: description of the action"
                             },
@@ -444,9 +444,9 @@
                                     }
                                 }
                             },
-                            "resultDescription": {
+                            "resultDescriptor": {
                                 "type": "string",
-                                "description": "free text: description of the resultDescription"
+                                "description": "free text: description of the resultDescriptor"
                             },
                             "blockingTypes": {
                                 "type": "array",
@@ -456,6 +456,7 @@
                                    "enum": [
                                       "NONE",
                                       "SOFT",
+                                      "SINGLE",
                                       "HARD"
                                    ]
                                 }
@@ -697,11 +698,11 @@
                                 "properties": {
                                     "length": {
                                         "type": "number",
-                                        "description": "Absolute length of the load´s bounding box."
+                                        "description": "Absolute length (along the mobile robot’s coordinate system’s x-axis) of the load's bounding box in meters."
                                     },
                                     "width": {
                                         "type": "number",
-                                        "description": "Absolute width of the load´s bounding bo"
+                                        "description": "Absolute width (along the mobile robot’s coordinate system’s y-axis) of the load's bounding box in meters."
                                     },
                                     "height": {
                                         "type": "number",
