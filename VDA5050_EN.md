@@ -546,8 +546,9 @@ The AGV can always check that the last known base node has the same `nodeId` (an
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
-It is important, that the contents of the stitching node (node g in the example case) are not changed.
-For actions, deviation range, etc., the AGV shall use the instructions provided in the first order (Figure 5, orderUpdateId 0).
+It is important that the contents of the decision point (node g in Figure 7) are not changed. This means actions, deviation range etc. have to be resent (see Figure 7.1 (new figure), orderUpdateId 1).
+In order to release actions for the mobile robot to execute on a node it is already positioned on through an order update, the master control must re-send this node once with all meta-data (including potentially already 'FINISHED'/'RUNNING' actions) from the previous order update, which will not be executed again by the robot, and then add a node with the now newly released actions to be executed with this order update. This node can have the same `nodeId` as the decision node or a different `nodeId` but the same position as the decision node. The `sequenceId` of the new node is always the `sequenceId` of the decision node +2.
+Note that for this purpose the vehicle shall be able to process a logical edge connecting a graph node to itself.
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension.
