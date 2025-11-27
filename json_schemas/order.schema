@@ -52,6 +52,10 @@
             "type": "integer",
             "minimum": 0
         },
+        "orderDescription": {
+            "description": "dditional human-readable information only for visualization purposes; this may not be used for any logical processes.",
+            "type": "string"
+        },
         "nodes": {
             "description": "Array of nodes objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "type": "array",

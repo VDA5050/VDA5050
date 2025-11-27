@@ -706,7 +706,7 @@ manufacturer | | string | Manufacturer of the AGV
 serialNumber | | string | Serial number of the AGV
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
 orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message.
-orderDescription | | string | Additional human-readable information only for visualization purposes; this may not be used for any logical processes.
+*orderDescription* | | string | Additional human-readable information only for visualization purposes; this may not be used for any logical processes.
 **nodes [node]** | | array | Array of node objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 **edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order. <br>One node is enough for a valid order. <br>Leave edge array empty in that case.
 
