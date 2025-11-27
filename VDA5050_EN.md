@@ -113,58 +113,37 @@ Version 3.0.0
 
 # 1 Foreword
 
-The interface was established in cooperation between the Verband der Automobilindustrie e.V. (VDA) and Verband Deutscher Maschinen- und Anlagenbau e. V. (VDMA).
-The aim of both parties is to create a universally applicable interface.
-Proposals for changes to the interface shall be submitted to the VDA, are evaluated jointly with the VDMA and adopted into a new version status in the event of a positive decision.
+The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized master control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the master control system and individual mobile robots.
+The specification for this interface was jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V..
+Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
 The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
 
 
-# 2 Objective of the document
+# 2 Scope
+This document specifies a standardized, vendor-neutral communication interface between a master control system and individual mobile robots to:
+- Reduce integration complexity when connecting mobile robots to a master control system.
+- Enable heterogeneous fleet operation, allowing mobile robots from different manufacturers to operate collaboratively within a shared physical environment.
+- Provide a generic toolkit applicable across diverse mobile robot configurations, including variations in navigation principles, vehicle dimensions, load-handling or manipulation devices, and levels of autonomy.
 
-The objective of the recommendation is to simplify the connection of new vehicles to an existing master control system and to enable parallel operation with AGVs from different manufacturers and conventional systems (inventory systems) in the same working environment.
+The interface is designed to be independent of proprietary solutions and applicable across all domains where mobile robots are deployed.
+The document also defines a foundational concept for coordinated multi-robot systems, serving as the basis for traffic management and specifying the required logic and expected behavior of mobile robots within such systems.
 
-A uniform interface between a master control and AGVs shall be defined.
-This should be achieved by the following points:
-
-- Description of a standard for communication between AGV and master control and thus a basis for the integration of transport systems into a continuous process automation using co-operating transport vehicles.
-- Increase in flexibility through, among other things, increased vehicle autonomy, process modules and interface, and preferably the separation of a rigid sequence of event-controlled command chains.
-- Reduction of implementation time due to high "Plug & Play" capability, as required information (e.g., order information) are provided by central services and are generally valid. Vehicles should be able to be put into operation independently of the manufacturer with the same implementation effort taking into account the requirements of occupational safety.
-- Complexity reduction and increase of the "Plug & Play" capability of the systems through the use of uniform, overarching coordination with the corresponding logic for all transport vehicles, vehicle models and manufacturers.
-- Increase in manufacturers' independence using common interfaces between vehicle control and coordination level.
-- Integration of proprietary DTS inventory systems by implementing vertical communication between the proprietary master control and the superordinate master control (cf. Figure 1).
-
-![Figure 1 Integration of DTS inventory systems](./assets/concept_DTS.png)
->Figure 1 Integration of DTS inventory systems
-
-In order to implement the above-mentioned objectives, this document describes an interface for the communication of order and status information between AGV and master control.
-
-Other interfaces required for operation between AGV and master control (e.g., taking special skills freely into account with regard to path planning, etc.) or for communicating with other system components (e.g., external peripherals, fire protection gates, etc.) are not initially included in this document.
-
-
-# 3 Scope
-
-This recommendation contains definitions and best practice regarding communication between automated guided vehicles (AGVs) and master control.
-The goal is to allow AGVs with different characteristics (e.g., underrun tractor or fork lift AGV) to communicate with master control in a uniform language. 
-This creates the basis for operating any combination of AGVs in a master control.
-The master control provides orders and coordinates the AGV traffic.
-
-The interface is based on the requirements from production and plant logistics in the automotive industry.
-According to the formulated requirements, the requirements of intralogistics cover the requirements of the logistics department, i.e., the logistical processes from goods receiving to production supply to goods out, through control of freely navigating vehicles and guided vehicles.
-
-In contrast to automated vehicles, autonomous vehicles solve problems that occur on the basis of the corresponding sensor system and algorithms independently and can react accordingly to changes in a dynamic environment or be adapted to them shortly afterwards.
-Autonomous properties such as the independent bypassing of obstacles can be fulfilled by freely navigating vehicles as well as guided vehicles.
-However, as soon as the path planning is carried out on the vehicle itself, this document describes freely navigating vehicles (see glossary).
-Autonomous systems are not completely decentralized (swarm intelligence) and have defined behavior through predefined rules.
-
-For the purpose of a sustainable solution, an interface is described below which can be expanded in its structure.
-This should enable a complete coverage of the master control for vehicles that are guided.
-Vehicles that are freely navigating can be integrated into the structure; a detailed specification required for this is not part of this recommendation.
-
-For the integration of proprietary stock systems, individual definitions of the interface may be required, which are not considered as part of this recommendation.
+# 3 Exclusions
+The following aspects are explicitly outside the scope and are not covered:
+- Safety Requirements
+	- This document does not constitute a safety standard.
+- Traffic Management Logic
+	- Strategies and algorithms for traffic control (e.g., routing, prioritization, deadlock resolution).
+- Other Communication Interfaces
+	- Interfaces beyond master control and mobile robots (e.g., peripheral devices, external IT systems)
+- Project Coordination
+	- Topics such as project management, integration processes, commissioning procedures, and acceptance criteria
+- Operational Responsibilities
+	- Allocation of responsibilities among operators, integrators, vehicle manufacturers, and master control suppliers for planning, operation, maintenance, and safety
 
 
-## 3.1 Other applicable documents
+## 3 Other applicable documents
 
 Document | Version | Description
 ---|---|---
@@ -175,25 +154,18 @@ LIF – Layout Interchange Format| March 2024 | Definition of a format of track 
 
 # 4 Requirements and protocol definition
 
-The communication interface is designed to support the following requirements:
+Mobile robots should transfer their state at a regular interval or when their state changes.
 
-- Control of min. 1000 vehicles
-- Enabling the integration of vehicles with different degrees of autonomy
-- Enable decision, e.g., with regard to the selection of routes or the behavior at intersections
+Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
 
-Vehicles should transfer their status at a regular interval or when their status changes.
-
-Communication is done over wireless networks, taking into account the effects of connection failures and loss of messages.
-
-The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in conjunction with a JSON structure.
-MQTT 3.1.1 was tested during the development of this protocol and is the minimum required version for compatibility.
+The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON structure.
+MQTT 3.1.1 is the minimum required version for compatibility.
 MQTT allows the distribution of messages to subchannels, which are called "topics".
 Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
 
-The JSON structure allows for a future extension of the protocol with additional parameters.
-The parameters are described in English to ensure that the protocol is readable, comprehensible and applicable outside the German-speaking area.
+The JSON structure allows for future extensions of the protocol with additional parameters.
 
-## 4.1 Terminology and Definitions
+## 4.1 Definitions
 
 To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
 
