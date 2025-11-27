@@ -1859,7 +1859,7 @@ This JSON object defines actions and parameters which are supported by the AGV.
 | &emsp;***actionParameters** [**actionParameter**]* | array of JSON object | Array of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message) within nodes and edges.|
 |&emsp;*{* | | |
 |&emsp;&emsp;key | string | Key string for parameter. |
-|&emsp;&emsp;valueDataType | enum | Data type of value, possible data types are: 'BOOL', 'NUMBER', 'INTEGER', 'FLOAT', 'STRING', 'OBJECT', 'ARRAY'. |
+|&emsp;&emsp;valueDataType | enum | Data type of value, possible data types are: 'BOOL', 'NUMBER', 'INTEGER', 'STRING', 'OBJECT', 'ARRAY'. |
 |&emsp;&emsp;*description* | string | Free-form text: description of the parameter. |
 |&emsp;&emsp;*isOptional* | boolean | "true": optional parameter. |
 |&emsp;*}* | | |
@@ -1988,7 +1988,7 @@ Parameters for errors, information and actions are designed as an array of JSON 
 |---|---|---|
 **actionParameter** { | JSON object | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers.
 key | string | The key of the parameter.
-value</br>} | One of:</br>array,</br>boolean,</br>number,</br>string,</br>object | The value of the parameter that belongs to the key.
+value</br>} | One of:</br>array,</br>boolean,</br>number,</br>integer,</br>string,</br>object | The value of the parameter that belongs to the key.
 
 Examples for the `actionParameter` of an action "someAction" with key-value pairs for stationType and loadType:
 

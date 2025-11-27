@@ -422,12 +422,11 @@
                                         },
                                         "valueDataType": {
                                             "type": "string",
-                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY",
+                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, STRING, OBJECT, ARRAY",
                                             "enum": [
                                                 "BOOL",
                                                 "NUMBER",
                                                 "INTEGER",
-                                                "FLOAT",
                                                 "STRING",
                                                 "OBJECT",
                                                 "ARRAY"
