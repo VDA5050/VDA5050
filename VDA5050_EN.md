@@ -541,7 +541,7 @@ This ensures that the AGV can also perform the order update, i.e., that the firs
 >Figure 6 Pseudocode of an order update. Note the change of the `orderUpdateId`.
 
 This also aids in the event that an order update is lost (e.g., due to an unreliable wireless network).
-The AGV can always check that the last known base node has the same `nodeId` (and `sequenceId`, more on that later) as the first node of a new order update.
+The AGV can always check that the last known base node has the same `nodeId` (and `sequenceId`) as the first node of a new order update.
 
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
