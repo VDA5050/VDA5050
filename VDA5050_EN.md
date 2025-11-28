@@ -568,7 +568,7 @@ To allow loops in orders (like going from node a to b and then back to a) a `seq
 This `sequenceId` runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on).
 This allows for easier tracking of the order progress.
 
-Once a `sequenceId` is assigned, it does not change with order updates (see Figure 7).
+Once a `sequenceId` is assigned and the node is released, it does not change with order updates (see Figure 7).
 This is necessary to determine on AGV side to which node the master control refers to.
 
 Figure 8 describes the process of accepting an order or order update.
