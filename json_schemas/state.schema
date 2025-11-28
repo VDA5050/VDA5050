@@ -159,7 +159,7 @@
                 "INTERVENED",
                 "MANUAL",
                 "SERVICE",
-                "TEACHIN"
+                "TEACH_IN"
             ]
         },
         "nodeStates": {
