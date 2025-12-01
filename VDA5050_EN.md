@@ -6,20 +6,20 @@
 
 ## Version 3.0.0 - Draft (not released by the VDA)
 
-![control system and automated guided vehicles](./assets/csagv.png)
+![control system and mobile robots](./assets/csagv.png)
 
 
 
 ### Brief information
 
 Definition of a communication interface for driverless transport systems (DTS).
-This recommendation describes the communication interface for exchanging order and status data between a central master control and automated guided vehicles (AGVs) for intralogistics processes.
+This recommendation describes the communication interface for exchanging order and status data between a central master control and mobile robots for intralogistics processes.
 
 
 
 ### Disclaimer
 
-The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGVs) and master control and one that is freely applicable to everyone and is non-binding.
+The following explanations serve as an indication for the execution of an interface for communication between mobile robots and master control and one that is freely applicable to everyone and is non-binding.
 Those who apply them shall ensure that they are applied properly in the specific case.
 
 They shall take into account the state of the art prevailing at the time of each issue.
