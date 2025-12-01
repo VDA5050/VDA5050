@@ -77,13 +77,7 @@
                 },
                 "agvClass": {
                     "type": "string",
-                    "description": "Simplified description of AGV class.",
-                    "enum": [
-                        "FORKLIFT",
-                        "CONVEYOR",
-                        "TUGGER",
-                        "CARRIER"
-                    ]
+                    "description": "Simplified description of mobile robot class. Extensible enum: FORKLIFT, CONVEYOR, TUGGER, CARRIER"
                 },
                 "maxLoadMass": {
                     "type": "number",
@@ -93,17 +87,10 @@
                 },
                 "localizationTypes": {
                     "type": "array",
-                    "description": "simplified description of localization type",
+                    "description": "Simplified description of localization type.",
                     "items": {
                         "type": "string",
-                        "enum": [
-                            "NATURAL",
-                            "REFLECTOR",
-                            "RFID",
-                            "DMC",
-                            "SPOT",
-                            "GRID"
-                        ]
+                        "description": "Simplified description of localization type. Extensible enum: NATURAL, REFLECTOR, RFID, DMC, SPOT, GRID",
                     }
                 },
                 "navigationTypes": {
@@ -485,13 +472,7 @@
                         "properties": {
                             "type": {
                                 "type": "string",
-                                "description": "wheel type. DRIVE, CASTER, FIXED, MECANUM",
-                                "enum": [
-                                    "DRIVE",
-                                    "CASTER",
-                                    "FIXED",
-                                    "MECANUM"
-                                ]
+                                "description": "wheel type. Extensible enum: DRIVE, CASTER, FIXED, MECANUM"
                             },
                             "isActiveDriven": {
                                 "type": "boolean",
