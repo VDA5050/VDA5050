@@ -1238,6 +1238,7 @@ actions [action] | array | Array of actions that need to be performed immediatel
 When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `actionStates` array of the AGV's state.
 The `actionStatus` is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an `actionStatus`.
+The `blockingType`of an instant action is always 'NONE'.
 
 
 ## 6.12 Topic: "state" (from AGV to master control)
