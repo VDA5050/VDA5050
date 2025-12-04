@@ -1918,6 +1918,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;***data*** | JSON object | 3D-envelope curve data, format specified in 'format'. |
 | &emsp;*url* | string | Protocol and URL definition for downloading the 3D-envelope curve data, e.g., <ftp://xxx.yyy.com/ac4dgvhoif5tghji>. |
 | &emsp;*description* | string | Free-form text: description of envelope curve set |
+| *usage* | enum | 'EXPLICIT_LAYOUT_INCLUSION_REQUIRED', 'CAN_DO_ANYWHERE', 'WE_NEED_TO_TALK'. |
 | *}* | | |
 
 #### loadSpecification
