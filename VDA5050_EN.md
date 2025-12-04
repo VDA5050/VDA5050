@@ -1876,7 +1876,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |&emsp;&emsp;*isOptional* | boolean | "true": optional parameter. |
 |&emsp;*}* | | |
 |*resultDescription* | string | Free-form text: description of the result. |
-|*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'HARD'} |
+|*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'HARD'}. |
 |*atomic* | boolean | "true": action is atomic and cannot be paused, "false": action is not atomic and can be paused. |
 |*}* | | |
 
