@@ -648,7 +648,7 @@ There are two options:
 
 If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report a "NO_ORDER_TO_CANCEL" error with the `errorLevel` set to 'WARNING'.
+The AGV shall report an error of `errorType` "NO_ORDER_TO_CANCEL" with the `errorLevel` set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
@@ -687,7 +687,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the previous order in its buffer.
-3. The vehicle reports the error "OUTDATED_ORDER_UPDATE" with level 'WARNING'.
+3. The vehicle reports an error of type "OUTDATED_ORDER_UPDATE" and level 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
