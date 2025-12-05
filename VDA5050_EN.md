@@ -492,8 +492,8 @@ The master control has the possibility to change the horizon by sending an updat
 ![Figure 4 Procedure for changing the driving route "Horizon"](./assets/driving_route_horizon.png)
 >Figure 4 Procedure for changing the driving route "Horizon"
 
-In Figure 4, an initial job is first sent by the control panel at time t = 1.
-Figure 5 shows the pseudocode of a possible job.
+In Figure 4, an initial order is first sent by the master control at time t = 1.
+Figure 5 shows the pseudocode of a possible order.
 For the sake of readability, a complete JSON example has been omitted here.
 
 ```
@@ -520,7 +520,7 @@ For the sake of readability, a complete JSON example has been omitted here.
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6).
 Note that the `orderUpdateId` is incremented and that the first node of the order update corresponds to the last shared base node of the previous order message.
 
-This ensures that the AGV can also perform the order update, i.e., that the first node of the job update is reachable by executing the edges already known to the AGV.
+This ensures that the AGV can also perform the order update, i.e., that the first node of the order update is reachable by executing the edges already known to the AGV.
 
 ```
 {
