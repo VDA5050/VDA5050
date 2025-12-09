@@ -805,14 +805,14 @@ sequenceId | | uint32 | Number to track the sequence of nodes and edges in an or
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId | | string | nodeId of first node within the order.
 endNodeId | | string | nodeId of the last node within the order.
-*maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
-*maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
-*minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
+*maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
+*maximumHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
+*minimumHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the vehicle on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.
 *orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional vehicles.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional vehicle, any orientation is possible, for differential drive vehicles, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>If not defined, the default value is 'TANGENTIAL'.
 *direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: "left", "right", "straight".
 *reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional vehicles. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Vehicle can rotate into the desired orientation on the edge.<br>Default: "false".
-*maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
+*maximumRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
 ***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
@@ -840,7 +840,7 @@ Object structure | Unit | Data type | Description
 ***corridor*** { | | JSON object |
 leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
 rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
-*corridorRefPoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
+*corridorReferencePoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
 *releaseRequired* |  | boolean | Optional flag that indicates whether the robot must request approval from master control. It has a default value of false.
 *releaseLossBehaviour* | | string | Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the master control.<br> Enum { 'STOP' , 'RETURN' }
 
@@ -947,7 +947,7 @@ The following contour-based zones are defined:
 | | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a RELEASE_LOST error with level CRITICAL. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the vehicle has already entered the zone, the vehicle continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the vehicle waits for a new order.| 
 | COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their path if granted permission by master control. | 
 | SPEED_LIMIT | | | Vehicles must not drive faster than the defined maximum speed within this zone. | 
-| | maxSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
+| | maximumSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
 | ACTION | | | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
 | | entryActions[action] | array | Actions to be triggered when entering the zone. Empty array, if no actions required. |
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty array, if no actions required. |
@@ -1003,7 +1003,7 @@ A single zone object has the following structure:
 | zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to section [6.9.1 Zone types](#691-zone-types). |
 | *zoneDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
-| maxSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
+| maximumSpeed | float64 | Required only for SPEED_LIMIT zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
 | **entryActions[Action]**| array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
 | **duringActions[Action]** | array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
 | **exitActions[Action]** | array | Required only for ACTION zone as defined in chapter [6.9.1 Zone types](#691-zone-types).| 
@@ -1155,7 +1155,7 @@ stopHibernation | startHibernation | Ends hibernate mode. <br>Upon success, the 
 shutdown | - | Initiates a coordinated shutdown of the mobile robot, where it disconnects from the MQTT broker and clears all orders. Action execution requires the mobile robot to be in an idle state. There is no way using the VDA 5050 protocol to automatically restart due to the connection being terminated.<br>If a mobile robot is in hibernate mode but should be shut down, it must first exit hibernation (via stopHibernation) before executing shutdown.| yes | - | - | yes | no | no
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Discontinues the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle or charging station, e.g., if the battery is full. <br>The battery state is only allowed to be "false", when the AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initPosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
+initializePosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
 downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
@@ -1191,7 +1191,7 @@ stopHibernation | - | Deactivation of the hibernate mode is in preparation. If t
 shutdown | - | Activation of the OFFLINE connection state is in preparation. If the AGV supports an instant transition, this state can be omitted.| - |Vehicle shall not be moving. All actions are in an end state, and all orders are cleared. The connection between AGV and broker is terminated in a coordinated way.<br>The AGV reports connection state "OFFLINE".| The shutdown cannot be executed for some reason (e.g., vehicle is not in idle state, overridden by a hardware switch).
 startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: "true". | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error.
 stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: "false" | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error.
-initPosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
+initializePosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
 | downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download is finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapStatus to 'DISABLED'. | The download failed, updated in vehicle state (e.g., connection lost, Map server unreachable, mapId/mapVersion not existing on map server). |
 | enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
 | deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
@@ -1392,7 +1392,7 @@ lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the 
 **edgeStates [edgeState]** | |array | Array of edgeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 ***plannedPath*** | | JSON object |  Represents a path within the robot's currently active order as NURBS.
 ***intermediatePath*** | | JSON object |  Represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors.
-***agvPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional: Can only be omitted for AGVs without the capability to localize themselves, e.g., line-guided AGVs.
+***robotPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional: Can only be omitted for AGVs without the capability to localize themselves, e.g., line-guided AGVs.
 ***velocity*** | | JSON object | The AGV velocity in vehicle coordinates.
 ***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If the AGV cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
 driving | | boolean | "true": indicates, that the mobile robot is driving (manual or automatic). Other movements (e.g., lift movements) are not included here.<br>"false": indicates that the mobile robot is not driving.
@@ -1478,13 +1478,13 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-coordinate described in the project-specific coordinate system.
 y | m | float64 | Y-coordinate described in the project-specific coordinate system.
 *theta* | rad | float64 | Absolute orientation of the vehicle in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
-ETA | | string | Estimated time of arrival/traversal. ETA is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
+estimatedArrivalTime | | string | Estimated time of arrival/traversal. estimatedArrivalTime is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
 } | | |
 
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**agvPosition** { | | JSON object | Defines the position on a map in world coordinates. Each floor has its own map.
+**robotPosition** { | | JSON object | Defines the position on a map in world coordinates. Each floor has its own map.
 localized | | boolean | "true": mobile robot is localized. `x`, `y`, and `theta` can be trusted.<br>"false": mobile robot is not localized. `x`, `y`, and `theta` cannot be trusted.<br>Changing to the state to "false" is only allowed if the vehicle cannot determine its position anymore. The vehicle shall report this state via an error (`errorType` = "localizationError", `errorLevel` = "FATAL"). While this is set to "false", the vehicle shall not resume automatic driving or continue its order.
 *localizationScore* | | float64 | Range: [0.0 ... 1.0]<br>Describes the quality of the localization and can therefore be used, e.g., by SLAM vehicles to describe how accurate the current position information is.<br>0.0: lowest possible confidence<br>1.0: highest possible confidence.<br>Only for logging and visualization purposes.
 *deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br>Only for logging and visualization purposes.
@@ -1562,7 +1562,7 @@ batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values 
 *batteryCurrent* | A | float64 | Battery current in Ampere (A).
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
 charging | | boolean | “true”: charging in progress.<br>“false”: the AGV is currently not charging.
-*reach* <br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated reach with current state of charge. 
+*reach* <br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated distance to drive with current state of charge. 
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1590,7 +1590,7 @@ translationValue <br>} | | string | Translation in language of translation key.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **info** { | | JSON object |
-infoType | | string | Type/name of information.
+informationType | | string | Type/name of information.
 *infoReferences [infoReference]* | | array | Array of references.
 *infoDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 infoLevel <br>}| | string | Enum {'DEBUG', 'INFO'}<br><br>'DEBUG': used for debugging.<br> 'INFO': used for visualization.
@@ -1770,9 +1770,9 @@ The factsheet consists of the JSON objects listed in the following table.
 | **physicalParameters** | JSON object | These parameters specify the basic physical properties of the AGV. |
 | **protocolLimits** | JSON object | Limits for length of identifiers, arrays, strings, and similar in MQTT communication. |
 | **protocolFeatures** | JSON object | Supported features of VDA5050 protocol. |
-| **agvGeometry** | JSON object | Detailed definition of AGV geometry. |
+| **robotGeometry** | JSON object | Detailed definition of AGV geometry. |
 | **loadSpecification** | JSON object | Abstract specification of load capabilities. |
-| ***vehicleConfig*** | JSON object | Summary of current software and hardware versions on the vehicle and optional network information. |
+| ***vehicleConfiguration*** | JSON object | Summary of current software and hardware versions on the vehicle and optional network information. |
 
 #### typeSpecification
 
@@ -1782,9 +1782,9 @@ This JSON object describes general properties of the AGV type.
 |---|---|---|
 | seriesName | string | Free text generalized series name as specified by manufacturer. |
 | *seriesDescription* | string | Free text human-readable description of the AGV type series. |
-| agvKinematic | string | Simplified description of the AGV kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omnidirectional vehicle,<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics. |
-| agvClass | string | Simplified description of the AGV class.<br/> Extensable enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br/>FORKLIFT: forklift,<br/>CONVEYOR: AGV with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
-| maxLoadMass | float64 | [kg], Maximum loadable mass. |
+| robotKinematic | string | Simplified description of the AGV kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omnidirectional vehicle,<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics. |
+| robotClass | string | Simplified description of the AGV class.<br/> Extensable enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br/>FORKLIFT: forklift,<br/>CONVEYOR: AGV with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
+| maximumLoadMass | float64 | [kg], Maximum loadable mass. |
 | localizationTypes | array of string | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks,<br/>REFLECTOR: laser reflectors,<br/>RFID: RFID tags,<br/>DMC: data matrix code,<br/>SPOT: magnetic spots,<br/>GRID: magnetic grid.<br/>
 | navigationTypes | array of string | Array of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: no path planning, the AGV follows physical installed paths,<br/>VIRTUAL_LINE_GUIDED: the AGV follows fixed (virtual) paths,<br/>AUTONOMOUS: the AGV plans its path autonomously.|
 | *supportedZones* | array of string | Array of zone types supported by the vehicle.<br/>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
@@ -1795,14 +1795,14 @@ This JSON object describes physical properties of the AGV.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| speedMin | float64 | [m/s] Minimal controlled continuous speed of the AGV. |
-| speedMax | float64 | [m/s] Maximum speed of the AGV. |
-| *angularSpeedMin* | float64 | [Rad/s] Minimal controlled continuous rotation speed of the AGV. |
-| *angularSpeedMax* | float64 | [Rad/s] Maximum rotation speed of the AGV. |
-| accelerationMax | float64 | [m/s²] Maximum acceleration with maximum load. |
-| decelerationMax | float64 | [m/s²] Maximum deceleration with maximum load. |
-| heightMin | float64 | [m] Minimum height of the AGV. |
-| heightMax | float64 | [m] Maximum height of the AGV. |
+| speedMinimum | float64 | [m/s] Minimal controlled continuous speed of the AGV. |
+| speedMaximum | float64 | [m/s] Maximum speed of the AGV. |
+| *angularSpeedMinimum* | float64 | [Rad/s] Minimal controlled continuous rotation speed of the AGV. |
+| *angularSpeedMaximum* | float64 | [Rad/s] Maximum rotation speed of the AGV. |
+| accelerationMaximum | float64 | [m/s²] Maximum acceleration with maximum load. |
+| decelerationMaximum | float64 | [m/s²] Maximum deceleration with maximum load. |
+| heightMinimum | float64 | [m] Minimum height of the AGV. |
+| heightMaximum | float64 | [m] Maximum height of the AGV. |
 | width | float64 | [m] Width of the AGV. |
 | length | float64 | [m] Length of the AGV. |
 
@@ -1813,16 +1813,16 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| **maxStringLens** { | JSON object | Maximum lengths of strings. |
-| &emsp;*msgLen* | uint32 | Maximum MQTT message length. |
-| &emsp;*topicSerialLen* | uint32 | Maximum length of serial number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber |
-| &emsp;*topicElemLen* | uint32 | Maximum length of all other parts in MQTT topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
-| &emsp;*idLen* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
+| **maximumStringLengths** { | JSON object | Maximum lengths of strings. |
+| &emsp;*maximumMessageLength* | uint32 | Maximum MQTT message length. |
+| &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber |
+| &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer |
+| &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId |
 | &emsp;*idNumericalOnly* | boolean | If "true" ID strings need to contain numerical values only. |
-| &emsp;*enumLen* | uint32 | Maximum length of enum and key strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState |
-| &emsp;*loadIdLen* | uint32 | Maximum length of loadId strings. |
+| &emsp;*maximumEnumLength* | uint32 | Maximum length of enum and key strings.<br/><br/>Affected parameters:<br/>action.actionType action.blockingType<br/>edge.direction<br/>actionParameter.key<br/>state.operatingMode<br/>load.loadPosition<br/>load.loadType<br/>actionState.actionStatus<br/>error.errorType<br/>error.errorLevel<br/>errorReference.referenceKey<br/>info.infoType<br/>info.infoLevel<br/>safetyState.eStop<br/>connection.connectionState |
+| &emsp;*maximumLoadIdLength* | uint32 | Maximum length of loadId strings. |
 | } | | |
-| **maxArrayLens** { | JSON object | Maximum lengths of arrays. |
+| **maximumArrayLengths** { | JSON object | Maximum lengths of arrays. |
 | &emsp;*order.nodes* | uint32 | Maximum number of nodes per order processable by the AGV. |
 | &emsp;*order.edges* | uint32 | Maximum number of edges per order processable by the AGV. |
 | &emsp;*node.actions* | uint32 | Maximum number of actions per node processable by the AGV. |
@@ -1841,8 +1841,8 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*information.infoReferences* | uint32 | Maximum number of info references sent by the AGV for each information. |
 | } | | |
 | **timing** { | JSON object | Timing information. |
-| &emsp;minOrderInterval | float32 | [s], Minimum interval sending order messages to the AGV. |
-| &emsp;minStateInterval | float32 | [s], Minimum interval for sending state messages. |
+| &emsp;minimumOrderInterval | float32 | [s], Minimum interval sending order messages to the AGV. |
+| &emsp;minimumStateInterval | float32 | [s], Minimum interval for sending state messages. |
 | &emsp;*defaultStateInterval* | float32 | [s], Default interval for sending state messages, *if not defined, the default value from the main document is used*. |
 | &emsp;*visualizationInterval* | float32 | [s], Default interval for sending messages on visualization topic. |
 | } | | |
@@ -1863,7 +1863,7 @@ This JSON object defines order handling processes, actions and parameters which 
 | &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper AGV operation. |
 | &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this AGV type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
 | } | | |
-| **agvActions** [**agvAction**] | array of JSON object | Array of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **robotActions** [**robotAction**] | array of JSON object | Array of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
@@ -1934,16 +1934,16 @@ This JSON object specifies load handling and supported load types of the AGV.
 |&emsp; *loadPositions* | array of string | Array of load positions btw. load handling devices, this load set is valid for.<br/>*If this parameter does not exist or is empty, this load set is valid for all load handling devices on this AGV.* |
 |&emsp; ***boundingBoxReference*** | JSON object | Bounding box reference as defined in parameter loads[] in state message. |
 |&emsp; ***loadDimensions*** | JSON object | Load dimensions as defined in parameter loads[] in state message. |
-|&emsp; *maxWeight* | float64 | [kg], maximum weight of load type. |
-|&emsp; *minLoadhandlingHeight* | float64 | [m], minimum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *maxLoadhandlingHeight* | float64 | [m], maximum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *minLoadhandlingDepth* | float64 | [m], minimum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *maxLoadhandlingDepth* | float64 | [m], maximum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *minLoadhandlingTilt* | float64 | [rad], minimum allowed tilt for this load type and weight. |
-|&emsp; *maxLoadhandlingTilt* | float64 | [rad], maximum allowed tilt for this load type and weight. |
-|&emsp; *agvSpeedLimit* | float64 | [m/s], maximum allowed speed for this load type and weight. |
-|&emsp; *agvAccelerationLimit* | float64 | [m/s²], maximum allowed acceleration for this load type and weight. |
-|&emsp; *agvDecelerationLimit* | float64 | [m/s²], maximum allowed deceleration for this load type and weight. |
+|&emsp; *maximumWeight* | float64 | [kg], maximum weight of load type. |
+|&emsp; *minimumLoadhandlingHeight* | float64 | [m], minimum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
+|&emsp; *maximumLoadhandlingHeight* | float64 | [m], maximum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
+|&emsp; *minimumLoadhandlingDepth* | float64 | [m], minimum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
+|&emsp; *maximumLoadhandlingDepth* | float64 | [m], maximum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
+|&emsp; *minimumLoadhandlingTilt* | float64 | [rad], minimum allowed tilt for this load type and weight. |
+|&emsp; *maximumLoadhandlingTilt* | float64 | [rad], maximum allowed tilt for this load type and weight. |
+|&emsp; *maximumSpeed* | float64 | [m/s], maximum allowed speed for this load type and weight. |
+|&emsp; *maximumAcceleration* | float64 | [m/s²], maximum allowed acceleration for this load type and weight. |
+|&emsp; *maximumDeceleration* | float64 | [m/s²], maximum allowed deceleration for this load type and weight. |
 |&emsp; *pickTime* | float64 | [s], approx. time for picking up the load |
 |&emsp; *dropTime* | float64 | [s], approx. time for dropping the load. |
 |&emsp; *description* | string | Free-form text: description of the load handling set. |
