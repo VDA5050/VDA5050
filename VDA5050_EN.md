@@ -1431,7 +1431,16 @@ nodeId | | string | Unique node identification.
 sequenceId | | uint32 | sequence ID to discern multiple nodes with same nodeId.
 *nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released| | boolean | "true" indicates that the node is part of the base.<br>"false" indicates that the node is part of the horizon.
-***nodePosition***<br><br>}| | JSON object | Node position. <br>The object is defined in Section [6.6 Topic "order"](#66-topic-order-from-master-control-to-agv) <br>Optional: <br>Master control has this information. <br>Can be sent additionally, e.g., for debugging purposes.
+***nodePosition***<br><br>}| | JSON object | Node position. <br>Optional: Master control has this information. Can be sent additionally, e.g., for debugging purposes.
+
+Object structure | Unit | Data type | Description
+---| --- |--- | ---
+**nodePosition** { | | JSON object | Defines the position on a map in a global project-specific world coordinate system. <br>Each floor has its own map. <br>All maps shall use the same project-specific global origin.
+x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
+y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a vehicle shall match on a node for it to be considered traversed.<br> Optional: vehicle can plan the path by itself.<br>If defined, the vehicle has to assume the theta angle on this node.<br>If previous edge disallows rotation, the vehicle shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the vehicle is to rotate on the node to the edges desired rotation before entering the edge.
+mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+} | | |
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
