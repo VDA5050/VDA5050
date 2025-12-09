@@ -584,7 +584,7 @@ All formatting and JSON data types are correct?
 Is `orderId` of the received order different to `orderId` of order the vehicle currently holds?
 
 3)	**is vehicle still executing an order or waiting for an update?**:
-Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore waiting for an update and executing an order.
+Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore be waiting for an update and executing an order.
 
 4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is it in the node's deviation range (see Section [6.6.1 Concept and logic](#661-concept-and-logic))?
 
@@ -600,7 +600,7 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 ### 6.6.3 Idle state of the mobile robot
 
-A mobile robot is idle if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
+A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
 
 ### 6.6.4 Reporting of horizon actions in the mobile robot's state
 
@@ -614,11 +614,11 @@ MC can optionally pass an `orderId` to reference which order it wants to cancel.
 After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
 A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position and not only on the next node.
 
-If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
-If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
+If there are order related actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
+If there are order related actions running, those actions should be cancelled and also be reported as 'FAILED'.
 If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
-While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
-After all movement of the vehicle and all of its actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
+While order related actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
+After all movement of the vehicle and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 This means that the vehicle is idle and ready to receive new orders.
 
 The `orderId` and `orderUpdateId` are kept.
@@ -1236,7 +1236,7 @@ manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
 actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
-When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `actionStates` array of the AGV's state.
+When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `instantActionStates` array of the AGV's state.
 The `actionStatus` is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an `actionStatus`.
 
@@ -1261,7 +1261,8 @@ Events that trigger the transmission of the state message are:
 - Change in the `lastNodeId` or `lastNodeSequenceId` field
 - Change in the `zoneRequests` field
 - Change in the `batteryState.charging` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
+- Change in the `nodeStates` or `edgeStates` arrays
+- Change in the `actionStates`, `instantActionStates` or `zoneActionStates` arrays
 - Change in the `zoneSets` array
 - Change in the `maps` array
 
@@ -1610,11 +1611,13 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 
 ## 6.13 Action states
 
-When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an order related `action` (attached to a `node` or `edge` of an order), it shall represent this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an `instantAction`, it shall represent this `action` with an `actionState` in its `instantActionStates` array.
+When an AGV executes (or, optionally: plans) a `zoneAction`, it shall represent this `action` with an `actionState` in its `zoneActionStates` array.
 
-`actionStates` describe in the field `actionStatus` at which stage of the action's life cycle the action is.
+The current stage of an action is reflected in the field `actionStatus` of an `actionState`.
 
-Table 2 describes, which value the enum `actionStatus` can hold.
+Table 2 lists possible values the `actionStatus` can take.
 
 actionStatus | Description
 ---|---
@@ -1834,7 +1837,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
 | &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
 | &emsp;*state.loads* | uint32 | Maximum number of load objects sent by the AGV. |
-| &emsp;*state.actionStates* | uint32 | Maximum number of actionStates sent by the AGV. |
+| &emsp;*state.actionStates* | uint32 | Maximum number of objects in actionStates, instantActionStates or zoneActionStates sent by the AGV. |
 | &emsp;*state.errors* | uint32 | Maximum number of errors sent by the AGV in one state message. |
 | &emsp;*state.information* | uint32 | Maximum number of information sent by the AGV in one state message. |
 | &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the AGV for each error. |
