@@ -45,9 +45,10 @@
             "enum": [
                 "ONLINE",
                 "OFFLINE",
+                "HIBERNATING",
                 "CONNECTIONBROKEN"
             ],
-            "description": "ONLINE: connection between AGV and broker is active. OFFLINE: connection between AGV and broker has gone offline in a coordinated way. CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended."
+            "description": "ONLINE: connection between AGV and broker is active. OFFLINE: connection between AGV and broker has gone offline in a coordinated way. HIBERNATING: connection between AGV and broker is active, but AGV stops sending state messages. This mode is intended for power-saving or communication reduction. The AGV can later resume to ONLINE when instructed. CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended."
         }
     }
 }
