@@ -569,7 +569,7 @@ This `sequenceId` runs over the nodes and edges (first node of an order receives
 This allows for easier tracking of the order progress.
 
 Once a `sequenceId` is assigned and the node is released, it does not change with order updates (see Figure 7).
-This is necessary to unambigiously refer nodes of the order, as nodes may be contained more than once (e.g., when driving a circular path).
+This is necessary to unambiguously refer to nodes of the order, as nodes may be contained more than once (e.g., when driving a circular path).
 
 Figure 8 describes the process of accepting an order or order update.
 
