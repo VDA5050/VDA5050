@@ -18,6 +18,7 @@
         "edgeStates",
         "driving",
         "actionStates",
+        "instantActionStates",
         "batteryState",
         "operatingMode",
         "errors",
@@ -519,21 +520,21 @@
         },
         "actionStates": {
             "type": "array",
-            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
+            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
         },
         "instantActionStates": {
             "type": "array",
-            "description": "Contains an array of all instant action states that the vehicle received. Empty array if the vehicle has received no instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "description": "Array of all instant action states that the vehicle received. Empty array if the vehicle has not received any instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
         },
         "zoneActionStates": {
             "type": "array",
-            "description": "Contains an array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
+            "description": "Array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
