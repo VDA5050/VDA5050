@@ -542,7 +542,7 @@ This ensures that the AGV can also perform the order update, i.e., that the firs
 >Figure 6 Pseudocode of an order update. Note the change of the `orderUpdateId`.
 
 This also aids in the event that an order update is lost (e.g., due to an unreliable wireless network).
-The AGV can always check that the last known base node has the same `nodeId` (and `nodeSequenceId`, more on that later) as the first new base node.
+The AGV can always check that the last known base node has the same `nodeId` (and `sequenceId`) as the first node of a new order update.
 
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
@@ -569,8 +569,8 @@ To allow loops in orders (like going from node a to b and then back to a) a `seq
 This `sequenceId` runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on).
 This allows for easier tracking of the order progress.
 
-Once a `sequenceId` is assigned, it does not change with order updates (see Figure 7).
-This is necessary to determine on AGV side to which node the master control refers to.
+Once a `sequenceId` is assigned and the node is released, it does not change with order updates (see Figure 7).
+This is necessary to unambiguously refer to nodes of the order, as nodes may be contained more than once (e.g., when driving a circular path).
 
 Figure 8 describes the process of accepting an order or order update.
 
