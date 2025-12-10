@@ -1611,13 +1611,13 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 
 ## 6.13 Action states
 
-When an AGV receives an order related `action` (attached to a `node` or `edge` of an order), it shall represent this `action` with an `actionState` in its `actionStates` array.
-When an AGV receives an `instantAction`, it shall represent this `action` with an `actionState` in its `instantActionStates` array.
-When an AGV executes (or, optionally: plans) a `zoneAction`, it shall represent this `action` with an `actionState` in its `zoneActionStates` array.
+When an AGV receives an order related `action` (attached to a `node` or `edge` of an order), it shall report this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
+When an AGV executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
 The current stage of an action is reflected in the field `actionStatus` of an `actionState`.
 
-Table 2 lists possible values the `actionStatus` can take.
+Table 2 lists feasible values of the `actionStatus`.
 
 actionStatus | Description
 ---|---
