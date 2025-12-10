@@ -1,0 +1,65 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "response",
+    "description": "Responses from master control to mobile robot's requests.",
+    "subtopic": "/response",
+    "type": "object",
+    "required": [
+        "headerId",
+        "timestamp", 
+        "version", 
+        "manufacturer", 
+        "serialNumber", 
+        "responses"
+    ],
+    "properties": {
+        "headerId": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2)."
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the AGV."
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the AGV."
+        },
+        "responses": {
+            "type": "array",
+            "description": "Array of zone response objects.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "requestId", 
+                    "grantType"
+                    ],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per vehicle identifier within all active requests."
+                    },
+                    "grantType": {
+                        "type": "string",
+                        "enum": ["GRANTED", "QUEUED", "REVOKED", "REJECTED"],
+                        "description": "Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}. 'GRANTED': master control grants request. 'REVOKED': master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the vehicle's request to the master control, but no permission is given yet. Request was added to some sort of a queue."
+                    },
+                    "leaseExpiry": {
+                        "type": "string",
+                        "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+                    }
+                }
+            }
+        }
+    }
+}

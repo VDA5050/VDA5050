@@ -18,6 +18,7 @@
         "edgeStates",
         "driving",
         "actionStates",
+        "instantActionStates",
         "batteryState",
         "operatingMode",
         "errors",
@@ -31,9 +32,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -71,13 +72,44 @@
                         "type": "string",
                         "description": "Version of the map."
                     },
-                    "mapDescription": {
+                    "mapDescriptor": {
                         "type": "string",
                         "description": "Additional information on the map."
                     },
                     "mapStatus": {
                         "type": "string",
                         "description": "Information on the status of the map indicating, if a map version is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "enum": [
+                            "ENABLED",
+                            "DISABLED"
+                        ]
+                    }
+                }
+            }
+        },
+        "zoneSets":{
+            "type": "array",
+            "description": "Array of zoneSet objects that are currently stored on the vehicle.",
+            "items": {
+                "type": "object",
+                "title": "zoneSet",
+                "required": [
+                    "zoneSetId",
+                    "mapId",
+                    "zoneSetStatus"
+                ],
+                "properties": {
+                    "zoneSetId": {
+                        "type": "string",
+                        "description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map."
+                    },
+                    "mapId": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "zoneSetStatus": {
+                        "type": "string",
+                        "description": "ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED. DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.",
                         "enum": [
                             "ENABLED",
                             "DISABLED"
@@ -93,10 +125,6 @@
         "orderUpdateId": {
             "type": "integer",
             "description": "Order Update Identification to identify that an order update has been accepted by the AGV. \"0\" if no previous orderUpdateId is available."
-        },
-        "zoneSetId": {
-            "type": "string",
-            "description": "Unique ID of the zone set that the AGV currently uses for path planning. Must be the same as the one used in the order, otherwise the AGV is to reject the order.\nOptional: If the AGV does not use zones, this field can be omitted."
         },
         "lastNodeId": {
             "type": "string",
@@ -126,11 +154,13 @@
             "type": "string",
             "description": "Current operating mode of the AGV.",
             "enum": [
+                "STARTUP",
                 "AUTOMATIC",
                 "SEMIAUTOMATIC",
+                "INTERVENED",
                 "MANUAL",
                 "SERVICE",
-                "TEACHIN"
+                "TEACH_IN"
             ]
         },
         "nodeStates": {
@@ -153,7 +183,7 @@
                         "type": "integer",
                         "description": "sequenceId to discern multiple nodes with same nodeId."
                     },
-                    "nodeDescription": {
+                    "nodeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the node."
                     },
@@ -206,7 +236,7 @@
                         "type": "integer",
                         "description": "sequenceId of the edge."
                     },
-                    "edgeDescription": {
+                    "edgeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the edge."
                     },
@@ -215,49 +245,66 @@
                         "description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
                     },
                     "trajectory": {
+                        "$ref": "#/definitions/trajectory",
+                        "decription": "Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order."
+                    }
+                }
+            }
+        },
+        "plannedPath": {
+            "type": "object",
+            "required": [
+                "trajectory"
+            ],
+            "description": "Defines the position on a map in world coordinates. Each floor has its own map.",
+            "properties": {
+                "trajectory": {
+                    "$ref": "#/definitions/trajectory"
+                },
+                "traversedNodes": {
+                    "type": "array",
+                    "description": "Array of nodeIds as communicated in the currently executed order that are traversed within the shared planned path.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "intermediatePath": {
+            "type": "object",
+            "description": "",
+            "required": [
+                "polyline"
+            ],
+            "properties": {
+                "polyline": {
+                    "type": "array",
+                    "description": "Array of end points of segments of a polyline.",
+                    "items": {
                         "type": "object",
-                        "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
-                        "required": [
-                            "degree",
-                            "knotVector",
-                            "controlPoints"
-                        ],
+                        "description": "Endpoint of a segment within a defined polyline.",
+                        "required": ["x", "y", "ETA"],
                         "properties": {
-                            "degree": {
-                                "type": "integer",
-                                "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1."
+                            "x": {
+                                "type": "number",
+                                "description": "X-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
                             },
-                            "knotVector": {
-                                "type": "array",
-                                "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1",
-                                "items": {
-                                    "type": "number",
-                                    "maximum": 1.0,
-                                    "minimum": 0.0
-                                }
+                            "y": {
+                                "type": "number",
+                                "description": "Y-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
                             },
-                            "controlPoints": {
-                                "type": "array",
-                                "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
-                                "items": {
-                                    "type": "object",
-                                    "required": [
-                                        "x",
-                                        "y"
-                                    ],
-                                    "properties": {
-                                        "x": {
-                                            "type": "number"
-                                        },
-                                        "y": {
-                                            "type": "number"
-                                        },
-                                        "weight": {
-                                            "type": "number",
-                                            "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0."
-                                        }
-                                    }
-                                }
+                            "theta": {
+                                "type": "number",
+                                "description": "Absolute orientation of the vehicle in the project-specific coordinate system.",
+                                "unit": "rad",
+                                "minimum": -3.14159265359,
+                                "maximum": 3.14159265359
+                            },
+                            "ETA": {
+                                "type": "string",
+                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., '2017-04-15T11:40:03.12Z')."
                             }
                         }
                     }
@@ -287,7 +334,7 @@
                 "mapId": {
                     "type": "string"
                 },
-                "mapDescription": {
+                "mapDescriptor": {
                     "type": "string"
                 },
                 "positionInitialized": {
@@ -382,11 +429,11 @@
                         "properties": {
                             "length": {
                                 "type": "number",
-                                "description": "Absolute length of the loads bounding box in meter."
+                                "description": "Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box in meters."
                             },
                             "width": {
                                 "type": "number",
-                                "description": "Absolute width of the loads bounding box in meter."
+                                "description": "Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box in meters."
                             },
                             "height": {
                                 "type": "number",
@@ -402,49 +449,94 @@
                 }
             }
         },
-        "actionStates": {
+        "zoneRequests": {
+            "description": "Array of zoneRequest objects that are currently active on the AGV. Empty array if no zone requests are active.",
             "type": "array",
-            "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
             "items": {
                 "type": "object",
-                "required": [
-                    "actionId",
-                    "actionStatus"
-                ],
-                "title": "actionState",
+                "description": "Zone information sent by the vehicle to master control.",
+                "required": ["requestId", "requestType", "zoneId", "zoneSetId", "requestStatus"],
                 "properties": {
-                    "actionId": {
+                    "requestId": {
                         "type": "string",
-                        "description": "Unique actionId",
-                        "examples": [
-                            "blink_123jdaimoim234"
-                        ]
+                        "description": "Unique per vehicle identifier within all active requests."
                     },
-                    "actionType": {
+                    "requestType": {
                         "type": "string",
-                        "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
+                        "enum": ["ACCESS", "REPLANNING"],
+                        "description": "Enum specifying the type of zone the request relates to. Feasible values are ACCESS or REPLANNING."
                     },
-                    "actionDescription": {
+                    "zoneId": {
                         "type": "string",
-                        "description": "Additional information on the current action."
+                        "description": "Locally (within the zone set) unique identifier referencing the zone the request is related to."
                     },
-                    "actionStatus": {
+                    "zoneSetId": {
                         "type": "string",
-                        "description": "WAITING: waiting for the trigger (passing the mode, entering the edge) PAUSED: paused by instantAction or external trigger FAILED: action could not be performed.",
-                        "enum": [
-                            "WAITING",
-                            "INITIALIZING",
-                            "RUNNING",
-                            "PAUSED",
-                            "FINISHED",
-                            "FAILED"
-                        ]
+                        "description": "Due to the zoneId only being unique to a zoneSet, the zoneSetId is part of the request."
                     },
-                    "resultDescription": {
+                    "requestStatus": {
                         "type": "string",
-                        "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
+                        "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                    },
+                    "trajectory": {
+                        "$ref": "#/definitions/trajectory"
                     }
                 }
+            }
+        },
+        "edgeRequests": {
+            "description": "Array of edgeRequest objects that are currently active on the mobile robot. Empty array if no edge requests are active.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Edge request information sent by the vehicle to master control.",
+                "required": ["requestId", "requestType", "edgeId", "sequenceId", "requestStatus"],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per vehicle identifier across all active requests."
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["CORRIDOR"],
+                        "description": "Enum specifying the type of edge the request relates to."
+                    },
+                    "edgeId": {
+                        "type": "string",
+                        "description": "Globally unique identifier referencing the edge the request is related to."
+                    },
+                    "sequenceId": {
+                        "type": "integer",
+                        "description": "Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order."
+                    },
+                    "requestStatus": {
+                        "type": "string",
+                        "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                    }
+                }
+            }
+        },
+        "actionStates": {
+            "type": "array",
+            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
+            }
+        },
+        "instantActionStates": {
+            "type": "array",
+            "description": "Array of all instant action states that the vehicle received. Empty array if the vehicle has not received any instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
+            }
+        },
+        "zoneActionStates": {
+            "type": "array",
+            "description": "Array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
+            "items": {
+                "$ref": "#/definitions/actionState"     
             }
         },
         "batteryState": {
@@ -462,6 +554,10 @@
                 "batteryVoltage": {
                     "type": "number",
                     "description": "Battery voltage"
+                },
+                "batteryCurrent": {
+                    "type": "number",
+                    "description": "Battery current in Ampere (A)"
                 },
                 "batteryHealth": {
                     "type": "number",
@@ -493,7 +589,7 @@
                 "properties": {
                     "errorType": {
                         "type": "string",
-                        "description": "Type/name of error."
+                        "description": "Error type, extensible enumeration including the following predefined values."
                     },
                     "errorReferences": {
                         "type": "array",
@@ -527,9 +623,11 @@
                     },
                     "errorLevel": {
                         "type": "string",
-                        "description": "WARNING: AGV is ready to start (e.g., maintenance cycle expiration warning). FATAL: AGV is not in running condition, user intervention required (e.g., laser scanner is contaminated).",
+                        "description": "WARNING: No immediate attention required, mobile robot is able to continue active and accept new order. URGENT: Immediate attention required, mobile robot is able to continue active and accept new order. CRITICAL: Immediate attention required, mobile robot is unable to continue active order, but can accept new order. FATAL: User intervention is required, mobile robot is unable to continue active or accept new order.",
                         "enum": [
                             "WARNING",
+                            "URGENT",
+                            "CRITICAL",
                             "FATAL"
                         ]
                     }
@@ -572,7 +670,7 @@
                             }
                         }
                     },
-                    "infoDescription": {
+                    "infoDescriptor": {
                         "type": "string",
                         "description": "Info of description."
                     },
@@ -590,16 +688,15 @@
         "safetyState": {
             "type": "object",
             "required": [
-                "eStop",
+                "activeEmergencyStop",
                 "fieldViolation"
             ],
             "description": "Contains all safety-related information.",
             "properties": {
-                "eStop": {
+                "activeEmergencyStop": {
                     "type": "string",
-                    "description": "Acknowledge-Type of eStop: AUTOACK: auto-acknowledgeable e-stop is activated, e.g., by bumper or protective field. MANUAL: e-stop hast to be acknowledged manually at the vehicle. REMOTE: facility e-stop has to be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
-                        "AUTOACK",
                         "MANUAL",
                         "REMOTE",
                         "NONE"
@@ -608,6 +705,95 @@
                 "fieldViolation": {
                     "type": "boolean",
                     "description": "Protective field violation. True: field is violated. False: field is not violated."
+                }
+            }
+        }
+    },
+    "definitions": {
+        "trajectory": {
+            "type": "object",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
+            "required": [
+                "controlPoints"
+            ],
+            "properties": {
+                "degree": {
+                    "type": "integer",
+                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases differentiability. If not defined, the default value is 1."
+                },
+                "knotVector": {
+                    "type": "array",
+                    "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1.",
+                    "items": {
+                        "type": "number",
+                        "maximum": 1.0,
+                        "minimum": 0.0
+                    }
+                },
+                "controlPoints": {
+                    "type": "array",
+                    "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "x",
+                            "y"
+                        ],
+                        "properties": {
+                            "x": {
+                                "type": "number"
+                            },
+                            "y": {
+                                "type": "number"
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0.",
+                                "exclusiveMinimum": 0.0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "actionState": {
+            "type": "object",
+            "required": [
+                "actionId",
+                "actionStatus"
+            ],
+            "title": "actionState",
+            "properties": {
+                "actionId": {
+                    "type": "string",
+                    "description": "Unique actionId",
+                    "examples": [
+                        "blink_123jdaimoim234"
+                    ]
+                },
+                "actionType": {
+                    "type": "string",
+                    "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
+                },
+                "actionDescriptor": {
+                    "type": "string",
+                    "description": "Additional information on the current action."
+                },
+                "actionStatus": {
+                    "type": "string",
+                    "description": "WAITING: waiting for the trigger (passing the mode, entering the edge) PAUSED: paused by instantAction or external trigger FAILED: action could not be performed.",
+                    "enum": [
+                        "WAITING",
+                        "INITIALIZING",
+                        "RUNNING",
+                        "PAUSED",
+                        "FINISHED",
+                        "FAILED"
+                    ]
+                },
+                "resultDescriptor": {
+                    "type": "string",
+                    "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
                 }
             }
         }

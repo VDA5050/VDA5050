@@ -23,9 +23,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -52,8 +52,8 @@
             "type": "integer",
             "minimum": 0
         },
-        "zoneSetId": {
-            "description": "Unique identifier of the zone set that the AGV has to use for navigation or that was used by MC for planning.\nOptional: Some MC systems do not use zones. Some AGVs do not understand zones. Do not add to message if no zones are used.",
+        "orderDescription": {
+            "description": "dditional human-readable information only for visualization purposes; this may not be used for any logical processes.",
             "type": "string"
         },
         "nodes": {
@@ -82,7 +82,7 @@
                         "minimum": 0,
                         "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
-                    "nodeDescription": {
+                    "nodeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the node."
                     },
@@ -128,7 +128,7 @@
                                 "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
                                 "type": "string"
                             },
-                            "mapDescription": {
+                            "mapDescriptor": {
                                 "description": "Additional information on the map.",
                                 "type": "string"
                             }
@@ -168,7 +168,7 @@
                         "minimum": 0,
                         "description": "Number to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
                     },
-                    "edgeDescription": {
+                    "edgeDescriptor": {
                         "type": "string",
                         "description": "Additional information on the edge."
                     },
@@ -233,7 +233,7 @@
                         "properties": {
                             "degree": {
                                 "type": "integer",
-                                "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1.",
+                                "description": "Degree of the NURBS curve defining the trajectory. If not defined, the default value is 1.",
                                 "minimum": 1
                             },
                             "knotVector": {
@@ -299,7 +299,19 @@
                                     "KINEMATICCENTER",
                                     "CONTOUR"
                                 ]
-                            }
+                            },
+                            "releaseRequired": {
+                                "type": "boolean",
+                                "description": "Optional flag that indicates if the robot must request approval from the master control. If not defined, no release is required.",
+                            },
+                            "releaseLossBehavior": {
+                                "type": "string",
+                                "description": "Defines how the robot shall behave in case its release of a corridor expires or gets revoked by the master control.",
+                                "enum": [
+                                    'STOP', 
+                                    'RETURN'
+                                ]
+                            },
                         }
                     },
                     "actions": {
@@ -331,7 +343,7 @@
                     "type": "string",
                     "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
-                "actionDescription": {
+                "actionDescriptor": {
                     "type": "string",
                     "description": "Additional information on the action."
                 },
@@ -341,6 +353,7 @@
                     "enum": [
                         "NONE",
                         "SOFT",
+                        "SINGLE",
                         "HARD"
                     ]
                 },
@@ -369,6 +382,7 @@
                                     "array",
                                     "boolean",
                                     "number",
+                                    "integer",
                                     "string", 
                                     "object"
                                 ],

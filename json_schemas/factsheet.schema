@@ -26,9 +26,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -77,13 +77,7 @@
                 },
                 "agvClass": {
                     "type": "string",
-                    "description": "Simplified description of AGV class.",
-                    "enum": [
-                        "FORKLIFT",
-                        "CONVEYOR",
-                        "TUGGER",
-                        "CARRIER"
-                    ]
+                    "description": "Simplified description of mobile robot class. Extensible enum: FORKLIFT, CONVEYOR, TUGGER, CARRIER"
                 },
                 "maxLoadMass": {
                     "type": "number",
@@ -93,17 +87,10 @@
                 },
                 "localizationTypes": {
                     "type": "array",
-                    "description": "simplified description of localization type",
+                    "description": "Simplified description of localization type.",
                     "items": {
                         "type": "string",
-                        "enum": [
-                            "NATURAL",
-                            "REFLECTOR",
-                            "RFID",
-                            "DMC",
-                            "SPOT",
-                            "GRID"
-                        ]
+                        "description": "Simplified description of localization type. Extensible enum: NATURAL, REFLECTOR, RFID, DMC, SPOT, GRID",
                     }
                 },
                 "navigationTypes": {
@@ -115,6 +102,25 @@
                             "PHYSICAL_LINE_GUIDED",
                             "VIRTUAL_LINE_GUIDED",
                             "AUTONOMOUS"
+                        ]
+                    }
+                },
+                "supportedZones": {
+                    "type": "array",
+                    "description": "Array of zone types supported by the vehicle.",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "BLOCKED", 
+                            "LINE_GUIDED", 
+                            "RELEASE", 
+                            "COORDINATED_REPLANNING", 
+                            "SPEED_LIMIT", 
+                            "ACTION", 
+                            "PRIORITY", 
+                            "PENALTY", 
+                            "DIRECTED", 
+                            "BIDIRECTED"
                         ]
                     }
                 }
@@ -202,7 +208,7 @@
                         },
                         "idLen": {
                             "type": "integer",
-                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
                         "idNumericalOnly": {
                             "type": "boolean",
@@ -371,7 +377,7 @@
                                 "type": "string",
                                 "description": "unique actionType corresponding to action.actionType"
                             },
-                            "actionDescription": {
+                            "actionDescriptor": {
                                 "type": "string",
                                 "description": "free text: description of the action"
                             },
@@ -403,12 +409,11 @@
                                         },
                                         "valueDataType": {
                                             "type": "string",
-                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING, OBJECT, ARRAY",
+                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, STRING, OBJECT, ARRAY",
                                             "enum": [
                                                 "BOOL",
                                                 "NUMBER",
                                                 "INTEGER",
-                                                "FLOAT",
                                                 "STRING",
                                                 "OBJECT",
                                                 "ARRAY"
@@ -425,9 +430,9 @@
                                     }
                                 }
                             },
-                            "resultDescription": {
+                            "resultDescriptor": {
                                 "type": "string",
-                                "description": "free text: description of the resultDescription"
+                                "description": "free text: description of the resultDescriptor"
                             },
                             "blockingTypes": {
                                 "type": "array",
@@ -437,6 +442,7 @@
                                    "enum": [
                                       "NONE",
                                       "SOFT",
+                                      "SINGLE",
                                       "HARD"
                                    ]
                                 }
@@ -466,13 +472,7 @@
                         "properties": {
                             "type": {
                                 "type": "string",
-                                "description": "wheel type. DRIVE, CASTER, FIXED, MECANUM",
-                                "enum": [
-                                    "DRIVE",
-                                    "CASTER",
-                                    "FIXED",
-                                    "MECANUM"
-                                ]
+                                "description": "wheel type. Extensible enum: DRIVE, CASTER, FIXED, MECANUM"
                             },
                             "isActiveDriven": {
                                 "type": "boolean",
@@ -678,11 +678,11 @@
                                 "properties": {
                                     "length": {
                                         "type": "number",
-                                        "description": "Absolute length of the load´s bounding box."
+                                        "description": "Absolute length (along the mobile robot’s coordinate system’s x-axis) of the load's bounding box in meters."
                                     },
                                     "width": {
                                         "type": "number",
-                                        "description": "Absolute width of the load´s bounding bo"
+                                        "description": "Absolute width (along the mobile robot’s coordinate system’s y-axis) of the load's bounding box in meters."
                                     },
                                     "height": {
                                         "type": "number",

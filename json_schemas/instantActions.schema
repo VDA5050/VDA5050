@@ -22,9 +22,9 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -62,17 +62,15 @@
                         "type": "string",
                         "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                     },
-                    "actionDescription": {
+                    "actionDescriptor": {
                         "type": "string",
                         "description": "Additional information on the action."
                     },
                     "blockingType": {
                         "type": "string",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": The blockingType of an instant action is always NONE: action can happen in parallel with others, including movement.",
                         "enum": [
-                            "NONE",
-                            "SOFT",
-                            "HARD"
+                            "NONE"
                         ]
                     },
                     "actionParameters": {
