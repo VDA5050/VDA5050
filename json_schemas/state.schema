@@ -19,7 +19,6 @@
         "driving",
         "actionStates",
         "instantActionStates",
-        "zoneActionStates",
         "batteryState",
         "operatingMode",
         "errors",
