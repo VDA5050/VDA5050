@@ -594,7 +594,7 @@ A mobile robot is idle if its nodeStates and edgeStates are empty and all action
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
 MC can optionally pass an `orderId` to reference which order it wants to cancel.
-After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
+After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
 A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position, not merely at the next node.
 
 If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
