@@ -648,7 +648,7 @@ There are two options:
 
 If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report an error of `errorType` "NO_ORDER_TO_CANCEL" with the `errorLevel` set to 'WARNING'.
+The AGV shall report an error of type "NO_ORDER_TO_CANCEL" with the level set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
