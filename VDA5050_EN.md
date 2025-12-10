@@ -851,7 +851,7 @@ To ensure consistent navigation among different types of AGVs, the position is a
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
-The vehicle coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1)  with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward (ISO 9787 5.5). The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
+The vehicle coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward (ISO 9787 5.5). The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
 
 ![Figure 11 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 11 Coordinate system with sample AGV and orientation
