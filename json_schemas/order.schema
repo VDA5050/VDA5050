@@ -113,11 +113,31 @@
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
-                            "allowedDeviationXY": {
-                                "type": "number",
-                                "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
-                                "minimum": 0
-                            },
+                            "allowedDeviationXY":{
+                              "type": "object",
+                              "description": ndicates how precisely a vehicle shall match the position of a node for it to be considered traversed.\nIf a = b= 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if allowedDeviationXY is smaller than what is technically viable for the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master Control the vehicle shall assume the value of a and b as 0.0.\nThe coordinates of the node defines the center of the ellipse.",
+                              "required": [
+                                "a",
+                                "b",
+                                "theta"
+                              ],
+                              "properties": {
+                                "a": {
+                                  "type": "number",
+                                  "description": "Length of the ellipse semi-major axis in meters",
+                                  "minimum": 0
+                                },
+                                "b": {
+                                  "type": "number",
+                                  "description": "Length of the ellipse semi-minor axis in meters",
+                                  "minimum": 0
+                                },
+                                "theta": {
+                                  "type": "number",
+                                  "description": "Rotation angle "
+                                }
+                              }
+                            }
                             "allowedDeviationTheta": {
                                 "type": "number",
                                 "minimum": -3.141592654,
