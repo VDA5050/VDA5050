@@ -151,6 +151,7 @@ VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - DTS master control
 DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
 LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system.
+ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
 
 # 4 Requirements and protocol definition
 
@@ -785,7 +786,7 @@ theta<br>} | rad | float64 | rotation angle (the angle from the positive horizon
 
 ![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
 >Figure xx allowedDeviation ellipse
- 
+
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **action** { | | JSON object | Describes an action that the AGV can perform.
@@ -850,8 +851,7 @@ To ensure consistent navigation among different types of AGVs, the position is a
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
-The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
-This is in accordance with Section 2.11 in DIN ISO 8855.
+The vehicle coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward (ISO 9787 5.5). The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
 
 ![Figure 11 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 11 Coordinate system with sample AGV and orientation
@@ -975,7 +975,7 @@ In kinematic center-based zones, the vehicle's kinematic center determines its e
 | BIDIRECTED | | | While in this zone, vehicles shall only move in the defined direction of travel and its direct opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the velocity vector in the project-specific coordinate system. | 
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
- 
+
 ### 6.9.2 Implementation of the zone set transfer
 
 While this guideline  does not explicitly define a map format, both a zone and a zone set are well-defined JSON objects. This structure shall be maintained when providing the download as well as sending the zones via the separate `zoneSet` topic. This structure is not part of the state message.
@@ -1339,7 +1339,7 @@ The master control shall not use the info messages for logic; they shall only be
 
 The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
- 
+
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
 - An 'URGENT' level issue requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order, and is able to take new orders.
 - A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot can not continue its current order, but is able to take new orders.
