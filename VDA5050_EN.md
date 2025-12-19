@@ -592,11 +592,11 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 6)	**is received order update currently on vehicle?**: Is `orderUpdateId` equal to the one currently on the vehicle?
 
-7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order equal to the current decision point (last node of the current base)? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
+8)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon).  In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-9)	populate/append states refers to the `actionStates`/`nodeStates`/`edgeStates`.
+9)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
 
 ### 6.6.3 Idle state of the mobile robot
 
@@ -781,7 +781,8 @@ Object structure | Unit | Data type | Description
 a | m | float64 | length of the ellipse semi-major axis	in meters.
 b | m | float64 | length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
-(*Remark: A MC system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*)
+
+*Remark: A master control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*
 
 ![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
 >Figure xx allowedDeviation ellipse
@@ -1403,7 +1404,7 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed.
-**zoneActionStates [actionState]** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed.
+***zoneActionStates [actionState]*** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed. If action zones are supported, this field is required.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6126-operating mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
@@ -1638,7 +1639,7 @@ All possible action state transitions are visualized in Figure 16 and examples a
 | **INITIALIZING** | - | - | external trigger | initialization finished, action starting | - | initialization failed, aborted via cancel, switch to manual mode | - |
 | **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
 | **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
-| **RETRIABLE** | - | - | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
+| **RETRIABLE** | - | retries action via retry, external trigger | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
@@ -1877,7 +1878,8 @@ This JSON object defines order handling processes, actions and parameters which 
 |&emsp;*}* | | |
 |*resultDescription* | string | Free-form text: description of the result. |
 |*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'HARD'} |
-|*atomic* | boolean | "true": action is atomic and cannot be paused, "false": action is not atomic and can be paused. |
+|pauseAllowed | boolean | "true": action  a, "false": action cannot be paused. |
+|cancelAllowed | boolean | "true": action can be cancelled, "false": action cannot be cancelled. |
 |*}* | | |
 
 ### agvGeometry
