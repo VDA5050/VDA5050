@@ -562,6 +562,9 @@ The last node of the previous base is the first base node in the updated order.
 With this node the AGV can add the updated order onto the current order (stitching).
 The other nodes and edges from the previous base are not resent.
 
+![Figure 7.1 Order update with additional stitching node.](./assets/update_order_stitching_node.png)
+>Figure 7.1 Order update with additional stitching node (e.g., to execute new actions on decision point)
+
 Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
