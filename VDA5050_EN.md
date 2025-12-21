@@ -1478,7 +1478,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-coordinate described in the project-specific coordinate system.
 y | m | float64 | Y-coordinate described in the project-specific coordinate system.
 *theta* | rad | float64 | Absolute orientation of the vehicle in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
-estimatedArrivalTime | | string | Estimated time of arrival/traversal. estimatedArrivalTime is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., "2017-04-15T11:40:03.12Z").
+eta | | string | Estimated time of arrival/traversal. estimatedArrivalTime is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 } | | |
 
 
