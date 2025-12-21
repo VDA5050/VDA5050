@@ -1770,7 +1770,7 @@ The factsheet consists of the JSON objects listed in the following table.
 | **physicalParameters** | JSON object | These parameters specify the basic physical properties of the AGV. |
 | **protocolLimits** | JSON object | Limits for length of identifiers, arrays, strings, and similar in MQTT communication. |
 | **protocolFeatures** | JSON object | Supported features of VDA5050 protocol. |
-| **robotGeometry** | JSON object | Detailed definition of AGV geometry. |
+| **mobileRobotGeometry** | JSON object | Detailed definition of AGV geometry. |
 | **loadSpecification** | JSON object | Abstract specification of load capabilities. |
 | ***mobileRobotConfiguration*** | JSON object | Summary of current software and hardware versions on the mobile robot and optional network information. |
 
