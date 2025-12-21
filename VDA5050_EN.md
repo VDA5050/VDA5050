@@ -1772,7 +1772,7 @@ The factsheet consists of the JSON objects listed in the following table.
 | **protocolFeatures** | JSON object | Supported features of VDA5050 protocol. |
 | **robotGeometry** | JSON object | Detailed definition of AGV geometry. |
 | **loadSpecification** | JSON object | Abstract specification of load capabilities. |
-| ***vehicleConfiguration*** | JSON object | Summary of current software and hardware versions on the vehicle and optional network information. |
+| ***mobileRobotConfiguration*** | JSON object | Summary of current software and hardware versions on the mobile robot and optional network information. |
 
 #### typeSpecification
 
