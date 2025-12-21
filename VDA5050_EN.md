@@ -1590,7 +1590,7 @@ translationValue <br>} | | string | Translation in language of translation key.
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **info** { | | JSON object |
-informationType | | string | Type/name of information.
+infoType | | string | Type/name of information.
 *infoReferences [infoReference]* | | array | Array of references.
 *infoDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 infoLevel <br>}| | string | Enum {'DEBUG', 'INFO'}<br><br>'DEBUG': used for debugging.<br> 'INFO': used for visualization.
