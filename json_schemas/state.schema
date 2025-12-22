@@ -198,7 +198,7 @@
                             "y",
                             "mapId"
                         ],
-                        "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV).\nOptional:Master control has this information. Can be sent additionally, e.g., for debugging purposes. ",
+                        "description": "Node position. Optional: Master control has this information. Can be sent additionally, e.g., for debugging purposes. ",
                         "properties": {
                             "x": {
                                 "type": "number"
