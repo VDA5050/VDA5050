@@ -12,7 +12,7 @@
         "physicalParameters",
         "protocolLimits",
         "protocolFeatures",
-        "agvGeometry",
+        "mobileRobotGeometry",
         "loadSpecification"
     ],
     "subtopic": "/factsheet",
@@ -50,9 +50,9 @@
             "type": "object",
             "required": [
                 "seriesName",
-                "agvKinematic",
-                "agvClass",
-                "maxLoadMass",
+                "mobileRobotKinematic",
+                "mobileRobotClass",
+                "maximumLoadMass",
                 "localizationTypes",
                 "navigationTypes"
             ],
@@ -66,26 +66,20 @@
                     "type": "string",
                     "description": "Free text human readable description of the AGV type series"
                 },
-                "agvKinematic": {
+                "mobileRobotKinematics": {
                     "type": "string",
-                    "description": "simplified description of AGV kinematics-type.",
+                    "description": "simplified description of mobile robots kinematics-type.",
                     "enum": [
                         "DIFF",
                         "OMNI",
                         "THREEWHEEL"
                     ]
                 },
-                "agvClass": {
+                "mobileRobotClass": {
                     "type": "string",
-                    "description": "Simplified description of AGV class.",
-                    "enum": [
-                        "FORKLIFT",
-                        "CONVEYOR",
-                        "TUGGER",
-                        "CARRIER"
-                    ]
+                    "description": "Simplified description of mobile robot class. Extensible enum: FORKLIFT, CONVEYOR, TUGGER, CARRIER"
                 },
-                "maxLoadMass": {
+                "maximumLoadMass": {
                     "type": "number",
                     "description": "maximum loadable mass",
                     "unit": "kg",
@@ -93,17 +87,10 @@
                 },
                 "localizationTypes": {
                     "type": "array",
-                    "description": "simplified description of localization type",
+                    "description": "Simplified description of localization type.",
                     "items": {
                         "type": "string",
-                        "enum": [
-                            "NATURAL",
-                            "REFLECTOR",
-                            "RFID",
-                            "DMC",
-                            "SPOT",
-                            "GRID"
-                        ]
+                        "description": "Simplified description of localization type. Extensible enum: NATURAL, REFLECTOR, RFID, DMC, SPOT, GRID",
                     }
                 },
                 "navigationTypes": {
@@ -142,54 +129,65 @@
         "physicalParameters": {
             "type": "object",
             "required": [
-                "speedMin",
-                "speedMax",
-                "accelerationMax",
-                "decelerationMax",
-                "heightMax",
+                "minimumSpeed",
+                "maximumSpeed",
+                "maximumAcceleration",
+                "maximumDeceleration",
+                "minimumHeight",
+                "maximumHeight",
                 "width",
                 "length"
             ],
-            "description": "These parameters specify the basic physical properties of the AGV",
+            "description": "These parameters specify the basic physical properties of the mobile robot",
             "properties": {
-                "speedMin": {
+                "minimumSpeed": {
                     "type": "number",
-                    "description": "minimal controlled continuous speed of the AGV",
+                    "description": "minimal controlled continuous speed of the mobile robot",
                     "unit": "m/s"
                 },
-                "speedMax": {
+                "maximumSpeed": {
                     "type": "number",
-                    "description": "maximum speed of the AGV",
+                    "description": "maximum speed of the mobile robot",
                     "unit": "m/s"
                 },
-                "accelerationMax": {
+                "minimumAngularSpeed": {
+                    "type": "number",
+                    "description": "minimal controlled continuous rotation speed of the mobile robot",
+                    "unit": "rad/s"
+                },
+                "maximumAngularSpeed": {
+                    "type": "number",
+                    "description": "maximum rotation speed of the mobile robot",
+                    "unit": "rad/s"
+                },
+                "maximumAcceleration": {
                     "type": "number",
                     "description": "maximum acceleration with maximum load",
                     "unit": "m/s^2"
                 },
-                "decelerationMax": {
+                "maximumDeceleration": {
                     "type": "number",
                     "description": "maximum deceleration with maximum load",
                     "unit": "m/s^2"
                 },
-                "heightMin": {
+                "minimumHeight": {
                     "type": "number",
-                    "description": "minimum height of AGV",
+                    "description": "minimum height of mobile robot",
                     "unit": "m"
                 },
-                "heightMax": {
+                "maximumHeight": {
                     "type": "number",
-                    "description": "maximum height of AGV",
+                    "description": "maximum height of mobile robot",
                     "unit": "m"
                 },
                 "width": {
                     "type": "number",
-                    "description": "width of AGV",
+                    "description": "width of the mobile robot",
                     "unit": "m"
                 },
                 "length": {
                     "type": "number",
-                    "description": "length of AGV",
+                    "description": "length of the mobile robot",
                     "unit": "m"
                 }
             }
@@ -197,29 +195,29 @@
         "protocolLimits": {
             "type": "object",
             "required": [
-                "maxStringLens",
-                "maxArrayLens",
+                "maximumStringLengths",
+                "maximumArrayLengths",
                 "timing"
             ],
             "description": "This JSON-object describes the protocol limitations of the AGV. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
             "properties": {
-                "maxStringLens": {
+                "maximumStringLengths": {
                     "type": "object",
                     "description": "maximum lengths of strings",
                     "properties": {
-                        "msgLen": {
+                        "maximumMessageLength": {
                             "type": "integer",
                             "description": "maximum MQTT Message length"
                         },
-                        "topicSerialLen": {
+                        "maximumTopicSerialLength": {
                             "type": "integer",
                             "description": "maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
                         },
-                        "topicElemLen": {
+                        "maximumTopicElementLength": {
                             "type": "integer",
                             "description": "maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
                         },
-                        "idLen": {
+                        "maximumIdLength": {
                             "type": "integer",
                             "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
@@ -227,17 +225,17 @@
                             "type": "boolean",
                             "description": "If true ID-strings need to contain numerical values only"
                         },
-                        "enumLen": {
+                        "maximumEnumLength": {
                             "type": "integer",
                             "description": "maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
                         },
-                        "loadIdLen": {
+                        "maximumLoadIdLength": {
                             "type": "integer",
                             "description": "maximum length of loadId Strings"
                         }
                     }
                 },
-                "maxArrayLens": {
+                "maximumArrayLengths": {
                     "type": "object",
                     "description": "maximum lengths of arrays",
                     "properties": {
@@ -310,17 +308,17 @@
                 "timing": {
                     "type": "object",
                     "required": [
-                        "minOrderInterval",
-                        "minStateInterval"
+                        "minimumOrderInterval",
+                        "minimumStateInterval"
                     ],
                     "description": "timing information",
                     "properties": {
-                        "minOrderInterval": {
+                        "minimumOrderInterval": {
                             "type": "number",
                             "description": "minimum interval sending order messages to the AGV",
                             "unit": "s"
                         },
-                        "minStateInterval": {
+                        "minimumStateInterval": {
                             "type": "number",
                             "description": "minimum interval for sending state-messages",
                             "unit": "s"
@@ -343,7 +341,7 @@
             "type": "object",
             "required": [
                 "optionalParameters",
-                "agvActions"
+                "mobileRobotActions"
             ],
             "description": "Supported features of VDA5050 protocol",
             "properties": {
@@ -376,7 +374,7 @@
                         }
                     }
                 },
-                "agvActions": {
+                "mobileRobotActions": {
                     "type": "array",
                     "description": "list of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
                     "items": {
@@ -465,7 +463,7 @@
                 }
             }
         },
-        "agvGeometry": {
+        "mobileRobotGeometry": {
             "type": "object",
             "description": "Detailed definition of AGV geometry",
             "properties": {
@@ -485,13 +483,7 @@
                         "properties": {
                             "type": {
                                 "type": "string",
-                                "description": "wheel type. DRIVE, CASTER, FIXED, MECANUM",
-                                "enum": [
-                                    "DRIVE",
-                                    "CASTER",
-                                    "FIXED",
-                                    "MECANUM"
-                                ]
+                                "description": "wheel type. Extensible enum: DRIVE, CASTER, FIXED, MECANUM"
                             },
                             "isActiveDriven": {
                                 "type": "boolean",
@@ -709,52 +701,52 @@
                                     }
                                 }
                             },
-                            "maxWeight": {
+                            "maximumWeight": {
                                 "type": "number",
                                 "description": "maximum weight of loadtype",
                                 "unit": "kg"
                             },
-                            "minLoadhandlingHeight": {
+                            "minimumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
                             },
-                            "maxLoadhandlingHeight": {
+                            "maximumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingDepth": {
+                            "minimumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "maxLoadhandlingDepth": {
+                            "maximumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingTilt": {
+                            "minimumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "minimum allowed tilt for this load-type and –weight"
                             },
-                            "maxLoadhandlingTilt": {
+                            "maximumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "maximum allowed tilt for this load-type and –weight"
                             },
-                            "agvSpeedLimit": {
+                            "maximumSpeed": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed speed for this load-type and –weight"
                             },
-                            "agvAccelerationLimit": {
+                            "maximumAcceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed acceleration for this load-type and –weight"
                             },
-                            "agvDecelerationLimit": {
+                            "maximumDeceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed deceleration for this load-type and –weight"
@@ -778,7 +770,7 @@
                 }
             }
         },
-         "vehicleConfig": {
+         "mobileRobotConfiguration": {
             "type": "object",
             "properties": {
                 "versions": {
