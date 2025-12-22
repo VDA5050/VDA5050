@@ -615,8 +615,8 @@ The mobile robot's state shall always represent the full status of the order it 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
 MC can optionally pass an `orderId` to reference which order it wants to cancel.
-After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
-A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position and not only on the next node.
+After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
+A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position, not merely at the next node.
 
 If there are order related actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are order related actions running, those actions should be cancelled and also be reported as 'FAILED'.
@@ -694,12 +694,12 @@ Resolution:
 3. The vehicle reports an error of type "OUTDATED_ORDER_UPDATE" and level 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
-If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
+If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
 
 #### 6.6.4.4 Clearing the order
 
-In response to one of the following events, not triggered by Master Control, the vehicle has to stop executing the current order:
+In response to one of the following events, not triggered by master control, the vehicle has to stop executing the current order:
 
 - The vehicle is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
 - The vehicle cannot determine its position anymore.
