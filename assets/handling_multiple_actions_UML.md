@@ -5,34 +5,34 @@ This markdown file is the original UML diagram from which handling_multiple_acti
 skinparam dpi 400
 skinparam defaultTextAlignment center
 start
-:mobile robot arrives at node \nwith multiple actions;
+:Mobile robot arrives at node \nwith multiple actions;
 #lightgreen:empty parallel execution set;
 
 #lightgreen:iterate over action list;
 repeat
-    if (action for \nparallel execution?) then (no)
-        if (action:\n blockingType) then (HARD)
+    if (Action for \nparallel execution?) then (no)
+        if (Action:\n blockingType?) then (HARD)
         #lightgreen: stop driving;
         else (SINGLE)
         endif
-        if (parallel\n execution list\n empty?) then(Yes)
+        if (Parallel\n execution list\n empty?) then(Yes)
         else(No)
-        #lightgreen: Execute actions from\n parallel execution list;
+        #lightgreen: execute actions from\n parallel execution list;
         endif
-        #lightgreen: Execute HARD action;
+        #lightgreen: execute HARD action;
     else (yes)
-        if () then(SOFT)
+        if (Action:\n blockingType?) then(SOFT)
         #lightgreen: stop driving;
         else(NONE)
         endif
-        #lightgreen: Add action to parallel\n execution list;
+        #lightgreen: add action to parallel\n execution list;
     endif
 repeat while (More actions \non node?) is (Yes) not (No)
-if (parallel\n execution list\n empty?) then(Yes)
+if (Parallel\n execution list\n empty?) then(Yes)
 
 else(No)
-#lightgreen: Execute actions from\n parallel execution list;
+#lightgreen: execute actions from\n parallel execution list;
 endif
-#lightgreen: Continue order\n handling;
+#lightgreen: continue order\n handling;
 @enduml
 ```
