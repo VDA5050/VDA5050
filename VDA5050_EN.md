@@ -151,6 +151,7 @@ VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - DTS master control
 DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
 LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system.
+ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
 
 # 4 Requirements and protocol definition
 
@@ -492,8 +493,8 @@ The master control has the possibility to change the horizon by sending an updat
 ![Figure 4 Procedure for changing the driving route "Horizon"](./assets/driving_route_horizon.png)
 >Figure 4 Procedure for changing the driving route "Horizon"
 
-In Figure 4, an initial job is first sent by the control panel at time t = 1.
-Figure 5 shows the pseudocode of a possible job.
+In Figure 4, an initial order is first sent by the master control at time t = 1.
+Figure 5 shows the pseudocode of a possible order.
 For the sake of readability, a complete JSON example has been omitted here.
 
 ```
@@ -520,7 +521,7 @@ For the sake of readability, a complete JSON example has been omitted here.
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6).
 Note that the `orderUpdateId` is incremented and that the first node of the order update corresponds to the last shared base node of the previous order message.
 
-This ensures that the AGV can also perform the order update, i.e., that the first node of the job update is reachable by executing the edges already known to the AGV.
+This ensures that the AGV can also perform the order update, i.e., that the first node of the order update is reachable by executing the edges already known to the AGV.
 
 ```
 {
@@ -542,7 +543,7 @@ This ensures that the AGV can also perform the order update, i.e., that the firs
 >Figure 6 Pseudocode of an order update. Note the change of the `orderUpdateId`.
 
 This also aids in the event that an order update is lost (e.g., due to an unreliable wireless network).
-The AGV can always check that the last known base node has the same `nodeId` (and `nodeSequenceId`, more on that later) as the first new base node.
+The AGV can always check that the last known base node has the same `nodeId` (and `sequenceId`) as the first node of a new order update.
 
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
@@ -562,6 +563,9 @@ The last node of the previous base is the first base node in the updated order.
 With this node the AGV can add the updated order onto the current order (stitching).
 The other nodes and edges from the previous base are not resent.
 
+![Figure 7.1 Order update with additional stitching node.](./assets/update_order_stitching_node.png)
+>Figure 7.1 Order update with additional stitching node (e.g., to execute new actions on decision point)
+
 Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
@@ -569,8 +573,8 @@ To allow loops in orders (like going from node a to b and then back to a) a `seq
 This `sequenceId` runs over the nodes and edges (first node of an order receives a 0, the first edge then gets the 1, the second node then gets the 2, and so on).
 This allows for easier tracking of the order progress.
 
-Once a `sequenceId` is assigned, it does not change with order updates (see Figure 7).
-This is necessary to determine on AGV side to which node the master control refers to.
+Once a `sequenceId` is assigned and the node is released, it does not change with order updates (see Figure 7).
+This is necessary to unambiguously refer to nodes of the order, as nodes may be contained more than once (e.g., when driving a circular path).
 
 Figure 8 describes the process of accepting an order or order update.
 
@@ -584,7 +588,7 @@ All formatting and JSON data types are correct?
 Is `orderId` of the received order different to `orderId` of order the vehicle currently holds?
 
 3)	**is vehicle still executing an order or waiting for an update?**:
-Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore waiting for an update and executing an order.
+Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore be waiting for an update and executing an order.
 
 4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is it in the node's deviation range (see Section [6.6.1 Concept and logic](#661-concept-and-logic))?
 
@@ -592,15 +596,15 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 6)	**is received order update currently on vehicle?**: Is `orderUpdateId` equal to the one currently on the vehicle?
 
-7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order equal to the current decision point (last node of the current base)? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-8)	**is the received update a valid continuation of the previously completed order?**: Are `nodeId` and `sequenceId` of the first node of the received order update equal to `lastNodeId` and `lastNodeSequenceId`? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). The order update is now accepted if it continues from the last traversed node, therefore the first node of the new base needs to match the vehicle's `lastNodeId` as well as `lastNodeSequenceId`.
+8)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon).  In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-9)	populate/append states refers to the `actionStates`/`nodeStates`/`edgeStates`.
+9)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
 
 ### 6.6.3 Idle state of the mobile robot
 
-A mobile robot is idle if its nodeStates and edgeStates are empty and all actionStates are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
+A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
 
 ### 6.6.4 Reporting of horizon actions in the mobile robot's state
 
@@ -614,11 +618,11 @@ MC can optionally pass an `orderId` to reference which order it wants to cancel.
 After receiving the instantAction `cancelOrder`, the vehicle shall stop as soon as possible (based on its capabilities, e.g., right where it is or on the next node).
 A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position and not only on the next node.
 
-If there are actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
-If there are running actions, those actions should be cancelled and also be reported as 'FAILED'.
+If there are order related actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
+If there are order related actions running, those actions should be cancelled and also be reported as 'FAILED'.
 If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
-While actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
-After all movement of the vehicle and all of its actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
+While order related actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished.
+After all movement of the vehicle and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 This means that the vehicle is idle and ready to receive new orders.
 
 The `orderId` and `orderUpdateId` are kept.
@@ -648,7 +652,7 @@ There are two options:
 
 If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report a "NO_ORDER_TO_CANCEL" error with the `errorLevel` set to 'WARNING'.
+The AGV shall report an error of type "NO_ORDER_TO_CANCEL" with the level set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
@@ -687,7 +691,7 @@ Resolution:
 
 1. Vehicle does NOT take over the new order in its internal buffer.
 2. Vehicle keeps the previous order in its buffer.
-3. The vehicle reports the error "OUTDATED_ORDER_UPDATE" with level 'WARNING'.
+3. The vehicle reports an error of type "OUTDATED_ORDER_UPDATE" and level 'WARNING'.
 4. The vehicle continues with executing the previous order.
 
 If the AGV receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
@@ -697,7 +701,7 @@ This might happen, if the master control resends the order because the state mes
 
 In response to one of the following events, not triggered by Master Control, the vehicle has to stop executing the current order:
 
-- The vehicle is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
+- The vehicle is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
 - The vehicle cannot determine its position anymore.
 
 In these cases the vehicle has to clear any current order which means that similar to a cancellation:
@@ -709,7 +713,7 @@ In these cases the vehicle has to clear any current order which means that simil
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
 
-As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACHIN' is reported.
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
 
 
 ### 6.6.5 Corridors
@@ -781,11 +785,12 @@ Object structure | Unit | Data type | Description
 a | m | float64 | length of the ellipse semi-major axis	in meters.
 b | m | float64 | length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
-(*Remark: A MC system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*)
+
+*Remark: A master control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*
 
 ![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
 >Figure xx allowedDeviation ellipse
- 
+
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **action** { | | JSON object | Describes an action that the AGV can perform.
@@ -810,13 +815,13 @@ endNodeId | | string | nodeId of the last node within the order.
 *minimumHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
 *orientation* | rad | float64 | Orientation of the AGV on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the vehicle on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.
 *orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional vehicles.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional vehicle, any orientation is possible, for differential drive vehicles, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>If not defined, the default value is 'TANGENTIAL'.
-*direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: "left", "right", "straight".
+*direction* | | string | Sets direction at junctions for navigation type physical line guided mobile robots, possible values shall be pre-defined (vehicle-individual).<br> Examples: "left", "right", "straight", "580 Hz".
 *reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional vehicles. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Vehicle can rotate into the desired orientation on the edge.<br>Default: "false".
 *maximumRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
 ***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
 *length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
 ***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
-**action [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+**actions [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 
 Object structure | Unit | Data type | Description
@@ -850,8 +855,7 @@ To ensure consistent navigation among different types of AGVs, the position is a
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
-The vehicle coordinate system is also specified as a right-handed coordinate system with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward. The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
-This is in accordance with Section 2.11 in DIN ISO 8855.
+The vehicle coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward (ISO 9787 5.5). The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
 
 ![Figure 11 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 11 Coordinate system with sample AGV and orientation
@@ -975,7 +979,7 @@ In kinematic center-based zones, the vehicle's kinematic center determines its e
 | BIDIRECTED | | | While in this zone, vehicles shall only move in the defined direction of travel and its direct opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the velocity vector in the project-specific coordinate system. | 
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
- 
+
 ### 6.9.2 Implementation of the zone set transfer
 
 While this guideline  does not explicitly define a map format, both a zone and a zone set are well-defined JSON objects. This structure shall be maintained when providing the download as well as sending the zones via the separate `zoneSet` topic. This structure is not part of the state message.
@@ -1150,8 +1154,8 @@ action | counter action | description | idempotent | parameters | linked state |
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Running atomic actions continue. Actions that can be paused, shall be paused. Order execution is resumed after stopPause. | yes | - | paused | yes | no | no
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no
-startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT-broker but no longer needs to send state messages.<br>Before entering this mode, the vehicle shall publish a connection state of HIBERNATING. <br>While in HIBERNATING connection state, no further driving shall occur, reaching the next node is not required. The mobile robot shall only receive and respond to the instantAction stopHibernation and shall not respond to any other commands, such as orders or additional instant actions. If there was previously an active order, it is either resumed upon exiting the HIBERNATING connection state or must be resent, depending on the mobile robot's orderHandling.clearOrderOnStopHibernation value. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop HIBERNATING autonomously to report an error. | yes | - | - | yes | no | no
-stopHibernation | startHibernation | Ends hibernate mode. <br>Upon success, the mobile robot shall publish the connection state ONLINE.<br>Driving and actions may be immediately resumed, dependent on the mobile robot's orderHandling.clearOrderOnStopHibernation value. | yes | clearOrderOnStopHibernation (boolean) | - | yes | no | no
+startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT-broker but no longer needs to send state messages.<br>Before entering this mode, the vehicle shall publish a connection state of HIBERNATING. <br>While in HIBERNATING connection state, no further driving shall occur, reaching the next node is not required. The mobile robot shall only receive and respond to the instantAction stopHibernation and shall not respond to any other commands, such as orders or additional instant actions. If there was previously an active order, it is either resumed upon exiting the HIBERNATING connection state or must be resent, depending on the mobile robot's orderHandling.clearOrderOnStopHibernation value. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop HIBERNATING autonomously to report an error. In case a wake‑up time is set, the vehicle is able to autonomously exit the HIBERNATING connection state at the specified time and will publish the corresponding connection state transition before resuming normal operation| yes | wakeUpTime (string, optional) | - | yes | no | no
+stopHibernation | startHibernation | Ends hibernate mode. To initiate wake‑up while the mobile robot is in the HIBERNATING state, a control device (onboard or external) shall subscribe to the instantAction topic and remain connected to the MQTT broker. Because the mobile robots standard control device may be partially shut down during hibernation, the wake‑up may be triggered by a distinct MQTT client (separate from the mobile robots usual communication client).<br>Upon success, the mobile robot shall publish the connection state ONLINE.<br>Driving and actions may be immediately resumed, dependent on the mobile robot's orderHandling.clearOrderOnStopHibernation value. | yes | clearOrderOnStopHibernation (boolean) | - | yes | no | no
 shutdown | - | Initiates a coordinated shutdown of the mobile robot, where it disconnects from the MQTT broker and clears all orders. Action execution requires the mobile robot to be in an idle state. There is no way using the VDA 5050 protocol to automatically restart due to the connection being terminated.<br>If a mobile robot is in hibernate mode but should be shut down, it must first exit hibernation (via stopHibernation) before executing shutdown.| yes | - | - | yes | no | no
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Discontinues the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle or charging station, e.g., if the battery is full. <br>The battery state is only allowed to be "false", when the AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
@@ -1236,9 +1240,10 @@ manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
 actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
-When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `actionStates` array of the AGV's state.
+When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `instantActionStates` array of the AGV's state.
 The `actionStatus` is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an `actionStatus`.
+The `blockingType` of an instant action is always 'NONE'.
 
 
 ## 6.12 Topic: "state" (from AGV to master control)
@@ -1261,7 +1266,8 @@ Events that trigger the transmission of the state message are:
 - Change in the `lastNodeId` or `lastNodeSequenceId` field
 - Change in the `zoneRequests` field
 - Change in the `batteryState.charging` field
-- Change in the `nodeStates`, `edgeStates` or `actionStates` arrays
+- Change in the `nodeStates` or `edgeStates` arrays
+- Change in the `actionStates`, `instantActionStates` or `zoneActionStates` arrays
 - Change in the `zoneSets` array
 - Change in the `maps` array
 
@@ -1337,7 +1343,7 @@ The master control shall not use the info messages for logic; they shall only be
 
 The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
- 
+
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
 - An 'URGENT' level issue requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order, and is able to take new orders.
 - A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot can not continue its current order, but is able to take new orders.
@@ -1357,9 +1363,9 @@ AUTOMATIC | Master control is in full control of the mobile robot. <br>Mobile ro
 SEMIAUTOMATIC | Master control is in control of the mobile robot.<br> Mobile robot moves and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
 INTERVENED | Master control is not in control of the Mobile robot. The mobile robot is reporting its state correctly.<br>Master control is allowed to send orders or order updates to the mobile robot to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Master control shall not send any instant action except `cancelOrder`.<br>The mobile robot shall not clear the order but shall remove all zone requests from the state, also if the mobile robot is already inside a 'RELEASE' zone. (*Remark: If necessary, the master control can continue to track the position of the mobile robot and decide whether clearance for other vehicles is possible.*) The mobile robot shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the mobile robot shall reflect this in the state message accordingly.<br>If the mobile robot leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the mobile robot leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the mobile robot shall continue executing any current order. If the mobile robot detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the mobile robot shall switch into operating mode 'MANUAL' and act accordingly.
 MANUAL | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>HMI can be used to control the steering, velocity and handling devices of the mobile robot.<br>The position of the mobile robot is sent to the master control.<br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the mobile robot detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
-STARTUP | Mobile robot is starting up, but is not ready to receive orders. The parameters of the state message may not yet be valid.
+STARTUP | Master control is not in control of the mobile robot. The mobile robot is starting up and not ready to receive orders. State message parameters may be incomplete or invalid until startup is finished.
 SERVICE | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
-TEACHIN | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
+TEACH_IN | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
 
 Operating Mode | Master Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending instant actions allowed | Sending orders allowed
@@ -1370,7 +1376,7 @@ INTERVENED | NO | YES | NO | NO | YES | Only `cancelOrder` allowed | YES
 MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | NO | NO
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
-TEACHIN | NO | YES | YES | YES | YES | NO | NO
+TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 
 
 ### 6.12.7 Implementation of the state message
@@ -1403,9 +1409,9 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 *distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed.
-**zoneActionStates [actionState]** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed.
+***zoneActionStates [actionState]*** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed. If action zones are supported, this field is required.
 **batteryState** | | JSON object | Contains all battery-related information.
-operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACHIN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6126-operating mode).
+operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6126-operating mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
 ***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in master control.
 **safetyState** | | JSON object | Contains all safety-related information.
@@ -1478,7 +1484,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-coordinate described in the project-specific coordinate system.
 y | m | float64 | Y-coordinate described in the project-specific coordinate system.
 *theta* | rad | float64 | Absolute orientation of the vehicle in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
-eta | | string | Estimated time of arrival/traversal. estimatedArrivalTime is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
+eta | | string | Estimated time of arrival/traversal. ETA is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.12Z").
 } | | |
 
 
@@ -1610,11 +1616,13 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 
 ## 6.13 Action states
 
-When an AGV receives an `action` (either attached to a `node` or `edge` or via an `instantAction`), it shall represent this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an order related `action` (attached to a `node` or `edge` of an order), it shall report this `action` with an `actionState` in its `actionStates` array.
+When an AGV receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
+When an AGV executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
-`actionStates` describe in the field `actionStatus` at which stage of the action's life cycle the action is.
+The current stage of an action is reflected in the field `actionStatus` of an `actionState`.
 
-Table 2 describes, which value the enum `actionStatus` can hold.
+Table 2 lists feasible values of the `actionStatus`.
 
 actionStatus | Description
 ---|---
@@ -1638,7 +1646,7 @@ All possible action state transitions are visualized in Figure 16 and examples a
 | **INITIALIZING** | - | - | external trigger | initialization finished, action starting | - | initialization failed, aborted via cancel, switch to manual mode | - |
 | **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual | - |
 | **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
-| **RETRIABLE** | - | - | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
+| **RETRIABLE** | - | retries action via retry, external trigger | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual | fixed by operator via external input |
 
 ![Figure 16 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 16 All possible status transitions for actionStates
@@ -1695,7 +1703,7 @@ timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., 
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the AGV.
 serialNumber | string | Serial number of the AGV.
-connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between AGV and broker is active.<br><br>'OFFLINE': connection between AGV and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': connection between AGV and broker is active, but AGV stops sending state messages. This mode is intended for power-saving or communication reduction. The AGV can later resume to ONLINE when instructed.<br><br> 'CONNECTIONBROKEN': the connection between AGV and broker has unexpectedly ended.
+connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between AGV and broker is active.<br><br>'OFFLINE': connection between AGV and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The AGV enters a low‑power state and stops sending state messages. A connection to the MQTT broker may remain active but is not required. This mode is intended for power saving or communication reduction. The AGV can later transition to ONLINE when instructed or via a configured wake‑up mechanism.<br><br> 'CONNECTIONBROKEN': the connection between AGV and broker has unexpectedly ended.
 
 The last will message will not be sent, when a connection is ended in a graceful way by using an MQTT disconnection command.
 The last will message is only sent by the broker, if the connection is unexpectedly interrupted.
@@ -1834,7 +1842,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
 | &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
 | &emsp;*state.loads* | uint32 | Maximum number of load objects sent by the AGV. |
-| &emsp;*state.actionStates* | uint32 | Maximum number of actionStates sent by the AGV. |
+| &emsp;*state.actionStates* | uint32 | Maximum number of objects in actionStates, instantActionStates or zoneActionStates sent by the AGV. |
 | &emsp;*state.errors* | uint32 | Maximum number of errors sent by the AGV in one state message. |
 | &emsp;*state.information* | uint32 | Maximum number of information sent by the AGV in one state message. |
 | &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the AGV for each error. |
@@ -1876,8 +1884,9 @@ This JSON object defines order handling processes, actions and parameters which 
 |&emsp;&emsp;*isOptional* | boolean | "true": optional parameter. |
 |&emsp;*}* | | |
 |*resultDescription* | string | Free-form text: description of the result. |
-|*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'HARD'} |
-|*atomic* | boolean | "true": action is atomic and cannot be paused, "false": action is not atomic and can be paused. |
+|*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'SINGLE', 'HARD'} |
+|pauseAllowed | boolean | "true": action  a, "false": action cannot be paused. |
+|cancelAllowed | boolean | "true": action can be cancelled, "false": action cannot be cancelled. |
 |*}* | | |
 
 ### mobileRobotGeometry
