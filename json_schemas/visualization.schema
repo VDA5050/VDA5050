@@ -32,9 +32,9 @@
             "type": "string",
             "description": "Serial number of the AGV."
         },
-        "agvPosition": {
+        "mobileRobotPosition": {
             "type": "object",
-            "title": "agvPosition",
+            "title": "mobileRobotPosition",
             "description": "The AGVs position",
             "required": [
                 "x",

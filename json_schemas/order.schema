@@ -184,15 +184,15 @@
                         "type": "string",
                         "description": "The nodeId of the end node."
                     },
-                    "maxSpeed": {
+                    "maximumSpeed": {
                         "type": "number",
                         "description": "Permitted maximum speed on the edge in m/s. Speed is defined by the fastest measurement of the vehicle."
                     },
-                    "maxHeight": {
+                    "maximumHeight": {
                         "type": "number",
                         "description": "Permitted maximum height of the vehicle, including the load, on edge in meters."
                     },
-                    "minHeight": {
+                    "minimumHeight": {
                         "type": "number",
                         "description": "Permitted minimal height of the load handling device on the edge in meters"
                     },
@@ -292,7 +292,7 @@
                                 "description":"Defines the width of the corridor in meters to the right related to the trajectory of the vehicle.",
                                 "minimum": 0.0
                             },
-                            "corridorRefPoint": {
+                            "corridorReferencePoint": {
                                 "type": "string",
                                 "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle.",
                                 "enum": [
