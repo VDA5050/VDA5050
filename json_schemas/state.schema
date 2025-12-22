@@ -310,7 +310,7 @@
                 }
             }
         },
-        "agvPosition": {
+        "mobileRobotPosition": {
             "type": "object",
             "required": [
                 "x",
@@ -568,7 +568,7 @@
                     "type": "boolean",
                     "description": "True: charging in progress. False: AGV is currently not charging."
                 },
-                "reach": {
+                "range": {
                     "type": "number",
                     "description": "Estimated reach with current State of Charge in meter.",
                     "minimum": 0

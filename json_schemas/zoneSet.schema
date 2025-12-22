@@ -111,9 +111,9 @@
                         }
                     },
                     "then": {
-                        "required": ["maxSpeed"],
+                        "required": ["maximumSpeed"],
                         "properties": {
-                            "maxSpeed": {
+                            "maximumSpeed": {
                                 "type": "number",
                                 "description": "Required in SPEED_LIMIT zone."
                             }

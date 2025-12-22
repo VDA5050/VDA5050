@@ -201,7 +201,7 @@
             ],
             "description": "This JSON-object describes the protocol limitations of the AGV. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
             "properties": {
-                "maxStringLens": {
+                "maximumStringLengths": {
                     "type": "object",
                     "description": "maximum lengths of strings",
                     "properties": {
@@ -463,7 +463,7 @@
                 }
             }
         },
-        "agvGeometry": {
+        "mobileRobotGeometry": {
             "type": "object",
             "description": "Detailed definition of AGV geometry",
             "properties": {
@@ -701,52 +701,52 @@
                                     }
                                 }
                             },
-                            "maxWeight": {
+                            "maximumWeight": {
                                 "type": "number",
                                 "description": "maximum weight of loadtype",
                                 "unit": "kg"
                             },
-                            "minLoadhandlingHeight": {
+                            "minimumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
                             },
-                            "maxLoadhandlingHeight": {
+                            "maximumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingDepth": {
+                            "minimumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "maxLoadhandlingDepth": {
+                            "maximumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingTilt": {
+                            "minimumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "minimum allowed tilt for this load-type and –weight"
                             },
-                            "maxLoadhandlingTilt": {
+                            "maximumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "maximum allowed tilt for this load-type and –weight"
                             },
-                            "agvSpeedLimit": {
+                            "maximumSpeed": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed speed for this load-type and –weight"
                             },
-                            "agvAccelerationLimit": {
+                            "maximumAcceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed acceleration for this load-type and –weight"
                             },
-                            "agvDecelerationLimit": {
+                            "maximumDeceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed deceleration for this load-type and –weight"
@@ -770,7 +770,7 @@
                 }
             }
         },
-         "vehicleConfig": {
+         "mobileRobotConfiguration": {
             "type": "object",
             "properties": {
                 "versions": {

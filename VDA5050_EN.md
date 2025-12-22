@@ -723,10 +723,10 @@ Depending on the vehicle type, the trajectory that a vehicle takes between the s
 Depending on the internal state of the vehicle, the selected trajectory may vary.*
 
 ![Figure 10 Edges with corridor attribute.](./assets/edges_with_corridors.png)
->Figure 10 Edges with a `corridor` attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorRefPoint` parameter.
+>Figure 10 Edges with a `corridor` attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorReferencePoint` parameter.
 
 The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
-The optional `corridorRefPoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
+The optional `corridorReferencePoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node.
 Instead of setting the corridor boundaries to zero, master control shall not use the `corridor` attribute if the vehicle shall not deviate from the trajectory.
 
@@ -877,7 +877,7 @@ The map distribution process is shown in Figure 13.
 
 #### 6.7.2 Maps in the vehicle state
 
-The `mapId` field in the `agvPosition` of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
+The `mapId` field in the `mobileRobotPosition` of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
 
 Note that multiple maps with different `mapId` can be enabled at the same time. There can only be one version of maps with the same `mapId` enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the vehicle.
 
@@ -900,7 +900,7 @@ There are two ways to enable a map on a vehicle:
 2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
 
 It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding `mapId` as part of a `nodePosition` in an order.
-If the vehicle is to be set to a specific position on a new map, the `initPosition` instant action is used.
+If the vehicle is to be set to a specific position on a new map, the `initializePosition` instant action is used.
 
 
 #### 6.7.5 Delete maps on vehicle
@@ -1155,7 +1155,7 @@ stopHibernation | startHibernation | Ends hibernate mode. <br>Upon success, the 
 shutdown | - | Initiates a coordinated shutdown of the mobile robot, where it disconnects from the MQTT broker and clears all orders. Action execution requires the mobile robot to be in an idle state. There is no way using the VDA 5050 protocol to automatically restart due to the connection being terminated.<br>If a mobile robot is in hibernate mode but should be shut down, it must first exit hibernation (via stopHibernation) before executing shutdown.| yes | - | - | yes | no | no
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
 stopCharging | startCharging | Discontinues the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle or charging station, e.g., if the battery is full. <br>The battery state is only allowed to be "false", when the AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initializePosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .agvPosition.x<br>.agvPosition.y<br>.agvPosition.theta<br>.agvPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
+initializePosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .mobileRobotPosition.x<br>.mobileRobotPosition.y<br>.mobileRobotPosition.theta<br>.mobileRobotPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
 downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
 deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
@@ -1191,7 +1191,7 @@ stopHibernation | - | Deactivation of the hibernate mode is in preparation. If t
 shutdown | - | Activation of the OFFLINE connection state is in preparation. If the AGV supports an instant transition, this state can be omitted.| - |Vehicle shall not be moving. All actions are in an end state, and all orders are cleared. The connection between AGV and broker is terminated in a coordinated way.<br>The AGV reports connection state "OFFLINE".| The shutdown cannot be executed for some reason (e.g., vehicle is not in idle state, overridden by a hardware switch).
 startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: "true". | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error.
 stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: "false" | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error.
-initializePosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.agvPosition.x = x, <br>.agvPosition.y = y, <br>.agvPosition.theta = theta <br>.agvPosition.mapId = mapId <br>.agvPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
+initializePosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.mobileRobotPosition.x = x, <br>.mobileRobotPosition.y = y, <br>.mobileRobotPosition.theta = theta <br>.mobileRobotPosition.mapId = mapId <br>.mobileRobotPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
 | downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download is finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapStatus to 'DISABLED'. | The download failed, updated in vehicle state (e.g., connection lost, Map server unreachable, mapId/mapVersion not existing on map server). |
 | enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
 | deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
@@ -1267,7 +1267,7 @@ Events that trigger the transmission of the state message are:
 
 
 There should be an effort to curb the amount of communication.
-If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple. The minimum time between two consecutive state messages is defined by the factsheet ([6.17 Topic "factsheet"](#617-topic-factsheet) protocolLimits.timing.minStateInterval) . 
+If two events correlate with each other (e.g., the receiving of a new order usually forces an update of the `nodeStates` and `edgeStates`; as does the driving over a node), it is sensible to trigger one state update instead of multiple. The minimum time between two consecutive state messages is defined by the factsheet ([6.17 Topic "factsheet"](#617-topic-factsheet) protocolLimits.timing.minimumStateInterval) . 
 
 
 ### 6.12.1 Concept and logic
@@ -1880,7 +1880,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |*atomic* | boolean | "true": action is atomic and cannot be paused, "false": action is not atomic and can be paused. |
 |*}* | | |
 
-### agvGeometry
+### mobileRobotGeometry
 
 This JSON object defines the geometry properties of the AGV, e.g., outlines and wheel positions.
 
@@ -1949,7 +1949,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 |&emsp; *description* | string | Free-form text: description of the load handling set. |
 | } | | |
 
-#### vehicleConfig
+#### mobileRobotConfiguration
 
 This JSON object details the software and hardware versions running on the vehicle, as well as a brief summary of network information.
 
