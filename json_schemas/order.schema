@@ -134,7 +134,10 @@
                                 },
                                 "theta": {
                                   "type": "number",
-                                  "description": "Rotation angle "
+                                  "description": "Rotation angle",
+                                  "minimum": -1.570796327,
+                                  "maximum": 1.570796327
+                                  
                                 }
                               }
                             }
