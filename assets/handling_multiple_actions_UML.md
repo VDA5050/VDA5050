@@ -5,7 +5,7 @@ This markdown file is the original UML diagram from which handling_multiple_acti
 skinparam dpi 400
 skinparam defaultTextAlignment center
 start
-:AGV arrives at node \nwith multiple actions;
+:mobile robot arrives at node \nwith multiple actions;
 #lightgreen:empty parallel execution set;
 
 #lightgreen:iterate over action list;
