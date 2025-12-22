@@ -1,25 +1,25 @@
 ![logo](./assets/logo.png)
 
-# Interface for the communication between mobile robots and a master control
+# Interface for the Communication between Mobile Robots and a Fleet Control
 
 ## VDA 5050
 
-## Version 3.0.0 - Draft (not released by the VDA)
+## Version 3.0.0 - Release Candidate (not released by the VDA)
 
-![control system and automated guided vehicles](./assets/csagv.png)
+![Fleet control system and mobile robots](./assets/csagv.png)
 
 
 
 ### Brief information
 
 Definition of a communication interface for driverless transport systems (DTS).
-This recommendation describes the communication interface for exchanging order and status data between a central master control and automated guided vehicles (AGVs) for intralogistics processes.
+This recommendation describes the communication interface for exchanging information between a central fleet control and mobile robots.
 
 
 
 ### Disclaimer
 
-The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGVs) and master control and one that is freely applicable to everyone and is non-binding.
+The following explanations serve as an indication for the execution of an interface for communication between mobile robots and the fleet control and one that is freely applicable to everyone and is non-binding.
 Those who apply them shall ensure that they are applied properly in the specific case.
 
 They shall take into account the state of the art prevailing at the time of each issue.
@@ -63,19 +63,19 @@ Version 3.0.0
 [6.3 MQTT topic levels](#63-mqtt-topic-levels)<br>
 [6.4 Protocol header](#64-protocol-header)<br>
 [6.5 Topics for communication](#65-topics-for-communication)<br>
-[6.6 Topic: "order" (from master control to AGV)](#66-topic-order-from-master-control-to-agv)<br>
+[6.6 Topic: "order" (from fleet control to mobile robot)](#66-topic-order-from-fleet-control-to-mobile-robot)<br>
 [6.6.1 Concept and logic](#661-concept-and-logic)<br>
 [6.6.2 Orders and order updates](#662-orders-and-order-update)<br>
-[6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control)<br>
+[6.6.3 Order cancellation (by fleet control)](#663-order-cancellation-by-fleet-control)<br>
 [6.6.4 Order rejection](#664-order-rejection)<br>
 [6.6.5 Corridors](#665-corridors)<br>
 [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)<br>
 [6.7 Maps](#67-maps)<br>
 [6.7.1 Map distribution](#671-map-distribution)<br>
-[6.7.2 Maps in vehicle state](#672-maps-in-the-vehicle-state)<br>
+[6.7.2 Maps in mobile robot state](#672-maps-in-the-mobile-robot-state)<br>
 [6.7.3 Map download](#673-map-download)<br>
 [6.7.4 Enable downloaded maps](#674-enable-downloaded-maps)<br>
-[6.7.5 Delete maps on vehicle](#675-delete-maps-on-vehicle)<br>
+[6.7.5 Delete maps on mobile robot](#675-delete-maps-on-mobile-robot)<br>
 [6.8 Sharing of planned path for freely-navigating mobile robots](#68-sharing-of-planned-path-for-freely-navigating-mobile-robots)<br>
 [6.9 Zones](#69-zones)<br>
 [6.9.1 Zone types](#691-zone-types)<br>
@@ -86,8 +86,8 @@ Version 3.0.0
 [6.10 Actions](#610-actions)<br>
 [6.10.1 Definition, parameters, effects and scope of predefined actions](#6101-definition-parameters-effects-and-scope-of-predefined-actions)<br>
 [6.10.2 States of predefined actions](#6102-states-of-predefined-actions)<br>
-[6.11 Topic: "instantActions" (from master control to AGV)](#611-topic-instantactions-from-master-control-to-agv)<br>
-[6.12 Topic: "state" (from AGV to master control)](#612-topic-state-from-agv-to-master-control)<br>
+[6.11 Topic: "instantActions" (from fleet control to mobile robot)](#611-topic-instantactions-from-fleet-control-to-mobile-robot)<br>
+[6.12 Topic: "state" (from mobile robot to fleet control)](#612-topic-state-from-mobile-robot-to-fleet-control)<br>
 [6.12.1 Concept and logic](#6121-concept-and-logic)<br>
 [6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
 [6.12.3 Base request](#6123-base-request)<br>
@@ -113,7 +113,7 @@ Version 3.0.0
 
 # 1 Foreword
 
-The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized master control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the master control system and individual mobile robots.
+The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized fleet control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the fleet control system and individual mobile robots.
 The specification for this interface was jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V..
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
 The contribution to this document via GitHub is greatly appreciated.
@@ -121,10 +121,10 @@ The repository can be found at the following link: https://github.com/vda5050/vd
 
 
 # 2 Scope
-This document specifies a standardized, vendor-neutral communication interface between a master control system and individual mobile robots to:
-- Reduce integration complexity when connecting mobile robots to a master control system.
+This document specifies a standardized, vendor-neutral communication interface between a fleet control system and individual mobile robots to:
+- Reduce integration complexity when connecting mobile robots to a fleet control system.
 - Enable heterogeneous fleet operation, allowing mobile robots from different manufacturers to operate collaboratively within a shared physical environment.
-- Provide a generic toolkit applicable across diverse mobile robot configurations, including variations in navigation principles, vehicle dimensions, load-handling or manipulation devices, and levels of autonomy.
+- Provide a generic toolkit applicable across diverse mobile robot configurations, including variations in navigation principles, mobile robot dimensions, load-handling or manipulation devices, and levels of autonomy.
 
 The interface is designed to be independent of proprietary solutions and applicable across all domains where mobile robots are deployed.
 The document also defines a foundational concept for coordinated multi-robot systems, serving as the basis for traffic management and specifying the required logic and expected behavior of mobile robots within such systems.
@@ -136,12 +136,11 @@ The following aspects are explicitly outside the scope and are not covered:
 - Traffic Management Logic
 	- Strategies and algorithms for traffic control (e.g., routing, prioritization, deadlock resolution).
 - Other Communication Interfaces
-	- Interfaces beyond master control and mobile robots (e.g., peripheral devices, external IT systems)
+	- Interfaces beyond fleet control and mobile robots (e.g., peripheral devices, external IT systems)
 - Project Coordination
 	- Topics such as project management, integration processes, commissioning procedures, and acceptance criteria
 - Operational Responsibilities
-	- Allocation of responsibilities among operators, integrators, vehicle manufacturers, and master control suppliers for planning, operation, maintenance, and safety
-
+	- Allocation of responsibilities among operators, integrators, mobile robot manufacturers, and fleet control suppliers for planning, operation, maintenance, and safety
 
 ## 3 Other applicable documents
 
@@ -150,7 +149,7 @@ Document | Version | Description
 VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - DTS master control
 DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
-LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system.
+LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) master control system.
 ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
 
 # 4 Requirements and protocol definition
@@ -172,49 +171,48 @@ To ensure a common understanding across all stakeholders and implementations, th
 
 Term | Definition
 ---|---
-Moving | Any change in the spatial position or orientation of the vehicle or its components. This includes the motion of wheels, load handling devices, or the vehicle body.
-Driving | The vehicle is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
-Automatic Driving | The vehicle is driving without human intervention.
-Manual Driving | The vehicle is driving with human intervention.
+Moving | Any change in the spatial position or orientation of the mobile robot or its components. This includes the motion of wheels, load handling devices, or the mobile robot body.
+Driving | The mobile robot is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
+Automatic Driving | The mobile robot is driving without human intervention.
+Manual Driving | The mobile robot is driving with human intervention.
 
 
 # 5 Process and content of communication
 
-There are at least the following participants for the operation of AGVs:
+There are at least the following participants for the operation of DTS:
 
-- The operator of the AGV system provides basic information
-- The master control organizes and manages the operation
-- The AGV carries out the orders
+- The operator of the DTS provides basic information
+- The fleet control organizes and manages the operation
+- The mobile robot carries out the orders
 
 Figure 2 describes the communication content during the operational phase.
-During implementation or modification, the AGV and master control are manually configured.
+During implementation or modification, the mobile robot and the fleet control are manually configured.
 
 ![Figure 2 Structure of the Information Flow](./assets/information_flow_VDA5050.png)
 >Figure 2 Structure of the Information Flow
 
-During the implementation phase, the driverless transport systems (DTS) consisting of master control and AGVs is set up.
-The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the master control by importing from other systems.
+During the implementation phase, the DTS consisting of fleet control and mobile robots is set up.
+The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the fleet control by importing from other systems.
 Essentially, this concerns the following content:
 
 - Definition of routes:
-Using the Layout Interchange Format (LIF), routes can be imported to the master control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) master control system (see section 3.1).
-Alternatively, routes can also be implemented manually in the master control by the operator.
-Routes can be one-way streets, restricted for certain vehicle groups (based on the size ratios), etc.
+Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (see section 3.1).
+Alternatively, routes can also be implemented manually in the fleet control by the operator.
+Routes can be one-way streets, restricted for certain mobile robot groups (based on the size ratios), etc.
 - Route network configuration:
 Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined.
-- Vehicle configuration: The physical properties of an AGV (size, available load carrier mounts, etc.) are stored by the operator.
-The AGV shall communicate this information via the topic `factsheet` in a specific way that is defined in Section [6.17 Topic "Factsheet"](#617-topic-factsheet) of this document.
+- Mobile robot configuration: The physical properties of a mobile robot (size, available load carrier mounts, etc.) are stored by the operator.
+The mobile robot shall communicate this information via the topic `factsheet` in a specific way that is defined in Section [6.17 Topic "Factsheet"](#617-topic-factsheet) of this document.
 
 The configuration of routes and the route network described above are not part of this document.
-They form the basis for enabling order control and driving course assignment by the master control based on this information and the transport requirements to be completed.
-The resulting orders for an AGV are then transferred to the vehicle via an MQTT message broker.
-This then continuously reports its status to the master control in parallel with the execution of the job.
+They form the basis for enabling order control and driving course assignment by the fleet control based on this information and the transport requirements to be completed.
+The resulting orders for a mobile robot are then transferred to the mobile robot via an MQTT message broker.
+This then continuously reports its status to the fleet control in parallel with the execution of the job.
 This is also done using the MQTT message broker.
 
-Functions of the master control are:
-
-- Assignment of orders to the AGVs
-- Route calculation and guidance of the AGVs (taking into account the limitations of the individual physical properties of each AGV, e.g., size, maneuverability, etc.)
+Functions of the fleet control are:
+- Assignment of orders to the mobile robots
+- Route calculation and guidance of the mobile robots (taking into account the limitations of the individual physical properties of each mobile robot, e.g., size, maneuverability, etc.)
 - Detection and resolution of blockages ("deadlocks")
 - Energy management: Charging orders can interrupt transfer orders
 - Traffic control: Buffer routes and waiting positions
@@ -222,24 +220,24 @@ Functions of the master control are:
 - Communication with peripheral systems such as doors, gates, elevators, etc.
 - Detection and resolution of communication errors
 
-Functions of the AGVs are:
+Functions of the mobile robots are:
 
 - Localization
 - Navigation along associated routes (guided or autonomous)
 - Execution of actions
-- Continuous transmission of vehicle status
+- Continuous transmission of mobile robot status
 
 In addition, the integrator shall take into account the following when configuring the overall system (incomplete list):
 
-- Map configuration: The coordinate systems of the master control and the AGV shall be matched.
-- Pivot point: The use of different points of the AGV or points of charge as a pivot point leads to different envelopes of the vehicle. The reference point may vary depending on the situation, e.g., it may be different for an AGV carrying a load and for an AGV that does not carry a load.
+- Map configuration: The coordinate systems of the fleet control and the mobile robot shall be matched.
+- Pivot point: The use of different points of the mobile robot or points of charge as a pivot point leads to different envelopes of the mobile robot. The reference point may vary depending on the situation, e.g., it may be different for a mobile robot carrying a load and for a mobile robot that does not carry a load.
 
 
 # 6 Protocol specification
 
 The following section describes the details of the communication protocol.
-The protocol specifies the communication between the master control and the AGV.
-Communication between the AGV and peripheral equipment, e.g., between the AGV and a gate, is excluded.
+The protocol specifies the communication between the fleet control and the mobile robot.
+Communication between the mobile robot and peripheral equipment, e.g., between the mobile robot and a gate, is excluded.
 
 The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
 
@@ -266,17 +264,17 @@ All enumerations are in UPPERCASE without underscores.
 
 ### 6.1.1 Optional fields
 
-If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the master control sends an order to an AGV, some AGVs plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
+If a variable is marked as optional, it means that it is optional for the sender because the variable might not be applicable in certain cases (e.g., when the fleet control sends an order to a mobile robot, some mobile robots plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
-If the AGV receives a message that contains a field which is marked as optional in this protocol, the AGV is expected to act accordingly and cannot ignore the field.
+If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and cannot ignore the field.
 If the mobile robot cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
-Master control shall only send optional information that the AGV supports.
+Fleet control shall only send optional information that the mobile robot supports.
 
 Example: Trajectories are optional.
-If an AGV cannot process trajectories, master control shall not send a trajectory to the vehicle.
+If a mobile robot cannot process trajectories, fleet control shall not send a trajectory to the mobile robot.
 
-The AGV shall communicate which optional parameters it needs via an AGV `factsheet` message.
+The mobile robot shall communicate which optional parameters it needs via a mobile robot `factsheet` message.
 
 
 ### 6.1.2 Permitted characters and field lengths
@@ -287,9 +285,9 @@ The recommendation is that IDs should only use the following characters:
 A-Z a-z 0-9 _ - . :
 
 A maximum message length is not defined, but limited by the MQTT protocol specification and perhaps by technical constraints defined inside the factsheet.
-If an AGVs memory is insufficient to process an incoming order, it is to reject the order.
+If a mobile robot's memory is insufficient to process an incoming order, it is to reject the order.
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
-For ease of integration, AGV vendors shall supply an AGV factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
+For ease of integration, mobile robot vendors shall supply a mobile robot factsheet that is detailed in [Factsheet Section](#616-topic-factsheet).
 
 
 ### 6.1.3 Notation of fields, topics and enumerations
@@ -313,7 +311,7 @@ The MQTT protocol provides the option of setting a last will message for a clien
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
 The use of this feature is described in Section [6.16 Topic "connection"](#616-topic-connection).
 
-If the AGV disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
+If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
 Protocol security needs to be taken into account by broker configuration.
 
@@ -340,8 +338,8 @@ MQTT Topic Level | Data type | Description
 ---|---|---
 interfaceName | string | Name of the used interface
 majorVersion | string | Major version number of the VDA 5050 recommendation, preceded by "v"
-manufacturer | string | Manufacturer of the AGV.
-serialNumber | string | Unique AGV serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
+manufacturer | string | Manufacturer of the mobile robot.
+serialNumber | string | Unique mobile robot serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g., order or state) see Section [6.5 Topics for Communication](#65-topics-for-communication)
 
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
@@ -360,8 +358,8 @@ Object structure/Identifier | Data type | Description
 headerId | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-manufacturer | string | Manufacturer of the AGV.
-serialNumber | string | Serial number of the AGV.
+manufacturer | string | Manufacturer of the mobile robot.
+serialNumber | string | Serial number of the mobile robot.
 
 
 ### Protocol version
@@ -383,26 +381,26 @@ Examples for patch version:
 
 ## 6.5 Topics for communication
 
-The AGV protocol uses the following topics for information exchange between master control and AGV.
+The mobile robot protocol uses the following topics for information exchange between fleet control and mobile robot.
 
 Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 ---|---|---|---|---|---
-order | master control | AGV | Communication of orders from master control to the mobile robot | mandatory | order.schema
-instantActions | master control | AGV | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
-state | AGV | master control | Communication of the AGV state | mandatory | state.schema
-visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
-connection | Broker/AGV | master control | Indicates when AGV connection is lost, not to be used by master control for checking the vehicle health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
-factsheet | AGV | master control | Parameters or vendor-specific information to assist set-up of the AGV in master control | mandatory | factsheet.schema
-zoneSet | master control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
-response | master control | mobile robot | Master controls responses to requests from within the mobile robots state. | optional | response.schema
+order | fleet control | mobile robot | Communication of orders from fleet control to the mobile robot | mandatory | order.schema
+instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
+state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
+visualization | mobile robot | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
+connection | Broker/mobile robot | fleet control | Indicates when mobile robot connection is lost, not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
+factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
+zoneSet | fleet control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
+response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state. | optional | response.schema
 
 ## 6.x Basic concepts
 
 ### 6.x.1 Request/response mechanism
 
-Certain coordination tasks between mobile robots and the master control require explicit permission from the master control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
+Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
 
-A request is always initiated by the mobile robot and communicated as part of the state message. The master control evaluates the request and returns its decision via the response topic.
+A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
 
 Each request is represented on the mobile robot by a request object (e.g. zoneRequest) which is included in the state message. The request object shall contain at minimum:
 	- a requestId that is unique per mobile robot for all currently active requests,
@@ -411,44 +409,43 @@ Each request is represented on the mobile robot by a request object (e.g. zoneRe
 	- a requestStatus.
 
 The field requestStatus describes the life cycle of the request and shall support the following values:
-    - 'REQUESTED': Vehicle request. 
-    - 'GRANTED': The master control grants the request.
-	- 'REVOKED': master control revokes previously granted request. 
-	- 'REJECTED': master control rejects a request. 
-	- 'QUEUED': Acknowledge the vehicle's request to the master control, but no permission is given yet. Request was added to some sort of a queue.
-
-Master control receives requests from the state topic and shall answer via the response topic containing a respone object that includes:
+    - 'REQUESTED': Mobile robot request. 
+    - 'GRANTED': The fleet control grants the request.
+	- 'REVOKED': fleet control revokes previously granted request. 
+	- 'REJECTED': fleet control rejects a request. 
+	- 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
+Fleet control receives requests from the state topic and shall answer via the response topic containing a respone object that includes:
 	- The requestId of the corresponding request,
 	- a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 	- optionally a leaseExpiry timestamp that limits the validity of a 'GRANTED' decision.
 
-If a request is answered with 'QUEUED', master control acknowledges reception of the request but does not yet grant permission. The mobile robot shall then continue to wait and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
+If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall then continue to wait and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
 
-If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a leaseExpiry is present, the permission shall only be considered valid until this time. Master control can extend a lease by sending an updated response with the same requestId and a new leaseExpiry.
+If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a leaseExpiry is present, the permission shall only be considered valid until this time. Fleet control can extend a lease by sending an updated response with the same requestId and a new leaseExpiry.
 
 If a request is answered with 'REVOKED', or if the leaseExpiry is reached, the mobile robot shall update the requestStatus accordingly ('REVOKED' or 'EXPIRED') and shall act according to the releaseLossBehavior.
 
 If no response is received within the time frame required by the application, the mobile robot shall behave as if the request had not been granted and shall not perform the operation that requires explicit permission. The handling of timeouts and retries shall be defined during integration.
 
-A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from master control is required.
+A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from fleet control is required.
 
-## 6.6 Topic: "order" (from master control to AGV)
+## 6.6 Topic: "order" (from fleet control to mobile robot)
 
-The topic "order" is the MQTT topic via which the AGV receives a JSON encapsulated order.
+The topic "order" is the MQTT topic via which the mobile robot receives a JSON encapsulated order.
 
 
 ### 6.6.1 Concept and logic
 
 The basic structure of an order is a graph of nodes and edges.
-The AGV is expected to traverse the nodes and edges to fulfill the order.
-The full graph of all connected nodes and edges is held by master control.
+The mobile robot is expected to traverse the nodes and edges to fulfill the order.
+The full graph of all connected nodes and edges is held by fleet control.
 
-The graph representation in the master control contains restrictions, e.g., which AGV is allowed to traverse which edge.
-These restrictions will not be communicated to the AGV.
-The master control only includes edges in an AGV order which the concerning AGV is allowed to traverse.
+The graph representation in the fleet control contains restrictions, e.g., which mobile robot is allowed to traverse which edge.
+These restrictions will not be communicated to the mobile robot.
+The fleet control only includes edges in a mobile robot order which the concerning mobile robot is allowed to traverse.
 
-![Figure 3 Graph representation in master control and graph transmitted in orders](./assets/graph_representation_transmission.png)
->Figure 3 Graph representation in master control and graph transmitted in orders
+![Figure 3 Graph representation in fleet control and graph transmitted in orders](./assets/graph_representation_transmission.png)
+>Figure 3 Graph representation in fleet control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
 The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed.
@@ -456,11 +453,11 @@ The order of the nodes and edges within those lists also governs in which sequen
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
 The first node of an order shall be trivially reachable for the mobile robot and released.
-This means either that the AGV is already standing on the node, or that the AGV is in the node's deviation range. As such, the first node shall not be reported in the `nodeStates`.
+This means either that the mobile robot is already standing on the node, or that the mobile robot is in the node's deviation range. As such, the first node shall not be reported in the `nodeStates`.
 
 Nodes and edges both have a boolean attribute `released`.
-If a node or edge is released, the AGV is expected to traverse it.
-If a node or edge is not released, the AGV shall not traverse it.
+If a node or edge is released, the mobile robot is expected to traverse it.
+If a node or edge is not released, the mobile robot shall not traverse it.
 The node with `sequenceId` 0 shall always be released.
 
 An edge can be released only if both the start and the end node of the edge are released.
@@ -473,27 +470,27 @@ The set of unreleased nodes and edges are called the "horizon".
 It is valid to send an order without a horizon.
 
 An order message does not necessarily describe the full transport order.
-For traffic control and to accommodate resource constrained vehicles, the full transport order (which might consist of many nodes and edges) can be split up into many sub-orders, which are connected via their `orderId` and `orderUpdateId`.
+For traffic control and to accommodate resource constrained mobile robots, the full transport order (which might consist of many nodes and edges) can be split up into many sub-orders, which are connected via their `orderId` and `orderUpdateId`.
 The process of updating an order is described in the next section.
 
 
 ### 6.6.2 Orders and order update
 
-To support traffic management, master control can split the path communicated via order into two parts:
+To support traffic management, fleet control can split the path communicated via order into two parts:
 
-- *"Base"*: This is the defined route that the AGV is allowed to travel. All nodes and edges of the base route have already been released by the master control for the vehicle. The last node of the base is called decision point.
-- *"Horizon"*: This is the route currently planned by master control for the AGV to travel after the decision point. The horizon route has not yet been released by the master control.
+- *"Base"*: This is the defined route that the mobile robot is allowed to travel. All nodes and edges of the base route have already been released by the fleet control for the mobile robot. The last node of the base is called decision point.
+- *"Horizon"*: This is the route currently planned by fleet control for the mobile robot to travel after the decision point. The horizon route has not yet been released by the fleet control.
 
-The AGV shall stop at the decision point if no further nodes and edges are added to the base. In order to ensure a fluent movement, the master control should extend the base before the AGV reaches the decision point, if the traffic situation allows for it.
+The mobile robot shall stop at the decision point if no further nodes and edges are added to the base. In order to ensure a fluent movement, the fleet control should extend the base before the mobile robot reaches the decision point, if the traffic situation allows for it.
 
-Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, the base cannot be changed. The master control shall therefore assume that the base has already been executed by the AGV. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
+Since MQTT is an asynchronous protocol and transmission via wireless networks is not reliable, the base cannot be changed. The fleet control shall therefore assume that the base has already been executed by the mobile robot. A later section describes a procedure to cancel an order, but this is also considered unreliable due to the communication limitations mentioned above.
 
-The master control has the possibility to change the horizon by sending an updated route to the AGV which includes the changed list of nodes and edges. The procedure for changing the horizon route is shown in Figure 4.
+The fleet control has the possibility to change the horizon by sending an updated route to the mobile robot which includes the changed list of nodes and edges. The procedure for changing the horizon route is shown in Figure 4.
 
 ![Figure 4 Procedure for changing the driving route "Horizon"](./assets/driving_route_horizon.png)
 >Figure 4 Procedure for changing the driving route "Horizon"
 
-In Figure 4, an initial order is first sent by the master control at time t = 1.
+In Figure 4, an initial order is first sent by the fleet control at time t = 1.
 Figure 5 shows the pseudocode of a possible order.
 For the sake of readability, a complete JSON example has been omitted here.
 
@@ -521,7 +518,7 @@ For the sake of readability, a complete JSON example has been omitted here.
 At time t = 3, the order is updated by sending an extension of the order (see example in Figure 6).
 Note that the `orderUpdateId` is incremented and that the first node of the order update corresponds to the last shared base node of the previous order message.
 
-This ensures that the AGV can also perform the order update, i.e., that the first node of the order update is reachable by executing the edges already known to the AGV.
+This ensures that the mobile robot can also perform the order update, i.e., that the first node of the order update is reachable by executing the edges already known to the mobile robot.
 
 ```
 {
@@ -543,30 +540,30 @@ This ensures that the AGV can also perform the order update, i.e., that the firs
 >Figure 6 Pseudocode of an order update. Note the change of the `orderUpdateId`.
 
 This also aids in the event that an order update is lost (e.g., due to an unreliable wireless network).
-The AGV can always check that the last known base node has the same `nodeId` (and `sequenceId`) as the first node of a new order update.
+The mobile robot can always check that the last known base node has the same `nodeId` (and `sequenceId`) as the first node of a new order update.
 
 Also note that node g is the only base node that is sent again.
 Since the base cannot be changed, a retransmission of nodes f and d is not valid.
 
 It is important that the contents of the decision point (node g in Figure 7) are not changed. This means actions, deviation range etc. have to be resent (see Figure 7.1 (new figure), orderUpdateId 1).
-In order to release actions for the mobile robot to execute on a node it is already positioned on through an order update, the master control must re-send this node once with all meta-data (including potentially already 'FINISHED'/'RUNNING' actions) from the previous order update, which will not be executed again by the robot, and then add a node with the now newly released actions to be executed with this order update. This node can have the same `nodeId` as the decision node or a different `nodeId` but the same position as the decision node. The `sequenceId` of the new node is always the `sequenceId` of the decision node +2.
-Note that for this purpose the vehicle shall be able to process a logical edge connecting a graph node to itself.
+In order to release actions for the mobile robot to execute on a node it is already positioned on through an order update, the fleet control must re-send this node once with all meta-data (including potentially already 'FINISHED'/'RUNNING' actions) from the previous order update, which will not be executed again by the mobile robot, and then add a node with the now newly released actions to be executed with this order update. This node can have the same `nodeId` as the decision node or a different `nodeId` but the same position as the decision node. The `sequenceId` of the new node is always the `sequenceId` of the decision node +2.
+Note that for this purpose the mobile robot shall be able to process a logical edge connecting a graph node to itself.
 
 ![Figure 7 Regular update process - order extension](./assets/update_order_extension.png)
 >Figure 7 Regular update process - order extension.
 
 Figure 7 describes how an order should be extended.
-It shows the information that is currently available on the AGV.
+It shows the information that is currently available on the mobile robot.
 The `orderId` stays the same and the `orderUpdateId` is incremented.
 
 The last node of the previous base is the first base node in the updated order.
-With this node the AGV can add the updated order onto the current order (stitching).
+With this node the mobile robot can add the updated order onto the current order (stitching).
 The other nodes and edges from the previous base are not resent.
 
 ![Figure 7.1 Order update with additional stitching node.](./assets/update_order_stitching_node.png)
 >Figure 7.1 Order update with additional stitching node (e.g., to execute new actions on decision point)
 
-Master control has the option to make changes to the horizon by sending entirely different nodes as the new base.
+Fleet control has the option to make changes to the horizon by sending entirely different nodes as the new base.
 The horizon can also be deleted.
 
 To allow loops in orders (like going from node a to b and then back to a) a `sequenceId` is assigned to the node and edge objects.
@@ -585,49 +582,49 @@ Figure 8 describes the process of accepting an order or order update.
 All formatting and JSON data types are correct?
 
 2)	**is received order new or an update of the current order?**:
-Is `orderId` of the received order different to `orderId` of order the vehicle currently holds?
+Is `orderId` of the received order different to `orderId` of order the mobile robot currently holds?
 
-3)	**is vehicle still executing an order or waiting for an update?**:
-Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Vehicle might still have a horizon and therefore be waiting for an update and executing an order.
+3)	**is mobile robot still executing an order or waiting for an update?**:
+Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Mobile robot might still have a horizon and therefore be waiting for an update and executing an order.
 
-4) **is start of new order close enough to current position?**:	Is the vehicle already standing on the node, or is it in the node's deviation range (see Section [6.6.1 Concept and logic](#661-concept-and-logic))?
+4) **is start of new order close enough to current position?**:	Is the mobile robot already standing on the node, or is it in the node's deviation range (see Section [6.6.1 Concept and logic](#661-concept-and-logic))?
 
-5) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the vehicle?
+5) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the mobile robot?
 
-6)	**is received order update currently on vehicle?**: Is `orderUpdateId` equal to the one currently on the vehicle?
+6)	**is received order update currently on mobile robot?**: Is `orderUpdateId` equal to the one currently on the mobile robot?
 
-7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The vehicle is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-8)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The vehicle is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon).  In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+8)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon).  In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
 9)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
 
 ### 6.6.3 Idle state of the mobile robot
 
-A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the vehicle is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a vehicle can execute instantActions.
+A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the mobile robot is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a mobile robot can execute instantActions.
 
 ### 6.6.4 Reporting of horizon actions in the mobile robot's state
 
 The mobile robot's state shall always represent the full status of the order it currently has. Therefore, the robot shall report both the `actionsStates` of actions included in its base as well as horizon at all times. All horizon actions are reported as 'WAITING'. If the mobile robot receives an order update where part of its former horizon is removed or changed, all actions that were attached to these nodes and edges shall be removed from the `actionStates` to reflect this. `actionStates` of base actions shall never be removed in the context of an `orderUpdate` as the base cannot be modified once released.
 
-### 6.6.3 Order cancellation (by master control)
+### 6.6.3 Order cancellation (by fleet control)
 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
 MC can optionally pass an `orderId` to reference which order it wants to cancel.
 After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
-A vehicle which plans and replans the trajectory between two nodes by itself shall stop at its current position, not merely at the next node.
+A mobile robot which plans and replans the trajectory between two nodes by itself shall stop at its current position, not merely at the next node.
 
 If there are order related actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are order related actions running, those actions should be cancelled and also be reported as 'FAILED'.
 If the action cannot be interrupted, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
 While order related actions are running, the cancelOrder action shall report 'RUNNING', until all actions are cancelled/finished. Actions that cannot be cancelled (cancelAllowed = false) shall be finished.
-After all movement of the vehicle and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
-This means that the vehicle is idle and ready to receive new orders.
+After all movement of the mobile robot and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
+This means that the mobile robot is idle and ready to receive new orders.
 
 The `orderId` and `orderUpdateId` are kept.
 
-Figure 9 shows the expected behavior for different AGV capabilities.
+Figure 9 shows the expected behavior for different mobile robot capabilities.
 
 ![Figure 9 Expected behavior after a cancelOrder](./assets/process_cancel_order.png)
 >Figure 9 Expected behavior after a `cancelOrder`.
@@ -635,24 +632,24 @@ Figure 9 shows the expected behavior for different AGV capabilities.
 
 #### 6.6.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the vehicle is idle and shall be ready to receive a new order.
+After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order.
 
-In the case of an AGV that localizes itself on nodes via a tag, the new order has to begin on the node the AGV is now standing on (see also Figure 5).
+In the case of a mobile robot that localizes itself on nodes via a tag, the new order has to begin on the node the mobile robot is now standing on (see also Figure 5).
 
-In case of an AGV that can stop in between nodes, the choice is up to master control how the next order should be started.
-The AGV shall accept both methods.
+In case of a mobile robot that can stop in between nodes, the choice is up to fleet control how the next order should be started.
+The mobile robot shall accept both methods.
 
 There are two options:
 
-- Send an order, where the first node is a temporary node that is positioned where the AGV currently stands. The AGV shall then realize that this node is trivially reachable and accept the order.
-- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the AGV is within this range. Thus, the AGV shall realize that this node shall be counted as traversed and accept the order.
+- Send an order, where the first node is a temporary node that is positioned where the mobile robot currently stands. The mobile robot shall then realize that this node is trivially reachable and accept the order.
+- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the mobile robot is within this range. Thus, the mobile robot shall realize that this node shall be counted as traversed and accept the order.
 
 
-#### 6.6.3.2 Receiving a cancelOrder action when AGV is idle
+#### 6.6.3.2 Receiving a cancelOrder action when mobile robot is idle
 
-If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
+If the mobile robot receives a `cancelOrder` action but the mobile robot is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the mobile robot’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-The AGV shall report an error of type "NO_ORDER_TO_CANCEL" with the level set to 'WARNING'.
+The mobile robot shall report an error of type "NO_ORDER_TO_CANCEL" with the level set to 'WARNING'.
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
@@ -662,16 +659,16 @@ There are several scenarios, when an order shall be rejected.
 These scenarios are shown in Figure 8 and described below.
 
 
-#### 6.6.4.1 Vehicle gets a malformed new order
+#### 6.6.4.1 Mobile robot gets a malformed new order
 
 Resolution:
 
-1. Vehicle does NOT take over the new order in its internal buffer.
-2. The vehicle reports an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
-3. The warning shall be reported until the vehicle has accepted a new order.
+1. Mobile robot does NOT take over the new order in its internal buffer.
+2. The mobile robot reports an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
+3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.6.4.2 Vehicle receives an order with actions it cannot perform or with fields that it cannot use
+#### 6.6.4.2 Mobile robot receives an order with actions it cannot perform or with fields that it cannot use
 
 Examples:
 
@@ -680,31 +677,30 @@ Examples:
 
 Resolution:
 
-1. Vehicle does NOT take over the new order in its internal buffer
-2. Vehicle reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
-3. The warning shall be reported until the vehicle has accepted a new order.
+1. Mobile robot does NOT take over the new order in its internal buffer
+2. Mobile robot reports an error  of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
+3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.6.4.3 Vehicle gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
+#### 6.6.4.3 Mobile robot gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution:
 
-1. Vehicle does NOT take over the new order in its internal buffer.
-2. Vehicle keeps the previous order in its buffer.
-3. The vehicle reports an error of type "OUTDATED_ORDER_UPDATE" and level 'WARNING'.
-4. The vehicle continues with executing the previous order.
+1. Mobile robot does NOT take over the new order in its internal buffer.
+2. Mobile robot keeps the previous order in its buffer.
+3. The mobile robot reports an error of type "OUTDATED_ORDER_UPDATE" and level 'WARNING'.
+4. The mobile robot continues with executing the previous order.
 
 If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
-This might happen, if the master control resends the order because the state message was received too late by master control and it could therefore not verify that the first order had been received.
+This might happen, if the fleet control resends the order because the state message was received too late by fleet control and it could therefore not verify that the first order had been received.
 
 #### 6.6.4.4 Clearing the order
 
-In response to one of the following events, not triggered by master control, the vehicle has to stop executing the current order:
+In response to one of the following events, not triggered by fleet control, the mobile robot has to stop executing the current order:
+- The mobile robot is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
+- The mobile robot cannot determine its position anymore.
 
-- The vehicle is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.12.6 Operating Mode](#6126-operating_mode)).
-- The vehicle cannot determine its position anymore.
-
-In these cases the vehicle has to clear any current order which means that similar to a cancellation:
+In these cases the mobile robot has to clear any current order which means that similar to a cancellation:
 
 - Any scheduled order related action shall be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running order related action should also be cancelled and be reported as 'FAILED' in `actionStates`.
@@ -713,33 +709,31 @@ In these cases the vehicle has to clear any current order which means that simil
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
 
-As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the vehicle shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
 
 
 ### 6.6.5 Corridors
 
-The optional `corridor` edge attribute allows the vehicle to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the vehicle is allowed to operate.
-To use the `corridor` attribute, a predefined trajectory is required that the vehicle would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the vehicle known to the master control or the trajectory sent in an order. The behavior of a vehicle using the `corridor` attribute is still the behavior of a line-guided vehicle, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles. Note that a corridor communicated within an order is released for the mobile robot by default. If the releaseRequired flag is set to true, the robot must request approval from master control before using the corridor as described in chapter [6.12.4 Requesting obstacle avoidance](#6124-obstacle-avoidance-request).
+The optional `corridor` edge attribute allows the mobile robot to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the mobile robot is allowed to operate.
+To use the `corridor` attribute, a predefined trajectory is required that the mobile robot would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the mobile robot known to the fleet control or the trajectory sent in an order. The behavior of a mobile robot using the `corridor` attribute is still the behavior of a line-guided mobile robot, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles. Note that a corridor communicated within an order is released for the mobile robot by default. If the releaseRequired flag is set to true, the mobile robot must request approval from fleet control before using the corridor as described in chapter [6.12.4 Requesting obstacle avoidance](#6124-obstacle-avoidance-request).
 
 *Remark:
-An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a vehicle follows when driving from the start node to the end node.
-Depending on the vehicle type, the trajectory that a vehicle takes between the start and end nodes is either defined by master control via the trajectory edge attribute or assigned to the vehicle as a predefined trajectory.
-Depending on the internal state of the vehicle, the selected trajectory may vary.*
+An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a mobile robot follows when driving from the start node to the end node.
+Depending on the mobile robot type, the trajectory that a mobile robot takes between the start and end nodes is either defined by fleet control via the trajectory edge attribute or assigned to the mobile robot as a predefined trajectory.
+Depending on the internal state of the mobile robot, the selected trajectory may vary.*
 
 ![Figure 10 Edges with corridor attribute.](./assets/edges_with_corridors.png)
->Figure 10 Edges with a `corridor` attribute that defines the left and right boundaries within which a vehicle is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the vehicle, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorReferencePoint` parameter.
+>Figure 10 Edges with a `corridor` attribute that defines the left and right boundaries within which a mobile robot is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the mobile robot, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorReferencePoint` parameter.
+The area in which the mobile robot is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
+The optional `corridorReferencePoint` field specifies whether the mobile robot control point or the mobile robot contour should be inside the defined boundary.
+The boundaries of the edges shall be defined in such a way that the mobile robot is inside the boundaries of the new and now current edge as soon as it passes a node.
+Instead of setting the corridor boundaries to zero, fleet control shall not use the `corridor` attribute if the mobile robot shall not deviate from the trajectory.
 
-The area in which the vehicle is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
-The optional `corridorReferencePoint` field specifies whether the vehicle control point or the vehicle contour should be inside the defined boundary.
-The boundaries of the edges shall be defined in such a way that the vehicle is inside the boundaries of the new and now current edge as soon as it passes a node.
-Instead of setting the corridor boundaries to zero, master control shall not use the `corridor` attribute if the vehicle shall not deviate from the trajectory.
+The mobile robot's motion control software shall constantly check that the mobile robot is within the defined boundaries.
+If not, the mobile robot shall stop because it is out of the allowed navigation space and report an error of type 'OUTSIDE_OF_CORRIDOR' with level 'CRITICAL'.
+The fleet control can decide if user interaction is required or if the mobile robot can continue by canceling the current order and sending a new order to the mobile robot with corridor information that allows the mobile robot to move again.
 
-The vehicle's motion control software shall constantly check that the vehicle is within the defined boundaries.
-If not, the vehicle shall stop because it is out of the allowed navigation space and report an error of type 'OUTSIDE_OF_CORRIDOR' with level 'CRITICAL'.
-The master control can decide if user interaction is required or if the vehicle can continue by canceling the current order and sending a new order to the vehicle with corridor information that allows the vehicle to move again.
-
-*Remark: Allowing the vehicle to deviate from the trajectory increases the possible footprint of the vehicle during driving. This circumstance shall be considered during initial operation, and if the master control makes a traffic control decision based on the vehicle's footprint.*
-
+*Remark: Allowing the mobile robot to deviate from the trajectory increases the possible footprint of the mobile robot during driving. This circumstance shall be considered during initial operation, and if the fleet control makes a traffic control decision based on the mobile robot's footprint.*
 See also Section [6.12.2 Traversal of nodes and entering/leaving edges](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
 
@@ -750,8 +744,8 @@ Object structure | Unit | Data type | Description
 headerId | | uint32 | Header ID of the message.<br> The header ID is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2)
-manufacturer | | string | Manufacturer of the AGV
-serialNumber | | string | Serial number of the AGV
+manufacturer | | string | Manufacturer of the mobile robot.
+serialNumber | | string | Serial number of the mobile robot.
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
 orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId.<br>If an order update is rejected, this field is to be passed in the rejection message.
 *orderDescription* | | string | Additional human-readable information only for visualization purposes; this may not be used for any logical processes.
@@ -765,7 +759,7 @@ nodeId | | string | Unique node identification
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
 *nodeDescription* | | string | Additional information on the node
 released | | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon.
-***nodePosition*** | | JSON object | Node position. <br>Optional for vehicle types that do not require the node position (e.g., line-guided vehicles).
+***nodePosition*** | | JSON object | Node position. <br>Optional for mobile robot types that do not require the node position (e.g., line-guided mobile robots).
 **actions [action]** <br> } | | array | Array of actions to be executed on a node. <br>Empty array, if no actions required.
 
 Object structure | Unit | Data type | Description
@@ -773,27 +767,27 @@ Object structure | Unit | Data type | Description
 **nodePosition** { | | JSON object | Defines the position on a map in a global project-specific world coordinate system. <br>Each floor has its own map. <br>All maps shall use the same project-specific global origin.
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a vehicle shall match on a node for it to be considered traversed.<br> Optional: vehicle can plan the path by itself.<br>If defined, the vehicle has to assume the theta angle on this node.<br>If previous edge disallows rotation, the vehicle shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the vehicle is to rotate on the node to the edges desired rotation before entering the edge.
-*allowedDeviationXY* | m | JSON<br>object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
-*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a vehicle shall match the orientation of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the vehicle orientation.<br>If = 0.0: no deviation is allowed, which means the vehicle shall reach the node orientation as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master Control the vehicle shall assume this value as 0.0.
-mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a mobile robot shall match on a node for it to be considered traversed.<br> Optional: mobile robot can plan the path by itself.<br>If defined, the mobile robot has to assume the theta angle on this node.<br>If previous edge disallows rotation, the mobile robot shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.
+*allowedDeviationXY* | m | JSON<br>object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by fleet control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+*allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a mobile robot shall match the orientation of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by fleet control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the mobile robot orientation.<br>If = 0.0: no deviation is allowed, which means the mobile robot shall reach the node orientation as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume this value as 0.0.
+mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescription* <br> } | | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
-**allowedDeviationXY** { | | JSON object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br><br> If `a` = `b`= 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master Control the vehicle shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.<br>A point *(x,y)* is on or inside an ellipse if *b^2 x + a^2 y <= a^2 b^2*.
+**allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by fleet control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br><br> If `a` = `b`= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.<br>A point *(x,y)* is on or inside an ellipse if *b^2 x + a^2 y <= a^2 b^2*.
 a | m | float64 | length of the ellipse semi-major axis	in meters.
 b | m | float64 | length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
 
-*Remark: A master control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A vehicle which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*
+*Remark: A fleet control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A mobile robot which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*
 
 ![Figure xx allowedDeviationXY ellipse](./assets/ellipse.png)
 >Figure xx allowedDeviation ellipse
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**action** { | | JSON object | Describes an action that the AGV can perform.
+**action** { | | JSON object | Describes an action that the mobile robot can perform.
 actionType | | string | Name of action as described in the first column of "Actions and Parameters". <br> Identifies the function of the action.
 actionId | | string | Unique ID to identify the action and map them to the actionState in the state. <br>Suggestion: Use UUIDs.
 *actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
@@ -810,18 +804,18 @@ sequenceId | | uint32 | Number to track the sequence of nodes and edges in an or
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
 startNodeId | | string | nodeId of first node within the order.
 endNodeId | | string | nodeId of the last node within the order.
-*maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
-*maximumHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
+*maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the mobile robot.
+*maximumHeight* | m | float64 | Permitted maximum height of the mobile robot, including the load, on the edge.
 *minimumHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
-*orientation* | rad | float64 | Orientation of the AGV on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the vehicle on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.
-*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional vehicles.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional vehicle, any orientation is possible, for differential drive vehicles, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>If not defined, the default value is 'TANGENTIAL'.
-*direction* | | string | Sets direction at junctions for navigation type physical line guided mobile robots, possible values shall be pre-defined (vehicle-individual).<br> Examples: "left", "right", "straight", "580 Hz".
-*reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional vehicles. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Vehicle can rotate into the desired orientation on the edge.<br>Default: "false".
+*orientation* | rad | float64 | Orientation of the mobile robot on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the mobile robot starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the mobile robot on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.
+*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional mobile robots.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional mobile robot, any orientation is possible, for differential drive mobile robots, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>If not defined, the default value is 'TANGENTIAL'.
+*direction* | | string | Sets direction at junctions for navigation type physical line guided mobile robots, possible values shall be pre-defined (mobile robot-individual).<br> Examples: "left", "right", "straight", "580 Hz".
+*reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional mobile robots. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Mobile robot can rotate into the desired orientation on the edge.<br>Default: "false".
 *maximumRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
-***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
-*length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
-***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
-**actions [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the mobile robot should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the mobile robot cannot process trajectories or if the mobile robot plans its own trajectory.
+*length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided mobile robots to decrease their speed before reaching a stop position.
+***corridor*** | | JSON object | Definition of boundaries in which a mobile robot can deviate from its trajectory, e.g., to avoid obstacles.<br>
+**actions [action]**<br><br><br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the mobile robot is traversing the edge which triggered the action. <br>When the mobile robot leaves the edge, the action will stop and the state before entering the edge will be restored.
 
 
 Object structure | Unit | Data type | Description
@@ -843,22 +837,22 @@ y | m | float64 | Y-coordinate described in the project-specific coordinate syst
 Object structure | Unit | Data type | Description
 ---|---|---|---
 ***corridor*** { | | JSON object |
-leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the vehicle (see Figure 13).
-rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the vehicle (see Figure 13).
-*corridorReferencePoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle. If not specified the boundaries are valid to the vehicles kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
-*releaseRequired* |  | boolean | Optional flag that indicates whether the robot must request approval from master control. It has a default value of false.
-*releaseLossBehaviour* | | string | Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the master control.<br> Enum { 'STOP' , 'RETURN' }
+leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the left related to the trajectory of the mobile robot (see Figure 13).
+rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the mobile robot (see Figure 13).
+*corridorReferencePoint* <br><br>**}**| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the mobile robot. If not specified the boundaries are valid to the mobile robot's kinematic center.<br> Enum { 'KINEMATICCENTER' , 'CONTOUR' }
+*releaseRequired* |  | boolean | Optional flag that indicates whether the robot must request approval from fleet control. It has a default value of false.
+*releaseLossBehaviour* | | string | Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the fleet control.<br> Enum { 'STOP' , 'RETURN' }
 
 ### 6.7 Maps
 
-To ensure consistent navigation among different types of AGVs, the position is always specified in reference to the project-specific coordinate system (see Figure 11). The project-specific coordinate system is referring to the coordinate system that is defined for the interaction between master control and the mobile robot.
+To ensure consistent navigation among different types of mobile robots, the position is always specified in reference to the project-specific coordinate system (see Figure 11). The project-specific coordinate system is referring to the coordinate system that is defined for the interaction between fleet control and the mobile robot.
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
-The vehicle coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the vehicle and the z-axis pointing upward (ISO 9787 5.5). The vehicle reference point is defined as (0,0,0) in the vehicle reference frame, unless specified otherwise.
+The mobile robot coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the mobile robot and the z-axis pointing upward (ISO 9787 5.5). The mobile robot reference point is defined as (0,0,0) in the mobile robot reference frame, unless specified otherwise.
 
-![Figure 11 Coordinate system with sample AGV and orientation](./assets/coordinate_system_vehicle_orientation.png)
->Figure 11 Coordinate system with sample AGV and orientation
+![Figure 11 Coordinate system with sample mobile robot and orientation](./assets/coordinate_system_vehicle_orientation.png)
+>Figure 11 Coordinate system with sample mobile robot and orientation
 
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within +Pi and –Pi.
@@ -866,93 +860,88 @@ The orientation shall be in radians and shall be within +Pi and –Pi.
 
 ### 6.7.1 Map distribution
 
-To enable an automatic map distribution and intelligent management of restarting the vehicles if necessary, a standardized way to distribute maps is introduced.
+To enable an automatic map distribution and intelligent management of restarting the mobile robots if necessary, a standardized way to distribute maps is introduced.
 
-The map files to be distributed are stored on a dedicated map server that is accessible by the vehicles. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a vehicle is a pull operation, initiated by the master control triggering a download command using an `instantAction`.
+The map files to be distributed are stored on a dedicated map server that is accessible by the mobile robots. To ensure efficient transmission, each transmission should consist of a single file. If multiple maps or files are required, they should be bundled or packed into a single file. The process of transferring a map from the map server to a mobile robot is a pull operation, initiated by the fleet control triggering a download command using an `instantAction`.
 
-Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the vehicle's physical workspace, and the map version indicates updates to previous versions. Before accepting a new order, the vehicle shall check that there is a map on the vehicle for each map identifier in the requested order. It is the responsibility of the master control to ensure that the correct maps are activated to operate the vehicle.
-
-In order to minimize downtime and make it easier for the master control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the vehicles. The status of the maps on the vehicle can be accessed via the vehicle state channel. It's important to note that transferring a map to an AGV and then activating the map are different processes. To activate a pre-loaded map on a vehicle, the master control sends an instant action. In this case, any other map with the same map identifier but a different map version is automatically disabled. Maps can be deleted by the master control with another instant action. The result of this process is shown in the vehicle state.
+Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the mobile robot's physical workspace, and the map version indicates updates to previous versions. Before accepting a new order, the mobile robot shall check that there is a map on the mobile robot for each map identifier in the requested order. It is the responsibility of the fleet control to ensure that the correct maps are activated to operate the mobile robot.
+In order to minimize downtime and make it easier for the fleet control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the mobile robots. The status of the maps on the mobile robot can be accessed via the mobile robot state channel. It's important to note that transferring a map to an mobile robot and then activating the map are different processes. To activate a pre-loaded map on a mobile robot, the fleet control sends an instant action. In this case, any other map with the same map identifier but a different map version is automatically disabled. Maps can be deleted by the fleet control with another instant action. The result of this process is shown in the mobile robot state.
 
 The map distribution process is shown in Figure 13.
 
 ![Figure 13 Map distribution process](./assets/map_distribution_process.png)
->Figure 13 Communication required between master control, AGV and map server to download, enable, and delete a map.
+>Figure 13 Communication required between fleet control, mobile robot and map server to download, enable, and delete a map.
 
-#### 6.7.2 Maps in the vehicle state
+#### 6.7.2 Maps in the mobile robot state
 
-The `mapId` field in the `mobileRobotPosition` of the state represents the currently active map. Information about the maps available on a vehicle is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the vehicle if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
-
-Note that multiple maps with different `mapId` can be enabled at the same time. There can only be one version of maps with the same `mapId` enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the vehicle.
+The `mapId` field in the `mobileRobotPosition` of the state represents the currently active map. Information about the maps available on a mobile robot is presented in the `maps` array, which is a component of the state message. Each entry in this array is a JSON object consisting of the mandatory fields `mapId`, `mapVersion`, and `mapStatus`, which can be either 'ENABLED' or 'DISABLED'. An 'ENABLED' map can be used by the mobile robot if necessary. A 'DISABLED' map shall not be used. The status of the download process is indicated by the current action not being completed. Errors are also reported in the state.
+Note that multiple maps with different `mapId` can be enabled at the same time. There can only be one version of maps with the same `mapId` enabled at a time. If the `maps` array is empty, this means that there are currently no maps available on the mobile robot.
 
 
 #### 6.7.3 Map download
 
-The map download is triggered by the `downloadMap` instant action from the master control. This command contains the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the vehicle.
+The map download is triggered by the `downloadMap` instant action from the fleet control. This command contains the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the mobile robot.
 
-The AGV sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
+The mobile robot sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state, before they are ready to be enabled.
 
-It is important to ensure that the process of downloading a map does not modify, delete, enable, or disable any existing maps on the vehicle.
-The vehicle shall reject the download of a map with a `mapId` and `mapVersion` that is already on the vehicle. An error  of type 'DUPLICATE_MAP' and level 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The master control shall first delete the map on the vehicle and then restart the download.
+It is important to ensure that the process of downloading a map does not modify, delete, enable, or disable any existing maps on the mobile robot.
+The mobile robot shall reject the download of a map with a `mapId` and `mapVersion` that is already on the mobile robot. An error  of type 'DUPLICATE_MAP' and level 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The fleet control shall first delete the map on the mobile robot and then restart the download.
 
 
 #### 6.7.4 Enable downloaded maps
 
-There are two ways to enable a map on a vehicle:
+There are two ways to enable a map on a mobile robot:
 
-1. **Master control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the vehicle. Other Versions of the same `mapId` with different `mapVersion` are set to 'DISABLED'.
-2. **Manually enable a map on the vehicle**: In some cases, it might be necessary to enable the maps on the vehicle directly. The result shall be reported in the vehicle state.
+1. **Fleet control enables map**: Use the `enableMap` instant action to set a map to 'ENABLED' on the mobile robot. Other Versions of the same `mapId` with different `mapVersion` are set to 'DISABLED'.
+2. **Manually enable a map on the mobile robot**: In some cases, it might be necessary to enable the maps on the mobile robot directly. The result shall be reported in the mobile robot state.
 
-It is the responsibility of the master control to ensure that the correct maps are activated on the vehicle when sending the corresponding `mapId` as part of a `nodePosition` in an order.
-If the vehicle is to be set to a specific position on a new map, the `initializePosition` instant action is used.
+It is the responsibility of the fleet control to ensure that the correct maps are activated on the mobile robot when sending the corresponding `mapId` as part of a `nodePosition` in an order.
+If the mobile robot is to be set to a specific position on a new map, the `initializePosition` instant action is used.
 
 
-#### 6.7.5 Delete maps on vehicle
-The master control can request the deletion of a specific map from a vehicle. This is done with the instant action `deleteMap`. When a vehicle runs out of memory, it should report this to the master control, which can then initiate the deletion of maps. The vehicle itself is not allowed to delete maps.
-After successfully deleting a map, it is important to remove that map's entry from the vehicle's array of maps in the vehicle state.
+#### 6.7.5 Delete maps on the mobile robot
+The fleet control can request the deletion of a specific map from a mobile robot. This is done with the instant action `deleteMap`. When a mobile robot runs out of memory, it should report this to the fleet control, which can then initiate the deletion of maps. The mobile robot itself is not allowed to delete maps.
+After successfully deleting a map, it is important to remove that map's entry from the mobile robot's array of maps in the mobile robot state.
 
 ## 6.8 Sharing of planned path for freely navigating mobile robots
 
-Vehicles shall communicate their planned trajectory to the master control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
-
-Vehicles share their `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors, and their `plannedPath`, which represents a longer path within the robot's currently active order. Both paths shall start from the mobile robot's current position, independent of any nodes that are part of the order. The robot can decide on the length of the shared paths, as it may be situation dependent. If the mobile robot is freely navigating both `intermediatePath` and `plannedPath` shall be shared in each state.
+Mobile robots shall communicate their planned trajectory to the fleet control system. This is done via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
+Mobile robots share their `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors, and their `plannedPath`, which represents a longer path within the mobile robot's currently active order. Both paths shall start from the mobile robot's current position, independent of any nodes that are part of the order. The mobile robot can decide on the length of the shared paths, as it may be situation dependent. If the mobile robot is freely navigating both `intermediatePath` and `plannedPath` shall be shared in each state.
 The `plannedPath` is defined as NURBS as defined in the `trajectory` field of the `edgeState`. The `plannedPath` can contain an array of nodes, referenced by their `nodeId`, that will be traversed as part of the current path. It should be updated whenever a significant change has occurred in the mobile robot's `plannedPath`. The `plannedPath` should at least cover the mobile robot's current base.
-The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the vehicle and the `ETA` indicating the estimated time of arrival.
+The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the mobile robot and the `ETA` indicating the estimated time of arrival.
 The `intermediatePath` shall be updated with every sent state or visualization message and always begin at the mobile robot's current position. The parameters `plannedPath` and `intermediatePath` shall be used only for trajectories planned by the mobile robot. The trajectory fields in the edgeState shall only be used to 'acknowledge' trajectories that have already been defined a priori within a layout or the order.
 
 ## 6.9 Zones
 
-Zones are used to define rules for specific areas of the vehicle workspace. In this way, zones allow vehicles to navigate freely between nodes while giving the Master Control the ability to manage traffic. Zones can be used to locally deny vehicles access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone type: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
+Zones are used to define rules for specific areas of the mobile robot workspace. In this way, zones allow mobile robots to navigate freely between nodes while giving the fleet control the ability to manage traffic. Zones can be used to locally deny mobile robots access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone type: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
 Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.9.4](#694-interactions-between-zones) .
-Some vehicles cannot process zones at all, while other vehicles might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All vehicles must therefore report to master control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
-Also (virtually) line-guided vehicles can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
-
-A zone set shall only be changed and distributed by master control to keep consistency in the system.
+Some mobile robots cannot process zones at all, while other mobile robots might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All mobile robots must therefore report to fleet control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
+Also (virtually) line-guided mobile robots can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
+A zone set shall only be changed and distributed by fleet control to keep consistency in the system.
 
 ### 6.9.1 Zone types
 
-Two categories of zones are distinguished: contour-based zones and kinematic center-based zones. This distinction is based on the different conditions for when the vehicle is considered to be entering and exiting zones.
+Two categories of zones are distinguished: contour-based zones and kinematic center-based zones. This distinction is based on the different conditions for when the mobile robot is considered to be entering and exiting zones.
 
 #### Contour-based zones
 
-For contour-based zones, the contour of the vehicle (including its load) determines zone entry and exit. Any part of the contour entering the zone is considered a zone entry. A zone exit shall be reported only when no part of the contour remains inside the zone. When a zone is reported as exited is decided by the mobile robot. 
-
-![Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
->Figure x1 Depiction of a vehicle entering a zone based on its contour (left) and a loaded vehicle with corresponding extended bounding box exiting a zone (right)
+For contour-based zones, the contour of the mobile robot (including its load) determines zone entry and exit. Any part of the contour entering the zone is considered a zone entry. A zone exit shall be reported only when no part of the contour remains inside the zone. When a zone is reported as exited is decided by the mobile robot. 
+![Figure x1 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
+>Figure x1 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)
 
 The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | | Vehicles shall not enter this zone. If a vehicle has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
-| LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Vehicles may only enter this zone if the route is explicitly specified by the master control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the master control or a predefined trajectory on the vehicle. A corridor can be sent to allow the vehicle to deviate from the trajectory. | 
-| RELEASE | | - | Vehicles are only allowed entering this zone once they have been granted access through master control. | 
-| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the vehicle can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the vehicle is already in the zone and the release expires or is revoked. If not defined, the vehicle is expected to STOP and report an error. STOP: Vehicle stops and sends a RELEASE_LOST error with level CRITICAL. EVACUATE: Execute the evacuation behavior of the vehicle to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the vehicle has already entered the zone, the vehicle continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the vehicle waits for a new order.| 
-| COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Vehicles are only allowed adjusting their path if granted permission by master control. | 
-| SPEED_LIMIT | | | Vehicles must not drive faster than the defined maximum speed within this zone. | 
-| | maximumSpeed | float64 | Maximum permitted speed for vehicles within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
-| ACTION | | | Vehicles shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
+| BLOCKED | none | | Mobile robots shall not enter this zone. If a mobile robot has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
+| LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the defined trajectories on edges. Mobile robots may only enter this zone if the route is explicitly specified by the fleet control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the fleet control or a predefined trajectory on the mobile robot. A corridor can be sent to allow the mobile robot to deviate from the trajectory. | 
+| RELEASE | | - | Mobile robots are only allowed entering this zone once they have been granted access through fleet control. | 
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the mobile robot can either STOP, CONTINUE, or EVACUATE the zone. This action is only executed, when the mobile robot is already in the zone and the release expires or is revoked. If not defined, the mobile robot is expected to STOP and report an error. STOP: Mobile robot stops and sends a RELEASE_LOST error with level CRITICAL. EVACUATE: Execute the evacuation behavior of the mobile robot to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. CONTINUE: If the release is revoked or expires after the mobile robot has already entered the zone, the mobile robot continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the mobile robot waits for a new order.| 
+| COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Mobile robots are only allowed adjusting their path if granted permission by fleet control. | 
+| SPEED_LIMIT | | | Mobile robots must not drive faster than the defined maximum speed within this zone. | 
+| | maximumSpeed | float64 | Maximum permitted speed for mobile robot within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
+| ACTION | | | The mobile robot shall perform predefined actions when entering, traversing, or exiting the zone. The factsheet defines which actions can be executed when. |
 | | entryActions[action] | array | Actions to be triggered when entering the zone. Empty array, if no actions required. |
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty array, if no actions required. |
 | | exitActions[action] | array | Actions to be triggered when leaving the zone. Empty array, if no actions required. |
@@ -960,23 +949,23 @@ The following contour-based zones are defined:
 
 #### Kinematic center-based zones
 
-In kinematic center-based zones, the vehicle's kinematic center determines its entry and exit of the zones. When the vehicle's kinematic center is inside a zone, the vehicle shall follow the defined behavior.
+In kinematic center-based zones, the mobile robot's kinematic center determines its entry and exit of the zones. When the mobile robot's kinematic center is inside a zone, the mobile robot shall follow the defined behavior.
 'PRIORITY' and 'PENALTY' zones are zones which only influence the path planning of mobile robots.
-'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used. Other directions shall be avoided. The `directedLimitation` and `bidirectedLimitation` enums specify the limits within which the vehicle may deviate from its direction of travel. The direction of travel is the velocity vector in the project-specific coordinate system.
+'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used. Other directions shall be avoided. The `directedLimitation` and `bidirectedLimitation` enums specify the limits within which the mobile robot may deviate from its direction of travel. The direction of travel is the velocity vector in the project-specific coordinate system.
 
-![Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
->Figure x2 Depiction of a vehicle entering a zone based on its kinematic center (left) and a loaded vehicle exiting a zone based on its kinematic center (right)
+![Figure x2 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
+>Figure x2 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| PRIORITY | | | The workspace encompassed by this zone is associated with an incentive for the vehicle to plan its route through this zone compared to an otherwise equivalent area without such a zone on the map.| 
+| PRIORITY | | | The workspace encompassed by this zone is associated with an incentive for the mobile robot to plan its route through this zone compared to an otherwise equivalent area without such a zone on the map.| 
 | | priorityFactor | float64 | [0.0...1.0]<br>Relative factor that determines the preference of the zone over a workspace without a zone. 0.0 means no preference, as if there was no zone, 1.0 is maximum preference.|
-| PENALTY | | | The workspace encompassed by this zone is associated with a disincentive for the vehicle to plan its route through this zone compared to an otherwise equivalent area without such a zone on the map.|
+| PENALTY | | | The workspace encompassed by this zone is associated with a disincentive for the mobile robot to plan its route through this zone compared to an otherwise equivalent area without such a zone on the map.|
 | | penaltyFactor | float64 | [0.0...1.0]<br> Relative factor that determines the penalty of the zone compared to a workspace without that zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if it cannot find any other feasible route. |
-| DIRECTED | | | Vehicles shall traverse this zone in a specific direction of travel. | 
+| DIRECTED | | | Mobile robots shall traverse this zone in a specific direction of travel. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the velocity vector in the project-specific coordinate system. | 
 | | directedLimitation | string | Enum {'SOFT','RESTRICTED','STRICT'}<\br>SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., to avoid an obstacle, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall maintain the defined direction of travel as precisely as its technical capabilities allow. |
-| BIDIRECTED | | | While in this zone, vehicles shall only move in the defined direction of travel and its direct opposite (+ Pi), vehicles should not cross this zone in any other direction. | 
+| BIDIRECTED | | | While in this zone, mobile robots shall only move in the defined direction of travel and its direct opposite (+ Pi), mobile robots should not cross this zone in any other direction. | 
 | | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the velocity vector in the project-specific coordinate system. | 
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
 
@@ -984,9 +973,9 @@ In kinematic center-based zones, the vehicle's kinematic center determines its e
 
 While this guideline  does not explicitly define a map format, both a zone and a zone set are well-defined JSON objects. This structure shall be maintained when providing the download as well as sending the zones via the separate `zoneSet` topic. This structure is not part of the state message.
 
-Zone sets shall only be changed and distributed by master control to keep consistency in the system.
+Zone sets shall only be changed and distributed by fleet control to keep consistency in the system.
 
-A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon master control to ensure that the right zone set is enabled for each map on the vehicle. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the vehicle. Only a single zone set can be active at once for each `mapId` on the vehicle. Zones shall not extend beyond the spatial boundaries of a map.
+A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It must be associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon fleet control to ensure that the right zone set is enabled for each map on the mobile robot. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the mobile robot. Only a single zone set can be active at once for each `mapId` on the mobile robot. Zones shall not extend beyond the spatial boundaries of a map.
 The content of a zone set with a unique `zoneSetId` shall not change. If changes are required within a zone set, it shall be referenced with a new `zoneSetId`.
 
 
@@ -1028,49 +1017,49 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 ## 6.9.3 Communication for interactive zones 
 
-For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by master control to respond to these requests.
+For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by fleet control to respond to these requests.
 
-Before entering an interactive zone, the vehicle shall state a request.
+Before entering an interactive zone, the mobile robot shall state a request.
 A request before entry of an interactive zone is necessary, even if the order contains released nodes within the zone.
-The vehicle decides at which point before entering the zone to make its requests.
-If the response is not received in time, the vehicle shall not enter the zone.
+The mobile robot decides at which point before entering the zone to make its requests.
+If the response is not received in time, the mobile robot shall not enter the zone.
 
-Requests shall only be made for zones of enabled zone sets. Zone requests can also be made for zone sets belonging to maps that the vehicle is not currently on.
+Requests shall only be made for zones of enabled zone sets. Zone requests can also be made for zone sets belonging to maps that the mobile robot is not currently on.
 
-The `requestId` allows master control to distinguish between different requests and allows the vehicle to request several alternative requests for the same zone at the same time.
-Each request attempt shall use a unique identifier per mobile robot. Ids can be reused after a vehicle restart.
+The `requestId` allows fleet control to distinguish between different requests and allows the mobile robot to request several alternative requests for the same zone at the same time.
+Each request attempt shall use a unique identifier per mobile robot. Ids can be reused after a mobile robot restart.
 
 For requests to enter a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the state message.
 For permission to enter a 'COORINATED_REPLANNING' zone with a planned path or for replanning its path within the zone, the `requestType` shall be set to 'REPLANNING'.
 For a 'REPLANNING' request, the planned path shall be added as NURBS to the `trajectory` field of the `zoneRequest`. Multiple requests with different trajectories for the same zone can be made. Each path shall be requested with its own `zoneRequest` object.
 If a mobile robot requires access to a workspace covered by two or more 'RELEASE' zones, it shall request access and receive approval for all necessary zones before entering the area.
 
-If a mobile robot navigates through a workspace on the map that is covered by two or more 'COORDINATED REPLANNING' zones, it shall request its path within this area individually for each zone and receive approval from the master control before entering or changing paths.
-The parameter `requestStatus` shall be initially set to 'REQUESTED' by the vehicle when stating its request.
+If a mobile robot navigates through a workspace on the map that is covered by two or more 'COORDINATED REPLANNING' zones, it shall request its path within this area individually for each zone and receive approval from the fleet control before entering or changing paths.
+The parameter `requestStatus` shall be initially set to 'REQUESTED' by the mobile robot when stating its request.
 
-Master control responds to zone requests via the `response` topic.
+Fleet control responds to zone requests via the `response` topic.
 The response message contains an array of `zoneResponse` objects. Each `zoneResponse` shall only respond to a single request referenced by the `requestId`.
 Each response has a `responseType` that is either 'GRANTED', 'QUEUED', 'REVOKED', or 'REJECTED'.
-If the `responseType` is 'GRANTED', the vehicle is allowed to enter the zone or use the requested trajectory.
-Master control can set the `responseType` to 'QUEUED' to acknowledge the vehicle's request without giving permission, informing the vehicle that its request is being processed.
-If the `responseType` is 'REJECTED', the vehicle shall not enter the zone or use the requested trajectory.
-The `responseType` 'REVOKED' indicates that the permission is no longer valid. The master control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the vehicle is set to 'REVOKED'.
-The `zoneResponse` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` master control can resend a response message with an updated `leaseExpiry` time.
+If the `responseType` is 'GRANTED', the mobile robot is allowed to enter the zone or use the requested trajectory.
+Fleet control can set the `responseType` to 'QUEUED' to acknowledge the mobile robot's request without giving permission, informing the mobile robot that its request is being processed.
+If the `responseType` is 'REJECTED', the mobile robot shall not enter the zone or use the requested trajectory.
+The `responseType` 'REVOKED' indicates that the permission is no longer valid. The fleet control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the mobile robot is set to 'REVOKED'.
+The `zoneResponse` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a response message with an updated `leaseExpiry` time.
 
-The vehicle shall acknowledge the master controls response by setting the `requestStatus` accordingly.
+The mobile robot shall acknowledge the fleet controls response by setting the `requestStatus` accordingly.
 
-The interaction between the mobile robot and the master control for 'RELEASE' zones shall be according to figure x3.
+The interaction between the mobile robot and the fleet control for 'RELEASE' zones shall be according to figure x3.
 
-While the vehicle remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform master control that it is still inside the zone. After vehicle has exited the zone, it shall remove the corresponding `zoneRequest` entry from its state message.
-When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'RELEASE' zone. When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall report a warning and react according to the `releaseLossBehavior` defined in the zone definition.
+While the mobile robot remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform fleet control that it is still inside the zone. After mobile robot has exited the zone, it shall remove the corresponding `zoneRequest` entry from its state message.
+When receiving a response with `responseType` 'REVOKED', the mobile robot shall set the `requestStatus` to 'REVOKED' and not enter the 'RELEASE' zone. When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall report a warning and react according to the `releaseLossBehavior` defined in the zone definition.
 
 ![Figure x3 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
 >Figure x3 Zone request behavior for a RELEASE zone.
 
-The interaction between the mobile robot and the master control for 'COORDINATED_REPLANNING' zones shall be according to figure x4.
+The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to figure x4.
 
-The vehicle shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
-When receiving a response with `responseType` 'REVOKED', the vehicle shall set the `requestStatus` to 'REVOKED' and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the vehicle is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop driving and report a warning. To continue, the vehicle shall state a new request.
+The mobile robot shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
+When receiving a response with `responseType` 'REVOKED', the mobile robot shall set the `requestStatus` to 'REVOKED' and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop driving and report a warning. To continue, the mobile robot shall state a new request.
 
 ![Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
 >Figure x4 Zone request behavior for a COORDINATED_REPLANNING zone.
@@ -1083,22 +1072,22 @@ Object structure/Identifier | Data type | Description
 |headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 |timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 |version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-|manufacturer | | string | Manufacturer of the AGV.
-|serialNumber | | string | Serial number of the AGV.
+|manufacturer | | string | Manufacturer of the mobile robot.
+|serialNumber | | string | Serial number of the mobile robot.
 |responses[response] | array | Array of response objects. |
 
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-| response <br> { | JSON object | Object which contains the master control answer to a specific request. |
-| requestId | string | Unique per vehicle identifier within all active requests. |
-| grantType | string | Enum {'GRANTED','REVOKED','REJECTED','QUEUED'}<\br>'GRANTED': Master control grants request. 'REVOKED': Master control revokes previously granted request. 'REJECTED': Master control rejects a request. 'QUEUED': Master control acknowledges the vehicles request, but no permission is given yet.|
-| *leaseExpiry* | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
+| response <br> { | JSON object | Object which contains the fleet control answer to a specific request. |
+| requestId | string | Unique per mobile robot identifier within all active requests. |
+| grantType | string | Enum {'GRANTED','REVOKED','REJECTED','QUEUED'}<\br>'GRANTED': Fleet control grants request. 'REVOKED': Fleet control revokes previously granted request. 'REJECTED': Fleet control rejects a request. 'QUEUED': Fleet control acknowledges the mobile robot request, but no permission is given yet.|
+| *leaseExpiry*<br>} | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
 
 ### 6.9.4 Interactions between zones
 
-In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The column No Zone defines the behavior for contour-based zones, where vehicles can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the vehicle can only be completely within or outside the zone, so there is no possible interaction.
+In the following matrix possible interactions between zones are described. The matrix is symmetric, as the interaction between two zones is the same, regardless of the order in which they are considered. For each combination, there is either a zone behavior that is overrulling the other (e.g., a 'BLOCKED' zone overrules a 'LINE_GUIDED' zone) or there is no conflict (e.g., a 'LINE_GUIDED' zone and a 'COORDINATED_REPLANNING' zone). 'DIRECTED' and 'BIDIRECTED' zones shall not overlap, since this might lead to an undefined behavior. The column No Zone defines the behavior for contour-based zones, where mobile robots can be inside a defined zone type and an area without a zone at the same time. For kinematic center-based zones the mobile robot can only be completely within or outside the zone, so there is no possible interaction.
 
 | |**BLOCKED**|**RELEASE**|**LINE_GUIDED**|**COORDINATED_REPLANNING**|**SPEED_LIMIT**|**ACTION**|**PRIORITY**|**PENALTY**|**DIRECTED**|**BIDIRECTED**|**No Zone**|**EDGE-PROPERTIES**
 ---|---|---|---|---|---|---|---|---|---|---|---|---
@@ -1113,34 +1102,34 @@ In the following matrix possible interactions between zones are described. The m
 **DIRECTED** |||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** ||||||||||(8)|(7)|(9)
 
-1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the vehicle.
+1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the mobile robot.
 2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
 4) The lowest of the competing speeds applies.
 5) Execute all actions
 6) The most restrictive one is always selected here; for PRIORITY zones, the lowest priority factor is used; for overlapping PRIORITY and PENALTY zones, the highest penalty factor is used; for overlapping PENALTY zones, the highest penalty factor is used.
-7) For kinematic center-based zones the vehicle can only be completely within or outside the zone, so this overlap is not possible.
+7) For kinematic center-based zones the mobile robot can only be completely within or outside the zone, so this overlap is not possible.
 8) Zones shall not overlap, since the behavior is not defined.
 9) A trajectory as part of the edge properties shall override the directed and bidirected zone property.
 
 ### 6.9.5 Error handling within zones
 
-If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the master control. The master control shall then decide how to proceed. The vehicle shall not try to reach the node again, but wait for further instructions from the master control.
+If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the fleet control. The fleet control shall then decide how to proceed. The mobile robot shall not try to reach the node again, but wait for further instructions from the fleet control.
 
 ## 6.10 Actions
 
-If the AGV supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic `instantActions` (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
+If the mobile robot supports actions other than driving, these actions are executed via the action field that is attached to either a node or an edge, or sent via the separate topic `instantActions` (see Section [6.10 Topic "instantActions"](#610-topic-instantactions-from-master-control-to-agv)).
 
-Actions that are to be executed on an edge shall only run while the AGV is on the edge (see Section [6.12.2 Traversal of nodes and entering/leaving edges](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+Actions that are to be executed on an edge shall only run while the mobile robot is on the edge (see Section [6.12.2 Traversal of nodes and entering/leaving edges](#6122-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 
 Actions that are triggered on nodes can run as long as they need to run and should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or formulated pairwise (e.g., "activateWarningLights" and "deactivateWarningLights"), although there may be exceptions.
 
-The following section presents predefined actions that shall be used by the AGV, if the AGV's capabilities map to the action description.
+The following section presents predefined actions that shall be used by the mobile robot, if the mobile robot's capabilities map to the action description.
 If there is a sensible way to use the defined parameters, they shall be used.
 Additional parameters can be defined, if they are needed to execute an action successfully.
 The actions `cancelOrder`, `startPause` and `stopPause` shall be supported by every mobile robot.
 
-If there is no way to map some action to one of the actions of the following section, the AGV manufacturer can define additional actions that shall be used by master control.
+If there is no way to map some action to one of the actions of the following section, the mobile robot manufacturer can define additional actions that shall be used by fleet control.
 
 
 
@@ -1153,30 +1142,30 @@ action, counter action, description, idempotent, parameters | linked state | ins
 action | counter action | description | idempotent | parameters | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Actions that can be paused (`pauseAllowed`=`true`), shall be paused, other actions continue. Order execution is resumed after stopPause. | yes | - | paused | yes | no | no
-stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many AGVs can be paused by using a hardware switch. <br>stopPause can also restart vehicles that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no
-startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT-broker but no longer needs to send state messages.<br>Before entering this mode, the vehicle shall publish a connection state of HIBERNATING. <br>While in HIBERNATING connection state, no further driving shall occur, reaching the next node is not required. The mobile robot shall only receive and respond to the instantAction stopHibernation and shall not respond to any other commands, such as orders or additional instant actions. If there was previously an active order, it is either resumed upon exiting the HIBERNATING connection state or must be resent, depending on the mobile robot's orderHandling.clearOrderOnStopHibernation value. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop HIBERNATING autonomously to report an error. In case a wake‑up time is set, the vehicle is able to autonomously exit the HIBERNATING connection state at the specified time and will publish the corresponding connection state transition before resuming normal operation| yes | wakeUpTime (string, optional) | - | yes | no | no
+stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many mobile robots can be paused by using a hardware switch. <br>stopPause can also restart mobile robots that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no
+startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT-broker but no longer needs to send state messages.<br>Before entering this mode, the mobile robot shall publish a connection state of HIBERNATING. <br>While in HIBERNATING connection state, no further driving shall occur, reaching the next node is not required. The mobile robot shall only receive and respond to the instantAction stopHibernation and shall not respond to any other commands, such as orders or additional instant actions. If there was previously an active order, it is either resumed upon exiting the HIBERNATING connection state or must be resent, depending on the mobile robot's orderHandling.clearOrderOnStopHibernation value. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop HIBERNATING autonomously to report an error. In case a wake‑up time is set, the mobile robot is able to autonomously exit the HIBERNATING connection state at the specified time and will publish the corresponding connection state transition before resuming normal operation| yes | wakeUpTime (string, optional) | - | yes | no | no
 stopHibernation | startHibernation | Ends hibernate mode. To initiate wake‑up while the mobile robot is in the HIBERNATING state, a control device (onboard or external) shall subscribe to the instantAction topic and remain connected to the MQTT broker. Because the mobile robots standard control device may be partially shut down during hibernation, the wake‑up may be triggered by a distinct MQTT client (separate from the mobile robots usual communication client).<br>Upon success, the mobile robot shall publish the connection state ONLINE.<br>Driving and actions may be immediately resumed, dependent on the mobile robot's orderHandling.clearOrderOnStopHibernation value. | yes | clearOrderOnStopHibernation (boolean) | - | yes | no | no
 shutdown | - | Initiates a coordinated shutdown of the mobile robot, where it disconnects from the MQTT broker and clears all orders. Action execution requires the mobile robot to be in an idle state. There is no way using the VDA 5050 protocol to automatically restart due to the connection being terminated.<br>If a mobile robot is in hibernate mode but should be shut down, it must first exit hibernation (via stopHibernation) before executing shutdown.| yes | - | - | yes | no | no
-startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (vehicle standing) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the vehicle. | yes | - | .batteryState.charging | yes | yes | no
-stopCharging | startCharging | Discontinues the charging process to send a new order. <br>The charging process can also be interrupted by the vehicle or charging station, e.g., if the battery is full. <br>The battery state is only allowed to be "false", when the AGV is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
-initializePosition | - | Resets (overrides) the pose of the AGV with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .mobileRobotPosition.x<br>.mobileRobotPosition.y<br>.mobileRobotPosition.theta<br>.mobileRobotPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
+startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (mobile robot stopped) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the mobile robot. | yes | - | .batteryState.charging | yes | yes | no
+stopCharging | startCharging | Discontinues the charging process to send a new order. <br>The charging process can also be interrupted by the mobile robot or the charging station, e.g., if the battery is full. <br>The battery state is only allowed to be "false", when the mobile robot is ready to receive orders. | yes | - |.batteryState.charging | yes | yes | no
+initializePosition | - | Resets (overrides) the pose of the mobile robot with the given parameters. | yes | x (float64)<br>y (float64)<br>theta (float64)<br>mapId (string)<br>lastNodeId (string) | .mobileRobotPosition.x<br>.mobileRobotPosition.y<br>.mobileRobotPosition.theta<br>.mobileRobotPosition.mapId<br>.lastNodeId<br>.maps | yes | yes<br>(Elevator) | no
 enableMap | - | Enable a previously downloaded map explicitly to be used in orders without initializing a new position. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | yes | no
-downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in vehicle state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
-deleteMap | - | Trigger the removal of a map from the vehicle memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
+downloadMap | - | Trigger the download of a new map. Active during the download. Errors reported in mobile robot state. Finished after verifying the successful download, preparing the map for use and setting the map in the state. | yes | mapId (string)<br>mapVersion (string)<br>mapDownloadLink (string)<br>mapHash (string, optional) | .maps | yes | no | no
+deleteMap | - | Trigger the removal of a map from the mobile robot's memory. | yes | mapId (string)<br>mapVersion (string) | .maps | yes | no | no
 clearInstantActions | - | Removes all finished or failed instant actions from the mobile robot state. | yes | - | .instantActions | yes | yes | no
-clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot state. | yes | - | .instantActions | yes | yes | no
-stateRequest | - | Requests the AGV to send a new state report. | yes | - | - | yes | no | no
-logReport | - | Requests the AGV to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no
-pick | drop<br><br>(if automated) | Request the AGV to pick a load. <br>AGVs with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the AGV state, because the associated node is not released yet.<br>If on an edge, the vehicle can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string, optional)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
-drop | pick<br><br>(if automated) | Request the AGV to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
-detectObject | - | AGV detects object (e.g., load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes
-finePositioning | - | On a node, AGV will position exactly on a target.<br>The AGV is allowed to deviate from its node position.<br>On an edge, the AGV will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
-waitForTrigger | - | Mobile robot has to wait for a trigger of the type defined specified in the triggerType parameter, which is an array of strings. Two predefined values shall be used when semantically appropriate: 'MASTER_CONTROL' if the trigger originates from the master control, and 'LOCAL' if the trigger comes from an input on the vehicle (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Master control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType[string](array) | - | no | yes | no
-trigger | - | Master control system notifies the mobile robot that a waitForTrigger action has been released. Typically, this occurs when the master control system receives information from a third-party system indicating that the process the mobile robot was waiting for has completed. This mechanism is useful when there are several actions on a node and the vehicle should wait between the actions. | yes | - | - | yes | no | no
+clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot's state. | yes | - | .instantActions | yes | yes | no
+stateRequest | - | Requests the mobile robot to send a new state report. | yes | - | - | yes | no | no
+logReport | - | Requests the mobile robot to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no
+pick | drop<br><br>(if automated) | Request the mobile robot to pick a load. <br>Mobile robots with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter lhd needs to be present (e.g., LHD1). <br>The parameter stationType informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the mobile robot state, because the associated node is not released yet.<br>If on an edge, the mobile robot can use its sensing device to detect the position for picking the node. | no |lhd (string, optional)<br>stationType (string, optional)<br>stationName(string, optional)<br>loadType (string) <br>loadId(string, optional)<br>height (float64) (optional)<br>defines bottom of the load related to the floor<br>depth (float64) (optional) for forklifts<br>side(string) (optional) e.g., conveyor | .load | no | yes | yes
+drop | pick<br><br>(if automated) | Request the mobile robot to drop a load. <br>See action pick for more details. | no | lhd (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId(string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | .load | no | yes | yes
+detectObject | - | mobile robot detects object (e.g., load, charging spot, free parking position). | yes | objectType(string, optional) | - | no | yes | yes
+finePositioning | - | On a node, mobile robot will position exactly on a target.<br>The mobile robot is allowed to deviate from its node position.<br>On an edge, the mobile robot will e.g., align on stationary equipment while traversing an edge. | yes | stationType(string, optional)<br>stationName(string, optional) | - | no | yes | yes
+waitForTrigger | - | Mobile robot has to wait for a trigger of the type defined specified in the triggerType parameter, which is an array of strings. Two predefined values shall be used when semantically appropriate: 'FLEET_CONTROL' if the trigger originates from the fleet control, and 'LOCAL' if the trigger comes from an input on the mobile robot (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Fleet control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType[string](array) | - | no | yes | no
+trigger | - | Fleet control system notifies the mobile robot that a waitForTrigger action has been released. Typically, this occurs when the fleet control system receives information from a third-party system indicating that the process the mobile robot was waiting for has completed. This mechanism is useful when there are several actions on a node and the mobile robot should wait between the actions. | yes | - | - | yes | no | no
 retry | - | Mobile robot retries action defined via actionId that is currently in state RETRIABLE. | yes | actionId(string) | - | yes | no | no
 skipRetry | - | Mobile robot has to skip action defined via actionId that is currently in state RETRIABLE, setting action to FAILED. | yes | actionId(string) | - | yes | no | no
-cancelOrder | - | AGV stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by master control). | yes | orderId(string, optional) | - | yes | no | no
-factsheetRequest | - | Requests the AGV to send a factsheet | yes | - | - | yes | no | no
+cancelOrder | - | mobile robot stops as soon as possible. This could be immediately or on the next node. See Chapter 6.6.3 Order cancellation (by fleet control). | yes | orderId(string, optional) | - | yes | no | no
+factsheetRequest | - | Requests the mobile robot to send a factsheet | yes | - | - | yes | no | no
 updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extensible enum with the predefined parameter 'MQTT' to be used for mqtt connection.  | yes | service (string)<br>keyDownloadLink (string)<br>certificateDownloadLink (string)<br>certificateAuthorityDownloadLink (string, optional) | - | yes | no | no |
 
 
@@ -1188,44 +1177,44 @@ action | action states
 
 action | 'INITIALIZING' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'FAILED'
 ---|---|---|---|---|---
-startPause | - | Activation of the mode is in preparation.<br>If the AGV supports an instant transition, this state can be omitted. | - | Vehicle stands still. <br>All pauseable actions are paused. <br>The pause mode is activated. <br>The AGV reports .paused: "true". | The pause mode cannot be activated for some reason (e.g., overridden by hardware switch).
-stopPause | - | Deactivation of the mode is in preparation. <br>If the AGV supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions are resumed. <br>The AGV reports .paused: "false". | The pause mode cannot be deactivated for some reason (e.g., overridden by hardware switch).
-startHibernation | - | Activation of the hibernate mode is in preparation. If the AGV supports an instant transition, this state can be omitted.| - | Vehicle stands still. All pausable actions are paused. No state messages are sent by the AGV.<br>Hibernate mode is activated. The AGV reports connection state "HIBERNATING".| The HIBERNATING connection state could not be published (e.g., overridden by a hardware switch).
-stopHibernation | - | Deactivation of the hibernate mode is in preparation. If the AGV supports an instant transition, this state can be omitted.| - | Hibernate mode is deactivated. Movement and all other actions will resume if the order is retained or once the order is resent.<br>The AGV reports connectionState "ONLINE".| The hibernate mode could not be deactivated (e.g., overridden by a hardware switch).
-shutdown | - | Activation of the OFFLINE connection state is in preparation. If the AGV supports an instant transition, this state can be omitted.| - |Vehicle shall not be moving. All actions are in an end state, and all orders are cleared. The connection between AGV and broker is terminated in a coordinated way.<br>The AGV reports connection state "OFFLINE".| The shutdown cannot be executed for some reason (e.g., vehicle is not in idle state, overridden by a hardware switch).
-startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The AGV reports .batteryState.charging: "true". | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error.
-stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the AGV supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The AGV reports .batteryState.charging: "false" | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error.
-initializePosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the AGV supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The AGV reports <br>.mobileRobotPosition.x = x, <br>.mobileRobotPosition.y = y, <br>.mobileRobotPosition.theta = theta <br>.mobileRobotPosition.mapId = mapId <br>.mobileRobotPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
-| downloadMap | Initialize the connection to the map server. | AGV is downloading the map, until download is finished. | - | AGV updates its state by setting the mapId/mapVersion and the corresponding mapStatus to 'DISABLED'. | The download failed, updated in vehicle state (e.g., connection lost, Map server unreachable, mapId/mapVersion not existing on map server). |
-| enableMap | - | AGV enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The AGV updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
-| deleteMap | - | AGV deletes map with requested mapId and mapVersion from its internal memory. | - | AGV removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
+startPause | - | Activation of the mode is in preparation.<br>If the mobile robot supports an instant transition, this state can be omitted. | - | Mobile robot stands still. <br>All pauseable actions are paused. <br>The pause mode is activated. <br>The mobile robot reports .paused: "true". | The pause mode cannot be activated for some reason (e.g., overridden by hardware switch).
+stopPause | - | Deactivation of the mode is in preparation. <br>If the mobile robot supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions are resumed. <br>The mobile robot reports .paused: "false". | The pause mode cannot be deactivated for some reason (e.g., overridden by hardware switch).
+startHibernation | - | Activation of the hibernate mode is in preparation. If the mobile robot supports an instant transition, this state can be omitted.| - | Mobile robot stands still. All pausable actions are paused. No state messages are sent by the mobile robot.<br>Hibernate mode is activated. The mobile robot reports connection state "HIBERNATING".| The HIBERNATING connection state could not be published (e.g., overridden by a hardware switch).
+stopHibernation | - | Deactivation of the hibernate mode is in preparation. If the mobile robot supports an instant transition, this state can be omitted.| - | Hibernate mode is deactivated. Movement and all other actions will resume if the order is retained or once the order is resent.<br>The mobile robot reports connectionState "ONLINE".| The hibernate mode could not be deactivated (e.g., overridden by a hardware switch).
+shutdown | - | Activation of the OFFLINE connection state is in preparation. If the mobile robot supports an instant transition, this state can be omitted.| - |Mobile robot shall not be moving. All actions are in an end state, and all orders are cleared. The connection between mobile robot and broker is terminated in a coordinated way.<br>The mobile robot reports connection state "OFFLINE".| The shutdown cannot be executed for some reason (e.g., mobile robot is not in idle state, overridden by a hardware switch).
+startCharging | - | Activation of the charging process is in progress (communication with charger is running). <br>If the mobile robot supports an instant transition, this state can be omitted. | - | The charging process is started. <br>The mobile robot reports .batteryState.charging: "true". | The charging process could not be started for some reason (e.g., not aligned to charger). Charging problems should correspond with an error.
+stopCharging | - | Deactivation of the charging process is in progress (communication with charger is running). <br>If the mobile robot supports an instant transition, this state can be omitted. | - | The charging process is stopped. <br>The mobile robot reports .batteryState.charging: "false" | The charging process could not be stopped for some reason (e.g., not aligned to charger).<br> Charging problems should correspond with an error.
+initializePosition | - | Initializing of the new pose in progress (confidence checks, etc.). <br>If the mobile robot supports an instant transition, this state can be omitted. | - | The pose is reset. <br>The mobile robot reports <br>.mobileRobotPosition.x = x, <br>.mobileRobotPosition.y = y, <br>.mobileRobotPosition.theta = theta <br>.mobileRobotPosition.mapId = mapId <br>.mobileRobotPosition.lastNodeId = lastNodeId | The pose is not valid or cannot be reset. <br>General localization problems should correspond with an error.
+| downloadMap | Initialize the connection to the map server. | Mobile robot is downloading the map, until download is finished. | - | Mobile robot updates its state by setting the mapId/mapVersion and the corresponding mapStatus to 'DISABLED'. | The download failed, updated in mobile robot state (e.g., connection lost, Map server unreachable, mapId/mapVersion not existing on map server). |
+| enableMap | - | Mobile robot enables the map with the requested mapId and mapVersion while disabling other versions with the same mapId. | - | The mobile robot updates the corresponding mapStatus of the requested map to 'ENABLED' and the other versions with same mapId to 'DISABLED'. | The requested mapId/mapVersion combination does not exist.|
+| deleteMap | - | Mobile robot deletes map with requested mapId and mapVersion from its internal memory. | - | Mobile robot removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. |
 | clearInstantActions | - | | - | The instant actions array has been cleaned from all FINISHED or FAILED instantActions. | -
 | clearZoneActions | - | | - | The zone actions array has been cleaned from all FINISHED or FAILED instantActions. | -
 stateRequest | - | - | - | The state has been communicated | -
-logReport | - | The report is in generating. <br>If the AGV supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
-pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the AGV and AGV reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
-drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (AGV is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the AGV and AGV reports new load state. | Drop failed, e.g., station is unexpected occupied. <br>Failed drop operations should correspond with an error.
-detectObject | - | Object detection is running. | - | Object has been detected. | AGV could not detect the object.
-finePositioning | - | AGV positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached.
-waitForTrigger | - | AGV is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
-cancelOrder | - | AGV is stopping or driving, until it reaches the next node. | - | AGV stands still and has canceled the order. | <br>AGV has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
+logReport | - | The report is in generating. <br>If the mobile robot supports an instant generation, this state can be omitted. | - | The report is stored. <br>The name of the log will be reported in status. | The report can not be stored (e.g., no space).
+pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (Mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick is done. <br>Load has entered the mobile robot and mobile robot reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error.
+drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (Mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop is done. <br>Load has left the mobile robot and mobile robot reports new load state. | Drop failed, e.g., station is unexpected occupied. <br>Failed drop operations should correspond with an error.
+detectObject | - | Object detection is running. | - | Object has been detected. |  could not detect the object.
+finePositioning | - | Mobile robot positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the fine positioning continues. | Goal position in reference to the station is reached. | Goal position in reference to the station could not be reached.
+waitForTrigger | - | Mobile robot is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled.
+cancelOrder | - | Mobile robot is stopping or driving, until it reaches the next node. | - | Mobile robot stands still and has canceled the order. | <br>Mobile robot has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
-updateCertificate | - | Vehicle is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
+updateCertificate | - | Mobile robot is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
 
-### 6.10.3 Update vehicle certificate
+### 6.10.3 Update mobile robot certificate
 
-For security reasons, vehicle communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a vehicle-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `certificateAuthorityDownloadLink ` specifies the URL for the root certificate(s). The parameters `certificateDownloadLink` and `keyDownloadLink` specify the URLs for the vehicle-specific public and private keys.
+For security reasons, mobile robot communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a mobile robot-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `certificateAuthorityDownloadLink ` specifies the URL for the root certificate(s). The parameters `certificateDownloadLink` and `keyDownloadLink` specify the URLs for the mobile robot-specific public and private keys.
 
 It is recommended to secure the download via TLS as well, since the sender of the instantAction cannot be verified. It is also advisable to validate the certificate chain before it is activated.
 
-## 6.11 Topic: "instantActions" (from master control to AGV)
+## 6.11 Topic: "instantActions" (from fleet control to Mobile robot)
 
-In certain cases, it is necessary to send actions to the AGV that need to be performed immediately.
+In certain cases, it is necessary to send actions to the mobile robot that need to be performed immediately.
 This is made possible by publishing an `instantAction` message to the topic `instantActions`.
-These shall not conflict with the content of the AGV's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
+These shall not conflict with the content of the mobile robot's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are:
-- pause the AGV without changing anything in the current order;
+- pause the mobile robot without changing anything in the current order;
 - resume order after pause;
 - activate signal (optical, audio, etc.).
 
@@ -1236,22 +1225,22 @@ Object structure | Data type | Description
 headerId | uint32 | Header ID of the message.<br> The header ID is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-manufacturer | string | Manufacturer of the AGV.
-serialNumber | string | Serial number of the AGV.
+manufacturer | string | Manufacturer of the mobile robot.
+serialNumber | string | Serial number of the mobile robot.
 actions [action] | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
-When an AGV receives an `instantAction`, an appropriate `actionStatus` is added to the `instantActionStates` array of the AGV's state.
+When a mobile robot receives an `instantAction`, an appropriate `actionStatus` is added to the `instantActionStates` array of the mobile robot's state.
 The `actionStatus` is updated according to the progress of the action.
 See also Figure 16 for the different transitions of an `actionStatus`.
 The `blockingType` of an instant action is always 'NONE'.
 
 
-## 6.12 Topic: "state" (from AGV to master control)
+## 6.12 Topic: "state" (from mobile robot to fleet control)
 
-The AGV state will be transmitted on only one topic.
-Compared to separate messages (e.g., for orders, battery state and errors) using one topic will reduce the workload of the broker and the master control for handling messages, while also keeping the information about the AGV state synchronized.
+The mobile robot state will be transmitted on only one topic.
+Compared to separate messages (e.g., for orders, battery state and errors) using one topic will reduce the workload of the broker and the fleet control for handling messages, while also keeping the information about the mobile robot state synchronized.
 
-The AGV state message will be published with occurrence of relevant events or at the latest every 30s via MQTT broker to master control.
+The mobile robot state message will be published with occurrence of relevant events or at the latest every 30s via MQTT broker to fleet control.
 
 Events that trigger the transmission of the state message are:
 - Receiving an order
@@ -1279,37 +1268,35 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 ### 6.12.1 Concept and logic
 
 The order progress is tracked by the `nodeStates` and `edgeStates`.
-Additionally, if the AGV is able to derive its current position, it can publish its position via the `position` field.
+Additionally, if the mobile robot is able to derive its current position, it can publish its position via the `position` field.
 
-If the AGV plans the path by itself, it shall communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless master control cannot use this field, and it was agreed during integration, that this field shall not be sent.
-After nodes are released by master control, the AGV is not allowed to change its trajectory.
+If the mobile robot plans the path by itself, it shall communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless fleet control cannot use this field, and it was agreed during integration, that this field shall not be sent.
+After nodes are released by fleet control, the mobile robot is not allowed to change its trajectory.
 
-The `nodeStates` and `edgeStates` includes all nodes/edges, that the AGV still shall traverse.
+The `nodeStates` and `edgeStates` include all the nodes and edges that the mobile robot will still traverse.
 
 ![Figure 14 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
 >Figure 14 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
-
 ### 6.12.2 Traversal of nodes and entering/leaving edges, triggering of actions
 
-The AGV decides on its own, when a node should count as traversed.
+The mobile robot decides on its own, when a node should count as traversed.
 A requirement for the traversal is that the mobile robot's control point should be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
-The allowedDeviationXY defines at what point a line-guided vehicle can deviate from its predefined trajectory, to cut the corner along a smoother path rather than reaching the node's exact position. When leaving the allowedDeviationXY the mobile robot shall be back on its predefined trajectory of the subsequent edge.
+The allowedDeviationXY defines at what point a line-guided mobile robot can deviate from its predefined trajectory, to cut the corner along a smoother path rather than reaching the node's exact position. When leaving the allowedDeviationXY the mobile robot shall be back on its predefined trajectory of the subsequent edge.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
-In case the mobile robot is located too far away from the first node of an order, the master control can add an extended allowedDeviationXY to this node to include the vehicles current position.
+In case the mobile robot is located too far away from the first node of an order, the fleet control can add an extended allowedDeviationXY to this node to include the mobile robot's current position.
 
-The AGV reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
+The mobile robot reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
 
-As soon as the AGV reports the node as traversed, the AGV shall trigger the actions associated with the node, if any.
-
+As soon as the mobile robot reports the node as traversed, the mobile robot shall trigger the actions associated with the node, if any.
 The traversal of a node also necessarily implies leaving the edge that is leading up to the node.
 The edge shall then also be removed from the `edgeStates` and the actions that were active on the edge shall be finished.
 
-The traversal of the node also marks the moment when the AGV enters the following edge, if there is one.
+The traversal of the node also marks the moment when the mobile robot enters the following edge, if there is one.
 The edge's actions shall be triggered, if any.
-An exception to this rule is if the AGV shall pause on the node (because of a soft or hard blocking action, or otherwise) – then the AGV only enters the following edge once it begins driving again.
+An exception to this rule is if the mobile robot shall pause on the node (because of a soft or hard blocking action, or otherwise) – then the mobile robot only enters the following edge once it begins driving again.
 
 ![Figure 15 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 15 Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
@@ -1317,26 +1304,24 @@ An exception to this rule is if the AGV shall pause on the node (because of a so
 
 ### 6.12.3 Base request
 
-If the AGV detects that its base is running short, it can set the `newBaseRequest` flag to "true" to attempt to prevent unnecessary braking.
+If the mobile robot detects that its base is running short, it can set the `newBaseRequest` flag to "true" to attempt to prevent unnecessary braking.
 
 ### 6.12.4 Request Use of Corridors
 
-If the corridors within a mobile robot's currently active order have the `releaseRequired` flag set to true, it shall issue a request prior to deviating from the predefined trajectory of an edge. For this purpose, the robot shall add an `edgeRequest` object to its state message. Note that the `requestId` shall be unique across all requests (e.g. `zoneRequest`, `edgeRequest`) issued by the mobile robot. Master control shall only release the corridor for edges that are part of the base.
+If the corridors within a mobile robot's currently active order have the `releaseRequired` flag set to true, it shall issue a request prior to deviating from the predefined trajectory of an edge. For this purpose, the robot shall add an `edgeRequest` object to its state message. Note that the `requestId` shall be unique across all requests (e.g. `zoneRequest`, `edgeRequest`) issued by the mobile robot. Fleet control shall only release the corridor for edges that are part of the base.
 
-The `requestStatus` is set to REQUESTED and the combination of `edgeId` and `sequenceId` references the edge's trajectory the robot asks to deviate from. The mobile robot has the option to request the approval for several edges simulatenously as long as they are part of its current base. The usage of each corridor shall be requested in a dedicated `edgeRequest` and each request must be approved inidivdually by master control. 
+The `requestStatus` is set to REQUESTED and the combination of `edgeId` and `sequenceId` references the edge's trajectory the robot asks to deviate from. The mobile robot has the option to request the approval for several edges simulatenously as long as they are part of its current base. The usage of each corridor shall be requested in a dedicated `edgeRequest` and each request must be approved inidivdually by fleet control. 
 
-
-The robot shall remain on the predefined trajectory of its current edge until a `respone` is received from the master control. Once the robot has received the approval to start maneuvering, it sets the `requestStatus` to 'GRANTED' and may now use the corridor. As long as the robot requires the corridor, it shall keep the `edgeRequest` in its state. If the mobile robot no longer requires the use of a corridor (e.g., because it might have successfully completed its avoidance procedure, no more need to avoid an obstacle, etc.), it indicates this to the master control by removing the corresponding `edgeRequest` object from its state. From there on, the mobile robot shall act as a line-guided vehicle again. If it wishes to deviate from the predefined trajectory once more, it shall issue a new `edgeRequest`. 
-
-If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and wishes to continue to the upcoming corridor, which is not yet released, it must stop at the border of its current `corridor`, send a dedicated edge request, and await its approval through the master control. If the robot's approval expires or the master control revokes a granted request, it must initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
+The robot shall remain on the predefined trajectory of its current edge until a `respone` is received from the fleet control. Once the robot has received the approval to start maneuvering, it sets the `requestStatus` to 'GRANTED' and may now use the corridor. As long as the robot requires the corridor, it shall keep the `edgeRequest` in its state. If the mobile robot no longer requires the use of a corridor (e.g., because it might have successfully completed its avoidance procedure, no more need to avoid an obstacle, etc.), it indicates this to the fleet control by removing the corresponding `edgeRequest` object from its state. From there on, the mobile robot shall act as a line-guided mobile robot again. If it wishes to deviate from the predefined trajectory once more, it shall issue a new `edgeRequest`. 
+If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and wishes to continue to the upcoming corridor, which is not yet released, it must stop at the border of its current `corridor`, send a dedicated edge request, and await its approval through the fleet control. If the robot's approval expires or the fleet control revokes a granted request, it must initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
 
 
 ### 6.12.4 Information
 
-The AGV can submit arbitrary additional information to the master control via the `information` array.
-It is up to the AGV to decide how long it reports information via an information message.
+The mobile robot can submit arbitrary additional information to the fleet control via the `information` array.
+It is up to the mobile robot to decide how long it reports information via an information message.
 
-The master control shall not use the info messages for logic; they shall only be used for visualization and debugging purposes.
+The fleet control shall not use the info messages for logic; they shall only be used for visualization and debugging purposes.
 
 
 ### 6.12.5 Errors
@@ -1353,22 +1338,22 @@ The mobile robot can add references that help with finding the cause of the erro
 
 
 ### 6.12.6 Operating Mode
-For regular order execution, master control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
+For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
 
-The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and master control:
+The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and fleet control:
 
 Operating Mode | Description
 ---|---
-AUTOMATIC | Master control is in full control of the mobile robot. <br>Mobile robot moves and executes actions based on orders from the master control.
-SEMIAUTOMATIC | Master control is in control of the mobile robot.<br> Mobile robot moves and executes actions based on orders from the master control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
-INTERVENED | Master control is not in control of the Mobile robot. The mobile robot is reporting its state correctly.<br>Master control is allowed to send orders or order updates to the mobile robot to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Master control shall not send any instant action except `cancelOrder`.<br>The mobile robot shall not clear the order but shall remove all zone requests from the state, also if the mobile robot is already inside a 'RELEASE' zone. (*Remark: If necessary, the master control can continue to track the position of the mobile robot and decide whether clearance for other vehicles is possible.*) The mobile robot shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the mobile robot shall reflect this in the state message accordingly.<br>If the mobile robot leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the mobile robot leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the mobile robot shall continue executing any current order. If the mobile robot detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the mobile robot shall switch into operating mode 'MANUAL' and act accordingly.
-MANUAL | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>HMI can be used to control the steering, velocity and handling devices of the mobile robot.<br>The position of the mobile robot is sent to the master control.<br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the mobile robot detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
-STARTUP | Master control is not in control of the mobile robot. The mobile robot is starting up and not ready to receive orders. State message parameters may be incomplete or invalid until startup is finished.
-SERVICE | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
-TEACH_IN | Master control is not in control of the mobile robot. <br>Master control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
+AUTOMATIC | Fleet control is in full control of the mobile robot. <br>Mobile robot moves and executes actions based on orders from the fleet control.
+SEMIAUTOMATIC | Fleet control is in control of the mobile robot.<br> Mobile robot moves and executes actions based on orders from the fleet control. <br>The driving speed is controlled by the HMI (speed can't exceed the speed of automatic mode).<br>The steering is under automatic control.
+INTERVENED | Fleet control is not in control of the Mobile robot. The mobile robot is reporting its state correctly.<br>Fleet control is allowed to send orders or order updates to the mobile robot to be executed after changing back into operating mode 'AUTOMATIC' or 'SEMI-AUTOMATIC'. Fleet control shall not send any instant action except `cancelOrder`.<br>The mobile robot shall not clear the order but shall remove all zone requests from the state, also if the mobile robot is already inside a 'RELEASE' zone. (*Remark: If necessary, the fleet control can continue to track the position of the mobile robot and decide whether clearance for other mobile robots is possible.*) The mobile robot shall not request any permissions to enter a 'RELEASE' zone or for replanning inside a 'COORDINATED_REPLANNING' zone.<br>If entering operating mode 'INTERVENED' has any impact on running actions the mobile robot shall reflect this in the state message accordingly.<br>If the mobile robot leaves this operating mode and does not directly switch into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode it shall act according to new operating mode. If the mobile robot leaves this operating mode and switches directly into 'AUTOMATIC' or 'SEMI-AUTOMATIC' mode the mobile robot shall continue executing any current order. If the mobile robot detects during operating mode 'INTERVENED' that a continuation of the current order is not possible the mobile robot shall switch into operating mode 'MANUAL' and act accordingly.
+MANUAL | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>HMI can be used to control the steering, velocity and handling devices of the mobile robot.<br>The position of the mobile robot is sent to the fleet control.<br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>If, while being in this mode, the mobile robot detects that it is being moved to a position where the current value of `lastNodeId` cannot be used as a start node of a new order, it shall set `lastNodeId` to an empty string ("").
+STARTUP | Fleet control is not in control of the mobile robot. The mobile robot is starting up and not ready to receive orders. State message parameters may be incomplete or invalid until startup is finished.
+SERVICE | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
+TEACH_IN | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
 
-Operating Mode | Master Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending instant actions allowed | Sending orders allowed
+Operating Mode | Fleet Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
 AUTOMATIC | YES | YES | NO | NO | NO | YES | YES
 SEMIAUTOMATIC | YES | YES | NO | NO | NO | YES | YES
@@ -1386,49 +1371,49 @@ Object structure | Unit | Data type | Description
 headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-manufacturer | | string | Manufacturer of the AGV.
-serialNumber | | string | Serial number of the AGV.
-*maps[map]* | | array | Array of map objects that are currently stored on the vehicle.
-***zoneSets[zoneSet]*** | | Array of zoneSet | Array of zoneSet objects that are currently stored on the vehicle.
+manufacturer | | string | Manufacturer of the mobile robot.
+serialNumber | | string | Serial number of the mobile robot.
+*maps[map]* | | array | Array of map objects that are currently stored on the mobile robot.
+***zoneSets[zoneSet]*** | | Array of zoneSet | Array of zoneSet objects that are currently stored on the mobile robot.
 orderId| | string | Unique order identification of the current order or the previously finished order. <br>The orderId is kept until a new order is received. <br>Empty string (""), if no previous orderId is available.
-orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the AGV. <br>"0" if no previous orderUpdateId is available.
-lastNodeId | | string | Node ID of last reached node or, if the AGV is currently on a node, current node (e.g., "node7"). Empty string (""), if no `lastNodeId` is available.
-lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the AGV is currently on a node, Sequence ID of current node. <br>This value is only valid if `lastNodeId` is not an empty string (\"\"). If `lastNodeId` is an empty string (\"\"), the value of `lastNodeSequenceId` can be arbitrary and shall be ignored.
+orderUpdateId | | uint32 | Order update identification to identify, that an order update has been accepted by the mobile robot. <br>"0" if no previous orderUpdateId is available.
+lastNodeId | | string | Node ID of last reached node or, if the mobile robot is currently on a node, current node (e.g., "node7"). Empty string (""), if no `lastNodeId` is available.
+lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the mobile robot is currently on a node, Sequence ID of current node. <br>This value is only valid if `lastNodeId` is not an empty string (\"\"). If `lastNodeId` is an empty string (\"\"), the value of `lastNodeSequenceId` can be arbitrary and shall be ignored.
 **nodeStates [nodeState]** | |array | Array of nodeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 **edgeStates [edgeState]** | |array | Array of edgeState objects that need to be traversed for fulfilling the order<br>(empty array if idle)
 ***plannedPath*** | | JSON object |  Represents a path within the robot's currently active order as NURBS.
-***intermediatePath*** | | JSON object |  Represents the estimated time of arrival at closer waypoints that the vehicle is able to perceive with its sensors.
-***mobileRobotPosition*** | | JSON object | Current position of the AGV on the map.<br><br>Optional: Can only be omitted for AGVs without the capability to localize themselves, e.g., line-guided AGVs.
-***velocity*** | | JSON object | The AGV velocity in vehicle coordinates.
-***loads [load]*** | | array | Loads, that are currently handled by the AGV.<br><br>Optional: If the AGV cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.
+***intermediatePath*** | | JSON object |  Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors.
+***mobileRobotPosition*** | | JSON object | Current position of the mobile robot on the map.<br><br>Optional: Can only be omitted for mobile robots without the capability to localize themselves, e.g., line-guided mobile robots.
+***velocity*** | | JSON object | The mobile robot velocity in its coordinates.
+***loads [load]*** | | array | Loads, that are currently handled by the mobile robot.<br><br>Optional: If the mobile robot cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the mobile robot can determine the load state, but the array is empty, the mobile robot is considered unloaded.
 driving | | boolean | "true": indicates, that the mobile robot is driving (manual or automatic). Other movements (e.g., lift movements) are not included here.<br>"false": indicates that the mobile robot is not driving.
-*paused* | | boolean | "true": the AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. <br>The AGV can resume the order.<br><br>"false": the AGV is currently not in a paused state.
-*newBaseRequest* | | boolean | "true": the AGV is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for master control to send a new base.<br><br>"false": no base update required.
-***zoneRequests [zoneRequest]*** | | array | Array of zoneRequest objects that are currently active on the AGV. <br>Empty array if no zone requests are active.
-***edgeRequests [edgeRequest]*** | | array | Array of edgeRequest objects that are currently active on the AGV. <br>Empty array if no edge requests are active.
-*distanceSinceLastNode* | meter | float64 | Used by line-guided vehicles to indicate the distance it has been driving past the lastNodeId. <br>Distance is in meters.
+*paused* | | boolean | "true": the mobile robot is currently in a paused state, either because of the push of a physical button on the mobile robot or because of an instantAction. <br>The mobile robot can resume the order.<br><br>"false": the mobile robot is currently not in a paused state.
+*newBaseRequest* | | boolean | "true": the mobile robot is almost at the end of the base and will reduce speed, if no new base is transmitted. <br>Trigger for fleet control to send a new base.<br><br>"false": no base update required.
+***zoneRequests [zoneRequest]*** | | array | Array of zoneRequest objects that are currently active on the mobile robot. <br>Empty array if no zone requests are active.
+***edgeRequests [edgeRequest]*** | | array | Array of edgeRequest objects that are currently active on the mobile robot. <br>Empty array if no edge requests are active.
+*distanceSinceLastNode* | meter | float64 | Used by line-guided mobile robots to indicate the distance it has been driving past the lastNodeId. <br>Distance in meters.
 **actionStates [actionState]** | | array | Contains an array of all actions from the current order and all received instantActions since the last order. The action states are kept until a new order is received. Action states, except for running instant actions, are removed upon receiving a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated state message is published with actionStatus set to 'FINISHED' and if applicable with the corresponding resultDescription.
 **instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed.
 ***zoneActionStates [actionState]*** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed. If action zones are supported, this field is required.
 **batteryState** | | JSON object | Contains all battery-related information.
 operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table in Section [6.12.6 Operating Mode](#6126-operating mode).
-**errors [error]** | | array | Array of error objects. <br>All active errors of the AGV should be in the array.<br>An empty array indicates that the AGV has no active errors.
-***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the AGV has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in master control.
+**errors [error]** | | array | Array of error objects. <br>All active errors of the mobile robot should be in the array.<br>An empty array indicates that the mobile robot has no active errors.
+***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the mobile robot has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in fleet control.
 **safetyState** | | JSON object | Contains all safety-related information.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **map**{ | | JSON object|
-mapId | | string | ID of the map describing a defined area of the vehicle's workspace.
+mapId | | string | ID of the map describing a defined area of the mobile robot's workspace.
 mapVersion | | string | Version of the map.
-mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.
+mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently active / used on the mobile robot. At most one map with the same mapId can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **zoneSet**{ | | JSON object|
-zoneSetId | | string | Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map.
+zoneSetId | | string | Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the mobile robot has no zones defined for the corresponding map.
 mapId | | string | Identifier of the corresponding map.
-zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED.<br>DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.
+zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>ENABLED: Indicates this zone set is currently active / used on the mobile robot. At most one zone set for each map can have its status set to ENABLED.<br>DISABLED: Indicates this zone set is currently not enabled on the mobile robot and thus could be enabled or deleted by fleet control.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1437,15 +1422,15 @@ nodeId | | string | Unique node identification.
 sequenceId | | uint32 | sequence ID to discern multiple nodes with same nodeId.
 *nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released| | boolean | "true" indicates that the node is part of the base.<br>"false" indicates that the node is part of the horizon.
-***nodePosition***<br><br>}| | JSON object | Node position. <br>Optional: Master control has this information. Can be sent additionally, e.g., for debugging purposes.
+***nodePosition***<br><br>}| | JSON object | Node position. <br>Optional: Fleet control has this information. Can be sent additionally, e.g., for debugging purposes.
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
 **nodePosition** { | | JSON object | Defines the position on a map in a global project-specific world coordinate system. <br>Each floor has its own map. <br>All maps shall use the same project-specific global origin.
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
-*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a vehicle shall match on a node for it to be considered traversed.<br> Optional: vehicle can plan the path by itself.<br>If defined, the vehicle has to assume the theta angle on this node.<br>If previous edge disallows rotation, the vehicle shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the vehicle is to rotate on the node to the edges desired rotation before entering the edge.
-mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
+*theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a mobile robot shall match on a node for it to be considered traversed.<br> Optional: mobile robot can plan the path by itself.<br>If defined, the mobile robot has to assume the theta angle on this node.<br>If previous edge disallows rotation, the mobile robot shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.
+mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 } | | |
 
 Object structure | Unit | Data type | Description
@@ -1455,7 +1440,7 @@ edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | sequence ID to differentiate between multiple edges with the same edgeId.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
-***trajectory*** <br><br>} | | JSON object | Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order.<br><br>The trajectory is to be communicated as NURBS and is defined in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)<br><br>Trajectory segments start from the point, where the vehicle enters the edge, and terminate at the point, where the vehicle reports that the end node was traversed.
+***trajectory*** <br><br>} | | JSON object | Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order.<br><br>The trajectory is to be communicated as NURBS and is defined in Section [6.6.6 Implementation of the order message](#666-implementation-of-the-order-message)<br><br>Trajectory segments start from the point, where the mobile robot enters the edge, and terminate at the point, where the mobile robot reports that the end node was traversed.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1492,7 +1477,7 @@ Object structure | Unit | Data type | Description
 **waypoint** { | | JSON object | Endpoint of a segment within a defined polyline.
 x | m | float64 | X-coordinate described in the project-specific coordinate system.
 y | m | float64 | Y-coordinate described in the project-specific coordinate system.
-*theta* | rad | float64 | Absolute orientation of the vehicle in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
+*theta* | rad | float64 | Absolute orientation of the mobile robot in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
 eta | | string | Estimated time of arrival/traversal. ETA is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.12Z").
 } | | |
 
@@ -1500,54 +1485,54 @@ eta | | string | Estimated time of arrival/traversal. ETA is formatted as a `tim
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **mobileRobotPosition** { | | JSON object | Defines the position on a map in world coordinates. Each floor has its own map.
-localized | | boolean | "true": mobile robot is localized. `x`, `y`, and `theta` can be trusted.<br>"false": mobile robot is not localized. `x`, `y`, and `theta` cannot be trusted.<br>Changing to the state to "false" is only allowed if the vehicle cannot determine its position anymore. The vehicle shall report this state via an error (`errorType` = "localizationError", `errorLevel` = "FATAL"). While this is set to "false", the vehicle shall not resume automatic driving or continue its order.
-*localizationScore* | | float64 | Range: [0.0 ... 1.0]<br>Describes the quality of the localization and can therefore be used, e.g., by SLAM vehicles to describe how accurate the current position information is.<br>0.0: lowest possible confidence<br>1.0: highest possible confidence.<br>Only for logging and visualization purposes.
+localized | | boolean | "true": mobile robot is localized. `x`, `y`, and `theta` can be trusted.<br>"false": mobile robot is not localized. `x`, `y`, and `theta` cannot be trusted.<br>Changing to the state to "false" is only allowed if the mobile robot cannot determine its position anymore. The mobile robot shall report this state via an error (`errorType` = "localizationError", `errorLevel` = "FATAL"). While this is set to "false", the mobile robot shall not resume automatic driving or continue its order.
+*localizationScore* | | float64 | Range: [0.0 ... 1.0]<br>Describes the quality of the localization and can therefore be used, e.g., by SLAM mobile robots to describe how accurate the current position information is.<br>0.0: lowest possible confidence<br>1.0: highest possible confidence.<br>Only for logging and visualization purposes.
 *deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br>Only for logging and visualization purposes.
 x | m | float64 | X-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the map coordinate system. <br>Precision is up to the specific implementation.
-theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the AGV.
-mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When an AGV uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
+theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the mobile robot.
+mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When a mobile robot uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
 *mapDescriptor*<br>} | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **velocity** { | | JSON object |
-*vx* | m/s | float64 | The AGV's velocity in its X-direction.
-*vy* | m/s | float64 | The AGV's velocity in its Y-direction.
-*omega*<br>}| Rad/s | float64 | The AGV's turning speed around its Z-axis.
+*vx* | m/s | float64 | The mobile robot's velocity in its X-direction.
+*vy* | m/s | float64 | The mobile robot's velocity in its Y-direction.
+*omega*<br>}| Rad/s | float64 | The mobile robot's turning speed around its Z-axis.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **load** { | | JSON object |
-*loadId* | | string | Unique identification of the load (e.g., barcode or RFID).<br><br>Empty field, if the AGV can identify the load but didn't identify the load yet.<br><br>Optional if the AGV cannot identify the load.
+*loadId* | | string | Unique identification of the load (e.g., barcode or RFID).<br><br>Empty field, if the mobile robot can identify the load but didn't identify the load yet.<br><br>Optional if the mobile robot cannot identify the load.
 *loadType* | | string | Type of load.
-*loadPosition* | | string | Indicates, which load handling/carrying unit of the AGV is used, e.g., in case the AGV has multiple spots/positions to carry loads.<br><br>For example: "front", "back", "positionC1", etc.<br><br>Optional for vehicles with only one loadPosition
-***boundingBoxReference*** | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the AGV's coordinate system.
+*loadPosition* | | string | Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads.<br><br>For example: "front", "back", "positionC1", etc.<br><br>Optional for mobile robots with only one loadPosition
+***boundingBoxReference*** | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
 ***loadDimensions*** | | JSON object | Dimensions of the load's bounding box in meters.
 *weight*<br>} | kg | float64 | Range: [0.0 ... float64.max]<br><br>Absolute weight of the load measured in kg.
 
 | **Object structure** | **Data type** | **Description** |
 | --- | --- | --- |
-| zoneRequest <br> { | JSON object | Zone information sent by the vehicle to master control. |
-| requestId | string | Unique per vehicle identifier within all active requests. |
+| zoneRequest <br> { | JSON object | Zone information sent by the mobile robot to fleet control. |
+| requestId | string | Unique per mobile robot identifier within all active requests. |
 | requestType | string | Enum {ACCESS, REAPLNNING} </br> Specifying the type of zone the request relates to. Feasible values are ACCESS or REPLANNING. |
 | zoneId | string | Locally (within the zone set) unique identifier referencing the zone the request is related to. |
 | zoneSetId | string | Due to the zoneId only being unique to a zoneSet, the zoneSetId is part of the request. |
-| requestStatus | string | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED.|
+| requestStatus | string | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED.|
 | *trajectory* <br> } | object | Optional for 'COORDINATED_REPLANNING' requests only with the planned trajectory through the zone. |
 
 | **Object structure** | **Data type** | **Description** |
 | --- | --- | --- |
-| edgeRequest <br> { | JSON object | Request information sent by the mobile robot to master control. |
+| edgeRequest <br> { | JSON object | Request information sent by the mobile robot to fleet control. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
 | requestType | enum | Enum {'CORRIDOR'}<br> Enum specifying the type of request. Set to CORRIDOR if requesting to deviate from the predefined trajectory within the defined work space. |
 | edgeId | string | Globally unique identifier referencing the edge the request is related to. |
 | sequenceId | uint32 | Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order. |
-| requestStatus  <br><br> } | enum | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED.|
+| requestStatus  <br><br> } | enum | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED.|
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the AGV's coordinate system.
+**boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
 x | | float64 | X-coordinate of the point of reference.
 y | | float64 | Y-coordinate of the point of reference.
 z | | float 64 | Z-coordinate of the point of reference.
@@ -1564,7 +1549,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **actionState** { | | JSON object |
 actionId | |string | Unique identifier of the action.
-*actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Master control is aware of action type as dispatched in the order.
+*actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Fleet control is aware of action type as dispatched in the order.
 *actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.13 actionStates](#613-action-states).
 *actionResult*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
@@ -1572,11 +1557,11 @@ actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **batteryState** { | | JSON object | 
-batteryCharge | % | float64 | State of Charge: <br> if AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
+batteryCharge | % | float64 | State of Charge: <br> if mobile robot only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
 *batteryVoltage* | V | float64 | Battery voltage.
 *batteryCurrent* | A | float64 | Battery current in Ampere (A).
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
-charging | | boolean | “true”: charging in progress.<br>“false”: the AGV is currently not charging.
+charging | | boolean | “true”: charging in progress.<br>“false”: the mobile robot is currently not charging.
 *range* <br>}| m | uint32 | Range: [0 ... uint32.max]<br><br>Estimated distance to drive with current state of charge. 
 
 Object structure | Unit | Data type | Description
@@ -1619,15 +1604,15 @@ referenceValue <br>} | | string | References the value, which belongs to the ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **safetyState** { | | JSON object |
-activeEmergencyStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>EmergencyStopTypes <br> :'MANUAL': e-stop shall be acknowledged manually at the vehicle.<br>'REMOTE': facility e-stop shall be acknowledged remotely.<br>'NONE': no e-stop activated.
+activeEmergencyStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br>EmergencyStopTypes <br> :'MANUAL': emergency stop shall be acknowledged manually on the mobile robot.<br>'REMOTE': facility emergency stop shall be acknowledged remotely.<br>'NONE': no emergency stop activated.
 fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or bumber).<br>"true":field is violated<br>"false":field is not violated.
 
 
 ## 6.13 Action states
 
-When an AGV receives an order related `action` (attached to a `node` or `edge` of an order), it shall report this `action` with an `actionState` in its `actionStates` array.
-When an AGV receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
-When an AGV executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
+When a mobile robot receives an order related `action` (attached to a `node` or `edge` of an order), it shall report this `action` with an `actionState` in its `actionStates` array.
+When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
+When a mobile robot executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
 The current stage of an action is reflected in the field `actionStatus` of an `actionState`.
 
@@ -1635,10 +1620,10 @@ Table 2 lists feasible values of the `actionStatus`.
 
 actionStatus | Description
 ---|---
-'WAITING' | Action was received by the AGV but the node where it triggers was not yet reached or the edge where it is active was not yet entered.
+'WAITING' | Action was received by the mobile robot but the node where it triggers was not yet reached or the edge where it is active was not yet entered.
 'INITIALIZING' | Action was triggered, preparatory measures are initiated.
 'RUNNING' | The action is running.
-'PAUSED' | The action is paused because of a pause instantAction or external trigger (pause button on the AGV)
+'PAUSED' | The action is paused because of a pause instantAction or external trigger (pause button on the mobile robot)
 'RETRIABLE' | Actions that failed, but can be retried, specified by the retriable parameter in the action of an order. Transition from this state is triggered by a retry or skipRetry instantAction or an external trigger.
 'FINISHED' | The action is finished. <br>A result is reported via the resultDescription.
 'FAILED' | Action could not be finished for whatever reason.
@@ -1684,17 +1669,17 @@ Figure 17 describes how the mobile robot shall handle the blocking type of actio
 
 ## 6.15 Topic "visualization"
 
-For a near real-time position and planned trajectory update the AGV can broadcast its position, velocity and planned trajectory on the topic `visualization`.
+For a near real-time position and planned trajectory update the mobile robot can broadcast its position, velocity and planned trajectory on the topic `visualization`.
 
 The fields of the visualization object use the same structure as the position, velocity, planned path and intermediate path object in the state.
-For additional information see Section [6.12.7 Implementation of the state message](#6127-implementation-of-the-state-message) for the vehicle state.
+For additional information see Section [6.12.7 Implementation of the state message](#6127-implementation-of-the-state-message) for the mobile robot state.
 The update rate for this topic is defined by the integrator.
 
 
 ## 6.16 Topic "connection"
 
-During the connection of an AGV client to the broker, a last will topic and message can be set, which is published by the broker upon disconnection of the AGV client from the broker.
-Thus, the master control can detect a disconnection event by subscribing the connection topics of all AGVs.
+During the connection of a mobile robot client to the broker, a last will topic and message can be set, which is published by the broker upon disconnection of the mobile robot client from the broker.
+Thus, the fleet control can detect a disconnection event by subscribing the connection topics of all mobile robots.
 The disconnection is detected via a heartbeat that is exchanged between the broker and the client.
 The interval is configurable in most brokers and should be set around 15 seconds.
 The Quality of Service level for the `connection` topic shall be 1 - At Least Once.
@@ -1710,33 +1695,33 @@ Identifier | Data type | Description
 headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-manufacturer | string | Manufacturer of the AGV.
-serialNumber | string | Serial number of the AGV.
-connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between AGV and broker is active.<br><br>'OFFLINE': connection between AGV and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The AGV enters a low‑power state and stops sending state messages. A connection to the MQTT broker may remain active but is not required. This mode is intended for power saving or communication reduction. The AGV can later transition to ONLINE when instructed or via a configured wake‑up mechanism.<br><br> 'CONNECTIONBROKEN': the connection between AGV and broker has unexpectedly ended.
+manufacturer | string | Manufacturer of the mobile robot.
+serialNumber | string | Serial number of the mobile robot.
+connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTIONBROKEN'}<br><br>'ONLINE': connection between mobile robot and broker is active.<br><br>'OFFLINE': connection between mobile robot and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The mobile robot enters a low‑power state and stops sending state messages. A connection to the MQTT broker may remain active but is not required. This mode is intended for power saving or communication reduction. The mobile robot can later transition to ONLINE when instructed or via a configured wake‑up mechanism.<br><br> 'CONNECTIONBROKEN': the connection between mobile robot and broker has unexpectedly ended.
 
 The last will message will not be sent, when a connection is ended in a graceful way by using an MQTT disconnection command.
 The last will message is only sent by the broker, if the connection is unexpectedly interrupted.
 
-**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the AGV and the MQTT broker.
+**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the mobile robot and the MQTT broker.
 As a result, the timestamp and headerId fields will always be outdated.
 
-AGV wants to disconnect gracefully:
+Mobile robot wants to disconnect gracefully:
 
-1. AGV sends "uagv/v2/manufacturer/SN/connection" with `connectionState` set to `OFFLINE`.
+1. Mobile robot sends "uagv/v2/manufacturer/SN/connection" with `connectionState` set to `OFFLINE`.
 2. Disconnect the MQTT connection with a disconnect command.
 
-AGV comes online:
+Mobile robot comes online:
 
 1. Set the last will to "uagv/v2/manufacturer/SN/connection" with the field `connectionState` set to `CONNECTIONBROKEN`, when the MQTT connection is created.
 2. Send the topic "uagv/v2/manufacturer/SN/connection" with `connectionState` set to `ONLINE`.
 
 All messages on this topic shall be sent with a retained flag.
 
-When connection between the AGV and the broker stops unexpectedly, the broker will send the last will topic: "uagv/v2/manufacturer/SN/connection" with the field `connectionState` set to `CONNECTIONBROKEN`.
+When connection between the mobile robot and the broker stops unexpectedly, the broker will send the last will topic: "uagv/v2/manufacturer/SN/connection" with the field `connectionState` set to `CONNECTIONBROKEN`.
 
 ## 6.17 Topic "response"
 
-As with zone requests, the master control can grant edge requests through a `response` object sent on the dedicated /response topic.
+As with zone requests, the fleet control can grant edge requests through a `response` object sent on the dedicated /response topic.
 
 ### Response message definitions
 
@@ -1751,24 +1736,23 @@ Object structure/Identifier | Data type | Description
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-| response <br> { | JSON object | Object which contains the master control's answer to a specific request. |
+| response <br> { | JSON object | Object which contains the fleet control's answer to a specific request. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
-| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The master control has granted the request. 'REVOKED': The master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
+| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The fleet control has granted the request. 'REVOKED': The fleet control revokes previously granted request. 'REJECTED': fleet control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue. |
 | *leaseExpiry* <br><br> } | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
-Additionally, the master control has the option to add a `leaseExpiry` timestamp to the response. If the robot hasn't finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
+Additionally, the fleet control has the option to add a `leaseExpiry` timestamp to the response. If the robot hasn't finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
 
 ## 6.17 Topic "factsheet"
 
-The factsheet provides basic information about a specific AGV type series.
-This information allows comparison of different AGV types and can be applied for the planning, dimensioning, and simulation of an AGV system.
-The factsheet also includes information about AGV communication interfaces which are required for the integration of an AGV type series into a VDA-5050-compliant master control.
+The factsheet provides basic information about a specific mobile robot type series.
+This information allows comparison of different mobile robot types and can be applied for the planning, dimensioning, and simulation of a mobile robot system.
+The factsheet also includes information about mobile robot communication interfaces which are required for the integration of a mobile robot type series into a VDA-5050-compliant fleet control.
 
-The values for some fields in the AGV factsheet can only be specified during system integration, for example the assignment of project-specific load and station types, together with the list of station and load types which are supported by this AGV.
+The values for some fields in the mobile robot factsheet can only be specified during system integration, for example the assignment of project-specific load and station types, together with the list of station and load types which are supported by this mobile robot.
+The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the fleet control application, and thus is specified as a JSON document.
 
-The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the master control application, and thus is specified as a JSON document.
-
-The master control can request the factsheet from the AGV by sending the instant action `factsheetRequest`.
+The fleet control can request the factsheet from the mobile robot by sending the instant action `factsheetRequest`.
 
 All messages on this topic shall be sent with a retained flag.
 
@@ -1781,51 +1765,51 @@ The factsheet consists of the JSON objects listed in the following table.
 | headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message. |
 | timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z"). |
 | version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2). |
-| manufacturer | string | Manufacturer of the AGV. |
-| serialNumber | string | Serial number of the AGV. |
-| **typeSpecification** | JSON object | These parameters generally specify the class and the capabilities of the AGV. |
-| **physicalParameters** | JSON object | These parameters specify the basic physical properties of the AGV. |
+| manufacturer | string | Manufacturer of the mobile robot. |
+| serialNumber | string | Serial number of the mobile robot. |
+| **typeSpecification** | JSON object | These parameters generally specify the class and the capabilities of the mobile robot. |
+| **physicalParameters** | JSON object | These parameters specify the basic physical properties of the mobile robot. |
 | **protocolLimits** | JSON object | Limits for length of identifiers, arrays, strings, and similar in MQTT communication. |
 | **protocolFeatures** | JSON object | Supported features of VDA5050 protocol. |
-| **mobileRobotGeometry** | JSON object | Detailed definition of AGV geometry. |
+| **mobileRobotGeometry** | JSON object | Detailed definition of mobile robot geometry. |
 | **loadSpecification** | JSON object | Abstract specification of load capabilities. |
 | ***mobileRobotConfiguration*** | JSON object | Summary of current software and hardware versions on the mobile robot and optional network information. |
 
 #### typeSpecification
 
-This JSON object describes general properties of the AGV type.
+This JSON object describes general properties of the mobile robot type.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
 | seriesName | string | Free text generalized series name as specified by manufacturer. |
-| *seriesDescription* | string | Free text human-readable description of the AGV type series. |
-| mobileRobotKinematics | string | Simplified description of the AGV kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omnidirectional vehicle,<br/>THREEWHEEL: three-wheel-driven vehicle or vehicle with similar kinematics. |
-| mobileRobotClass | string | Simplified description of the AGV class.<br/> Extensable enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br/>FORKLIFT: forklift,<br/>CONVEYOR: AGV with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
+| *seriesDescription* | string | Free text human-readable description of the mobile robot type series. |
+| mobileRobotKinematics | string | Simplified description of the mobile robot kinematics type.<br/> [DIFF, OMNI, THREEWHEEL]<br/>DIFF: differential drive,<br/>OMNI: omnidirectional mobile robot,<br/>THREEWHEEL: three-wheel-driven mobile robot or mobile robot with similar kinematics. |
+| mobileRobotClass | string | Simplified description of the mobile robot class.<br/> Extensable enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br/>FORKLIFT: forklift,<br/>CONVEYOR: mobile robot with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
 | maximumLoadMass | float64 | [kg], Maximum loadable mass. |
 | localizationTypes | array of string | Simplified description of localization type.<br/>Example values:<br/>NATURAL: natural landmarks,<br/>REFLECTOR: laser reflectors,<br/>RFID: RFID tags,<br/>DMC: data matrix code,<br/>SPOT: magnetic spots,<br/>GRID: magnetic grid.<br/>
-| navigationTypes | array of string | Array of path planning types supported by the AGV, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: no path planning, the AGV follows physical installed paths,<br/>VIRTUAL_LINE_GUIDED: the AGV follows fixed (virtual) paths,<br/>AUTONOMOUS: the AGV plans its path autonomously.|
-| *supportedZones* | array of string | Array of zone types supported by the vehicle.<br/>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
+| navigationTypes | array of string | Array of path planning types supported by the mobile robot, sorted by priority.<br/>Example values:<br/>PHYSICAL_LINE_GUIDED: no path planning, the mobile robot follows physical installed paths,<br/>VIRTUAL_LINE_GUIDED: the mobile robot follows fixed (virtual) paths,<br/>AUTONOMOUS: the mobile robot plans its path autonomously.|
+| *supportedZones* | array of string | Array of zone types supported by the mobile robot.<br/>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
 
 #### physicalParameters
 
-This JSON object describes physical properties of the AGV.
+This JSON object describes physical properties of the mobile robot.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| minimumSpeed | float64 | [m/s] Minimal controlled continuous speed of the AGV. |
-| maximumSpeed | float64 | [m/s] Maximum speed of the AGV. |
-| *minimumAngularSpeed* | float64 | [rad/s] Minimal controlled continuous rotation speed of the AGV. |
-| *maximumAngularSpeed* | float64 | [rad/s] Maximum rotation speed of the AGV. |
+| minimumSpeed | float64 | [m/s] Minimal controlled continuous speed of the mobile robot. |
+| maximumSpeed | float64 | [m/s] Maximum speed of the mobile robot. |
+| *minimumAngularSpeed* | float64 | [rad/s] Minimal controlled continuous rotation speed of the mobile robot. |
+| *maximumAngularSpeed* | float64 | [rad/s] Maximum rotation speed of the mobile robot. |
 | maximumAcceleration | float64 | [m/s²] Maximum acceleration with maximum load. |
 | maximumDeceleration | float64 | [m/s²] Maximum deceleration with maximum load. |
-| minimumHeight | float64 | [m] Minimum height of the AGV. |
-| maximumHeight | float64 | [m] Maximum height of the AGV. |
-| width | float64 | [m] Width of the AGV. |
-| length | float64 | [m] Length of the AGV. |
+| minimumHeight | float64 | [m] Minimum height of the mobile robot. |
+| maximumHeight | float64 | [m] Maximum height of the mobile robot. |
+| width | float64 | [m] Width of the mobile robot. |
+| length | float64 | [m] Length of the mobile robot. |
 
 #### protocolLimits
 
-This JSON object describes the protocol limitations of the AGV.
+This JSON object describes the protocol limitations of the mobile robot.
 If a parameter is not defined or set to zero then there is no explicit limit for this parameter.
 
 | **Field** | **data type** | **description** |
@@ -1840,25 +1824,25 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*maximumLoadIdLength* | uint32 | Maximum length of loadId strings. |
 | } | | |
 | **maximumArrayLengths** { | JSON object | Maximum lengths of arrays. |
-| &emsp;*order.nodes* | uint32 | Maximum number of nodes per order processable by the AGV. |
-| &emsp;*order.edges* | uint32 | Maximum number of edges per order processable by the AGV. |
-| &emsp;*node.actions* | uint32 | Maximum number of actions per node processable by the AGV. |
-| &emsp;*edge.actions* | uint32 | Maximum number of actions per edge processable by the AGV. |
-| &emsp;*actions.actionsParameters* | uint32 | Maximum number of parameters per action processable by the AGV. |
-| &emsp;*instantActions* | uint32 | Maximum number of instant actions per message processable by the AGV. |
-| &emsp;*trajectory.knotVector* | uint32 | Maximum number of knots per trajectory processable by the AGV. |
-| &emsp;*trajectory.controlPoints* | uint32 | Maximum number of control points per trajectory processable by the AGV. |
-| &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV. |
-| &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV. |
-| &emsp;*state.loads* | uint32 | Maximum number of load objects sent by the AGV. |
-| &emsp;*state.actionStates* | uint32 | Maximum number of objects in actionStates, instantActionStates or zoneActionStates sent by the AGV. |
-| &emsp;*state.errors* | uint32 | Maximum number of errors sent by the AGV in one state message. |
-| &emsp;*state.information* | uint32 | Maximum number of information sent by the AGV in one state message. |
-| &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the AGV for each error. |
-| &emsp;*information.infoReferences* | uint32 | Maximum number of info references sent by the AGV for each information. |
+| &emsp;*order.nodes* | uint32 | Maximum number of nodes per order processable by the mobile robot. |
+| &emsp;*order.edges* | uint32 | Maximum number of edges per order processable by the mobile robot. |
+| &emsp;*node.actions* | uint32 | Maximum number of actions per node processable by the mobile robot. |
+| &emsp;*edge.actions* | uint32 | Maximum number of actions per edge processable by the mobile robot. |
+| &emsp;*actions.actionsParameters* | uint32 | Maximum number of parameters per action processable by the mobile robot. |
+| &emsp;*instantActions* | uint32 | Maximum number of instant actions per message processable by the mobile robot. |
+| &emsp;*trajectory.knotVector* | uint32 | Maximum number of knots per trajectory processable by the mobile robot. |
+| &emsp;*trajectory.controlPoints* | uint32 | Maximum number of control points per trajectory processable by the mobile robot. |
+| &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot. |
+| &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot. |
+| &emsp;*state.loads* | uint32 | Maximum number of load objects sent by the mobile robot. |
+| &emsp;*state.actionStates* | uint32 | Maximum number of objects in actionStates, instantActionStates or zoneActionStates sent by the mobile robot. |
+| &emsp;*state.errors* | uint32 | Maximum number of errors sent by the mobile robot in one state message. |
+| &emsp;*state.information* | uint32 | Maximum number of information sent by the mobile robot in one state message. |
+| &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the mobile robot for each error. |
+| &emsp;*information.infoReferences* | uint32 | Maximum number of info references sent by the mobile robot for each information. |
 | } | | |
 | **timing** { | JSON object | Timing information. |
-| &emsp;minimumOrderInterval | float32 | [s], Minimum interval sending order messages to the AGV. |
+| &emsp;minimumOrderInterval | float32 | [s], Minimum interval sending order messages to the mobile robot. |
 | &emsp;minimumStateInterval | float32 | [s], Minimum interval for sending state messages. |
 | &emsp;*defaultStateInterval* | float32 | [s], Default interval for sending state messages, *if not defined, the default value from the main document is used*. |
 | &emsp;*visualizationInterval* | float32 | [s], Default interval for sending messages on visualization topic. |
@@ -1866,21 +1850,21 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 
 #### protocolFeatures
 
-This JSON object defines order handling processes, actions and parameters which are supported by the AGV.
+This JSON object defines order handling processes, actions and parameters which are supported by the mobile robot.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| ***orderHandling*** [***orderHandling***] | array of JSON object | Defines the vehicle’s behavior and capabilities related to order processing, including special conditions such as HIBERNATING connection state. |
+| ***orderHandling*** [***orderHandling***] | array of JSON object | Defines the mobile robot’s behavior and capabilities related to order processing, including special conditions such as HIBERNATING connection state. |
 | { | | |
-| &emsp;*clearOrderOnStopHibernation* | boolean | Indicates whether the vehicle retains its current order when entering the HIBERNATING connection state. If true, the AGV will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'true'.|
+| &emsp;*clearOrderOnStopHibernation* | boolean | Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'true'.|
 | } | | |
-| **optionalParameters** [**optionalParameters**] | array of JSON object | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the AGV. |
+| **optionalParameters** [**optionalParameters**] | array of JSON object | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
 | { | | |
 | &emsp;parameter | string | Full name of optional parameter, e.g., "*order.nodes.nodePosition.allowedDeviationTheta"*.|
-| &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper AGV operation. |
-| &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this AGV type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
+| &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper mobile robot operation. |
+| &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this mobile robot type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
 | } | | |
-| **mobileRobotActions** [**mobileRobotAction**] | array of JSON object | Array of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **mobileRobotActions** [**mobileRobotAction**] | array of JSON object | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
@@ -1900,7 +1884,7 @@ This JSON object defines order handling processes, actions and parameters which 
 
 ### mobileRobotGeometry
 
-This JSON object defines the geometry properties of the AGV, e.g., outlines and wheel positions.
+This JSON object defines the geometry properties of the mobile robot, e.g., outlines and wheel positions.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
@@ -1910,16 +1894,16 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;isActiveDriven | boolean | "true": wheel is actively driven. |
 | &emsp;isActiveSteered | boolean | "true": wheel is actively steered. |
 | &emsp;**position** { | JSON object | |
-|&emsp;&emsp; x | float64 | [m], x-position in AGV coordinate system. |
-|&emsp;&emsp; y | float64 | [m], y-position in AGV coordinate system. |
-|&emsp;&emsp; *theta* | float64 | [rad], orientation of the wheel in AGV coordinate system. Necessary for fixed wheels. |
+|&emsp;&emsp; x | float64 | [m], x-position in mobile robot coordinate system. |
+|&emsp;&emsp; y | float64 | [m], y-position in mobile robot coordinate system. |
+|&emsp;&emsp; *theta* | float64 | [rad], orientation of the wheel in mobile robot coordinate system. Necessary for fixed wheels. |
 | &emsp;} | | |
 | &emsp;diameter | float64 | [m], nominal diameter of wheel. |
 | &emsp;width | float64 | [m], nominal width of wheel. |
 | &emsp;*centerDisplacement* | float64 | [m], nominal displacement of the wheel's center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0. |
 | &emsp;*constraints* | string | Free-form text: can be used by the manufacturer to define constraints. |
 | } | | |
-| ***envelopes2d** [**envelope2d**]* | array of JSON object | Array of AGV envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| ***envelopes2d** [**envelope2d**]* | array of JSON object | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | { | | |
 | &emsp;set | string | Name of the envelope curve set. |
 | &emsp;**polygonPoints** **[polygonPoint]** | array of JSON object | Envelope curve as an x/y-polygon polygon is assumed as closed and shall be non-self-intersecting. |
@@ -1929,7 +1913,7 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 | &emsp;} | | |
 | &emsp;*description* | string | Free-form text: description of envelope curve set. |
 | *}* | | |
-| ***envelopes3d [envelope3d]*** | array of JSON object | Array of AGV envelope curves in 3D. |
+| ***envelopes3d [envelope3d]*** | array of JSON object | Array of mobile robot envelope curves in 3D. |
 | *{* | | |
 | &emsp;set | string | Name of the envelope curve set. |
 | &emsp;format | string | Format of data, e.g., DXF. |
@@ -1940,16 +1924,16 @@ This JSON object defines the geometry properties of the AGV, e.g., outlines and 
 
 #### loadSpecification
 
-This JSON object specifies load handling and supported load types of the AGV.
+This JSON object specifies load handling and supported load types of the mobile robot.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| *loadPositions* | array of string | Array of load positions / load handling devices.<br/>This array contains the valid values for the parameter "state.loads[].loadPosition" and for the action parameter "lhd" of the actions pick and drop.<br/>*If this array doesn't exist or is empty, the AGV has no load handling device.* |
-| ***loadSets [loadSet]*** | array of JSON object | Array of load sets that can be handled by the AGV |
+| *loadPositions* | array of string | Array of load positions / load handling devices.<br/>This array contains the valid values for the parameter "state.loads[].loadPosition" and for the action parameter "lhd" of the actions pick and drop.<br/>*If this array doesn't exist or is empty, the mobile robot has no load handling device.* |
+| ***loadSets [loadSet]*** | array of JSON object | Array of load sets that can be handled by the mobile robot |
 | { | | |
 |&emsp; setName | string | Unique name of the load set, e.g., DEFAULT, SET1, etc. |
 |&emsp; loadType | string | Type of load, e.g., EPAL, XLT1200, etc. |
-|&emsp; *loadPositions* | array of string | Array of load positions btw. load handling devices, this load set is valid for.<br/>*If this parameter does not exist or is empty, this load set is valid for all load handling devices on this AGV.* |
+|&emsp; *loadPositions* | array of string | Array of load positions btw. load handling devices, this load set is valid for.<br/>*If this parameter does not exist or is empty, this load set is valid for all load handling devices on this mobile robot.* |
 |&emsp; ***boundingBoxReference*** | JSON object | Bounding box reference as defined in parameter loads[] in state message. |
 |&emsp; ***loadDimensions*** | JSON object | Load dimensions as defined in parameter loads[] in state message. |
 |&emsp; *maximumWeight* | float64 | [kg], maximum weight of load type. |
@@ -1969,7 +1953,7 @@ This JSON object specifies load handling and supported load types of the AGV.
 
 #### mobileRobotConfiguration
 
-This JSON object details the software and hardware versions running on the vehicle, as well as a brief summary of network information.
+This JSON object details the software and hardware versions running on the mobile robot, as well as a brief summary of network information.
 
 | **Field** | **data type** | **description** |
 |---|---|---|
@@ -1977,15 +1961,15 @@ This JSON object details the software and hardware versions running on the vehic
 |&emsp; key | string | Key of the software/hardware version used. (e.g., softwareVersion) |
 |&emsp; value | string | The version corresponding to the key. (e.g., v1.12.4-beta) |
 | } | | |
-| *network* { | JSON object | Information about the vehicle's network connection. The listed information shall not be updated while the vehicle is operating. |
-|&emsp;&emsp; *dnsServers* | array of string | Array of Domain Name Servers (DNS) used by the vehicle. |
-|&emsp;&emsp; *ntpServers* | array of string | Array of Network Time Protocol (NTP) servers used by the vehicle. |
+| *network* { | JSON object | Information about the mobile robot's network connection. The listed information shall not be updated while the mobile robot is operating. |
+|&emsp;&emsp; *dnsServers* | array of string | Array of Domain Name Servers (DNS) used by the mobile robot. |
+|&emsp;&emsp; *ntpServers* | array of string | Array of Network Time Protocol (NTP) servers used by the mobile robot. |
 |&emsp;&emsp; *localIpAddress* | string | A priori assigned IP address used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations. |
 |&emsp;&emsp; *netmask* | string | The subnet mask used in the network configuration corresponding to the local IP address.|
-|&emsp;&emsp; *defaultGateway* | string | The default gateway used by the vehicle, corresponding to the local IP address. |
+|&emsp;&emsp; *defaultGateway* | string | The default gateway used by the mobile robot, corresponding to the local IP address. |
 | &emsp;} | | |
 | *batteryCharging* { | JSON object | Information about battery charging parameters. |
-| *criticalLowChargingLevel* | % | Specifies the critical charging level at or below which the master control should only send orders that command the vehicle to a charging station. |
+| *criticalLowChargingLevel* | % | Specifies the critical charging level at or below which the fleet control should only send orders that command the mobile robot to a charging station. |
 | *maximumDesiredChargingLevel* | % | Specifies the maximum desired charging level. |
 | *minimumDesiredChargingLevel* | % | Specifies the minimum desired charging level. |
 | *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
@@ -1998,7 +1982,7 @@ This section includes additional information, which helps in facilitating a comm
 
 ## 7.1 Error reference
 
-If an error occurs due to an erroneous order, the AGV should return a meaningful error reference in the field errorReferences (see Section [6.12.7 Implementation of the state message](#6127-implementation-of-the-state-message) of the state topic).
+If an error occurs due to an erroneous order, the mobile robot should return a meaningful error reference in the field errorReferences (see Section [6.12.7 Implementation of the state message](#6127-implementation-of-the-state-message) of the state topic).
 This can include the following information:
 
 - `headerId`

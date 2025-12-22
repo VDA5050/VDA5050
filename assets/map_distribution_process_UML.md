@@ -9,41 +9,41 @@ skinparam participantFontColor white
 skinparam noteFontColor white
 skinparam participantBorderColor None
 skinparam ArrowThickness 2
-participant "Master Control" #dodgerblue
-participant AGV #dodgerblue
+participant "Fleet Control" #dodgerblue
+participant "Mobile Robot" #dodgerblue
 participant "Map Server" #dodgerblue
 hide footbox
 
 group download map
-"Master Control" -> "AGV": Trigger instant action "downloadMap"
-activate AGV
-AGV -> "Map Server": Request Download
+"Fleet Control" -> "Mobile Robot": Trigger instant action "downloadMap"
+activate "Mobile Robot"
+"Mobile Robot" -> "Map Server": Request Download
 activate "Map Server"
-"Map Server" -> AGV: Transfer of the file
+"Map Server" -> "Mobile Robot": Transfer of the file
 deactivate "Map Server"
-"AGV" -> "AGV": Check, if download\n was successful
-"AGV" -> "AGV": Processing the map\n to make it ready for use
-AGV -> "Master Control": Report instant action as FINISHED
-"AGV" -> "Master Control": Send updated state\n with new map in maps array
-deactivate AGV
+"Mobile Robot" -> "Mobile Robot": Check, if download\n was successful
+"Mobile Robot" -> "Mobile Robot": Processing the map\n to make it ready for use
+"Mobile Robot" -> "Fleet Control": Report instant action as FINISHED
+"Mobile Robot" -> "Fleet Control": Send updated state\n with new map in maps array
+deactivate "Mobile Robot"
 end
 
 group enable map
-"Master Control" -> "AGV": Trigger instant action "enableMap"
-activate AGV
-"AGV" -> "AGV": Set map with requested mapId and\n mapVersion to ENABLED,\n set other maps with same mapId\n and different mapVersions to DISABLED
-"AGV" -> "Master Control": Report instant action as FINISHED
-"AGV" -> "Master Control": Send updated state
-deactivate AGV
+"Fleet Control" -> "Mobile Robot": Trigger instant action "enableMap"
+activate "Mobile Robot"
+"Mobile Robot" -> "Mobile Robot": Set map with requested mapId and\n mapVersion to ENABLED,\n set other maps with same mapId\n and different mapVersions to DISABLED
+"Mobile Robot" -> "Fleet Control": Report instant action as FINISHED
+"Mobile Robot" -> "Fleet Control": Send updated state
+deactivate "Mobile Robot"
 end
 
-group delete map on vehicle
-"Master Control" -> "AGV": Trigger instant action "deleteMap"
-activate AGV
-"AGV" -> "AGV": Remove map with\n requested mapId and mapVersion\n from vehicle memory
-"AGV" -> "Master Control": Report instant action as FINISHED
-"AGV" -> "Master Control": Send updated state with \nmap removed from maps array
-deactivate AGV
+group delete map on mobile robot
+"Fleet Control" -> "Mobile Robot": Trigger instant action "deleteMap"
+activate "Mobile Robot"
+"Mobile Robot" -> "Mobile Robot": Remove map with\n requested mapId and mapVersion\n from mobile robot memory
+"Mobile Robot" -> "Fleet Control": Report instant action as FINISHED
+"Mobile Robot" -> "Fleet Control": Send updated state with \nmap removed from maps array
+deactivate "Mobile Robot"
 end
 @enduml
 ```
