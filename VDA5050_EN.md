@@ -1796,13 +1796,13 @@ This JSON object describes physical properties of the AGV.
 | **Field** | **data type** | **description** |
 |---|---|---|
 | minimumSpeed | float64 | [m/s] Minimal controlled continuous speed of the AGV. |
-| speedMaximum | float64 | [m/s] Maximum speed of the AGV. |
-| *angularSpeedMinimum* | float64 | [Rad/s] Minimal controlled continuous rotation speed of the AGV. |
-| *angularSpeedMaximum* | float64 | [Rad/s] Maximum rotation speed of the AGV. |
-| accelerationMaximum | float64 | [m/s²] Maximum acceleration with maximum load. |
-| decelerationMaximum | float64 | [m/s²] Maximum deceleration with maximum load. |
-| heightMinimum | float64 | [m] Minimum height of the AGV. |
-| heightMaximum | float64 | [m] Maximum height of the AGV. |
+| maximumSpeed | float64 | [m/s] Maximum speed of the AGV. |
+| *minimumAngularSpeed* | float64 | [rad/s] Minimal controlled continuous rotation speed of the AGV. |
+| *maximumAngularSpeed* | float64 | [rad/s] Maximum rotation speed of the AGV. |
+| maximumAcceleration | float64 | [m/s²] Maximum acceleration with maximum load. |
+| maximumDeceleration | float64 | [m/s²] Maximum deceleration with maximum load. |
+| minimumHeight | float64 | [m] Minimum height of the AGV. |
+| maximumHeight | float64 | [m] Maximum height of the AGV. |
 | width | float64 | [m] Width of the AGV. |
 | length | float64 | [m] Length of the AGV. |
 
