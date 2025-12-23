@@ -114,8 +114,6 @@ Version 3.0.0
   [7.8 Implementation of the state message](#78-implementation-of-the-state-message)<br>
   [7.9 Implementation of the visualization message](#79-implementation-of-the-visualization-message)<br>
   [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message)<br>
-[8 Best practice](#8-best-practice)<br>
-  [8.1 Error reference](#81-error-reference)<br>
 
 
 # 1 Foreword
@@ -1076,6 +1074,18 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
+#### 6.6.5.1 Error references
+
+If an error occurs due to an erroneous order or execution failure, the mobile robot can return meaningful error references in the field `errorReferences` (see Section [7.8 Implementation of the state message](#78-implementation-of-the-state-message)).
+This can include the following information:
+
+- `headerId`
+- Topic (`order` or `instantAction`)
+- `orderId` and `orderUpdateId` if error was caused by an order update
+- `actionId` if error was caused by an action
+- List of parameters if error was caused by erroneous action parameters
+
+
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
 
@@ -2018,21 +2028,3 @@ This JSON object details the software and hardware versions running on the mobil
 | *minimumDesiredChargingLevel* | % | Specifies the minimum desired charging level. |
 | *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
 | &emsp;} | | |
-
-
-# 8 Best practice
-
-This section includes additional information, which helps in facilitating a common understanding concurrent with the logic of the protocol.
-
-## 8.1 Error reference
-
-If an error occurs due to an erroneous order, the mobile robot should return a meaningful error reference in the field errorReferences (see Section [7.8 Implementation of the state message](#78-implementation-of-the-state-message) of the state topic).
-This can include the following information:
-
-- `headerId`
-- Topic (`order` or `instantAction`)
-- `orderId` and `orderUpdateId` if error was caused by an order update
-- `actionId` if error was caused by an action
-- List of parameters if error was caused by erroneous action parameters
-
-If an action cannot be completed because of external factors (e.g., no load at expected position), the actionId should be referenced.
