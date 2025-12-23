@@ -62,10 +62,9 @@ Version 3.0.0
   [6.1 Order (from fleet control to mobile robot)](#61-order-from-fleet-control-to-mobile-robot)<br>
     [6.1.1 Concept and logic](#611-concept-and-logic)<br>
     [6.1.2 Orders and order updates](#612-orders-and-order-update)<br>
-    [6.1.3 Idle state of the mobile robot](#613-idle-state-of-the-mobile-robot)<br>
-    [6.1.4 Order cancellation (by fleet control)](#614-order-cancellation-by-fleet-control)<br>
-    [6.1.5 Order rejection](#615-order-rejection)<br>
-    [6.1.6 Corridors](#616-corridors)<br>
+    [6.1.3 Order cancellation (by fleet control)](#613-order-cancellation-by-fleet-control)<br>
+    [6.1.4 Order rejection](#614-order-rejection)<br>
+    [6.1.5 Corridors](#615-corridors)<br>
   [6.2 Actions](#62-actions)<br>
     [6.2.1 Instant actions](#621-instant-actions)<br>
     [6.2.2 Action blocking types and sequence](#622-action-blocking-types-and-sequence)<br>
@@ -91,8 +90,8 @@ Version 3.0.0
     [6.6.5 Errors](#665-errors)<br>
     [6.6.6 Operating Mode](#666-operating-mode)<br>
     [6.6.7 Clearing the order](#667-clearing-the-order)<br>
-    [6.6.8 Action states](#668-action-states)<br>
-    [6.6.9 Reporting of horizon actions in the mobile robot's state](#669-reporting-of-horizon-actions-in-the-mobile-robots-state)<br>
+    [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot)<br>	
+    [6.6.9 Action states](#669-action-states)<br>
     [6.6.10 Request use of Corridors](#6610-request-use-of-corridors)<br>
   [6.7 Visualization](#67-visualization)<br>
   [6.8 Sharing of planned paths for freely navigating mobile robots](#68-sharing-of-planned-paths-for-freely-navigating-mobile-robots)<br>
@@ -485,11 +484,8 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 9)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
 
-### 6.1.3 Idle state of the mobile robot
 
-A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the mobile robot is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a mobile robot can execute instantActions.
-
-### 6.1.4 Order cancellation (by fleet control)
+### 6.1.3 Order cancellation (by fleet control)
 
 In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
 
@@ -511,7 +507,7 @@ Figure 10 shows the expected behavior for different mobile robot capabilities.
 ![Figure 10 Expected behavior after a cancelOrder](./assets/process_cancel_order.png)
 >Figure 10 - Expected behavior after a `cancelOrder`.
 
-#### 6.1.4.1 Receiving a new order after cancellation
+#### 6.1.3.1 Receiving a new order after cancellation
 
 After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order.
 
@@ -525,7 +521,7 @@ There are two options:
 - Send an order, where the first node is a temporary node that is positioned where the mobile robot currently stands. The mobile robot shall then realize that this node is trivially reachable and accept the order.
 - Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the mobile robot is within this range. Thus, the mobile robot shall realize that this node shall be counted as traversed and accept the order.
 
-#### 6.1.4.2 Receiving a cancelOrder action when mobile robot is idle
+#### 6.1.3.2 Receiving a cancelOrder action when mobile robot is idle
 
 If the mobile robot receives a `cancelOrder` action but the mobile robot is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the mobile robot’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
@@ -533,13 +529,13 @@ The mobile robot shall report an error of type "NO_ORDER_TO_CANCEL" with the lev
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
-### 6.1.5 Order rejection
+### 6.1.4 Order rejection
 
 There are several scenarios, when an order shall be rejected.
 These scenarios are shown in Figure 9 and described below.
 
 
-#### 6.1.5.1 Mobile robot gets a malformed new order
+#### 6.1.4.1 Mobile robot gets a malformed new order
 
 Resolution:
 
@@ -548,7 +544,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.5.2 Mobile robot receives an order with actions it cannot perform or with fields that it cannot use
+#### 6.1.4.2 Mobile robot receives an order with actions it cannot perform or with fields that it cannot use
 
 Examples:
 
@@ -562,7 +558,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.5.3 Mobile robot gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
+#### 6.1.4.3 Mobile robot gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution:
 
@@ -574,7 +570,7 @@ Resolution:
 If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
 This might happen, if the fleet control resends the order because the state message was received too late by fleet control and it could therefore not verify that the first order had been received.
 
-### 6.1.6 Corridors
+### 6.1.5 Corridors
 
 The optional `corridor` edge attribute allows the mobile robot to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the mobile robot is allowed to operate.
 To use the `corridor` attribute, a predefined trajectory is required that the mobile robot would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the mobile robot known to the fleet control or the trajectory sent in an order. The behavior of a mobile robot using the `corridor` attribute is still the behavior of a line-guided mobile robot, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles. Note that a corridor communicated within an order is released for the mobile robot by default. If the releaseRequired flag is set to true, the mobile robot must request approval from fleet control before using the corridor as described in chapter [6.5.10 Request use of Corridors](#6510-request-use-of-corridors).
@@ -1123,7 +1119,13 @@ In these cases the mobile robot has to clear any current order which means that 
 
 As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
 
-## 6.6.8 Action states
+
+### 6.6.8 Idle state of the mobile robot
+
+A mobile robot is idle if its `nodeStates` and `edgeStates` are empty and all order related `actionStates` are either 'FINISHED' or 'FAILED'. A new order shall only be accepted if the mobile robot is idle. An order update can be accepted when the mobile robot is idle or during order execution. When idle, a mobile robot can execute instantActions.
+
+
+### 6.6.9 Action states
 
 When a mobile robot receives an order related `action` (attached to a `node` or `edge` of an order), it shall report this `action` with an `actionState` in its `actionStates` array.
 When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
@@ -1160,7 +1162,8 @@ All possible action state transitions are visualized in Figure 21 and examples a
 ![Figure 21 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 21 - All possible status transitions for actionStates
 
-### 6.6.9 Reporting of horizon actions in the mobile robot's state
+
+#### 6.6.9.1 Reporting of horizon actions in the mobile robot's state
 
 The mobile robot's state shall always represent the full status of the order it currently has. Therefore, the robot shall report both the `actionsStates` of actions included in its base as well as horizon at all times. All horizon actions are reported as 'WAITING'. If the mobile robot receives an order update where part of its former horizon is removed or changed, all actions that were attached to these nodes and edges shall be removed from the `actionStates` to reflect this. `actionStates` of base actions shall never be removed in the context of an `orderUpdate` as the base cannot be modified once released.
 
