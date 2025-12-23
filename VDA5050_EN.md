@@ -51,11 +51,10 @@ Version 3.0.0
   [2.1 Exclusions](#21-exclusions)<br>
   [2.2 Other applicable documents](#22-other-applicable-documents)<br>
   [2.3 Protocol version](#23-protocol-version)<br>
-[3 Transport protocol](#3-transport-protocol)<br>
-  [3.1 MQTT](#31-mqtt)<br>
-    [3.1.1 Connection handling, security and QoS](#311-connection-handling-security-and-qos)<br>
-    [3.1.2 Topic levels](#312-topic-levels)<br>
-    [3.1.3 Topics for communication](#313-topics-for-communication)<br>
+[3 Transport protocol (MQTT)](#3-transport-protocol-mqtt)<br>
+  [3.1 Connection handling, security and QoS](#31-connection-handling-security-and-qos)<br>
+  [3.2 Topic levels](#32-topic-levels)<br>
+  [3.3 Topics for communication](#33-topics-for-communication)<br>
 [4 Definitions](#4-definitions)<br>
 [5 Process and content of communication](#5-process-and-content-of-communication)<br>
 [6 Protocol specification](#6-protocol-specification)<br>
@@ -170,11 +169,9 @@ Examples for minor version changes (3.x.0):
 Examples for patch version (3.0.x):
 - Fixing of typos in the documentation
 
-# 3 Transport protocol
+# 3 Transport protocol (MQTT)
 
 Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
-
-## 3.1 MQTT
 
 The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON structure.
 MQTT 3.1.1 is the minimum required version for compatibility.
@@ -183,7 +180,7 @@ Participants in the MQTT network subscribe to these topics and receive informati
 
 The JSON structure allows for future extensions of the protocol with additional parameters.
 
-### 3.1.1 Connection handling, security and QoS
+### 3.1 Connection handling, security and QoS
 
 The MQTT protocol provides the option of setting a last will message for a client.
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
@@ -197,7 +194,7 @@ To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to b
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
-### 3.1.2 Topic levels
+### 3.2 Topic levels
 
 The MQTT topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
 For a cloud-based MQTT broker the topic structure has to be adapted individually to match the topics defined in this protocol.
@@ -223,7 +220,7 @@ topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Comm
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
 
-### 3.1.3 Topics for communication
+### 3.3 Topics for communication
 
 The mobile robot protocol uses the following topics for information exchange between fleet control and mobile robot.
 
