@@ -118,7 +118,7 @@ Version 3.0.0
 # 1 Foreword
 
 The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized fleet control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the fleet control system and individual mobile robots.
-The specification for this interface was jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V..
+The specification for this interface was jointly developed by the Verband der Automobilindustrie e.V. (VDA) and the VDMA e. V..
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
 The contribution to this document via GitHub is greatly appreciated.
 The repository can be found at the following link: https://github.com/vda5050/vda5050.
@@ -192,7 +192,7 @@ If the mobile robot disconnects from the broker, it keeps all the order informat
 
 Protocol security needs to be taken into account by broker configuration.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) is to be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`.
 The topic `connection` shall use the QoS level 1 (At Least Once).
 
 
@@ -231,10 +231,10 @@ Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 order | fleet control | mobile robot | Communication of orders from fleet control to the mobile robot | mandatory | order.schema
 instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
-visualization | mobile robot | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
+visualization | mobile robot | Visualization systems | High frequency communication of position and planned path | optional | visualization.schema
 connection | Broker/mobile robot | fleet control | Indicates when mobile robot connection is lost, not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
-zoneSet | fleet control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
+zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
 response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state. | optional | response.schema
 
 # 4 Definitions
@@ -268,7 +268,7 @@ The necessary framework conditions are defined by the operator and the required 
 Essentially, this concerns the following content:
 
 - Definition of routes:
-Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (see section 3.1).
+Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (see Section [2.2 Other applicable documents](#22-other-applicable-documents)).
 Alternatively, routes can also be implemented manually in the fleet control by the operator.
 Routes can be one-way streets, restricted for certain mobile robot groups (based on the size ratios), etc.
 - Route network configuration:
