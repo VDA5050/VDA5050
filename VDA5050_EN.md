@@ -19,7 +19,7 @@ This recommendation describes the communication interface for exchanging informa
 
 ### Disclaimer
 
-The following explanations serve as an indication for the execution of an interface for communication between mobile robots and the fleet control and one that is freely applicable to everyone and is non-binding.
+The following explanations serve as an indication for the execution of an interface for communication between mobile robots and a fleet control. It is meant to be freely applicable to everyone and is non-binding.
 Those who apply them shall ensure that they are applied properly in the specific case.
 
 They shall take into account the state of the art prevailing at the time of each issue.
@@ -120,9 +120,6 @@ Version 3.0.0
 The objective of this recommendation is to facilitate the integration and efficient operation of mobile robot fleets under the supervision of a centralized fleet control system. This is achieved through the implementation of a standardized, vendor-neutral communication interface that enables interoperability between the fleet control system and individual mobile robots.
 The specification for this interface was jointly developed by the Verband der Automobilindustrie e.V. (VDA) and the VDMA e. V..
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub-Repository (https://github.com/vda5050/vda5050).
-The contribution to this document via GitHub is greatly appreciated.
-The repository can be found at the following link: https://github.com/vda5050/vda5050.
-
 
 # 2 Scope
 This document specifies a standardized, vendor-neutral communication interface between a fleet control system and individual mobile robots to:
@@ -144,7 +141,7 @@ The following aspects are explicitly outside the scope and are not covered:
 - Project Coordination
 	- Topics such as project management, integration processes, commissioning procedures, and acceptance criteria
 - Operational Responsibilities
-	- Allocation of responsibilities among operators, integrators, vehicle manufacturers, and master control suppliers for planning, operation, maintenance, and safety
+	- Allocation of responsibilities among operators, integrators, vehicle manufacturers, and fleet control suppliers for planning, operation, maintenance, and safety
 - Cybersecurity Aspects
 	- This document does not define how to ensure secure data exchange.
 
@@ -178,7 +175,7 @@ Communication is expected to be done via wireless networks, considering the effe
 The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON structure.
 MQTT 3.1.1 is the minimum required version for compatibility.
 MQTT allows the distribution of messages to subchannels, which are called "topics".
-Participants in the MQTT network subscribe to these topics and receive information that concerns or interests them.
+Participants in the MQTT network subscribe to these topics and receive information that concerns them.
 
 The JSON structure allows for future extensions of the protocol with additional parameters as well as validation against schemas.
 
@@ -190,10 +187,10 @@ The use of this feature is described in Section [6.8 Connection](#68-connection)
 
 If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
-Protocol security needs to be taken into account by broker configuration.
+Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
 To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`.
-The topic `connection` shall use the QoS level 1 (At Least Once).
+Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
 
 ### 3.2 Topic levels
