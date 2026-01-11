@@ -232,10 +232,10 @@ order | fleet control | mobile robot | Communication of orders from fleet contro
 instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
 visualization | mobile robot | Visualization systems | High frequency communication of position and planned path | optional | visualization.schema
-connection | Broker/mobile robot | fleet control | Indicates when mobile robot connection is lost, not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
+connection | broker / mobile robot | fleet control | Indicates when mobile robot connection is lost. Not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
-response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state. | optional | response.schema
+response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | response.schema
 
 # 4 Definitions
 
