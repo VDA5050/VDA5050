@@ -836,7 +836,7 @@
         "translation": {
             "type": "object",
             "title": "translation",
-            "description": "Translation of a text for a given language code."
+            "description": "Translation of a text for a given language code.",
             "required": [
                 "translationKey",
                 "translationValue"
