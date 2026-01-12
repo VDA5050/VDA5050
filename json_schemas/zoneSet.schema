@@ -326,7 +326,11 @@
                             "are",
                             "also",
                             "valid"
-                        ]
+                        ],
+                        {
+                            "objects": "as",
+                            "well": true
+                        }
                     ]
                 }
             }
