@@ -48,12 +48,12 @@
             "type": "string"
         },
         "orderUpdateId": {
-            "description": "orderUpdate identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
+            "description": "Order updat identification. It is unique per orderId. If an order update is rejected, this field shall be passed in the rejection message.",
             "type": "integer",
             "minimum": 0
         },
         "orderDescription": {
-            "description": "dditional human-readable information only for visualization purposes; this may not be used for any logical processes.",
+            "description": "Additional human-readable information only for visualization purposes; this shall not be used for any logical processes.",
             "type": "string"
         },
         "nodes": {
@@ -91,7 +91,7 @@
                         "description": "True indicates that the node is part of the base. False indicates that the node is part of the horizon."
                     },
                     "nodePosition": {
-                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for mobile robot-types that do not require the node position (e.g., line-guided mobile robots).",
+                        "description": "Defines the position on a map in a global project-specific world coordinate system. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for mobile robot-types that do not require the node position (e.g., line-guided mobile robots).",
                         "type": "object",
                         "required": [
                             "x",
@@ -137,13 +137,12 @@
                                   "description": "Rotation angle",
                                   "minimum": -1.570796327,
                                   "maximum": 1.570796327
-                                  
                                 }
                               }
                             },
                             "allowedDeviationTheta": {
                                 "type": "number",
-                                "minimum": -3.141592654,
+                                "minimum": 0,
                                 "maximum": 3.141592654,
                                 "description": "Indicates how big the deviation of theta angle can be. \nThe lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta."
                             },
@@ -274,6 +273,10 @@
                                 "items": {
                                     "type": "object",
                                     "title": "controlPoint",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
                                     "properties": {
                                         "x": {
                                             "type": "number",
@@ -288,11 +291,7 @@
                                             "minimum": 0,
                                             "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0."
                                         }
-                                    },
-                                    "required": [
-                                        "x",
-                                        "y"
-                                    ]
+                                    }
                                 }
                             }
                         }
@@ -325,16 +324,16 @@
                             },
                             "releaseRequired": {
                                 "type": "boolean",
-                                "description": "Optional flag that indicates if the robot must request approval from the fleet control. If not defined, no release is required.",
+                                "description": "Optional flag that indicates if the robot must request approval from the fleet control. If not defined, no release is required."
                             },
                             "releaseLossBehavior": {
                                 "type": "string",
                                 "description": "Defines how the robot shall behave in case its release of a corridor expires or gets revoked by the fleet control.",
                                 "enum": [
-                                    'STOP', 
-                                    'RETURN'
+                                    "STOP", 
+                                    "RETURN"
                                 ]
-                            },
+                            }
                         }
                     },
                     "actions": {
@@ -372,7 +371,7 @@
                 },
                 "blockingType": {
                     "type": "string",
-                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nNONE: allows driving and other actions\nSINGLE: allows driving but no other actions\nSOFT: allows other actions but not driving\nHARD: is the only allowed action at that time.",
                     "enum": [
                         "NONE",
                         "SOFT",
@@ -382,7 +381,7 @@
                 },
                 "actionParameters": {
                     "type": "array",
-                    "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                    "description": "Action parameters for the indicated action, e.g., deviceId, loadId, external Triggers.",
                     "items": {
                         "title": "actionParameter",
                         "type": "object",
@@ -419,11 +418,19 @@
                                         "are",
                                         "also",
                                         "valid"
-                                    ]
+                                    ],
+                                    {
+                                        "objects": "as",
+                                        "well": true
+                                    }
                                 ]
                             }
                         }
                     }
+                },
+                "retriable": {
+                    "type": "boolean",
+                    "description": "True: action can enter RETRIABLE state if it fails. False: action enters FAILED state directly after it fails. Default: false."
                 }
             }
         }
