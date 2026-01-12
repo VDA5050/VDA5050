@@ -113,7 +113,8 @@
                                             "valid"
                                         ],
                                         {
-                                          "objects":"as well"
+                                            "objects": "as",
+                                            "well": true
                                         }
                                     ]
                                 }
