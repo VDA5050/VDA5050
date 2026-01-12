@@ -640,7 +640,7 @@
                     },
                     "errorDescriptionTranslations": {
                         "type": "array",
-                        "description": "Array of translations of the error description."
+                        "description": "Array of translations of the error description.",
                         "items": {
                             "$ref": "#/definitions/translation"
                         }
@@ -651,7 +651,7 @@
                     },
                     "errorHintTranslations": {
                         "type": "array",
-                        "description": "Array of translations of the error hint."
+                        "description": "Array of translations of the error hint.",
                         "items": {
                             "$ref": "#/definitions/translation"
                         }
