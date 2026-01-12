@@ -407,7 +407,7 @@
                             },
                             "actionScopes": {
                                 "type": "array",
-                                "description": "List of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges.",
+                                "description": "List of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges, ZONE: usable as zone action.",
                                 "items": {
                                     "type": "string",
                                     "enum": [
