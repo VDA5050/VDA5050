@@ -1095,11 +1095,12 @@ In these cases the mobile robot has to clear any current order which means that 
 - Any scheduled order related action shall be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running order related action should also be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running order related action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
-- `orderId` and `orderUpdateId` are kept.
+- the `lastNodeId` is kept as long as it can be used as a start node of a new order (as stated in chapter 6.6.6).
+- `orderId`, `orderUpdateId` and `lastNodeSequenceId` are discarted
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
 
-As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN' is reported.
 
 
 ### 6.6.8 Idle state of the mobile robot
