@@ -1455,6 +1455,9 @@ manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Serial number of the mobile robot.
 **actions [action]** | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
+Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
+
+
 ## 7.5 Implementation of the response message
 
 Object structure/Identifier | Data type | Description
