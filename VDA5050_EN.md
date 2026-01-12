@@ -481,7 +481,7 @@ In the event of an unplanned change in the base nodes, the order shall be cancel
 
 Fleet control can optionally pass an `orderId` to reference which order it wants to cancel.
 After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
-A mobile robot which plans and replans the trajectory between two nodes by itself shall stop at its current position, not merely at the next node.
+A mobile robot which plans and replans the trajectory between two nodes by itself shall stop as soon as possible, not merely at the next node.
 
 If there are order related actions scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are order related actions running, those actions should be cancelled and also be reported as 'FAILED'.
@@ -490,7 +490,7 @@ While order related actions are running, the `cancelOrder` action shall report '
 After all movement of the mobile robot and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 This means that the mobile robot is idle and ready to receive new orders.
 
-The `orderId` and `orderUpdateId` are kept.
+The `lastNodeId` is kept in any case. The `orderId`, `orderUpdateId` and `lastNodeSequenceId` should be kept only if the robot can handle an order update and does not require a new order to continue driving.
 
 Figure 10 shows the expected behavior for different mobile robot capabilities.
 
