@@ -390,7 +390,9 @@
                     "items": {
                         "required": [
                             "actionType",
-                            "actionScopes"
+                            "actionScopes",
+                            "pauseAllowed",
+                            "cancelAllowed"
                         ],
                         "type": "object",
                         "properties": {
@@ -398,7 +400,7 @@
                                 "type": "string",
                                 "description": "unique actionType corresponding to action.actionType"
                             },
-                            "actionDescriptor": {
+                            "actionDescription": {
                                 "type": "string",
                                 "description": "free text: description of the action"
                             },
@@ -410,7 +412,8 @@
                                     "enum": [
                                         "INSTANT",
                                         "NODE",
-                                        "EDGE"
+                                        "EDGE",
+                                        "ZONE"
                                     ]
                                 }
                             },
@@ -451,7 +454,7 @@
                                     }
                                 }
                             },
-                            "resultDescriptor": {
+                            "resultDescription": {
                                 "type": "string",
                                 "description": "free text: description of the resultDescriptor"
                             },
@@ -467,6 +470,14 @@
                                       "HARD"
                                    ]
                                 }
+                            },
+                            "pauseAllowed": {
+                                "type": "string",
+                                "description": "true: action can be paused via startPause, false: action cannot be paused."
+                            },
+                            "cancelAllowed": {
+                                "type": "string",
+                                "description": "true: action can be cancelled via cancelOrder, false: action cannot be cancelled."
                             }
                         }
                     }
