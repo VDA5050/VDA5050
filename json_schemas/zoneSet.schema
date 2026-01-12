@@ -200,7 +200,8 @@
                         "properties": {
                             "direction": {
                                 "type": "number",
-                                "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system."
+                                "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system.",
+                                "unit": "rad"
                             },
                             "limitation": {
                                 "type": "string",
@@ -244,11 +245,13 @@
             "properties": {
                 "x": {
                     "type": "number",
-                    "description": "X-coordinate described in the project specific coordinate system."
+                    "description": "X-coordinate described in the project specific coordinate system.",
+                    "unit": "m"
                 },
                 "y": {
                     "type": "number",
-                    "description": "Y-coordinate described in the project specific coordinate system."
+                    "description": "Y-coordinate described in the project specific coordinate system.",
+                    "unit": "m"
                 }
             }
         }, 
