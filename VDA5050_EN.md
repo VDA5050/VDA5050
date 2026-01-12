@@ -557,8 +557,7 @@ Resolution:
 3. The mobile robot reports an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
-If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, the second order will be ignored. 
-This might happen, if the fleet control resends the order because the state message was received too late by fleet control and it could therefore not verify that the first order had been received.
+If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it has to reply with an error. Sending an order update is a handshake mechanism where one party waits for an answer from the other party. If the robot reports that it did not receive the order update, resend it. If there is a communication issue, wait for the robot to come back online.
 
 ### 6.1.5 Corridors
 
