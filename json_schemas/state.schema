@@ -638,9 +638,23 @@
                         "type": "string",
                         "description": "Verbose description providing details and possible causes of the error."
                     },
+                    "errorDescriptionTranslations": {
+                        "type": "array",
+                        "description": "Array of translations of the error description."
+                        "items": {
+                            "$ref": "#/definitions/translation"
+                        }
+                    },
                     "errorHint": {
                         "type": "string",
                         "description": "Hint on how to approach or solve the reported error."
+                    },
+                    "errorHintTranslations": {
+                        "type": "array",
+                        "description": "Array of translations of the error hint."
+                        "items": {
+                            "$ref": "#/definitions/translation"
+                        }
                     },
                     "errorLevel": {
                         "type": "string",
@@ -816,6 +830,25 @@
                 "resultDescriptor": {
                     "type": "string",
                     "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
+                }
+            }
+        },
+        "translation": {
+            "type": "object",
+            "title": "translation",
+            "description": "Translation of a text for a given language code."
+            "required": [
+                "translationKey",
+                "translationValue"
+            ],
+            "properties": {
+                "translationKey": {
+                    "type": "string",
+                    "description": "Specifies the language of the translation according to ISO 639-1."
+                },
+                "translationValue": {
+                    "type": "string",
+                    "description": "Translation in language of translation key."
                 }
             }
         }
