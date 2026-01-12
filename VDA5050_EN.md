@@ -1516,6 +1516,9 @@ A single zone object has the following structure:
 | directedLimitation | string | Required only for DIRECTED zone as defined in chapter [6.4.1 Zone types](#631-zone-types).| 
 | bidirectedLimitation<br>}| string | Required only for BIDIRECTED zone as defined in chapter [6.4.1 Zone types](#631-zone-types).|
 
+Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
+
+
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a counterclockwise direction: 
 
 | **Object structure** | **Data type** | **Description** |
