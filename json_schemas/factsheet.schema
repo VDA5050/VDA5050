@@ -849,13 +849,6 @@
                             "type": "string",
                             "description": "A priori assigned IP address of the mobile robot used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
                         },
-                        "ntpServers": {
-                            "type": "array",
-                            "description": "List of NTP servers used by the mobile robot.",
-                            "items": {
-                                "type": "string"
-                            }  
-                        },
                         "netmask": {
                             "type": "string",
                             "description": "Network subnet mask."
