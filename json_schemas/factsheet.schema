@@ -456,7 +456,7 @@
                             },
                             "resultDescription": {
                                 "type": "string",
-                                "description": "free text: description of the resultDescriptor"
+                                "description": "free text: description of the result"
                             },
                             "blockingTypes": {
                                 "type": "array",
@@ -828,6 +828,7 @@
                 },
                 "network": {
                     "type": "object",
+                    "description": "Information about the mobile robot's network connection. The listed information shall not be updated while the mobile robot is operating.",
                     "properties": {
                         "dnsServers": {
                             "type": "array",
@@ -854,6 +855,35 @@
                         "defaultGateway": {
                             "type": "string",
                             "description": "Default gateway used by the mobile robot."
+                        }
+                    }
+                },
+                "batteryCharging ": {
+                    "type": "object",
+                    "description": "Information about battery charging parameters.",
+                    "properties": {
+                        "criticalLowChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "minimumDesiredChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the minimum desired charging level in percent.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "maximumDesiredChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the maximum desired charging level in percent.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "minimumChargingTime": {
+                            "type": "number",
+                            "description": "Specifies the desired minimum charging time in seconds.",
+                            "unit": "s"
                         }
                     }
                 }
