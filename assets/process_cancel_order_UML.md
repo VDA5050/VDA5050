@@ -7,20 +7,19 @@ skinparam defaultTextAlignment center
 start
 :Mobile robot has order.;
 :Mobile robot receives instantAction\n <B>cancelOrder</B>.;
-#lightgreen: <B>cancelOrder</B> action is added to <B>actionStates</B>,\naction status is set to <B>RUNNING</B>.\n<B>WAITING</B> node and edge actions are set to <B>FAILED</B>.;
-if (Can running\n actions be\n interrupted?) then (yes)
-    #lightgreen: Interrupt actions, set\ntheir state to <B>FAILED</B>.;
+#lightgreen: add <B>cancelOrder</B> to <B>actionStates</B>,\nset action status to <B>RUNNING</B>\n\nset <B>WAITING</B> node and edge actions to <B>FAILED</B>;
+if (Can all running\n actions be\n interrupted?) then (yes)
+    #lightgreen: interrupt actions and set\ntheir state to <B>FAILED</B>;
 else (no)
-    #lightgreen: Finish the actions and report\n their respective state\n(<B>RUNNING</B>, <B>FAILED</B>, <B>FINISHED</B>).;
+    #lightgreen: finish the actions and report\n their respective state\n(<B>FAILED</B>, <B>FINISHED</B>);
 endif
-
 if (Can mobile robot stop\nin between nodes?) then (no)
-    #lightgreen: Mobile robot drives to next node of its base\nwhere it should be able to receive a new order.\nThe nodeState for the node the mobile robot\nis driving to is kept,\nall other nodeStates and edgeStates\nare deleted.;
-    #lightgreen: Mobile robot arrives at the node where it stops,\nlastNodeId and lastNodeSequenceId\n are be updated accordingly.;
+    #lightgreen: continue driving to next node of its base\nwhere receiving a new order is possible\n\nkeep nodeState for this node,\n delete all other nodeStates and edgeStates;
+    #lightgreen: update lastNodeId and lastNodeSequenceId\nafter arriving at node;
 else (yes)
-    #lightgreen: Mobile robot stops.;
+    #lightgreen: stop;
 endif
-#lightgreen: All nodeStates and edgeStates are deleted,\nactionStates are kept.\n<B>cancelOrder</B> action status is set to <B>FINISHED</B>.;
+#lightgreen: delete all nodeStates and edgeStates and \nkeep actionStates\n\nset <B>cancelOrder</B> action status to <B>FINISHED</B>;
 stop
 @enduml
 ```
