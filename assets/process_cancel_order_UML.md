@@ -9,10 +9,10 @@ start
 :Mobile robot receives instantAction\n <B>cancelOrder</B>;
 #lightgreen: add <B>cancelOrder</B> to <B>actionStates</B>,\nset action status to <B>RUNNING</B>\n\nset <B>WAITING</B> node and edge actions to <B>FAILED</B>;
 
-if (Can all running\n actions be\n interrupted?) then (no)
+if (Can all running\n actions be\n canceled?) then (no)
     #lightgreen: finish the actions and report\n their respective state\n(<B>FAILED</B>, <B>FINISHED</B>);
 else (yes)
-    #lightgreen: interrupt actions and set\ntheir state to <B>FAILED</B>;
+    #lightgreen: cancel actions and set\ntheir state to <B>FAILED</B>;
 endif
 
 if (Can mobile robot stop\nin between nodes?) then (no)
