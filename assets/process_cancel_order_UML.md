@@ -7,7 +7,7 @@ skinparam defaultTextAlignment center
 start
 :Mobile Robot has order;
 :Mobile Robot receives instantAction\n <B>cancelOrder</B>.;
-#lightgreen: <B>cancelOrder</B> action is added to <B>actionStates</B>, action status is set to <B>RUNNING</B> \n\nwaiting actions are set to <B>FAILED</B>;
+#lightgreen: <B>cancelOrder</B> action is added to <B>actionStates</B>, \naction status is set to <B>RUNNING</B> \n\nwaiting actions are set to <B>FAILED</B>;
 if (Can running\n actions be\n interrupted?) then (yes)
     #lightgreen: Interrupt actions, set\n their state to <B>FAILED</B>;
 else (no)
