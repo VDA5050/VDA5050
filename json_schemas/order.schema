@@ -140,7 +140,7 @@
                                   
                                 }
                               }
-                            }
+                            },
                             "allowedDeviationTheta": {
                                 "type": "number",
                                 "minimum": -3.141592654,
