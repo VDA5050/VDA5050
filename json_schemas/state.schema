@@ -326,7 +326,7 @@
                 "y",
                 "theta",
                 "mapId",
-                "positionInitialized"
+                "localized"
             ],
             "properties": {
                 "x": {
@@ -349,9 +349,9 @@
                 "mapDescriptor": {
                     "type": "string"
                 },
-                "positionInitialized": {
+                "localized": {
                     "type": "boolean",
-                    "description": "True: position is initialized. False: position is not initialized."
+                    "description": "True: mobile robot is localized. x, y, and theta can be trusted. False: mobile robot is not localized. x, y, and theta cannot be trusted."
                 },
                 "localizationScore": {
                     "type": "number",
