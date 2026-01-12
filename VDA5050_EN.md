@@ -557,7 +557,7 @@ Resolution:
 3. The mobile robot reports an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
-If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it has to reply with an error. Sending an order update is a handshake mechanism where one party waits for an answer from the other party. If the robot reports that it did not receive the order update, resend it. If there is a communication issue, wait for the robot to come back online.
+If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it has to reply with an error. Sending an order update is a handshake mechanism where one party waits for an answer from the other party. If the robot does not acknowledge the oder update in a state message within 30sec (see chapter 6.6 State), resend it. If there is a communication issue, wait for the robot to come back online.
 
 ### 6.1.5 Corridors
 
