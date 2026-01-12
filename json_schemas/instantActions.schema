@@ -68,7 +68,7 @@
                     },
                     "blockingType": {
                         "type": "string",
-                        "description": The blockingType of an instant action is always NONE: action can happen in parallel with others, including movement.",
+                        "description": "The blockingType of an instant action is always NONE: action can happen in parallel with others, including movement.",
                         "enum": [
                             "NONE"
                         ]
