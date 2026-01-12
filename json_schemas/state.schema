@@ -351,7 +351,7 @@
                 },
                 "positionInitialized": {
                     "type": "boolean",
-                    "description": "True: position is initialized. False: position is not initizalized."
+                    "description": "True: position is initialized. False: position is not initialized."
                 },
                 "localizationScore": {
                     "type": "number",
@@ -802,12 +802,13 @@
                 },
                 "actionStatus": {
                     "type": "string",
-                    "description": "WAITING: waiting for the trigger (passing the mode, entering the edge) PAUSED: paused by instantAction or external trigger FAILED: action could not be performed.",
+                    "description": "WAITING: waiting for the trigger (passing the mode, entering the edge); INITIALIZING: Action was triggered, preparatory measures are initiated; RUNNING: The action is running; RETRIABLE: Actions that failed, but can be retried; PAUSED: paused by instantAction or external trigger; FINISHED: The action is finished; FAILED: action could not be performed.",
                     "enum": [
                         "WAITING",
                         "INITIALIZING",
                         "RUNNING",
                         "PAUSED",
+                        "RETRIABLE",
                         "FINISHED",
                         "FAILED"
                     ]
