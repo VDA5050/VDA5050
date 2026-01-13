@@ -835,6 +835,31 @@
                             "description": "Default gateway used by the mobile robot."
                         }
                     }
+                },
+                "batteryCharging": {
+                    "type": "object",
+                    "properties": {
+                        "criticalLowChargingLevel": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station."
+                        },
+                        "maximumDesiredChargingLevel": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Specifies the maximum desired charging level in percent."
+                        },
+                        "minimumDesiredChargingLevel": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "Specifies the minimum desired charging level in percent."
+                        },
+                        "minimumChargingTime": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Specifies the desired minimum charging time in seconds."
+                        }
+                    }
                 }
             }
         }

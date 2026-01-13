@@ -2010,8 +2010,8 @@ This JSON object details the software and hardware versions running on the mobil
 |&emsp;&emsp; *defaultGateway* | string | The default gateway used by the mobile robot, corresponding to the local IP address. |
 | &emsp;} | | |
 | ***batteryCharging*** { | JSON object | Information about battery charging parameters. |
-| *criticalLowChargingLevel* | % | Specifies the critical charging level at or below which the fleet control should only send orders that command the mobile robot to a charging station. |
-| *maximumDesiredChargingLevel* | % | Specifies the maximum desired charging level. |
-| *minimumDesiredChargingLevel* | % | Specifies the minimum desired charging level. |
+| *criticalLowChargingLevel* | float64 | Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station. |
+| *maximumDesiredChargingLevel* | float64 | Specifies the maximum desired charging level in percent. |
+| *minimumDesiredChargingLevel* | float64 | Specifies the minimum desired charging level in percent. |
 | *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
 | &emsp;} | | |
