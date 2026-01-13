@@ -386,14 +386,14 @@ The AGV protocol uses the following topics for information exchange between mast
 
 Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 ---|---|---|---|---|---
-order | master control | AGV | Communication of orders from master control to the mobile robot | mandatory | order.schema
-instantActions | master control | AGV | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
-state | AGV | master control | Communication of the AGV state | mandatory | state.schema
+order | Master control | AGV | Communication of orders from master control to the mobile robot | mandatory | order.schema
+instantActions | Master control | AGV | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
+state | AGV | Master control | Communication of the AGV state | mandatory | state.schema
 visualization | AGV | Visualization systems | Higher frequency of position topic for visualization purposes only | optional | visualization.schema
-connection | Broker/AGV | master control | Indicates when AGV connection is lost, not to be used by master control for checking the vehicle health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
-factsheet | AGV | master control | Parameters or vendor-specific information to assist set-up of the AGV in master control | mandatory | factsheet.schema
-zoneSet | master control | mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
-response | master control | mobile robot | Master controls responses to requests from within the mobile robots state. | optional | response.schema
+connection | Broker/AGV | Master control | Indicates when AGV connection is lost, not to be used by master control for checking the vehicle health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
+factsheet | AGV | Master control | Parameters or vendor-specific information to assist set-up of the AGV in master control | mandatory | factsheet.schema
+zoneSet | Master control | Mobile robot | Update zone sets on the mobile robot | optional | zoneSet.schema
+response | Master control | Mobile robot | Master controls responses to requests from within the mobile robots state. | optional | response.schema
 
 ## 6.x Basic concepts
 
@@ -777,7 +777,7 @@ mapId | | string | Unique identification of the map on which the position is ref
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
-**allowedDeviationXY** { | | JSON object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br><br> If `a` = `b`= 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the vehicle. If the vehicle supports this attribute, but it is not defined for this node by Master control the vehicle shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.<br>A point *(x,y)* is on or inside an ellipse if *b^2 x + a^2 y <= a^2 b^2*.
+**allowedDeviationXY** { | | JSON object | Indicates how precisely a vehicle shall match the position of a node for it to be considered traversed.<br>(see also [6.6.3 Order cancellation (by master control)](#663-order-cancellation-by-master-control) and [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#6102-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).<br><br> If `a` = `b`= 0.0: no deviation is allowed, which means the vehicle shall reach or pass the node position with the vehicle control point as precisely as is technically possible for the vehicle. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the vehicle. If the vehicle supports this attribute, but it is not defined for this node by master control the vehicle shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.<br>A point *(x,y)* is on or inside an ellipse if *b^2 x + a^2 y <= a^2 b^2*.
 a | m | float64 | length of the ellipse semi-major axis	in meters.
 b | m | float64 | length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
