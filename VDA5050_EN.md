@@ -1739,7 +1739,7 @@ Object structure/Identifier | Data type | Description
 | --- | --- | --- |
 | response <br> { | JSON object | Object which contains the master control's answer to a specific request. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
-| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The master control has granted the request. 'REVOKED': The master control revokes previously granted request. 'REJECTED': master control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
+| grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The master control has granted the request. 'REVOKED': The master control revokes previously granted request. 'REJECTED': Master control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the master control, but no permission is given yet. Request was added to some sort of a queue. |
 | *leaseExpiry* <br><br> } | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”)
 
 Additionally, the master control has the option to add a `leaseExpiry` timestamp to the response. If the robot hasn't finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
