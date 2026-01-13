@@ -747,14 +747,15 @@
     "definitions": {
         "trajectory": {
             "type": "object",
-            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed. ",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message. Trajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed.",
             "required": [
                 "controlPoints"
             ],
             "properties": {
                 "degree": {
                     "type": "integer",
-                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases differentiability. If not defined, the default value is 1."
+                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases differentiability. If not defined, the default value is 1.",
+                    "minimum": 1
                 },
                 "knotVector": {
                     "type": "array",
@@ -783,7 +784,7 @@
                             },
                             "weight": {
                                 "type": "number",
-                                "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0.",
+                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0.",
                                 "exclusiveMinimum": 0.0
                             }
                         }
@@ -808,7 +809,7 @@
                 },
                 "actionType": {
                     "type": "string",
-                    "description": "actionType of the action.\nOptional: Only for informational or visualization purposes. Order knows the type."
+                    "description": "actionType of the action. Optional: Only for informational or visualization purposes. Order knows the type."
                 },
                 "actionDescriptor": {
                     "type": "string",
