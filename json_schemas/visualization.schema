@@ -202,7 +202,7 @@
                             "weight": {
                                 "type": "number",
                                 "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0.",
-                                ""exclusiveMaximum": 0.0
+                                "exclusiveMaximum": 0.0
                             }
                         }
                     }
