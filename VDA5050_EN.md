@@ -172,12 +172,12 @@ Examples for patch version (3.0.x):
 
 Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
 
-The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON structure.
+The message protocol is Message Queuing Telemetry Transport (MQTT), which is to be used in combination with a JSON format.
 MQTT 3.1.1 is the minimum required version for compatibility.
 MQTT allows the distribution of messages to subchannels, which are called "topics".
 Participants in the MQTT network subscribe to these topics and receive information that concerns them.
 
-The JSON structure allows for future extensions of the protocol with additional parameters as well as validation against schemas.
+The JSON format allows for future extensions of the protocol with additional parameters as well as validation against schemas.
 
 ### 3.1 Connection handling, security and QoS
 
@@ -1348,7 +1348,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a mobile robot shall match on a node for it to be considered traversed.<br>If defined, the mobile robot has to assume the theta angle on this node.<br>If previous edge disallows rotation, the mobile robot shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.
-***allowedDeviationXY*** | m | JSON<br>object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [Order cancellation](#614-order-cancellation) and [Traversal of nodes](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+***allowedDeviationXY*** | m | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [Order cancellation](#614-order-cancellation) and [Traversal of nodes](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a mobile robot shall match the orientation of a node for it to be considered traversed.<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the mobile robot orientation.<br>If = 0.0: no deviation is allowed, which means the mobile robot shall reach the node orientation as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume this value as 0.0.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 *mapDescriptor* <br> } | | string | Additional information on the map.
@@ -1441,7 +1441,7 @@ Examples for the `actionParameter` of an action "someAction" with key-value pair
 {"key": "loadType", "value": "pallet_eu"}
 ]
 
-The reason for using the proposed scheme of "key": "actualKey", "value": "actualValue" is to keep the implementation generic. The "actualValue" can be of any possible JSON data type, such as float, bool, and even an object.
+The reason for using the proposed scheme of "key": "actualKey", "value": "actualValue" is to keep the implementation generic. The "actualValue" can be of any possible JSON data type, such as array, boolean, integer, number, string or even an object.
 
 
 ## 7.4 Implementation of the instantAction message
@@ -1516,7 +1516,7 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 | **Object structure** | **Data type** | **Description** |
 | --------------------- | ------------- | ------------------- |
-| vertex{| JSON-object| |
+| vertex{| JSON object| |
 | x | float64 | X-coordinate described in the project-specific coordinate system |
 | y <br>} | float64 | Y-coordinate described in the project-specific coordinate system |
 
@@ -1527,7 +1527,7 @@ The suggested last will topic structure is:
 
 **uagv/v2/manufacturer/SN/connection**
 
-The last will message is defined as a JSON encapsulated message with the following fields:
+The last will message is defined as a JSON structure message with the following fields:
 
 Identifier | Data type | Description
 ---|---|---
