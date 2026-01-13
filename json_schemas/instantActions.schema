@@ -98,7 +98,8 @@
                                         "array",
                                         "boolean",
                                         "number",
-                                        "string",
+                                        "integer",
+                                        "string", 
                                         "object"
                                     ],
                                     "description": "The value of the action parameter",
