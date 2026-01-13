@@ -249,7 +249,7 @@
                     },
                     "trajectory": {
                         "$ref": "#/definitions/trajectory",
-                        "decription": "Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order."
+                        "description": "Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order."
                     }
                 }
             }
@@ -311,7 +311,7 @@
                             },
                             "eta": {
                                 "type": "string",
-                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., '2017-04-15T11:40:03.12Z')."
+                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
                             }
                         }
                     }
