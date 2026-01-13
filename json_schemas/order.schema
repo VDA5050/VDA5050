@@ -48,7 +48,7 @@
             "type": "string"
         },
         "orderUpdateId": {
-            "description": "Order updat identification. It is unique per orderId. If an order update is rejected, this field shall be passed in the rejection message.",
+            "description": "Order update identification. It is unique per orderId. If an order update is rejected, this field shall be passed in the rejection message.",
             "type": "integer",
             "minimum": 0
         },
@@ -91,7 +91,7 @@
                         "description": "True indicates that the node is part of the base. False indicates that the node is part of the horizon."
                     },
                     "nodePosition": {
-                        "description": "Defines the position on a map in a global project-specific world coordinate system. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for mobile robot-types that do not require the node position (e.g., line-guided mobile robots).",
+                        "description": "Defines the position on a map in a global project-specific world coordinate system. Each floor has its own map. All maps must use the same project specific global origin. Optional for mobile robot-types that do not require the node position (e.g., line-guided mobile robots).",
                         "type": "object",
                         "required": [
                             "x",
@@ -118,7 +118,7 @@
                             },
                             "allowedDeviationXY":{
                               "type": "object",
-                              "description": "Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.\nIf a = b= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if allowedDeviationXY is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of a and b as 0.0.\nThe coordinates of the node defines the center of the ellipse.",
+                              "description": "Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed. If a = b= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if allowedDeviationXY is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of a and b as 0.0. The coordinates of the node defines the center of the ellipse.",
                               "required": [
                                 "a",
                                 "b",
@@ -245,21 +245,21 @@
                     },
                     "rotationAllowed": {
                         "type": "boolean",
-                        "description": "True: rotation is allowed on the edge. False: rotation is not allowed on the edge. \nOptional: No limit, if not set."
+                        "description": "True: rotation is allowed on the edge. False: rotation is not allowed on the edge. Optional: No limit, if not set."
                     },
                     "maxRotationSpeed": {
                         "type": "number",
-                        "description": "Maximum rotation speed in rad/s. \nOptional: No limit, if not set.",
+                        "description": "Maximum rotation speed in rad/s. Optional: No limit, if not set.",
                         "unit": "rad/s"
                     },
                     "length": {
                         "type": "number",
-                        "description": "Distance of the path from startNode to endNode in meters. \nOptional: This value is used by line-guided mobile robots to decrease their speed before reaching a stop position.",
+                        "description": "Distance of the path from startNode to endNode in meters. Optional: This value is used by line-guided mobile robots to decrease their speed before reaching a stop position.",
                         "unit": "m"
                     },
                     "trajectory": {
                         "type": "object",
-                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between startNode and endNode. \nOptional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
+                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between startNode and endNode. Optional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
                         "required": [
                             "degree",
                             "knotVector",
@@ -276,8 +276,8 @@
                                 "description": "Sequence of parameter values that determines where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1.",
                                 "items": {
                                     "type": "number",
-                                    "maximum": 1,
-                                    "minimum": 0
+                                    "minimum": 0.0,
+                                    "maximum": 1.0
                                 }
                             },
                             "controlPoints": {
