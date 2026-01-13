@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "state",
-    "description": "all encompassing state of the AGV.",
+    "description": "State of the mobile robot.",
     "subtopic": "/state",
     "type": "object",
     "required": [
@@ -46,15 +46,15 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "maps":{
             "type": "array",
-            "description": "Array of map-objects that are currently stored on the vehicle.",
+            "description": "Array of map-objects that are currently stored on the mobile robot.",
             "items": {
                 "type": "object",
                 "title": "map",
@@ -66,7 +66,7 @@
                 "properties": {
                     "mapId": {
                         "type": "string",
-                        "description": "ID of the map describing a defined area of the vehicle's workspace."
+                        "description": "ID of the map describing a defined area of the mobile robot's workspace."
                     },
                     "mapVersion": {
                         "type": "string",
@@ -78,7 +78,7 @@
                     },
                     "mapStatus": {
                         "type": "string",
-                        "description": "Information on the status of the map indicating, if a map version is currently used on the vehicle. ENABLED: Indicates this map is currently active / used on the AGV. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the AGV and thus could be enabled or deleted by request.",
+                        "description": "Information on the status of the map indicating, if a map version is currently used on the mobile robot. ENABLED: Indicates this map is currently active / used on the mobile robot. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.",
                         "enum": [
                             "ENABLED",
                             "DISABLED"
@@ -89,7 +89,7 @@
         },
         "zoneSets":{
             "type": "array",
-            "description": "Array of zoneSet objects that are currently stored on the vehicle.",
+            "description": "Array of zoneSet objects that are currently stored on the mobile robot.",
             "items": {
                 "type": "object",
                 "title": "zoneSet",
@@ -101,7 +101,7 @@
                 "properties": {
                     "zoneSetId": {
                         "type": "string",
-                        "description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the vehicle has no zones defined for the corresponding map."
+                        "description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the mobile robot has no zones defined for the corresponding map."
                     },
                     "mapId": {
                         "type": "string",
@@ -109,7 +109,7 @@
                     },
                     "zoneSetStatus": {
                         "type": "string",
-                        "description": "ENABLED: Indicates this zone set is currently active / used on the vehicle. At most one zone set for each map can have its status set to ENABLED. DISABLED: Indicates this zone set is currently not enabled on the vehicle and thus could be enabled or deleted by master control.",
+                        "description": "ENABLED: Indicates this zone set is currently active / used on the mobile robot. At most one zone set for each map can have its status set to ENABLED. DISABLED: Indicates this zone set is currently not enabled on the mobile robot and thus could be enabled or deleted by fleet control.",
                         "enum": [
                             "ENABLED",
                             "DISABLED"
@@ -124,27 +124,27 @@
         },
         "orderUpdateId": {
             "type": "integer",
-            "description": "Order Update Identification to identify that an order update has been accepted by the AGV. \"0\" if no previous orderUpdateId is available."
+            "description": "Order Update Identification to identify that an order update has been accepted by the mobile robot. \"0\" if no previous orderUpdateId is available."
         },
         "lastNodeId": {
             "type": "string",
-            "description": "nodeID of last reached node or, if AGV is currently on a node, current node (e.g., \"node7\"). Empty string (\"\") if no lastNodeId is available."
+            "description": "nodeID of last reached node or, if mobile robot is currently on a node, current node (e.g., \"node7\"). Empty string (\"\") if no lastNodeId is available."
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node. \"0\" if no lastNodeSequenceId is available. "
+            "description": "sequenceId of the last reached node or, if the mobile robot is currently on a node, sequenceId of current node. \"0\" if no lastNodeSequenceId is available. "
         },
         "driving": {
             "type": "boolean",
-            "description": "True: indicates that the AGV is driving and/or rotating. Other movements of the AGV (e.g., lift movements) are not included here.\nFalse: indicates that the AGV is neither driving nor rotating "
+            "description": "True: indicates that the mobile robot is driving and/or rotating. Other movements of the mobile robot (e.g., lift movements) are not included here.\nFalse: indicates that the mobile robot is neither driving nor rotating "
         },
         "paused": {
             "type": "boolean",
-            "description": "True: AGV is currently in a paused state, either because of the push of a physical button on the AGV or because of an instantAction. The AGV can resume the order.\nFalse: The AGV is currently not in a paused state."
+            "description": "True: mobile robot is currently in a paused state, either because of the push of a physical button on the mobile robot or because of an instantAction. The mobile robot can resume the order.\nFalse: The mobile robot is currently not in a paused state."
         },
         "newBaseRequest": {
             "type": "boolean",
-            "description": "True: AGV is almost at the end of the base and will reduce speed if no new base is transmitted. Trigger for master control to send new base\nFalse: no base update required."
+            "description": "True: mobile robot is almost at the end of the base and will reduce speed if no new base is transmitted. Trigger for fleet control to send new base\nFalse: no base update required."
         },
         "distanceSinceLastNode": {
             "type": "number",
@@ -152,7 +152,7 @@
         },
         "operatingMode": {
             "type": "string",
-            "description": "Current operating mode of the AGV.",
+            "description": "Current operating mode of the mobile robot.",
             "enum": [
                 "STARTUP",
                 "AUTOMATIC",
@@ -160,7 +160,7 @@
                 "INTERVENED",
                 "MANUAL",
                 "SERVICE",
-                "TEACHIN"
+                "TEACH_IN"
             ]
         },
         "nodeStates": {
@@ -198,7 +198,7 @@
                             "y",
                             "mapId"
                         ],
-                        "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV).\nOptional:Master control has this information. Can be sent additionally, e.g., for debugging purposes. ",
+                        "description": "Node position. Optional: Fleet control has this information. Can be sent additionally, e.g., for debugging purposes. ",
                         "properties": {
                             "x": {
                                 "type": "number"
@@ -297,7 +297,7 @@
                             },
                             "theta": {
                                 "type": "number",
-                                "description": "Absolute orientation of the vehicle in the project-specific coordinate system.",
+                                "description": "Absolute orientation of the mobile robot in the project-specific coordinate system.",
                                 "unit": "rad",
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
@@ -311,7 +311,7 @@
                 }
             }
         },
-        "agvPosition": {
+        "mobileRobotPosition": {
             "type": "object",
             "required": [
                 "x",
@@ -343,7 +343,7 @@
                 },
                 "localizationScore": {
                     "type": "number",
-                    "description": "Describes the quality of the localization and therefore, can be used, e.g., by SLAM-AGV to describe how accurate the current position information is.\n0.0: position unknown\n1.0: position known\nOptional for vehicles that cannot estimate their localization score.\nOnly for logging and visualization purposes",
+                    "description": "Describes the quality of the localization and therefore, can be used, e.g., by SLAM mobile robot to describe how accurate the current position information is.\n0.0: position unknown\n1.0: position known\nOptional for vehicles that cannot estimate their localization score.\nOnly for logging and visualization purposes",
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
@@ -355,34 +355,34 @@
         },
         "velocity": {
             "type": "object",
-            "description": "The AGVs velocity in vehicle coordinates",
+            "description": "The mobile robot's velocity in mobile robot coordinates",
             "properties": {
                 "vx": {
                     "type": "number",
-                    "description":"The AVGs velocity in its x direction"
+                    "description":"The mobile robot's velocity in its x direction"
                 },
                 "vy": {
                     "type": "number",
-                    "description":"The AVGs velocity in its y direction"
+                    "description":"The mobile robot's velocity in its y direction"
                 },
                 "omega": {
                     "type": "number",
-                    "description":"The AVGs turning speed around its z axis."
+                    "description":"The mobile robot's turning speed around its z axis."
                 }
             }
         },
         "loads": {
             "type": "array",
-            "description": "Loads, that are currently handled by the AGV. Optional: If AGV cannot determine load state, leave the array out of the state. If the AGV can determine the load state, but the array is empty, the AGV is considered unloaded.",
+            "description": "Loads, that are currently handled by the mobile robot. Optional: If mobile robot cannot determine load state, leave the array out of the state. If the mobile robot can determine the load state, but the array is empty, the mobile robot is considered unloaded.",
             "items": {
                 "type": "object",
                 "required": [],
-                "description": "Load object that describes the load if the AGV has information about it.",
+                "description": "Load object that describes the load if the mobile robot has information about it.",
                 "title": "load",
                 "properties": {
                     "loadId": {
                         "type": "string",
-                        "description": "Unique identification number of the load (e.g., barcode or RFID). Empty field, if the AGV can identify the load, but did not identify the load yet. Optional, if the AGV cannot identify the load."
+                        "description": "Unique identification number of the load (e.g., barcode or RFID). Empty field, if the mobile robot can identify the load, but did not identify the load yet. Optional, if the mobile robot cannot identify the load."
                     },
                     "loadType": {
                         "type": "string",
@@ -390,7 +390,7 @@
                     },
                     "loadPosition": {
                         "type": "string",
-                        "description": "Indicates, which load handling/carrying unit of the AGV is used, e.g., in case the AGV has multiple spots/positions to carry loads. Optional for vehicles with only one loadPosition.",
+                        "description": "Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads. Optional for vehicles with only one loadPosition.",
                         "examples":[
                             "front", "back", "positionC1"
                         ]
@@ -402,7 +402,7 @@
                             "y",
                             "z"
                         ],
-                        "description": "Point of reference for the location of the bounding box. The point of reference is always the center of the bounding box bottom surface (at height = 0) and is described in coordinates of the AGV coordinate system.",
+                        "description": "Point of reference for the location of the bounding box. The point of reference is always the center of the bounding box bottom surface (at height = 0) and is described in coordinates of the mobile robot coordinate system.",
                         "properties": {
                             "x": {
                                 "type": "number"
@@ -450,16 +450,16 @@
             }
         },
         "zoneRequests": {
-            "description": "Array of zoneRequest objects that are currently active on the AGV. Empty array if no zone requests are active.",
+            "description": "Array of zoneRequest objects that are currently active on the mobile robot. Empty array if no zone requests are active.",
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Zone information sent by the vehicle to master control.",
+                "description": "Zone information sent by the mobile robot to fleet control.",
                 "required": ["requestId", "requestType", "zoneId", "zoneSetId", "requestStatus"],
                 "properties": {
                     "requestId": {
                         "type": "string",
-                        "description": "Unique per vehicle identifier within all active requests."
+                        "description": "Unique per mobile robot identifier within all active requests."
                     },
                     "requestType": {
                         "type": "string",
@@ -477,7 +477,7 @@
                     "requestStatus": {
                         "type": "string",
                         "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
                     },
                     "trajectory": {
                         "$ref": "#/definitions/trajectory"
@@ -490,12 +490,12 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Edge request information sent by the vehicle to master control.",
+                "description": "Edge request information sent by the mobile robot to fleet control.",
                 "required": ["requestId", "requestType", "edgeId", "sequenceId", "requestStatus"],
                 "properties": {
                     "requestId": {
                         "type": "string",
-                        "description": "Unique per vehicle identifier across all active requests."
+                        "description": "Unique per mobile robot identifier across all active requests."
                     },
                     "requestType": {
                         "type": "string",
@@ -513,7 +513,7 @@
                     "requestStatus": {
                         "type": "string",
                         "enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-                        "description": "When stating a request, this is set to REQUESTED. After response or update from master control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+                        "description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
                     }
                 }
             }
@@ -527,7 +527,7 @@
         },
         "instantActionStates": {
             "type": "array",
-            "description": "Array of all instant action states that the vehicle received. Empty array if the vehicle has not received any instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
+            "description": "Array of all instant action states that the mobile robot received. Empty array if the mobile robot has not received any instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
             "items": {
                 "$ref": "#/definitions/actionState"     
             }
@@ -549,7 +549,7 @@
             "properties": {
                 "batteryCharge": {
                     "type": "number",
-                    "description": "State of Charge in %:\nIf AGV only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good)."
+                    "description": "State of Charge in %:\nIf mobile robot only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good)."
                 },
                 "batteryVoltage": {
                     "type": "number",
@@ -567,9 +567,9 @@
                 },
                 "charging": {
                     "type": "boolean",
-                    "description": "True: charging in progress. False: AGV is currently not charging."
+                    "description": "True: charging in progress. False: mobile robot is currently not charging."
                 },
-                "reach": {
+                "range": {
                     "type": "number",
                     "description": "Estimated reach with current State of Charge in meter.",
                     "minimum": 0
@@ -578,7 +578,7 @@
         },
         "errors": {
             "type": "array",
-            "description": "Array of error-objects. All active errors of the AGV should be in the list. An empty array indicates that the AGV has no active errors.",
+            "description": "Array of error-objects. All active errors of the mobile robot should be in the list. An empty array indicates that the mobile robot has no active errors.",
             "items": {
                 "type": "object",
                 "required": [
@@ -636,7 +636,7 @@
         },
         "information": {
             "type": "array",
-            "description": "Array of info-objects. An empty array indicates, that the AGV has no information. This should only be used for visualization or debugging – it must not be used for logic in master control.",
+            "description": "Array of info-objects. An empty array indicates, that the mobile robot has no information. This should only be used for visualization or debugging – it must not be used for logic in fleet control.",
             "items": {
                 "type": "object",
                 "required": [
@@ -695,7 +695,7 @@
             "properties": {
                 "activeEmergencyStop": {
                     "type": "string",
-                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the vehicle. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
+                    "description": "EmergencyStop-Types:  MANUAL: e-stop shall be acknowledged manually at the mobile robot. REMOTE: facility e-stop shall be acknowledged remotely. NONE: no e-stop activated.",
                     "enum": [
                         "MANUAL",
                         "REMOTE",
@@ -712,7 +712,7 @@
     "definitions": {
         "trajectory": {
             "type": "object",
-            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed. ",
             "required": [
                 "controlPoints"
             ],

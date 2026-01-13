@@ -36,11 +36,11 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot."
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "zoneSetId": {
             "type": "string",
@@ -111,9 +111,9 @@
                         }
                     },
                     "then": {
-                        "required": ["maxSpeed"],
+                        "required": ["maximumSpeed"],
                         "properties": {
-                            "maxSpeed": {
+                            "maximumSpeed": {
                                 "type": "number",
                                 "description": "Required in SPEED_LIMIT zone."
                             }
@@ -254,7 +254,7 @@
         }, 
         "action": {
             "type": "object",
-            "description": "Describes an action that the AGV can perform.",
+            "description": "Describes an action that the mobile robot can perform.",
             "required": [
                 "actionId",
                 "actionType",

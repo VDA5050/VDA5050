@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "AGV Factsheet",
-    "description": "The factsheet provides basic information about a specific AGV type series. This information allows comparison of different AGV types and can be applied for the planning, dimensioning and simulation of an AGV system. The factsheet also includes information about AGV communication interfaces which are required for the integration of an AGV type series into a VD[M]A-5050-compliant master control.",
+    "title": "Mobile Robot Factsheet",
+    "description": "The factsheet provides basic information about a specific mobile robot type series. This information allows comparison of different mobile robot types and can be applied for the planning, dimensioning and simulation of a mobile robot system. The factsheet also includes information about mobile robot communication interfaces which are required for the integration of a mobile robot type series into a VD[M]A-5050-compliant fleet control.",
     "required": [
         "headerId",
         "timestamp",
@@ -12,7 +12,7 @@
         "physicalParameters",
         "protocolLimits",
         "protocolFeatures",
-        "agvGeometry",
+        "mobileRobotGeometry",
         "loadSpecification"
     ],
     "subtopic": "/factsheet",
@@ -40,23 +40,23 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV"
+            "description": "Serial number of the mobile robot"
         },
         "typeSpecification": {
             "type": "object",
             "required": [
                 "seriesName",
-                "agvKinematic",
-                "agvClass",
-                "maxLoadMass",
+                "mobileRobotKinematic",
+                "mobileRobotClass",
+                "maximumLoadMass",
                 "localizationTypes",
                 "navigationTypes"
             ],
-            "description": "These parameters generally specify the class and the capabilities of the AGV",
+            "description": "These parameters generally specify the class and the capabilities of the mobile robot",
             "properties": {
                 "seriesName": {
                     "type": "string",
@@ -64,22 +64,22 @@
                 },
                 "seriesDescription": {
                     "type": "string",
-                    "description": "Free text human readable description of the AGV type series"
+                    "description": "Free text human readable description of the mobile robot type series"
                 },
-                "agvKinematic": {
+                "mobileRobotKinematics": {
                     "type": "string",
-                    "description": "simplified description of AGV kinematics-type.",
+                    "description": "simplified description of mobile robots kinematics-type.",
                     "enum": [
                         "DIFF",
                         "OMNI",
                         "THREEWHEEL"
                     ]
                 },
-                "agvClass": {
+                "mobileRobotClass": {
                     "type": "string",
                     "description": "Simplified description of mobile robot class. Extensible enum: FORKLIFT, CONVEYOR, TUGGER, CARRIER"
                 },
-                "maxLoadMass": {
+                "maximumLoadMass": {
                     "type": "number",
                     "description": "maximum loadable mass",
                     "unit": "kg",
@@ -95,7 +95,7 @@
                 },
                 "navigationTypes": {
                     "type": "array",
-                    "description": "List of path planning types supported by the AGV, sorted by priority",
+                    "description": "List of path planning types supported by the mobile robot, sorted by priority",
                     "items": {
                         "type": "string",
                         "enum": [
@@ -107,7 +107,7 @@
                 },
                 "supportedZones": {
                     "type": "array",
-                    "description": "Array of zone types supported by the vehicle.",
+                    "description": "Array of zone types supported by the mobile robot.",
                     "items": {
                         "type": "string",
                         "enum": [
@@ -129,54 +129,65 @@
         "physicalParameters": {
             "type": "object",
             "required": [
-                "speedMin",
-                "speedMax",
-                "accelerationMax",
-                "decelerationMax",
-                "heightMax",
+                "minimumSpeed",
+                "maximumSpeed",
+                "maximumAcceleration",
+                "maximumDeceleration",
+                "minimumHeight",
+                "maximumHeight",
                 "width",
                 "length"
             ],
-            "description": "These parameters specify the basic physical properties of the AGV",
+            "description": "These parameters specify the basic physical properties of the mobile robot",
             "properties": {
-                "speedMin": {
+                "minimumSpeed": {
                     "type": "number",
-                    "description": "minimal controlled continuous speed of the AGV",
+                    "description": "minimal controlled continuous speed of the mobile robot",
                     "unit": "m/s"
                 },
-                "speedMax": {
+                "maximumSpeed": {
                     "type": "number",
-                    "description": "maximum speed of the AGV",
+                    "description": "maximum speed of the mobile robot",
                     "unit": "m/s"
                 },
-                "accelerationMax": {
+                "minimumAngularSpeed": {
+                    "type": "number",
+                    "description": "minimal controlled continuous rotation speed of the mobile robot",
+                    "unit": "rad/s"
+                },
+                "maximumAngularSpeed": {
+                    "type": "number",
+                    "description": "maximum rotation speed of the mobile robot",
+                    "unit": "rad/s"
+                },
+                "maximumAcceleration": {
                     "type": "number",
                     "description": "maximum acceleration with maximum load",
                     "unit": "m/s^2"
                 },
-                "decelerationMax": {
+                "maximumDeceleration": {
                     "type": "number",
                     "description": "maximum deceleration with maximum load",
                     "unit": "m/s^2"
                 },
-                "heightMin": {
+                "minimumHeight": {
                     "type": "number",
-                    "description": "minimum height of AGV",
+                    "description": "minimum height of mobile robot",
                     "unit": "m"
                 },
-                "heightMax": {
+                "maximumHeight": {
                     "type": "number",
-                    "description": "maximum height of AGV",
+                    "description": "maximum height of mobile robot",
                     "unit": "m"
                 },
                 "width": {
                     "type": "number",
-                    "description": "width of AGV",
+                    "description": "width of the mobile robot",
                     "unit": "m"
                 },
                 "length": {
                     "type": "number",
-                    "description": "length of AGV",
+                    "description": "length of the mobile robot",
                     "unit": "m"
                 }
             }
@@ -184,29 +195,29 @@
         "protocolLimits": {
             "type": "object",
             "required": [
-                "maxStringLens",
-                "maxArrayLens",
+                "maximumStringLengths",
+                "maximumArrayLengths",
                 "timing"
             ],
-            "description": "This JSON-object describes the protocol limitations of the AGV. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
+            "description": "This JSON-object describes the protocol limitations of the mobile robot. If a parameter is not defined or set to zero then there is no explicit limit for this parameter.",
             "properties": {
-                "maxStringLens": {
+                "maximumStringLengths": {
                     "type": "object",
                     "description": "maximum lengths of strings",
                     "properties": {
-                        "msgLen": {
+                        "maximumMessageLength": {
                             "type": "integer",
                             "description": "maximum MQTT Message length"
                         },
-                        "topicSerialLen": {
+                        "maximumTopicSerialLength": {
                             "type": "integer",
                             "description": "maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
                         },
-                        "topicElemLen": {
+                        "maximumTopicElementLength": {
                             "type": "integer",
                             "description": "maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
                         },
-                        "idLen": {
+                        "maximumIdLength": {
                             "type": "integer",
                             "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
@@ -214,100 +225,100 @@
                             "type": "boolean",
                             "description": "If true ID-strings need to contain numerical values only"
                         },
-                        "enumLen": {
+                        "maximumEnumLength": {
                             "type": "integer",
                             "description": "maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
                         },
-                        "loadIdLen": {
+                        "maximumLoadIdLength": {
                             "type": "integer",
                             "description": "maximum length of loadId Strings"
                         }
                     }
                 },
-                "maxArrayLens": {
+                "maximumArrayLengths": {
                     "type": "object",
                     "description": "maximum lengths of arrays",
                     "properties": {
                         "order.nodes": {
                             "type": "integer",
-                            "description": "maximum number of nodes per order processable by the AGV"
+                            "description": "maximum number of nodes per order processable by the mobile robot"
                         },
                         "order.edges": {
                             "type": "integer",
-                            "description": "maximum number of edges per order processable by the AGV"
+                            "description": "maximum number of edges per order processable by the mobile robot"
                         },
                         "node.actions": {
                             "type": "integer",
-                            "description": "maximum number of actions per node processable by the AGV"
+                            "description": "maximum number of actions per node processable by the mobile robot"
                         },
                         "edge.actions": {
                             "type": "integer",
-                            "description": "maximum number of actions per edge processable by the AGV"
+                            "description": "maximum number of actions per edge processable by the mobile robot"
                         },
                         "actions.actionsParameters": {
                             "type": "integer",
-                            "description": "maximum number of parameters per action processable by the AGV"
+                            "description": "maximum number of parameters per action processable by the mobile robot"
                         },
                         "instantActions": {
                             "type": "integer",
-                            "description": "maximum number of instant actions per message processable by the AGV"
+                            "description": "maximum number of instant actions per message processable by the mobile robot"
                         },
                         "trajectory.knotVector": {
                             "type": "integer",
-                            "description": "maximum number of knots per trajectory processable by the AGV"
+                            "description": "maximum number of knots per trajectory processable by the mobile robot"
                         },
                         "trajectory.controlPoints": {
                             "type": "integer",
-                            "description": "maximum number of control points per trajectory processable by the AGV"
+                            "description": "maximum number of control points per trajectory processable by the mobile robot"
                         },
                         "state.nodeStates": {
                             "type": "integer",
-                            "description": "maximum number of nodeStates sent by the AGV, maximum number of nodes in base of AGV"
+                            "description": "maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot"
                         },
                         "state.edgeStates": {
                             "type": "integer",
-                            "description": "maximum number of edgeStates sent by the AGV, maximum number of edges in base of AGV"
+                            "description": "maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot"
                         },
                         "state.loads": {
                             "type": "integer",
-                            "description": "maximum number of load-objects sent by the AGV"
+                            "description": "maximum number of load-objects sent by the mobile robot"
                         },
                         "state.actionStates": {
                             "type": "integer",
-                            "description": "maximum number of actionStates sent by the AGV"
+                            "description": "maximum number of actionStates sent by the mobile robot"
                         },
                         "state.errors": {
                             "type": "integer",
-                            "description": "maximum number of errors sent by the AGV in one state-message"
+                            "description": "maximum number of errors sent by the mobile robot in one state-message"
                         },
                         "state.information": {
                             "type": "integer",
-                            "description": "maximum number of information objects sent by the AGV in one state-message"
+                            "description": "maximum number of information objects sent by the mobile robot in one state-message"
                         },
                         "error.errorReferences": {
                             "type": "integer",
-                            "description": "maximum number of error references sent by the AGV for each error"
+                            "description": "maximum number of error references sent by the mobile robot for each error"
                         },
                         "information.infoReferences": {
                             "type": "integer",
-                            "description": "maximum number of info references sent by the AGV for each information"
+                            "description": "maximum number of info references sent by the mobile robot for each information"
                         }
                     }
                 },
                 "timing": {
                     "type": "object",
                     "required": [
-                        "minOrderInterval",
-                        "minStateInterval"
+                        "minimumOrderInterval",
+                        "minimumStateInterval"
                     ],
                     "description": "timing information",
                     "properties": {
-                        "minOrderInterval": {
+                        "minimumOrderInterval": {
                             "type": "number",
-                            "description": "minimum interval sending order messages to the AGV",
+                            "description": "minimum interval sending order messages to the mobile robot",
                             "unit": "s"
                         },
-                        "minStateInterval": {
+                        "minimumStateInterval": {
                             "type": "number",
                             "description": "minimum interval for sending state-messages",
                             "unit": "s"
@@ -330,13 +341,13 @@
             "type": "object",
             "required": [
                 "optionalParameters",
-                "agvActions"
+                "mobileRobotActions"
             ],
             "description": "Supported features of VDA5050 protocol",
             "properties": {
                 "optionalParameters": {
                     "type": "array",
-                    "description": "list of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the AGV.",
+                    "description": "list of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the mobile robot.",
                     "items": {
                         "type": "object",
                         "required": [
@@ -350,7 +361,7 @@
                             },
                             "support": {
                                 "type": "string",
-                                "description": "type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper AGV-operation.",
+                                "description": "type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper mobile robot operation.",
                                 "enum": [
                                     "SUPPORTED",
                                     "REQUIRED"
@@ -358,14 +369,14 @@
                             },
                             "description": {
                                 "type": "string",
-                                "description": "free text. Description of optional parameter. E.g. Reason, why the optional parameter ‚direction‘ is necessary for this AGV-type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
+                                "description": "free text. Description of optional parameter. E.g. Reason, why the optional parameter ‚direction‘ is necessary for this mobile robot type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
                             }
                         }
                     }
                 },
-                "agvActions": {
+                "mobileRobotActions": {
                     "type": "array",
-                    "description": "list of all actions with parameters supported by this AGV. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
+                    "description": "list of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
                     "items": {
                         "required": [
                             "actionType",
@@ -452,9 +463,9 @@
                 }
             }
         },
-        "agvGeometry": {
+        "mobileRobotGeometry": {
             "type": "object",
-            "description": "Detailed definition of AGV geometry",
+            "description": "Detailed definition of mobile robot geometry",
             "properties": {
                 "wheelDefinitions": {
                     "type": "array",
@@ -491,17 +502,17 @@
                                 "properties": {
                                     "x": {
                                         "type": "number",
-                                        "description": "[m] x-position in AGV-coordinate system",
+                                        "description": "[m] x-position in mobile robot coordinate system",
                                         "unit": "m"
                                     },
                                     "y": {
                                         "type": "number",
-                                        "description": "y-position in AGV-coordinate system",
+                                        "description": "y-position in mobile robot coordinate system",
                                         "unit": "m"
                                     },
                                     "theta": {
                                         "type": "number",
-                                        "description": "orientation of wheel in AGV-coordinate system Necessary for fixed wheels",
+                                        "description": "orientation of wheel in mobile robot coordinate system Necessary for fixed wheels",
                                         "unit": "rad"
                                     }
                                 }
@@ -573,7 +584,7 @@
                 },
                 "envelopes3d": {
                     "type": "array",
-                    "description": "list of AGV-envelope curves in 3D (german: „Hüllkurven“)",
+                    "description": "list of mobile robot envelope curves in 3D (german: „Hüllkurven“)",
                     "items": {
                         "type": "object",
                         "required": [
@@ -612,14 +623,14 @@
             "properties": {
                 "loadPositions": {
                     "type": "array",
-                    "description": "list of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load handling device.",
+                    "description": "list of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the mobile robot has no load handling device.",
                     "items": {
                         "type": "string"
                     }
                 },
                 "loadSets": {
                     "type": "array",
-                    "description": "list of load-sets that can be handled by the AGV",
+                    "description": "list of load-sets that can be handled by the mobile robot",
                     "items": {
                         "type": "object",
                         "required": [
@@ -637,7 +648,7 @@
                             },
                             "loadPositions": {
                                 "type": "array",
-                                "description": "list of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this AGV.",
+                                "description": "list of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this mobile robot.",
                                 "items": {
                                     "type": "string"
                                 }
@@ -690,52 +701,52 @@
                                     }
                                 }
                             },
-                            "maxWeight": {
+                            "maximumWeight": {
                                 "type": "number",
                                 "description": "maximum weight of loadtype",
                                 "unit": "kg"
                             },
-                            "minLoadhandlingHeight": {
+                            "minimumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
                             },
-                            "maxLoadhandlingHeight": {
+                            "maximumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingDepth": {
+                            "minimumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "maxLoadhandlingDepth": {
+                            "maximumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
                                 "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
-                            "minLoadhandlingTilt": {
+                            "minimumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "minimum allowed tilt for this load-type and –weight"
                             },
-                            "maxLoadhandlingTilt": {
+                            "maximumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
                                 "description": "maximum allowed tilt for this load-type and –weight"
                             },
-                            "agvSpeedLimit": {
+                            "maximumSpeed": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed speed for this load-type and –weight"
                             },
-                            "agvAccelerationLimit": {
+                            "maximumAcceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed acceleration for this load-type and –weight"
                             },
-                            "agvDecelerationLimit": {
+                            "maximumDeceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
                                 "description": "maximum allowed deceleration for this load-type and –weight"
@@ -759,12 +770,12 @@
                 }
             }
         },
-         "vehicleConfig": {
+         "mobileRobotConfiguration": {
             "type": "object",
             "properties": {
                 "versions": {
                     "type": "array",
-                    "description": "Array containing various hardware and software versions running on the vehicle.",
+                    "description": "Array containing various hardware and software versions running on the mobile robot.",
                     "items": {
                         "title": "version",
                         "type": "object",
@@ -799,18 +810,18 @@
                     "properties": {
                         "dnsServers": {
                             "type": "array",
-                            "description": "List of DNS servers used by the vehicle.",
+                            "description": "List of DNS servers used by the mobile robot.",
                             "items": {
                                 "type": "string"
                             }
                         },
                         "localIpAddress": {
                             "type": "string",
-                            "description": "A priori assigned IP address of the vehicle used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
+                            "description": "A priori assigned IP address of the mobile robot used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
                         },
                         "ntpServers": {
                             "type": "array",
-                            "description": "List of NTP servers used by the vehicle.",
+                            "description": "List of NTP servers used by the mobile robot.",
                             "items": {
                                 "type": "string"
                             }  
@@ -821,7 +832,7 @@
                         },
                         "defaultGateway": {
                             "type": "string",
-                            "description": "Default gateway used by the vehicle."
+                            "description": "Default gateway used by the mobile robot."
                         }
                     }
                 }

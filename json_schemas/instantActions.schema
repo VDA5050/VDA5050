@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "instantActions",
-    "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
+    "description": "JSON Schema for publishing instantActions that the mobile robot is to execute as soon as they arrive.",
     "required": [
         "headerId",
         "timestamp",
@@ -37,17 +37,17 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "actions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Describes an action that the AGV can perform.",
+                "description": "Describes an action that the mobile robot can perform.",
                 "required": [
                     "actionId",
                     "actionType",
@@ -68,12 +68,9 @@
                     },
                     "blockingType": {
                         "type": "string",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": The blockingType of an instant action is always NONE: action can happen in parallel with others, including movement.",
                         "enum": [
-                            "NONE",
-                            "SOFT",
-                            "SINGLE",
-                            "HARD"
+                            "NONE"
                         ]
                     },
                     "actionParameters": {

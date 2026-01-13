@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Order Message",
-    "description": "The message schema to communicate orders from master control to the AGV.",
+    "description": "The message schema to communicate orders from fleet control to the mobile robot.",
     "subtopic": "/order",
     "type": "object",
     "required": [
@@ -37,11 +37,11 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "orderId": {
             "description": "Order Identification. This is to be used to identify multiple order messages that belong to the same order.",
@@ -91,7 +91,7 @@
                         "description": "True indicates that the node is part of the base. False indicates that the node is part of the horizon."
                     },
                     "nodePosition": {
-                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for vehicle-types that do not require the node position (e.g., line-guided vehicles).",
+                        "description": "Defines the position on a map in world coordinates. Each floor has its own map. All maps must use the same project specific global origin. \nOptional for mobile robot-types that do not require the node position (e.g., line-guided mobile robots).",
                         "type": "object",
                         "required": [
                             "x",
@@ -109,15 +109,38 @@
                             },
                             "theta": {
                                 "type": "number",
-                                "description": "Absolute orientation of the AGV on the node. \nOptional: vehicle can plan the path by itself.\nIf defined, the AGV has to assume the theta angle on this node. If previous edge disallows rotation, the AGV must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the AGV is to rotate on the node to the edges desired rotation before entering the edge.",
+                                "description": "Absolute orientation of the mobile robot on the node. \nOptional: mobile robot can plan the path by itself.\nIf defined, the mobile robot has to assume the theta angle on this node. If previous edge disallows rotation, the mobile robot must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.",
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
-                            "allowedDeviationXY": {
-                                "type": "number",
-                                "description": "Indicates how exact an AGV has to drive over a node in order for it to count as traversed.\nIf = 0: no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).\nIf > 0: allowed deviation-radius in meters. If the AGV passes a node within the deviation-radius, the node is considered to have been traversed.",
-                                "minimum": 0
-                            },
+                            "allowedDeviationXY":{
+                              "type": "object",
+                              "description": "Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.\nIf a = b= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if allowedDeviationXY is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of a and b as 0.0.\nThe coordinates of the node defines the center of the ellipse.",
+                              "required": [
+                                "a",
+                                "b",
+                                "theta"
+                              ],
+                              "properties": {
+                                "a": {
+                                  "type": "number",
+                                  "description": "Length of the ellipse semi-major axis in meters",
+                                  "minimum": 0
+                                },
+                                "b": {
+                                  "type": "number",
+                                  "description": "Length of the ellipse semi-minor axis in meters",
+                                  "minimum": 0
+                                },
+                                "theta": {
+                                  "type": "number",
+                                  "description": "Rotation angle",
+                                  "minimum": -1.570796327,
+                                  "maximum": 1.570796327
+                                  
+                                }
+                              }
+                            }
                             "allowedDeviationTheta": {
                                 "type": "number",
                                 "minimum": -3.141592654,
@@ -125,7 +148,7 @@
                                 "description": "Indicates how big the deviation of theta angle can be. \nThe lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta."
                             },
                             "mapId": {
-                                "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When an AGV uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
+                                "description": "Unique identification of the map in which the position is referenced.\nEach map has the same origin of coordinates. When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.",
                                 "type": "string"
                             },
                             "mapDescriptor": {
@@ -184,21 +207,21 @@
                         "type": "string",
                         "description": "The nodeId of the end node."
                     },
-                    "maxSpeed": {
+                    "maximumSpeed": {
                         "type": "number",
-                        "description": "Permitted maximum speed on the edge in m/s. Speed is defined by the fastest measurement of the vehicle."
+                        "description": "Permitted maximum speed on the edge in m/s. Speed is defined by the fastest measurement of the mobile robot."
                     },
-                    "maxHeight": {
+                    "maximumHeight": {
                         "type": "number",
-                        "description": "Permitted maximum height of the vehicle, including the load, on edge in meters."
+                        "description": "Permitted maximum height of the mobile robot, including the load, on edge in meters."
                     },
-                    "minHeight": {
+                    "minimumHeight": {
                         "type": "number",
                         "description": "Permitted minimal height of the load handling device on the edge in meters"
                     },
                     "orientation": {
                         "type": "number",
-                        "description": "Orientation of the AGV on the edge. The value orientationType defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. \nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to True. If rotationAllowed is False, rotate before entering the edge. If that is not possible, reject the order. \nIf no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation to the trajectory.",
+                        "description": "Orientation of the mobile robot on the edge. The value orientationType defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. \nIf mobile robot starts in different orientation, rotate the mobile robot on the edge to the desired orientation if rotationAllowed is set to True. If rotationAllowed is False, rotate before entering the edge. If that is not possible, reject the order. \nIf no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation to the trajectory.",
                         "minimum": -3.14159265359,
                         "maximum": 3.14159265359
                     },
@@ -208,7 +231,7 @@
                     },
                     "direction": {
                         "type": "string",
-                        "description": "Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual)."
+                        "description": "Sets direction at junctions for line-guided or wire-guided mobile robots, to be defined initially (mobile robot-individual)."
                     },
                     "rotationAllowed": {
                         "type": "boolean",
@@ -220,11 +243,11 @@
                     },
                     "length": {
                         "type": "number",
-                        "description": "Distance of the path from startNode to endNode in meters. \nOptional: This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
+                        "description": "Distance of the path from startNode to endNode in meters. \nOptional: This value is used by line-guided mobile robots to decrease their speed before reaching a stop position."
                     },
                     "trajectory": {
                         "type": "object",
-                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the AGV should move between startNode and endNode. \nOptional: Can be omitted, if AGV cannot process trajectories or if AGV plans its own trajectory.",
+                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between startNode and endNode. \nOptional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
                         "required": [
                             "degree",
                             "knotVector",
@@ -275,7 +298,7 @@
                         }
                     },
                     "corridor": {
-                        "description": "Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to avoid obstacles.",
+                        "description": "Definition of boundaries in which a mobile robot can deviate from its trajectory, e. g. to avoid obstacles.",
                         "type": "object",
                         "required": [
                             "leftWidth",
@@ -284,17 +307,17 @@
                         "properties": {
                             "leftWidth": {
                                 "type": "number",
-                                "description": "Defines the width of the corridor in meters to the left related to the trajectory of the vehicle.",
+                                "description": "Defines the width of the corridor in meters to the left related to the trajectory of the mobile robot.",
                                 "minimum": 0.0
                             },
                             "rightWidth": {
                                 "type": "number",
-                                "description":"Defines the width of the corridor in meters to the right related to the trajectory of the vehicle.",
+                                "description":"Defines the width of the corridor in meters to the right related to the trajectory of the mobile robot.",
                                 "minimum": 0.0
                             },
-                            "corridorRefPoint": {
+                            "corridorReferencePoint": {
                                 "type": "string",
-                                "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the vehicle.",
+                                "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the mobile robot.",
                                 "enum": [
                                     "KINEMATICCENTER",
                                     "CONTOUR"
@@ -302,11 +325,11 @@
                             },
                             "releaseRequired": {
                                 "type": "boolean",
-                                "description": "Optional flag that indicates if the robot must request approval from the master control. If not defined, no release is required.",
+                                "description": "Optional flag that indicates if the robot must request approval from the fleet control. If not defined, no release is required.",
                             },
                             "releaseLossBehavior": {
                                 "type": "string",
-                                "description": "Defines how the robot shall behave in case its release of a corridor expires or gets revoked by the master control.",
+                                "description": "Defines how the robot shall behave in case its release of a corridor expires or gets revoked by the fleet control.",
                                 "enum": [
                                     'STOP', 
                                     'RETURN'
@@ -328,7 +351,7 @@
     "definitions": {
         "action": {
             "type": "object",
-            "description": "Describes an action that the AGV can perform.",
+            "description": "Describes an action that the mobile robot can perform.",
             "required": [
                 "actionId",
                 "actionType",

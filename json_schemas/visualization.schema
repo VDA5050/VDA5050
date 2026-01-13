@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "visualization",
-    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
+    "description": "Mobile robot position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
     "subtopic": "/visualization",
     "type": "object",
     "properties": {
@@ -26,16 +26,16 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
-        "agvPosition": {
+        "mobileRobotPosition": {
             "type": "object",
-            "title": "agvPosition",
-            "description": "The AGVs position",
+            "title": "mobileRobotPosition",
+            "description": "The mobile robot's position",
             "required": [
                 "x",
                 "y",
@@ -58,24 +58,24 @@
                 },
                 "positionInitialized": {
                     "type": "boolean",
-                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                    "description": "True if the mobile robot's position is initialized, false, if position is not initizalized."
                 },
                 "localizationScore": {
                     "type": "number",
-                    "description": "Localization score for SLAM based vehicles, if the AGV can communicate it.",
+                    "description": "Localization score for SLAM based mobile robots, if the mobile robot can communicate it.",
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
                 "deviationRange": {
                     "type": "number",
-                    "description": "Value for position deviation range in meters. Can be used if the AGV is able to derive it."
+                    "description": "Value for position deviation range in meters. Can be used if the mobile robot is able to derive it."
                 }
             }
         },
         "velocity": {
             "type": "object",
             "title": "velocity",
-            "description": "The AGVs velocity in vehicle coordinates",
+            "description": "The mobile robot's velocity in mobile robot's coordinates",
             "properties": {
                 "vx": {
                     "type": "number"
@@ -134,7 +134,7 @@
                             },
                             "theta": {
                                 "type": "number",
-                                "description": "Absolute orientation of the vehicle in the project-specific coordinate system.",
+                                "description": "Absolute orientation of the mobile robot in the project-specific coordinate system.",
                                 "unit": "rad",
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
@@ -152,7 +152,7 @@
     "definitions": {
         "trajectory": {
             "type": "object",
-            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the AGV starts to enter the edge to the point where it reports that the next node was traversed. ",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed. ",
             "required": [
                 "degree",
                 "knotVector",
