@@ -1899,18 +1899,18 @@ This JSON object defines order handling processes, actions and parameters which 
 | { | | |
 | &emsp;*clearOrderOnStopHibernation* | boolean | Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'true'.|
 | } | | |
-| **optionalParameters** [**optionalParameters**] | array of JSON object | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
+| **optionalParameters** [**optionalParameters**] | array | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
 | { | | |
 | &emsp;parameter | string | Full name of optional parameter, e.g., "*order.nodes.nodePosition.allowedDeviationTheta"*.|
 | &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper mobile robot operation. |
 | &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this mobile robot type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
 | } | | |
-| **mobileRobotActions** [**mobileRobotAction**] | array of JSON object | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **mobileRobotActions** [**mobileRobotAction**] | array | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
 | &emsp;actionScopes | array of enum | Array of allowed scopes for using this action type.<br/><br/>'INSTANT': usable as instantAction.<br/>'NODE': usable on nodes.<br/>'EDGE': usable on edges.<br/><br/>For example: ['INSTANT', 'NODE']|
-| &emsp;***actionParameters** [**actionParameter**]* | array of JSON object | Array of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Section [7.3 Implementation of the order message](#73-implementation-of-the-order-message) within nodes and edges.|
+| &emsp;***actionParameters** [**actionParameter**]* | array  | Array of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Section [7.3 Implementation of the order message](#73-implementation-of-the-order-message) within nodes and edges.|
 |&emsp;*{* | | |
 |&emsp;&emsp;key | string | Key string for parameter. |
 |&emsp;&emsp;valueDataType | enum | Data type of value, possible data types are: 'BOOL', 'NUMBER', 'INTEGER', 'STRING', 'OBJECT', 'ARRAY'. |
@@ -1929,7 +1929,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| ***wheelDefinitions** [**wheelDefinition**]* | array of JSON object | Array of wheels, containing wheel arrangement and geometry. |
+| ***wheelDefinitions** [**wheelDefinition**]* | array | Array of wheels, containing wheel arrangement and geometry. |
 | { | | |
 | &emsp;type | string | Wheel type <br/> Extensible enum {'DRIVE', 'CASTER', 'FIXED', 'MECANUM', ...}. |
 | &emsp;isActiveDriven | boolean | "true": wheel is actively driven. |
@@ -1944,17 +1944,17 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 | &emsp;*centerDisplacement* | float64 | [m], nominal displacement of the wheel's center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0. |
 | &emsp;*constraints* | string | Free-form text: can be used by the manufacturer to define constraints. |
 | } | | |
-| ***envelopes2d** [**envelope2d**]* | array of JSON object | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
+| ***envelopes2d** [**envelope2d**]* | array | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | { | | |
 | &emsp;set | string | Name of the envelope curve set. |
-| &emsp;**polygonPoints** **[polygonPoint]** | array of JSON object | Envelope curve as an x/y-polygon polygon is assumed as closed and shall be non-self-intersecting. |
+| &emsp;**polygonPoints** **[polygonPoint]** | array | Envelope curve as an x/y-polygon polygon is assumed as closed and shall be non-self-intersecting. |
 | &emsp;{ | | |
 |&emsp;&emsp; x | float64 | [m], X-position of polygon point. |
 |&emsp;&emsp; y | float64 | [m], Y-position of polygon point. |
 | &emsp;} | | |
 | &emsp;*description* | string | Free-form text: description of envelope curve set. |
 | *}* | | |
-| ***envelopes3d [envelope3d]*** | array of JSON object | Array of mobile robot envelope curves in 3D. |
+| ***envelopes3d [envelope3d]*** | array | Array of mobile robot envelope curves in 3D. |
 | *{* | | |
 | &emsp;set | string | Name of the envelope curve set. |
 | &emsp;format | string | Format of data, e.g., DXF. |
@@ -1970,7 +1970,7 @@ This JSON object specifies load handling and supported load types of the mobile 
 | **Field** | **data type** | **description** |
 |---|---|---|
 | *loadPositions* | array of string | Array of load positions / load handling devices.<br/>This array contains the valid values for the parameter "state.loads[].loadPosition" and for the action parameter "lhd" of the actions pick and drop.<br/>*If this array doesn't exist or is empty, the mobile robot has no load handling device.* |
-| ***loadSets [loadSet]*** | array of JSON object | Array of load sets that can be handled by the mobile robot |
+| ***loadSets [loadSet]*** | array | Array of load sets that can be handled by the mobile robot |
 | { | | |
 |&emsp; setName | string | Unique name of the load set, e.g., DEFAULT, SET1, etc. |
 |&emsp; loadType | string | Type of load, e.g., EPAL, XLT1200, etc. |
@@ -1998,7 +1998,7 @@ This JSON object details the software and hardware versions running on the mobil
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| ***versions[versionInfo]*** | array of JSON object | Array of key-value pair objects containing software and hardware information.| | { | | |
+| ***versions[versionInfo]*** | array | Array of key-value pair objects containing software and hardware information.| | { | | |
 |&emsp; key | string | Key of the software/hardware version used. (e.g., softwareVersion) |
 |&emsp; value | string | The version corresponding to the key. (e.g., v1.12.4-beta) |
 | } | | |
