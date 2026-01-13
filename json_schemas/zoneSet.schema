@@ -10,8 +10,8 @@
         "version", 
         "manufacturer", 
         "serialNumber",
-        "mapId",
         "zoneSetId",
+        "mapId",
         "zones"
     ],
     "properties": {
@@ -127,7 +127,11 @@
                     }
                 },
                 "then": {
-                    "required": ["entryActions", "duringActions", "exitActions"],
+                    "required": [
+                        "entryActions",
+                        "duringActions",
+                        "exitActions"
+                    ],
                     "properties": {
                         "entryActions": {
                             "type": "array",
@@ -196,7 +200,10 @@
                     }
                 },
                 "then": {
-                    "required": ["direction", "limitation"],
+                    "required": [
+                        "direction",
+                        "limitation"
+                    ],
                     "properties": {
                         "direction": {
                             "type": "number",
@@ -220,7 +227,10 @@
                     }
                 },
                 "then": {
-                    "required": ["direction", "limitation"],
+                    "required": [
+                        "direction",
+                        "limitation"
+                    ],
                     "properties": {
                         "direction": {
                             "type": "number",
@@ -228,7 +238,7 @@
                         },
                         "limitation": {
                             "type": "string",
-                            "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, exept for obstacle avoidance.",
+                            "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.",
                             "enum": [
                                 "SOFT","RESTRICTED"
                             ]
@@ -241,7 +251,10 @@
     },
     "vertex": {
         "type": "object",
-        "required": ["x", "y"],
+        "required": [
+            "x",
+            "y"
+        ],
         "properties": {
             "x": {
                 "type": "number",
@@ -259,8 +272,8 @@
         "type": "object",
         "description": "Describes an action that the mobile robot can perform.",
         "required": [
-            "actionId",
             "actionType",
+            "actionId",
             "blockingType"
         ],
         "properties": {
