@@ -217,7 +217,7 @@ serialNumber | string | Unique mobile robot serial number consisting of the foll
 topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Communication](#313-topics-for-communication)
 
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
-The `$` character is also used in some MQTT brokers for special internal topics, so it should not be used either.
+The `$`, `+` and `#` characters are also used in some MQTT brokers for special internal topics, so it should not be used either.
 
 ### 3.3 Topics for communication
 
