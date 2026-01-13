@@ -150,9 +150,9 @@ The following aspects are explicitly outside the scope and are not covered:
 Document | Version | Description
 ---|---|---
 VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
-VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - DTS master control
+VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - Fleet control
 DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
-LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) master control system.
+LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system.
 ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
 
 ## 2.3 Protocol version
