@@ -509,7 +509,7 @@ The mobile robot shall accept both methods.
 There are two options:
 
 - Send an order, where the first node is a temporary node that is positioned where the mobile robot currently stands. The mobile robot shall then realize that this node is trivially reachable and accept the order.
-- Send an order, where the first node is the last traversed node of the previous order but set the deviation range so large that the mobile robot is within this range. Thus, the mobile robot shall realize that this node shall be counted as traversed and accept the order.
+- Send an order, where the first node is the last traversed node of the previous order but set the allowed deviation so large that the mobile robot is within this range. Thus, the mobile robot shall immediately treat this node as traversed and accept the order.
 
 #### 6.1.3.2 Receiving a cancelOrder action when mobile robot is idle
 
