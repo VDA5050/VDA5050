@@ -4,7 +4,7 @@ This markdown file is the original UML diagram from which process_order_update.p
 @startuml
 skinparam dpi 250
 start
-#lightgreen:mobile robot receives order via MQTT;
+:Mobile robot receives order via MQTT;
 #lightgreen:validate JSON;
 if ((1) Is received order valid?) then (no)
     #orange:reject order
