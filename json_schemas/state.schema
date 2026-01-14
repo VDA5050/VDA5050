@@ -828,7 +828,7 @@
                         "FAILED"
                     ]
                 },
-                "resultDescriptor": {
+                "actionResult": {
                     "type": "string",
                     "description": "Description of the result, e.g., the result of a RFID-read. Errors will be transmitted in errors."
                 }
