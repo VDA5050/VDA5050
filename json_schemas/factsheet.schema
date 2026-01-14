@@ -20,7 +20,7 @@
     "properties":{
         "headerId": {
             "type": "integer",
-            "description": "header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
             "minimum": 0
         },
         "timestamp": {
@@ -32,10 +32,11 @@
             ]
         },
         "version": {
+            "title": "Version",
             "type": "string",
-            "description": "Version of the VD[M]A-5050 protocol [Major].[Minor].[Patch] (e.g. 1.3.2)",
+            "description": "Version of the protocol [Major].[Minor].[Patch]",
             "examples": [
-                "2.0.0"
+                "1.3.2"
             ]
         },
         "manufacturer": {
@@ -68,7 +69,7 @@
                 },
                 "mobileRobotKinematics": {
                     "type": "string",
-                    "description": "simplified description of mobile robots kinematics-type.",
+                    "description": "Simplified description of mobile robots kinematics-type.",
                     "enum": [
                         "DIFF",
                         "OMNI",
@@ -81,7 +82,7 @@
                 },
                 "maximumLoadMass": {
                     "type": "number",
-                    "description": "maximum loadable mass",
+                    "description": "Maximum loadable mass",
                     "unit": "kg",
                     "minimum": 0
                 },
@@ -90,7 +91,7 @@
                     "description": "Simplified description of localization type.",
                     "items": {
                         "type": "string",
-                        "description": "Simplified description of localization type. Extensible enum: NATURAL, REFLECTOR, RFID, DMC, SPOT, GRID",
+                        "description": "Simplified description of localization type. Extensible enum: NATURAL, REFLECTOR, RFID, DMC, SPOT, GRID"
                     }
                 },
                 "navigationTypes": {
@@ -142,52 +143,52 @@
             "properties": {
                 "minimumSpeed": {
                     "type": "number",
-                    "description": "minimal controlled continuous speed of the mobile robot",
+                    "description": "Minimal controlled continuous speed of the mobile robot",
                     "unit": "m/s"
                 },
                 "maximumSpeed": {
                     "type": "number",
-                    "description": "maximum speed of the mobile robot",
+                    "description": "Maximum speed of the mobile robot",
                     "unit": "m/s"
                 },
                 "minimumAngularSpeed": {
                     "type": "number",
-                    "description": "minimal controlled continuous rotation speed of the mobile robot",
+                    "description": "Minimal controlled continuous rotation speed of the mobile robot",
                     "unit": "rad/s"
                 },
                 "maximumAngularSpeed": {
                     "type": "number",
-                    "description": "maximum rotation speed of the mobile robot",
+                    "description": "Maximum rotation speed of the mobile robot",
                     "unit": "rad/s"
                 },
                 "maximumAcceleration": {
                     "type": "number",
-                    "description": "maximum acceleration with maximum load",
+                    "description": "Maximum acceleration with maximum load",
                     "unit": "m/s^2"
                 },
                 "maximumDeceleration": {
                     "type": "number",
-                    "description": "maximum deceleration with maximum load",
+                    "description": "Maximum deceleration with maximum load",
                     "unit": "m/s^2"
                 },
                 "minimumHeight": {
                     "type": "number",
-                    "description": "minimum height of mobile robot",
+                    "description": "Minimum height of mobile robot",
                     "unit": "m"
                 },
                 "maximumHeight": {
                     "type": "number",
-                    "description": "maximum height of mobile robot",
+                    "description": "Maximum height of mobile robot",
                     "unit": "m"
                 },
                 "width": {
                     "type": "number",
-                    "description": "width of the mobile robot",
+                    "description": "Width of the mobile robot",
                     "unit": "m"
                 },
                 "length": {
                     "type": "number",
-                    "description": "length of the mobile robot",
+                    "description": "Length of the mobile robot",
                     "unit": "m"
                 }
             }
@@ -203,23 +204,23 @@
             "properties": {
                 "maximumStringLengths": {
                     "type": "object",
-                    "description": "maximum lengths of strings",
+                    "description": "Maximum lengths of strings",
                     "properties": {
                         "maximumMessageLength": {
                             "type": "integer",
-                            "description": "maximum MQTT Message length"
+                            "description": "Maximum MQTT Message length"
                         },
                         "maximumTopicSerialLength": {
                             "type": "integer",
-                            "description": "maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
+                            "description": "Maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
                         },
                         "maximumTopicElementLength": {
                             "type": "integer",
-                            "description": "maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
+                            "description": "Maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
                         },
                         "maximumIdLength": {
                             "type": "integer",
-                            "description": "maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
                         },
                         "idNumericalOnly": {
                             "type": "boolean",
@@ -227,81 +228,81 @@
                         },
                         "maximumEnumLength": {
                             "type": "integer",
-                            "description": "maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
+                            "description": "Maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
                         },
                         "maximumLoadIdLength": {
                             "type": "integer",
-                            "description": "maximum length of loadId Strings"
+                            "description": "Maximum length of loadId Strings"
                         }
                     }
                 },
                 "maximumArrayLengths": {
                     "type": "object",
-                    "description": "maximum lengths of arrays",
+                    "description": "Maximum lengths of arrays",
                     "properties": {
                         "order.nodes": {
                             "type": "integer",
-                            "description": "maximum number of nodes per order processable by the mobile robot"
+                            "description": "Maximum number of nodes per order processable by the mobile robot"
                         },
                         "order.edges": {
                             "type": "integer",
-                            "description": "maximum number of edges per order processable by the mobile robot"
+                            "description": "Maximum number of edges per order processable by the mobile robot"
                         },
                         "node.actions": {
                             "type": "integer",
-                            "description": "maximum number of actions per node processable by the mobile robot"
+                            "description": "Maximum number of actions per node processable by the mobile robot"
                         },
                         "edge.actions": {
                             "type": "integer",
-                            "description": "maximum number of actions per edge processable by the mobile robot"
+                            "description": "Maximum number of actions per edge processable by the mobile robot"
                         },
                         "actions.actionsParameters": {
                             "type": "integer",
-                            "description": "maximum number of parameters per action processable by the mobile robot"
+                            "description": "Maximum number of parameters per action processable by the mobile robot"
                         },
                         "instantActions": {
                             "type": "integer",
-                            "description": "maximum number of instant actions per message processable by the mobile robot"
+                            "description": "Maximum number of instant actions per message processable by the mobile robot"
                         },
                         "trajectory.knotVector": {
                             "type": "integer",
-                            "description": "maximum number of knots per trajectory processable by the mobile robot"
+                            "description": "Maximum number of knots per trajectory processable by the mobile robot"
                         },
                         "trajectory.controlPoints": {
                             "type": "integer",
-                            "description": "maximum number of control points per trajectory processable by the mobile robot"
+                            "description": "Maximum number of control points per trajectory processable by the mobile robot"
                         },
                         "state.nodeStates": {
                             "type": "integer",
-                            "description": "maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot"
+                            "description": "Maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot"
                         },
                         "state.edgeStates": {
                             "type": "integer",
-                            "description": "maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot"
+                            "description": "Maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot"
                         },
                         "state.loads": {
                             "type": "integer",
-                            "description": "maximum number of load-objects sent by the mobile robot"
+                            "description": "Maximum number of load-objects sent by the mobile robot"
                         },
                         "state.actionStates": {
                             "type": "integer",
-                            "description": "maximum number of actionStates sent by the mobile robot"
+                            "description": "Maximum number of actionStates sent by the mobile robot"
                         },
                         "state.errors": {
                             "type": "integer",
-                            "description": "maximum number of errors sent by the mobile robot in one state-message"
+                            "description": "Maximum number of errors sent by the mobile robot in one state-message"
                         },
                         "state.information": {
                             "type": "integer",
-                            "description": "maximum number of information objects sent by the mobile robot in one state-message"
+                            "description": "Maximum number of information objects sent by the mobile robot in one state-message"
                         },
                         "error.errorReferences": {
                             "type": "integer",
-                            "description": "maximum number of error references sent by the mobile robot for each error"
+                            "description": "Maximum number of error references sent by the mobile robot for each error"
                         },
                         "information.infoReferences": {
                             "type": "integer",
-                            "description": "maximum number of info references sent by the mobile robot for each information"
+                            "description": "Maximum number of info references sent by the mobile robot for each information"
                         }
                     }
                 },
@@ -311,26 +312,26 @@
                         "minimumOrderInterval",
                         "minimumStateInterval"
                     ],
-                    "description": "timing information",
+                    "description": "Timing information",
                     "properties": {
                         "minimumOrderInterval": {
                             "type": "number",
-                            "description": "minimum interval sending order messages to the mobile robot",
+                            "description": "Minimum interval sending order messages to the mobile robot",
                             "unit": "s"
                         },
                         "minimumStateInterval": {
                             "type": "number",
-                            "description": "minimum interval for sending state-messages",
+                            "description": "Minimum interval for sending state-messages",
                             "unit": "s"
                         },
                         "defaultStateInterval": {
                             "type": "number",
-                            "description": "default interval for sending state-messages if not defined, the default value from the main document is used",
+                            "description": "Default interval for sending state-messages if not defined, the default value from the main document is used",
                             "unit": "s"
                         },
                         "visualizationInterval": {
                             "type": "number",
-                            "description": "default interval for sending messages on visualization topic",
+                            "description": "Default interval for sending messages on visualization topic",
                             "unit": "s"
                         }
                     }
@@ -345,9 +346,19 @@
             ],
             "description": "Supported features of VDA5050 protocol",
             "properties": {
+                "orderHandling": {
+                    "type": "object",
+                    "description": "Defines the mobile robot’s behavior and capabilities related to order processing.",
+                    "properties": {
+                        "clearOrderOnStopHibernation": {
+                            "type": "string",
+                            "description": "Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. If not defined, the default value is true."
+                        }
+                    }
+                },
                 "optionalParameters": {
                     "type": "array",
-                    "description": "list of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the mobile robot.",
+                    "description": "List of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the mobile robot.",
                     "items": {
                         "type": "object",
                         "required": [
@@ -357,11 +368,11 @@
                         "properties": {
                             "parameter": {
                                 "type": "string",
-                                "description": "full name of optional parameter, e.g. “order.nodes.nodePosition.allowedDeviationTheta”"
+                                "description": "Full name of optional parameter, e.g., “order.nodes.nodePosition.allowedDeviationTheta”"
                             },
                             "support": {
                                 "type": "string",
-                                "description": "type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper mobile robot operation.",
+                                "description": "Type of support for the optional parameter, the following values are possible: SUPPORTED: optional parameter is supported like specified. REQUIRED: optional parameter is required for proper mobile robot operation.",
                                 "enum": [
                                     "SUPPORTED",
                                     "REQUIRED"
@@ -369,44 +380,47 @@
                             },
                             "description": {
                                 "type": "string",
-                                "description": "free text. Description of optional parameter. E.g. Reason, why the optional parameter ‚direction‘ is necessary for this mobile robot type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
+                                "description": "Free text. Description of optional parameter. E.g., reason, why the optional parameter ‚direction‘ is necessary for this mobile robot type and which values it can contain. The parameter ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to straight lines and circle segments."
                             }
                         }
                     }
                 },
                 "mobileRobotActions": {
                     "type": "array",
-                    "description": "list of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions",
+                    "description": "List of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA 5050 and manufacturer-specific actions",
                     "items": {
                         "required": [
                             "actionType",
-                            "actionScopes"
+                            "actionScopes",
+                            "pauseAllowed",
+                            "cancelAllowed"
                         ],
                         "type": "object",
                         "properties": {
                             "actionType": {
                                 "type": "string",
-                                "description": "unique actionType corresponding to action.actionType"
+                                "description": "Unique actionType corresponding to action.actionType"
                             },
-                            "actionDescriptor": {
+                            "actionDescription": {
                                 "type": "string",
-                                "description": "free text: description of the action"
+                                "description": "Free text: description of the action"
                             },
                             "actionScopes": {
                                 "type": "array",
-                                "description": "list of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges.",
+                                "description": "List of allowed scopes for using this action-type. INSTANT: usable as instantAction, NODE: usable on nodes, EDGE: usable on edges, ZONE: usable as zone action.",
                                 "items": {
                                     "type": "string",
                                     "enum": [
                                         "INSTANT",
                                         "NODE",
-                                        "EDGE"
+                                        "EDGE",
+                                        "ZONE"
                                     ]
                                 }
                             },
                             "actionParameters": {
                                 "type": "array",
-                                "description": "list of parameters. if not defined, the action has no parameters",
+                                "description": "Kist of parameters. if not defined, the action has no parameters",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -416,11 +430,11 @@
                                     "properties": {
                                         "key": {
                                             "type": "string",
-                                            "description": "key-String for Parameter"
+                                            "description": "Key-String for Parameter"
                                         },
                                         "valueDataType": {
                                             "type": "string",
-                                            "description": "data type of Value, possible data types are: BOOL, NUMBER, INTEGER, STRING, OBJECT, ARRAY",
+                                            "description": "Data type of Value, possible data types are: BOOL, NUMBER, INTEGER, STRING, OBJECT, ARRAY",
                                             "enum": [
                                                 "BOOL",
                                                 "NUMBER",
@@ -432,7 +446,7 @@
                                         },
                                         "description": {
                                             "type": "string",
-                                            "description": "free text: description of the parameter"
+                                            "description": "Free text: description of the parameter"
                                         },
                                         "isOptional": {
                                             "type": "boolean",
@@ -441,9 +455,9 @@
                                     }
                                 }
                             },
-                            "resultDescriptor": {
+                            "resultDescription": {
                                 "type": "string",
-                                "description": "free text: description of the resultDescriptor"
+                                "description": "Free text: description of the result"
                             },
                             "blockingTypes": {
                                 "type": "array",
@@ -457,6 +471,14 @@
                                       "HARD"
                                    ]
                                 }
+                            },
+                            "pauseAllowed": {
+                                "type": "string",
+                                "description": "True: action can be paused via startPause. False: action cannot be paused."
+                            },
+                            "cancelAllowed": {
+                                "type": "string",
+                                "description": "True: action can be cancelled via cancelOrder. False: action cannot be cancelled."
                             }
                         }
                     }
@@ -469,7 +491,7 @@
             "properties": {
                 "wheelDefinitions": {
                     "type": "array",
-                    "description": "list of wheels, containing wheel-arrangement and geometry",
+                    "description": "List of wheels, containing wheel-arrangement and geometry",
                     "items": {
                         "type": "object",
                         "required": [
@@ -483,15 +505,15 @@
                         "properties": {
                             "type": {
                                 "type": "string",
-                                "description": "wheel type. Extensible enum: DRIVE, CASTER, FIXED, MECANUM"
+                                "description": "Wheel type. Extensible enum: DRIVE, CASTER, FIXED, MECANUM"
                             },
                             "isActiveDriven": {
                                 "type": "boolean",
-                                "description": "True: wheel is actively driven (de: angetrieben)"
+                                "description": "True: wheel is actively driven"
                             },
                             "isActiveSteered": {
                                 "type": "boolean",
-                                "description": "True: wheel is actively steered (de: aktiv gelenkt)"
+                                "description": "True: wheel is actively steered"
                             },
                             "position": {
                                 "type": "object",
@@ -502,39 +524,39 @@
                                 "properties": {
                                     "x": {
                                         "type": "number",
-                                        "description": "[m] x-position in mobile robot coordinate system",
+                                        "description": "X-position in mobile robot coordinate system",
                                         "unit": "m"
                                     },
                                     "y": {
                                         "type": "number",
-                                        "description": "y-position in mobile robot coordinate system",
+                                        "description": "Y-position in mobile robot coordinate system",
                                         "unit": "m"
                                     },
                                     "theta": {
                                         "type": "number",
-                                        "description": "orientation of wheel in mobile robot coordinate system Necessary for fixed wheels",
+                                        "description": "Orientation of wheel in mobile robot coordinate system Necessary for fixed wheels",
                                         "unit": "rad"
                                     }
                                 }
                             },
                             "diameter": {
                                 "type": "number",
-                                "description": "nominal diameter of wheel",
+                                "description": "Nominal diameter of wheel",
                                 "unit": "m"
                             },
                             "width": {
                                 "type": "number",
-                                "description": "nominal width of wheel",
+                                "description": "Nominal width of wheel",
                                 "unit": "m"
                             },
                             "centerDisplacement": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels). If the parameter is not defined, it is assumed to be 0"
+                                "description": "Nominal displacement of the wheel’s center to the rotation point (necessary for caster wheels). If the parameter is not defined, it is assumed to be 0"
                             },
                             "constraints": {
                                 "type": "string",
-                                "description": "free text: can be used by the manufacturer to define constraints"
+                                "description": "Free text: can be used by the manufacturer to define constraints"
                             }
                         }
                     }
@@ -550,11 +572,11 @@
                         "properties": {
                             "set": {
                                 "type": "string",
-                                "description": "name of the envelope curve set"
+                                "description": "Name of the envelope curve set"
                             },
                             "polygonPoints": {
                                 "type": "array",
-                                "description": "envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
+                                "description": "Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -564,12 +586,12 @@
                                     "properties": {
                                         "x": {
                                             "type": "number",
-                                            "description": "x-position of polygon-point",
+                                            "description": "X-position of polygon-point",
                                             "unit": "m"
                                         },
                                         "y": {
                                             "type": "number",
-                                            "description": " y-position of polygon-point",
+                                            "description": " Y-position of polygon-point",
                                             "unit": "m"
                                         }
                                     }
@@ -577,14 +599,14 @@
                             },
                             "description": {
                                 "type": "string",
-                                "description": "free text: description of envelope curve set"
+                                "description": "Free text: description of envelope curve set"
                             }
                         }
                     }
                 },
                 "envelopes3d": {
                     "type": "array",
-                    "description": "list of mobile robot envelope curves in 3D (german: „Hüllkurven“)",
+                    "description": "List of mobile robot envelope curves in 3D (german: „Hüllkurven“)",
                     "items": {
                         "type": "object",
                         "required": [
@@ -594,11 +616,11 @@
                         "properties": {
                             "set": {
                                 "type": "string",
-                                "description": "name of the envelope curve set"
+                                "description": "Name of the envelope curve set"
                             },
                             "format": {
                                 "type": "string",
-                                "description": "format of data e.g. DXF"
+                                "description": "Format of data, e.g., DXF"
                             },
                             "data": {
                                 "type": "object",
@@ -606,11 +628,11 @@
                             },
                             "url": {
                                 "type": "string",
-                                "description": "protocol and url-definition for downloading the 3D-envelope curve data e.g. ftp://xxx.yyy.com/ac4dgvhoif5tghji"
+                                "description": "Protocol and url-definition for downloading the 3D-envelope curve data, e.g., ftp://xxx.yyy.com/ac4dgvhoif5tghji"
                             },
                             "description": {
                                 "type": "string",
-                                "description": "free text: description of envelope curve set"
+                                "description": "Free text: description of envelope curve set"
                             }
                         }
                     }
@@ -623,14 +645,14 @@
             "properties": {
                 "loadPositions": {
                     "type": "array",
-                    "description": "list of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the mobile robot has no load handling device.",
+                    "description": "List of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the mobile robot has no load handling device.",
                     "items": {
                         "type": "string"
                     }
                 },
                 "loadSets": {
                     "type": "array",
-                    "description": "list of load-sets that can be handled by the mobile robot",
+                    "description": "List of load-sets that can be handled by the mobile robot",
                     "items": {
                         "type": "object",
                         "required": [
@@ -640,15 +662,15 @@
                         "properties": {
                             "setName": {
                                 "type": "string",
-                                "description": "Unique name of the load set, e.g. DEFAULT, SET1, ..."
+                                "description": "Unique name of the load set, e.g., DEFAULT, SET1, ..."
                             },
                             "loadType": {
                                 "type": "string",
-                                "description": "type of load e.g. EPAL, XLT1200, …."
+                                "description": "Type of load e.g., EPAL, XLT1200, …."
                             },
                             "loadPositions": {
                                 "type": "array",
-                                "description": "list of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this mobile robot.",
+                                "description": "List of load positions btw. load handling devices, this load-set is valid for. If this parameter does not exist or is empty, this load-set is valid for all load handling devices on this mobile robot.",
                                 "items": {
                                     "type": "string"
                                 }
@@ -660,19 +682,19 @@
                                     "y",
                                     "z"
                                 ],
-                                "description": "bounding box reference as defined in parameter loads[] in state-message",
+                                "description": "Bounding box reference as defined in parameter loads[] in state-message",
                                 "properties": {
                                     "x": {
                                         "type": "number",
-                                        "description": "x-coordinate of the point of reference."
+                                        "description": "X-coordinate of the point of reference."
                                     },
                                     "y": {
                                         "type": "number",
-                                        "description": "y-coordinate of the point of reference."
+                                        "description": "Y-coordinate of the point of reference."
                                     },
                                     "z": {
                                         "type": "number",
-                                        "description": "z-coordinate of the point of reference."
+                                        "description": "Z-coordinate of the point of reference."
                                     },
                                     "theta": {
                                         "type": "number",
@@ -703,67 +725,67 @@
                             },
                             "maximumWeight": {
                                 "type": "number",
-                                "description": "maximum weight of loadtype",
+                                "description": "Maximum weight of loadtype",
                                 "unit": "kg"
                             },
                             "minimumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
+                                "description": "Minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
                             },
                             "maximumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
+                                "description": "Maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
                             },
                             "minimumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
+                                "description": "Minimum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
                             "maximumLoadhandlingDepth": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
+                                "description": "Maximum allowed depth for this load-type and –weight. references to boundingBoxReference"
                             },
                             "minimumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
-                                "description": "minimum allowed tilt for this load-type and –weight"
+                                "description": "Minimum allowed tilt for this load-type and –weight"
                             },
                             "maximumLoadhandlingTilt": {
                                 "type": "number",
                                 "unit": "rad",
-                                "description": "maximum allowed tilt for this load-type and –weight"
+                                "description": "Maximum allowed tilt for this load-type and –weight"
                             },
                             "maximumSpeed": {
                                 "type": "number",
                                 "unit": "m/s^2",
-                                "description": "maximum allowed speed for this load-type and –weight"
+                                "description": "Maximum allowed speed for this load-type and –weight"
                             },
                             "maximumAcceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
-                                "description": "maximum allowed acceleration for this load-type and –weight"
+                                "description": "Maximum allowed acceleration for this load-type and –weight"
                             },
                             "maximumDeceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
-                                "description": "maximum allowed deceleration for this load-type and –weight"
+                                "description": "Maximum allowed deceleration for this load-type and –weight"
                             },
                             "pickTime": {
                                 "type": "number",
                                 "unit": "s",
-                                "description": "approx. time for picking up the load"
+                                "description": "Approximate time for picking up the load"
                             },
                             "dropTime": {
                                 "type": "number",
                                 "unit": "s",
-                                "description": "approx. time for dropping the load"
+                                "description": "Approximate time for dropping the load"
                             },
                             "description": {
                                 "type": "string",
-                                "description": "free text description of the load handling set"
+                                "description": "Free text description of the load handling set"
                             }
                         }
                     }
@@ -795,7 +817,7 @@
                             },
                             "value": {
                                 "type": "string",
-                                "description": "The value of the action parameter.",
+                                "description": "The value of the version.",
                                 "examples": [
                                     "v1.03.2",
                                     "0620NL51805A0",
@@ -807,6 +829,7 @@
                 },
                 "network": {
                     "type": "object",
+                    "description": "Information about the mobile robot's network connection. The listed information shall not be updated while the mobile robot is operating.",
                     "properties": {
                         "dnsServers": {
                             "type": "array",
@@ -815,16 +838,16 @@
                                 "type": "string"
                             }
                         },
-                        "localIpAddress": {
-                            "type": "string",
-                            "description": "A priori assigned IP address of the mobile robot used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
-                        },
                         "ntpServers": {
                             "type": "array",
                             "description": "List of NTP servers used by the mobile robot.",
                             "items": {
                                 "type": "string"
                             }  
+                        },
+                        "localIpAddress": {
+                            "type": "string",
+                            "description": "A priori assigned IP address of the mobile robot used to communicate with the MQTT broker. Note that this IP address should not be modified/changed during operations."
                         },
                         "netmask": {
                             "type": "string",
@@ -833,6 +856,35 @@
                         "defaultGateway": {
                             "type": "string",
                             "description": "Default gateway used by the mobile robot."
+                        }
+                    }
+                },
+                "batteryCharging ": {
+                    "type": "object",
+                    "description": "Information about battery charging parameters.",
+                    "properties": {
+                        "criticalLowChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "minimumDesiredChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the minimum desired charging level in percent.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "maximumDesiredChargingLevel": {
+                            "type": "number",
+                            "description": "Specifies the maximum desired charging level in percent.",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "minimumChargingTime": {
+                            "type": "number",
+                            "description": "Specifies the desired minimum charging time in seconds.",
+                            "unit": "s"
                         }
                     }
                 }

@@ -56,11 +56,11 @@
                 "properties": {
                     "actionType": {
                         "type": "string",
-                        "description": "Name of action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
+                        "description": "Name of action. Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
-                        "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
+                        "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUID."
                     },
                     "actionDescriptor": {
                         "type": "string",
@@ -68,14 +68,14 @@
                     },
                     "blockingType": {
                         "type": "string",
-                        "description": The blockingType of an instant action is always NONE: action can happen in parallel with others, including movement.",
+                        "description": "The blocking type of an instant action is always NONE: action can happen in parallel with others, including movement.",
                         "enum": [
                             "NONE"
                         ]
                     },
                     "actionParameters": {
                         "type": "array",
-                        "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                        "description": "Action parameters for the indicated action, e.g., deviceId, loadId, external Triggers.",
                         "items": {
                             "title": "actionParameter",
                             "type": "object",
@@ -98,7 +98,8 @@
                                         "array",
                                         "boolean",
                                         "number",
-                                        "string",
+                                        "integer",
+                                        "string", 
                                         "object"
                                     ],
                                     "description": "The value of the action parameter",
@@ -111,7 +112,11 @@
                                             "are",
                                             "also",
                                             "valid"
-                                        ]
+                                        ],
+                                        {
+                                            "objects": "as",
+                                            "well": true
+                                        }
                                     ]
                                 }
                             }
