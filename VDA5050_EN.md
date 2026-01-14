@@ -187,9 +187,8 @@ The use of this feature is described in Section [6.8 Connection](#68-connection)
 
 If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
-Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
-
 To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`.
+
 Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
 
