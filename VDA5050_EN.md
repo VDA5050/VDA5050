@@ -197,8 +197,8 @@ Protocol security needs to be taken into account by broker configuration, but is
 ### 3.2 Topic levels
 
 The MQTT topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
-For a cloud-based MQTT broker the topic structure has to be adapted individually to match the topics defined in this protocol.
-This means that the topic names defined in the following sections are mandatory.
+For a cloud-based MQTT broker the topic structure might have to be adapted individually, but it should roughly follow the proposed structure.
+The topic names defined in the following sections are mandatory.
 
 For a local broker the MQTT topic levels are suggested as followed:
 
@@ -1020,6 +1020,14 @@ An exception to this rule is if the mobile robot shall pause on the node (becaus
 ![Figure 20 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 20 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
 
+#### 6.6.2.1 Definition of allowedDeviationXY as an ellipse
+
+The allowedDeviationXY is defined as an ellipse around the node position to allow more flexible approaches to the node.
+
+![Figure 22 allowedDeviationXY ellipse](./assets/ellipse.png)
+>Figure 22 - allowedDeviation ellipse
+
+A fleet control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A mobile robot which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.
 
 ### 6.6.3 Base request
 
@@ -1366,11 +1374,6 @@ Object structure | Unit | Data type | Description
 a | m | float64 | Length of the ellipse semi-major axis	in meters.
 b | m | float64 | Length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | Rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
-
-*Remark: A fleet control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A mobile robot which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.*
-
-![Figure 22 allowedDeviationXY ellipse](./assets/ellipse.png)
->Figure 22 - allowedDeviation ellipse
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
