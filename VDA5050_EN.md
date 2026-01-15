@@ -501,7 +501,7 @@ Figure 10 shows the expected behavior for different mobile robot capabilities.
 
 #### 6.1.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
+After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the cancelled order shall be sent by the fleet control. If the mobile robot receives an order update it reports an error of type 'ORDER_UPDATE_FOLLOWING_CANCEL' and level 'WARNING'.
 
 In the case of a mobile robot that can only localize itself on a node, the new order has to begin on the node the mobile robot is now standing on (see also Figure 5).
 
