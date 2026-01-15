@@ -1795,7 +1795,7 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | manufacturer | string | Manufacturer of the mobile robot. |
 | serialNumber | string | Serial number of the mobile robot. |
 | referenceStateHeaderId | uint32 | Header ID of the state message this visualization message refers to. |
-|***plannedPath*** | JSON object | Represents a path within the robot's currently active order as NURBS. |
+| ***plannedPath*** | JSON object | Represents a path within the robot's currently active order as NURBS. |
 | ***intermediatePath*** | JSON object | Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
 | ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
 | ***velocity*** | JSON object | The mobile robot velocity in mobile robot coordinates. |
