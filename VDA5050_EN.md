@@ -1450,6 +1450,9 @@ manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Serial number of the mobile robot.
 **actions [action]** | array | Array of actions that need to be performed immediately and are not part of the regular order.
 
+Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
+
+
 ## 7.5 Implementation of the response message
 
 Object structure/Identifier | Data type | Description
@@ -1467,6 +1470,7 @@ Object structure/Identifier | Data type | Description
 | requestId | string | Unique per mobile robot identifier within all active requests. |
 | grantType | enum | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The fleet control has granted the request. 'REVOKED': The fleet control revokes previously granted request. 'REJECTED': The Fleet control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue. |
 | *leaseExpiry* <br><br> } | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g.“2017-04-15T11:40:03.123Z”). A timestamp for the release to expire shall only be sent with reponses granting a request.
+
 
 ## 7.6 Implementation of the zoneSet message
 
@@ -1507,6 +1511,9 @@ A single zone object has the following structure:
 | *directedLimitation* | string | Required only for a DIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 | *bidirectedLimitation* | string | Required only for a BIDIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 
+Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
+
+
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a counterclockwise direction: 
 
 | **Object structure** | **Data type** | **Description** |
@@ -1532,6 +1539,7 @@ version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2)
 manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Serial number of the mobile robot.
 connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTION_BROKEN'}<br><br>'ONLINE': connection between mobile robot and broker is active.<br><br>'OFFLINE': connection between mobile robot and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The mobile robot enters a low‑power state and stops sending state messages. A connection to the MQTT broker shall remain active. This mode is intended for power saving or communication reduction. The mobile robot can later transition to ONLINE when instructed or via a configured wake‑up mechanism.<br><br> 'CONNECTION_BROKEN': the connection between mobile robot and broker has unexpectedly ended.
+
 
 ## 7.8 Implementation of the state message
 
@@ -1776,6 +1784,7 @@ Object structure | Unit | Data type | Description
 activeEmergencyStop | | string | Enum {'MANUAL', 'REMOTE', 'NONE'}<br><br> Defining what type of emergency stop has been activated: <br>'MANUAL': emergency stop shall be acknowledged manually on the mobile robot.<br>'REMOTE': facility emergency stop shall be acknowledged remotely.<br>'NONE': no emergency stop activated.
 fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or bumper).<br>"true":field is violated<br>"false":field is not violated.
 
+
 ## 7.9 Implementation of the visualization message
 
 | **Field** | **data type** | **description** |
@@ -1786,10 +1795,12 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | manufacturer | string | Manufacturer of the mobile robot. |
 | serialNumber | string | Serial number of the mobile robot. |
 | referenceStateHeaderId | uint32 | Header ID of the state message this visualization message refers to. |
-| ***plannedPath*** | JSON object |Represents a path within the robot's currently active order as NURBS. |
-| ***intermediatePath*** | JSON object |Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
+| ***plannedPath*** | JSON object | Represents a path within the robot's currently active order as NURBS. |
+| ***intermediatePath*** | JSON object | Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
 | ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
 | ***velocity*** | JSON object | The mobile robot velocity in mobile robot coordinates. |
+
+Objects `plannedPath`, `intermediatePaht`, `mobileRobotPosition` and `velocity` are defined in [7.8 Implementation of the state message](#78-implementation-of-the-state-message).
 
 
 ## 7.10 Implementation of the factsheet message
