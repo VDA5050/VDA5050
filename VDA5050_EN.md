@@ -1095,8 +1095,7 @@ In these cases the mobile robot has to clear any current order which means that 
 - Any scheduled order related action shall be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running order related action should also be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running order related action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
-- the `lastNodeId` is kept as long as it can be used as a start node of a new order (as stated in chapter 6.6.6).
-- `orderId`, `orderUpdateId` and `lastNodeSequenceId` are discarted
+- `orderId` and `orderUpdateId` are kept.
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
 
