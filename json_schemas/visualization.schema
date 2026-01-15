@@ -4,6 +4,13 @@
     "description": "Mobile robot position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
     "subtopic": "/visualization",
     "type": "object",
+    "required": [
+        "headerId",
+        "timestamp", 
+        "version", 
+        "manufacturer", 
+        "serialNumber"
+    ],
     "properties": {
         "headerId": {
             "type": "integer",
@@ -27,6 +34,10 @@
         "manufacturer": {
             "type": "string",
             "description": "Manufacturer of the mobile robot"
+        },
+        "referenceStateHeaderId": {
+            "type": "integer",
+            "description": "Header ID of the state message this visualization message refers to."
         },
         "serialNumber": {
             "type": "string",
@@ -120,7 +131,11 @@
                     "items": {
                         "type": "object",
                         "description": "Endpoint of a segment within a defined polyline.",
-                        "required": ["x", "y", "ETA"],
+                        "required": [
+                            "x",
+                            "y",
+                            "eta"
+                        ],
                         "properties": {
                             "x": {
                                 "type": "number",
@@ -139,9 +154,9 @@
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
-                            "ETA": {
+                            "eta": {
                                 "type": "string",
-                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.ffZ (e.g., '2017-04-15T11:40:03.12Z')."
+                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
                             }
                         }
                     }
@@ -154,14 +169,14 @@
             "type": "object",
             "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message.\nTrajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed. ",
             "required": [
-                "degree",
                 "knotVector",
                 "controlPoints"
             ],
             "properties": {
                 "degree": {
                     "type": "integer",
-                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1."
+                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases continuity. If not defined, the default value is 1.",
+                    "minimum": 1
                 },
                 "knotVector": {
                     "type": "array",
@@ -190,7 +205,8 @@
                             },
                             "weight": {
                                 "type": "number",
-                                "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0."
+                                "description": "The weight, with which this control point pulls on the curve.\nWhen not defined, the default will be 1.0.",
+                                "exclusiveMaximum": 0.0
                             }
                         }
                     }
