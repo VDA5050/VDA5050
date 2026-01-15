@@ -291,7 +291,7 @@ Functions of the fleet control are:
 Functions of the mobile robots are:
 
 - Localization
-- Navigation along associated routes (guided or autonomous)
+- Execution of associated routes (line-guided or freely navigating)
 - Execution of actions
 - Continuous transmission of its status
 
@@ -359,7 +359,7 @@ Since MQTT is an asynchronous protocol and transmission via wireless networks is
 The fleet control has the possibility to change the horizon by sending an updated route to the mobile robot which includes the changed list of nodes and edges. The procedure for changing the horizon route is shown in Figure 4.
 
 ![Figure 4 Procedure for changing the driving route "Horizon"](./assets/driving_route_horizon.png)
->Figure 4 - Procedure for changing the driving route "Horizon"
+>Figure 4 - Procedure for expanding the driving route "Horizon"
 
 In Figure 4, an initial order is first sent by the fleet control at time t = 0.
 Figure 5 shows the pseudocode of a possible order.
@@ -449,8 +449,8 @@ All formatting and JSON data types are correct?
 2)	**is received order new or an update of the current order?**:
 Is `orderId` of the received order different to `orderId` of order the mobile robot currently holds?
 
-3)	**is mobile robot still executing an order or waiting for an update?**:
-Are `nodeStates` not empty or are `actionStates` containing states which are neither 'FAILED' nor 'FINISHED'? Nodes and edges and the corresponding action states of the order horizon are also included inside the state. Mobile robot might still have a horizon and therefore be waiting for an update and executing an order.
+3)	**is mobile robot idle and not waiting for an update?**:
+Is the mobile robot in an idle state according to [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot) and not waiting for an update? Since nodes and edges and the corresponding action states of the order horizon are also included inside the state, the mobile robot might still have a horizon and therefore is waiting for an update and executing an order.
 
 4) **is start of new order close enough to current position?**:	Is the mobile robot already standing on the node, or is it in the node's deviation range ([6.1.1 Concept and logic](#611-concept-and-logic))?
 
@@ -981,7 +981,7 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 ### 6.6.1 Concept and logic
 
 The order progress is tracked by the `nodeStates` and `edgeStates`.
-Additionally, if the mobile robot is able to derive its current position, it can publish its position via the `position` field.
+Additionally, if the mobile robot is able to derive its current position, it can publish its position via the `mobileRobotPosition` field.
 
 If the mobile robot plans the path by itself, it shall communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless fleet control cannot use this field, and it was agreed during integration, that this field shall not be sent.
 After nodes are released by fleet control, the mobile robot is not allowed to change its trajectory.
