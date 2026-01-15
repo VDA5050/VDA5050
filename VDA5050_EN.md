@@ -557,7 +557,9 @@ Resolution:
 3. The mobile robot reports an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
-If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it has to reply with an error. Sending an order update is a handshake mechanism where one party waits for an answer from the other party. If the robot does not acknowledge the oder update in a state message within 30sec (see chapter 6.6 State), resend it. If there is a communication issue, wait for the robot to come back online.
+If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it either has to be ignored or an error has to be reported. 
+- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order. This might happen, if the fleet control resends the order because the robot did not acknowledge the oder update in a state message within 30sec (see chapter 6.6 State).
+- If the content differs the mobile robot reports an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
 
 ### 6.1.5 Corridors
 
@@ -1740,7 +1742,7 @@ charging | | boolean | “true”: charging in progress.<br>“false”: the mob
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', ...}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.<br>For additional information see [8 Best practice](#8-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array | Array of translations of the error description. If a particular language is not included in the collection, the value of the errorDescription field, if present, shall be used as the default. 
