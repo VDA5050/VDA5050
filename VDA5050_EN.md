@@ -466,13 +466,15 @@ Are `nodeStates` not empty or are `actionStates` containing states which are nei
 
 5) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the mobile robot?
 
-6)	**is received order update currently on mobile robot?**: Is `orderUpdateId` equal to the one currently on the mobile robot?
+6) **is order update following cancelOrder?**: No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
 
-7)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+7)	**is received order update currently on mobile robot?**: Is `orderUpdateId` equal to the one currently on the mobile robot?
 
-8)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+8)	**is the received update a valid continuation of the currently still running order?**:	Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is still moving or executing actions related to the base released in previous order updates or still has a horizon and is therefore waiting for a continuation of the order. In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
 
-9)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
+9)	**is the received update a valid continuation of the previously completed order?**: Is the first node of the received order the current decision point according to the order update chapter? The mobile robot is not executing any actions anymore neither is it waiting for a continuation of the order (meaning that it has completed its base with all related actions and does not have a horizon). In this case, the order update is only accepted if the first node of the new base is equal to the last node of the previous base.
+
+10)	populate/append new states to the `actionStates`/`nodeStates`/`edgeStates`.
 
 
 ### 6.1.3 Order cancellation
@@ -490,7 +492,7 @@ While order related actions are running, the `cancelOrder` action shall report '
 After all movement of the mobile robot and all of its order related actions are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 This means that the mobile robot is idle and ready to receive new orders.
 
-The `lastNodeId` is kept in any case. The `orderId`, `orderUpdateId` and `lastNodeSequenceId` should be kept only if the robot can handle an order update and does not require a new order to continue driving.
+The `orderId` and `orderUpdateId` are kept.
 
 Figure 10 shows the expected behavior for different mobile robot capabilities.
 
@@ -499,7 +501,7 @@ Figure 10 shows the expected behavior for different mobile robot capabilities.
 
 #### 6.1.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order.
+After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
 
 In the case of a mobile robot that can only localize itself on a node, the new order has to begin on the node the mobile robot is now standing on (see also Figure 5).
 
@@ -1741,7 +1743,7 @@ charging | | boolean | “true”: charging in progress.<br>“false”: the mob
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', ...}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.<br>For additional information see [8 Best practice](#8-best-practice).
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array | Array of translations of the error description. If a particular language is not included in the collection, the value of the errorDescription field, if present, shall be used as the default. 
