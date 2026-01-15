@@ -33,7 +33,11 @@ endif
         endif
         ->no;
             if ((6) Is order update currently on mobile robot?) then (yes - mobile robot already\n has received update)
-                #lightgreen: discard message;
+              if (did order content change?) then (yes)
+                    #orange:reject order\nthrow error;
+                else (no)
+                    #lightgreen: discard message;
+                endif
                 stop
             endif
             ->no;
