@@ -48,7 +48,7 @@
             "type": "string"
         },
         "orderUpdateId": {
-            "description": "Order update identification. It is unique per orderId. If an order update is rejected, this field shall be passed in the rejection message.",
+            "description": "Order update identification. It is unique per orderId, starting at 0 for a new order. If an order update is rejected, this field shall be passed in the rejection message.",
             "type": "integer",
             "minimum": 0
         },
