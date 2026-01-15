@@ -1346,7 +1346,6 @@ y | m | float64 | Y-position on the map in reference to the global project-speci
 ***allowedDeviationXY*** | m | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [Order cancellation](#614-order-cancellation) and [Traversal of nodes](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a mobile robot shall match the orientation of a node for it to be considered traversed.<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the mobile robot orientation.<br>If = 0.0: no deviation is allowed, which means the mobile robot shall reach the node orientation as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume this value as 0.0.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
-*mapDescriptor* <br> } | | string | Additional information on the map.
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
@@ -1583,7 +1582,8 @@ Object structure | Unit | Data type | Description
 **map**{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the mobile robot's workspace.
 mapVersion | | string | Version of the map.
-mapStatus <br>}| | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently actively used on the mobile robot. At most one map with the same `mapId` can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.
+mapStatus | | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently actively used on the mobile robot. At most one map with the same `mapId` can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.
+*mapDescriptor* <br>}| | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
@@ -1668,8 +1668,7 @@ localized | | boolean | "true": Mobile robot is localized. `x`, `y`, and `theta`
 x | m | float64 | X-position on the map in reference to the project-specific coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the project-specific coordinate system. <br>Precision is up to the specific implementation.
 theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the mobile robot.
-mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When a mobile robot uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
-*mapDescriptor*<br>} | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
+mapId <br> } | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When a mobile robot uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
