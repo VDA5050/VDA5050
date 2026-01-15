@@ -13,11 +13,11 @@ if ((1) Is received order valid?) then (no)
 endif
 ->yes;
     if ((2) Is received order new?) then (yes)
-        if ((3) Is mobile robot still executing\nan order or waiting for an update?) then (yes)
+        if ((3) Is mobile robot idle and\nnot waiting for an update?) then (no)
         #orange:reject order\nthrow error;
          stop
        endif
-       ->no;
+       ->yes;
             if ((4) Is start of new order close\nenough to current position?) then (no)
                 #orange:reject order\nthrow error;
                 stop
@@ -37,15 +37,15 @@ endif
                 stop
             endif
             ->no;
-                if ((3) Is mobile robot still executing an\norder or waiting for an update?) then (yes)
+                if ((3) Is mobile robot idle and\nnot waiting for an update?) then (no)
                     if ((7) Is the received update a valid\ncontinuation of the currently\nrunning order?) then (no)
                       #orange:reject order\nthrow error;
                       stop
                     endif
-                    ->yes;
+                    ->no;
                         #lightgreen:clear horizon, if mobile robot has one;
                         #lightgreen:- accept order update\n- set orderUpdateId\n- append new states to the ones\ncurrently running/planned (9);
-                else (no)
+                else (yes)
                     if ((8) Is the received update a valid\ncontinuation of the previous\ncompleted order?) then (no)
                         #orange:reject order\nthrow error;
                         stop;
