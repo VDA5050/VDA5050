@@ -10,8 +10,8 @@
         "version", 
         "manufacturer", 
         "serialNumber",
-        "mapId",
         "zoneSetId",
+        "mapId",
         "zones"
     ],
     "properties": {
@@ -59,9 +59,10 @@
             "description": "Array of zone objects.",
             "items": {
                     "$ref": "#/definitions/zone"
-                }
             }
-        },
+        }
+    },
+    "definitions": {
         "zone": {
             "type": "object",
             "required": [
@@ -127,7 +128,11 @@
                         }
                     },
                     "then": {
-                        "required": ["entryActions", "duringActions", "exitActions"],
+                        "required": [
+                            "entryActions",
+                            "duringActions",
+                            "exitActions"
+                        ],
                         "properties": {
                             "entryActions": {
                                 "type": "array",
@@ -196,11 +201,15 @@
                         }
                     },
                     "then": {
-                        "required": ["direction", "limitation"],
+                        "required": [
+                            "direction",
+                            "limitation"
+                        ],
                         "properties": {
                             "direction": {
                                 "type": "number",
-                                "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system."
+                                "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system.",
+                                "unit": "rad"
                             },
                             "limitation": {
                                 "type": "string",
@@ -219,7 +228,10 @@
                         }
                     },
                     "then": {
-                        "required": ["direction", "limitation"],
+                        "required": [
+                            "direction",
+                            "limitation"
+                        ],
                         "properties": {
                             "direction": {
                                 "type": "number",
@@ -227,7 +239,7 @@
                             },
                             "limitation": {
                                 "type": "string",
-                                "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, exept for obstacle avoidance.",
+                                "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.",
                                 "enum": [
                                     "SOFT","RESTRICTED"
                                 ]
@@ -235,20 +247,24 @@
                         }
                     }
                 }
-
             ]
         },
         "vertex": {
             "type": "object",
-            "required": ["x", "y"],
+            "required": [
+                "x",
+                "y"
+            ],
             "properties": {
                 "x": {
                     "type": "number",
-                    "description": "X-coordinate described in the project specific coordinate system."
+                    "description": "X-coordinate described in the project specific coordinate system.",
+                    "unit": "m"
                 },
                 "y": {
                     "type": "number",
-                    "description": "Y-coordinate described in the project specific coordinate system."
+                    "description": "Y-coordinate described in the project specific coordinate system.",
+                    "unit": "m"
                 }
             }
         }, 
@@ -256,8 +272,8 @@
             "type": "object",
             "description": "Describes an action that the mobile robot can perform.",
             "required": [
-                "actionId",
                 "actionType",
+                "actionId",
                 "blockingType"
             ],
             "properties": {
@@ -267,7 +283,7 @@
                 },
                 "actionId": {
                     "type": "string",
-                    "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
+                "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
                 "actionDescriptor": {
                     "type": "string",
@@ -292,7 +308,7 @@
                 }
             }
         },
-        "actionParameter":{
+        "actionParameter": {
             "type": "object",
             "required": [
                 "key",
@@ -313,6 +329,7 @@
                         "array",
                         "boolean",
                         "number",
+                        "integer",
                         "string", 
                         "object"
                     ],
@@ -326,7 +343,11 @@
                             "are",
                             "also",
                             "valid"
-                        ]
+                        ],
+                        {
+                            "objects": "as",
+                            "well": true
+                        }
                     ]
                 }
             }
