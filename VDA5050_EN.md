@@ -1376,9 +1376,7 @@ Object structure | Unit | Data type | Description
 edgeId | | string | Unique edge identification.
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
-released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
-startNodeId | | string | Node defining the origin of the edge.
-endNodeId | | string | Node defining the end of the edge.
+released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
 *maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the mobile robot.
 *maximumMobileRobotHeight* | m | float64 | Permitted maximum height of the mobile robot, including the load, on the edge.
 *minimumLoadHandlingDeviceHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
@@ -1865,7 +1863,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*maximumMessageLength* | uint32 | Maximum MQTT message length. |
 | &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber<br/>zoneSet.serialNumber<br/>response.serialNumber |
 | &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer<br/>zoneSet.timestamp<br/>zoneSet.version<br/>zoneSet.manufacturer<br/>response.timestamp<br/>response.version<br/>response.manufacturer |
-| &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>edge.startNodeId<br/>edge.endNodeId<br/>map.mapId<br/>zoneSet.zoneSetId<br/>zone.zoneId<br/>zoneRequest.requestId<br/>edgeRequest.requestId | 
+| &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>map.mapId<br/>zoneSet.zoneSetId<br/>zone.zoneId<br/>zoneRequest.requestId<br/>edgeRequest.requestId | 
 | &emsp;*idNumericalOnly* | boolean | If "true" ID strings need to contain numerical values only. |
 | &emsp;*maximumLoadIdLength* | uint32 | Maximum length of loadId strings. |
 | } | | |
