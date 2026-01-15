@@ -983,9 +983,6 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 The order progress is tracked by the `nodeStates` and `edgeStates`.
 Additionally, if the mobile robot is able to derive its current position, it can publish its position via the `mobileRobotPosition` field.
 
-If the mobile robot plans the path by itself, it shall communicate its calculated trajectory (including base and horizon) in the form of NURBS via the `trajectory` object in the state message, unless fleet control cannot use this field, and it was agreed during integration, that this field shall not be sent.
-After nodes are released by fleet control, the mobile robot is not allowed to change its trajectory.
-
 The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the mobile robot to traverse.
 
 ![Figure 19 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
