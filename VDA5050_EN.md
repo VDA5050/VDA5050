@@ -927,10 +927,10 @@ The disconnection is detected via a heartbeat that is exchanged between the brok
 The interval is configurable in most brokers and should be set around 15 seconds.
 The Quality of Service level for the `connection` topic shall be 1 (At Least Once).
 
-The Last Will message will not be sent when a connection is ended in a graceful way by using an MQTT disconnection command.
-The Last Will message is only sent by the broker if the connection is unexpectedly interrupted.
+The last will message will not be sent when a connection is ended in a graceful way by using an MQTT disconnection command.
+The last will message is only sent by the broker if the connection is unexpectedly interrupted.
 
-**Note**: Due to the nature of the Last Will feature in MQTT, the Last Will message is defined during the connection phase between the mobile robot and the MQTT broker.
+**Note**: Due to the nature of the last will feature in MQTT, the last will message is defined during the connection phase between the mobile robot and the MQTT broker.
 As a result, the timestamp and headerId fields will always be outdated.
 
 Mobile robot wants to disconnect gracefully:
