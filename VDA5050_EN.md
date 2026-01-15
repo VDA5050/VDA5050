@@ -227,7 +227,7 @@ Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 order | fleet control | mobile robot | Communication of orders | mandatory | order.schema
 instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
-visualization | mobile robot | Visualization systems | High frequency communication of position and planned path | optional | visualization.schema
+visualization | mobile robot | Visualization systems | Higher frequency of position and planned trajectory information | optional | visualization.schema
 connection | broker / mobile robot | fleet control | Indicates when mobile robot connection is lost. Not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
@@ -1789,6 +1789,7 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2). |
 | manufacturer | string | Manufacturer of the mobile robot. |
 | serialNumber | string | Serial number of the mobile robot. |
+| referenceStateHeaderId | uint32 | Header ID of the state message this visualization message refers to. |
 | ***plannedPath*** | JSON object |Represents a path within the robot's currently active order as NURBS. |
 | ***intermediatePath*** | JSON object |Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
 | ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
