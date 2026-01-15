@@ -151,9 +151,11 @@ Document | Version | Description
 ---|---|---
 VDI Guideline 2510 | October 2005 | Driverless transport systems (DTS)
 VDI Guideline 4451 Sheet 7 | October 2005 | Compatibility of driverless transport systems (DTS) - Fleet control
+ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
 DIN EN ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
 LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system.
-ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures 
+
+>Table 1 Overview of other applicable documents
 
 ## 2.3 Protocol version
 
@@ -215,6 +217,8 @@ manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Unique mobile robot serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Communication](#313-topics-for-communication)
 
+>Table 2 Explanation of suggested MQTT topic levels
+
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 Wildcard characters `+` and `#` as well as the character `$` that is reserved for broker internal topics should not be used either.
 
@@ -233,6 +237,8 @@ factsheet | mobile robot | fleet control | Parameters or vendor-specific informa
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
 response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | response.schema
 
+>Table 3 Topics for communication between fleet control and mobile robot
+
 # 4 Definitions
 
 To ensure a common understanding across all stakeholders and implementations, this chapter defines key terms that are used throughout this document.
@@ -242,7 +248,9 @@ Term | Definition
 Moving | Any change in the spatial position or orientation of the mobile robot or its components. This includes the motion of wheels, load handling devices, or the mobile robot body.
 Driving | The mobile robot is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
 Automatic Driving | The mobile robot is driving without human intervention.
-Manual Driving | The mobile robot is driving while under control of a human. 
+Manual Driving | The mobile robot is driving while under control of a human.
+
+>Table 4 Definitions of terms used in this document
 
 
 # 5 Process and content of communication
@@ -634,10 +642,6 @@ If there is no way to map some action to one of the actions of the following sec
 
 #### 6.2.3.1 Definition, parameters, effects and scope
 
-general | | scope
-:---:|--- | :---:
-action, counter action, description, idempotent, parameters | linked state | instant, node, edge
-
 action | counter action | description | idempotent | parameters | linked state | instant | node | edge
 ---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Actions that can be paused (`pauseAllowed`=`true`), shall be paused, other actions continue. Order execution is resumed after stopPause. | yes | - | paused | yes | no | no
@@ -667,12 +671,10 @@ cancelOrder | - | Mobile robot stops as soon as possible. This could be immediat
 factsheetRequest | - | Requests the mobile robot to send a factsheet | yes | - | - | yes | no | no
 updateCertificate | - | Request the mobile robot to download and activate a new certificate set, the service parameter is an extensible enum with the predefined parameter 'MQTT' to be used for mqtt connection. | yes | service (string)<br>keyDownloadLink (string)<br>certificateDownloadLink (string)<br>certificateAuthorityDownloadLink (string, optional) | - | yes | no | no |
 
+>Table 4 - Predefined actions and their scope (instant, node, edge, zone)
+
 
 #### 6.2.3.2 Action states
-
-action | action states
----|:---:
- | | 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED' |
 
 action | 'INITIALIZING' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'FAILED'
 ---|---|---|---|---|---
@@ -699,6 +701,8 @@ waitForTrigger | - | Mobile robot is waiting for the trigger | - | Trigger has b
 cancelOrder | - | Mobile robot is stopping or driving, until it reaches the next node. | - | Mobile robot stands still and has canceled the order. | <br>Mobile robot has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId.
 factsheetRequest | - | - | - | The factsheet has been communicated | -
 updateCertificate | - | Mobile robot is downloading and installing certificates | - | Certificates are downloaded, installed and active. | Download or installation failed. |
+
+>Table 5 - Expected behavior in action states of predefined actions
 
 #### 6.2.3.3 Update mobile robot certificate
 
@@ -802,6 +806,7 @@ The following contour-based zones are defined:
 | | duringActions[action] | array | Actions to be executed while crossing the zone. Empty array, if no actions required. |
 | | exitActions[action] | array | Actions to be triggered when leaving the zone. Empty array, if no actions required. |
 
+>Table 6 - Contour-based zone types and their parameters
 
 #### 6.4.1.2 Kinematic center-based zones
 
@@ -824,6 +829,8 @@ In kinematic center-based zones, the mobile robot's kinematic center determines 
 | BIDIRECTED | | | While in this zone, mobile robots shall only move in the defined direction of travel and its direct opposite (+ Pi), mobile robots should not cross this zone in any other direction. | 
  | direction | float64 | Preferred direction of travel within the zone in radians. The direction of travel is the angular orientation of the mobile robot's velocity vector in the project-specific coordinate system.|
 | | bidirectedLimitation | string | Enum {'SOFT', 'RESTRICTED'}<\br>SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.|
+
+>Table 7 - Kinematic center-based zone types and their parameters
 
 ### 6.4.2 Zone set transfer
 
@@ -903,6 +910,8 @@ In the following matrix possible interactions between zones are described. The m
 **PENALTY** ||||||||(6)|No conflict|No conflict|(7)|No conflict
 **DIRECTED** |||||||||(8)|(8)|(7)|(9)
 **BIDIRECTED** ||||||||||(8)|(7)|(9)
+
+>Table 8 - Interaction matrix for zones
 
 1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the mobile robot.
 2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
@@ -1065,6 +1074,8 @@ STARTUP | Fleet control is not in control of the mobile robot. The mobile robot 
 SERVICE | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
 TEACH_IN | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters or leaves this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
+>Table 9 - Operating modes of the mobile robot
+
 
 Operating Mode | Fleet Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending instant actions allowed | Sending orders allowed
 --- | --- | --- | --- | --- | --- | --- | ---
@@ -1075,6 +1086,8 @@ MANUAL | NO | YES | YES | YES, if continuation of order is not possible | YES | 
 STARTUP | NO | NO | YES | YES | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACH_IN | NO | YES | YES | YES | YES | NO | NO
+
+>Table 10 - Overview of operating modes and their implications
 
 ### 6.6.7 Clearing the order
 
@@ -1105,9 +1118,7 @@ When a mobile robot receives an `action` as part of the order (attached to a `no
 When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
 When a mobile robot executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
-The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState`.
-
-Table 2 lists feasible values of the `actionStatus`.
+The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState` (see Table 2). The possible 
 
 actionStatus | Description
 ---|---
@@ -1119,7 +1130,7 @@ actionStatus | Description
 'FINISHED' | The action is finished. <br>A result is reported via the `actionResult`.
 'FAILED' | Action could not be finished for whatever reason.
 
->Table 2 The acceptable values for the actionStatus field
+>Table 11 - Feasible values for the `actionStatus` field
 
 All possible action state transitions are visualized in Figure 21 and examples are given in the following matrix:
 
@@ -1132,6 +1143,8 @@ All possible action state transitions are visualized in Figure 21 and examples a
 | **PAUSED** | - | external trigger | - | external trigger | - | aborted via cancelOrder, switch to manual mode | - |
 | **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual mode, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
 | **RETRIABLE** | - | retries action via retry, external trigger | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual mode | fixed by operator via external input |
+
+>Table 12 Examples for possible action state transitions
 
 ![Figure 21 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 21 - All possible status transitions for actionStates
@@ -1233,7 +1246,7 @@ The JSON schemas are updated with every release of the VDA5050. If there are dif
 
 ## 7.1 Symbols of the tables and meaning of formatting
 
-The table contains the name of the identifier, its unit, its data type, and a description, if any.
+The object structure tables contain the name of the identifier, its unit, its data type, and a description, if any.
 
 Identification | Description
 ---|---
@@ -1242,6 +1255,8 @@ standard | Variable is an elementary data type
 *italic* | Variable is optional
 ***italic and bold***| Variable is optional and a non-elementary data type
 arrayName[arrayDataType] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is arrayDataType)
+
+>Table 13 - Symbols of the tables and meaning of formatting
 
 All keywords are case sensitive.
 All field names are in camelCase.
@@ -1300,7 +1315,7 @@ In the following sections, the following fields will be referenced as header for
 The header consists of the following individual elements.
 The header is not a JSON object.
 
-Object structure/Identifier | Data type | Description
+Object structure | Data type | Description
 ---|---|---
 headerId | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
 timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
