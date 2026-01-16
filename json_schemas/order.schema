@@ -156,10 +156,6 @@
                             "mapId": {
                                 "description": "Unique identification of the map in which the position is referenced.",
                                 "type": "string"
-                            },
-                            "mapDescriptor": {
-                                "description": "Additional information on the map.",
-                                "type": "string"
                             }
                         }
                     },
