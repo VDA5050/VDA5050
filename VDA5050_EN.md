@@ -1113,7 +1113,7 @@ In these cases the mobile robot has to clear any current order which means that 
 - `nodeStates` and `edgeStates` are emptied.
 - Any requests shall be removed from the state.
 
-As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' is reported.
+As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN' is reported.
 
 
 ### 6.6.8 Idle state of the mobile robot
