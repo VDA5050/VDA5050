@@ -735,10 +735,10 @@ The map files to be distributed are stored on a dedicated map server that is acc
 Each map is uniquely identified by a combination of a map identifier (field `mapId`) and a map version (field `mapVersion`). The map identifier describes a specific area of the mobile robot's physical workspace, and the map version indicates updates to previous versions. Before accepting a new order, the mobile robot shall check that there is a map on the mobile robot for each map identifier in the requested order. It is the responsibility of the fleet control to ensure that the correct maps are activated to operate the mobile robot.
 In order to minimize downtime and make it easier for the fleet control to synchronize the activation of new maps, it is essential that maps are pre-loaded or buffered on the mobile robots. The status of the maps on the mobile robot can be accessed via the mobile robot state channel. It's important to note that transferring a map to an mobile robot and then activating the map are different processes. To activate a pre-loaded map on a mobile robot, the fleet control sends an instant action. In this case, any other map with the same map identifier but a different map version is automatically disabled. Maps can be deleted by the fleet control with another instant action. The result of this process is shown in the mobile robot state.
 
-The map distribution process is shown in Figure 12.
+The map distribution process is shown in Figure 13.
 
-![Figure 12 Map distribution process](./assets/map_distribution_process.png)
->Figure 12 - Communication required between fleet control, mobile robot and map server to download, enable, and delete a map.
+![Figure 13 Map distribution process](./assets/map_distribution_process.png)
+>Figure 13 - Communication required between fleet control, mobile robot and map server to download, enable, and delete a map.
 
 ### 6.3.2 Maps in the mobile robot state
 
@@ -788,8 +788,8 @@ Two categories of zones are distinguished: contour-based zones and kinematic cen
 
 For contour-based zones, the contour of the mobile robot (including its load) determines zone entry and exit. Any part of the contour entering the zone is considered a zone entry. A zone exit shall be reported only when no part of the contour remains inside the zone. At what point a zone is reported as exited is decided by the mobile robot.
 
-![Figure 13 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
->Figure 13 - Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)
+![Figure 14 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
+>Figure 14 - Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)
 
 The following contour-based zones are defined:
 
@@ -815,8 +815,8 @@ In kinematic center-based zones, the mobile robot's kinematic center determines 
 'PRIORITY' and 'PENALTY' zones are zones which only influence the path planning of mobile robots.
 'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used. Other directions shall be avoided. The `directedLimitation` and `bidirectedLimitation` enums specify the limits within which the mobile robot may deviate from its direction of travel. The direction of travel is the velocity vector in the project-specific coordinate system.
 
-![Figure 14 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
->Figure 14 - Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)
+![Figure 15 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
+>Figure 15 - Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
@@ -883,16 +883,16 @@ The interaction between the mobile robot and the fleet control for 'RELEASE' zon
 While the mobile robot remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform fleet control that it is still inside the zone. After mobile robot has exited the zone, it shall remove the corresponding `zoneRequest` entry from its state message.
 When receiving a response with `responseType` 'REVOKED', the mobile robot shall remove the request from its state. When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall report a warning and react according to the `releaseLossBehavior` defined in the zone definition.
 
-![Figure 15 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
->Figure 15 - Zone request behavior for a RELEASE zone.
+![Figure 16 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
+>Figure 16 - Zone request behavior for a RELEASE zone.
 
 The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to Figure 16.
 
 The mobile robot shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
 When receiving a response with `responseType` 'REVOKED', the mobile robot shall remove the request from its state and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop driving and report a warning. To continue, the mobile robot shall state a new request.
 
-![Figure 16 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
->Figure 16 - Zone request behavior for a COORDINATED_REPLANNING zone.
+![Figure 17 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
+>Figure 17 - Zone request behavior for a COORDINATED_REPLANNING zone.
 
 
 ### 6.4.4 Interactions between zones
@@ -995,8 +995,8 @@ Additionally, if the mobile robot is able to derive its current position, it can
 
 The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the mobile robot to traverse.
 
-![Figure 17 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
->Figure 17 - Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
+![Figure 18 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
+>Figure 18 - Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
 ### 6.6.2 Traversal of nodes and entering/leaving edges, triggering of actions
@@ -1018,15 +1018,15 @@ The traversal of the node also marks the moment when the mobile robot enters the
 The edge's actions shall be triggered, if any.
 An exception to this rule is if the mobile robot shall pause on the node (because of a soft or hard blocking action, or otherwise) – then the mobile robot only enters the following edge once it begins driving again.
 
-![Figure 18 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
->Figure 18 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
+![Figure 19 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
+>Figure 19 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
 
 #### 6.6.2.1 Definition of allowedDeviationXY as an ellipse
 
 The allowedDeviationXY is defined as an ellipse around the node position to allow more flexible approaches to the node.
 
-![Figure 19 allowedDeviationXY ellipse](./assets/ellipse.png)
->Figure 19 - allowedDeviation ellipse
+![Figure 20 allowedDeviationXY ellipse](./assets/ellipse.png)
+>Figure 20 - allowedDeviation ellipse
 
 A fleet control system which doesn't support internally ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A mobile robot which doesn't support internally ellipses can choose the smaller half axis as a circle radius and ignore `theta` and behaves still standard conform.
 
@@ -1141,7 +1141,7 @@ actionStatus | Description
 
 >Table 11 - Feasible values for the `actionStatus` field
 
-All possible action state transitions are visualized in Figure 20 and examples are given in the following matrix:
+All possible action state transitions are visualized in Figure 21 and examples are given in the following matrix:
 
 
 | **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **RETRIABLE** | **FAILED** | **FINISHED** |
@@ -1155,8 +1155,8 @@ All possible action state transitions are visualized in Figure 20 and examples a
 
 >Table 12 Examples for possible action state transitions
 
-![Figure 20 All possible status transitions for actionStates](./assets/action_state_transition.png)
->Figure 20 - All possible status transitions for actionStates
+![Figure 21 All possible status transitions for actionStates](./assets/action_state_transition.png)
+>Figure 21 - All possible status transitions for actionStates
 
 
 #### 6.6.9.1 Reporting of horizon actions in the mobile robot's state
