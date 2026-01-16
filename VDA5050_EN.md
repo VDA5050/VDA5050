@@ -558,7 +558,7 @@ Resolution:
 4. The mobile robot continues with executing the previous order.
 
 If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, it either has to be ignored or an error has to be reported. 
-- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order. This might happen, if the fleet control resends the order because the robot did not acknowledge the oder update in a state message within 30sec (see chapter 6.6 State).
+- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order. This might happen, if the fleet control resends the order because the robot did not acknowledge the order in time.
 - If the content differs the mobile robot reports an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
 
 ### 6.1.5 Corridors
