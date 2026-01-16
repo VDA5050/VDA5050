@@ -1178,7 +1178,7 @@ The parameters `plannedPath` and `intermediatePath` shall be used only for traje
 
 Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in figure 21.
 
-![Figure 21 Visualization of request state transitions](./assets/request_state_transition.png)
+![Figure 21 Visualization of request state transitions](./assets/request_state_transitions.png)
 >Figure 21 - Request lifecycle: request states and logic of possible transitions. 
 
 A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
