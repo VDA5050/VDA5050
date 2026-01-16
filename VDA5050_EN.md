@@ -514,13 +514,10 @@ There are two options:
 
 If the mobile robot receives a `cancelOrder` instant action but the mobile robot is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the mobile robot’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
-<<<<<<< HEAD
-If the AGV receives a `cancelOrder` action but the AGV is currently idle, or the previous order was canceled, or the `orderId` specified in the action does not match the `orderId` of the AGV’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
-
 The AGV shall report an error of type "noOrderToCancel" with the `errorLevel` set to 'WARNING'.
 =======
 The mobile robot shall report an error of type 'NO_ORDER_TO_CANCEL' with the level set to 'WARNING'.
->>>>>>> ea8db42e01404406d86ba6d8ac7f6578310cd9b7
+
 The `actionId` of the `instantAction` shall be passed as an `errorReference`.
 
 
