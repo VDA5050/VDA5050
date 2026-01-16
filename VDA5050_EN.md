@@ -1176,7 +1176,10 @@ The parameters `plannedPath` and `intermediatePath` shall be used only for traje
 
 ## 6.9 Request/response mechanism
 
-Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used.
+Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in figure 21.
+
+![Figure 21 Visualization of request state transitions](./assets/request_state_transition.png)
+>Figure 21 - Request lifecycle: request states and logic of possible transitions. 
 
 A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
 
@@ -1197,9 +1200,6 @@ Fleet control receives requests from the state topic and shall answer via the re
 - The `requestId` of the corresponding request,
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
-
-![Figure 21 Visualization of request state transitions](./assets/request_state_transition.png)
->Figure 21 - Request lifecycle: states reported in the mobile robot state, valid transitions, and initiating entity (mobile robot or fleet control).
 
 If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall then continue to wait and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
 
