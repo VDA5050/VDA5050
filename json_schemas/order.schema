@@ -331,7 +331,7 @@
                                 "type": "string",
                                 "description": "Defines whether the boundaries are valid for the kinematic center or the contour of the mobile robot.",
                                 "enum": [
-                                    "KINEMATICCENTER",
+                                    "KINEMATIC_CENTER",
                                     "CONTOUR"
                                 ]
                             },
