@@ -1127,7 +1127,7 @@ When a mobile robot receives an `action` as part of the order (attached to a `no
 When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
 When a mobile robot executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
-The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState` (see Table 2). The possible 
+The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState` (see Table 2).
 
 actionStatus | Description
 ---|---
