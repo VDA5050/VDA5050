@@ -1324,7 +1324,7 @@ version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.
 manufacturer | | string | Manufacturer of the mobile robot.
 serialNumber | | string | Serial number of the mobile robot.
 orderId | | string | Order identification.<br> This is to be used to identify multiple order messages that belong to the same order.
-orderUpdateId | | uint32 | Order update identification.<br>Is unique per orderId, starting at 0 for a new order.<br>If an order update is rejected, this field is to be passed in the rejection message.
+orderUpdateId | | uint32 | Order update identification.<br>Shall be unique per orderId and start at 0 for a new order.<br>If an order update is rejected, this field shall be passed in the respective error.
 *orderDescription* | | string | Additional human-readable information only for visualization purposes; this may not be used for any logical processes.
 **nodes [node]** | | array | Array of node objects to be traversed for fulfilling the order.
 **edges [edge]** | | array | Array of edge objects to be traversed for fulfilling the order.
