@@ -102,7 +102,7 @@
                         "enum": [
                             "PHYSICAL_LINE_GUIDED",
                             "VIRTUAL_LINE_GUIDED",
-                            "AUTONOMOUS"
+                            "FREELY_NAVIGATING"
                         ]
                     }
                 },

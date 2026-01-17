@@ -35,6 +35,10 @@
             "type": "string",
             "description": "Manufacturer of the mobile robot"
         },
+        "referenceStateHeaderId": {
+            "type": "integer",
+            "description": "Header ID of the state message this visualization message refers to."
+        },
         "serialNumber": {
             "type": "string",
             "description": "Serial number of the mobile robot."

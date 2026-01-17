@@ -346,9 +346,6 @@
                 "mapId": {
                     "type": "string"
                 },
-                "mapDescriptor": {
-                    "type": "string"
-                },
                 "localized": {
                     "type": "boolean",
                     "description": "True: mobile robot is localized. x, y, and theta can be trusted. False: mobile robot is not localized. x, y, and theta cannot be trusted."
