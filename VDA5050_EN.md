@@ -1928,7 +1928,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |---|---|---|
 | ***orderHandling***  | JSON object | Defines the mobile robot’s behavior and capabilities related to order processing, including special conditions such as HIBERNATING connection state. |
 | { | | |
-| &emsp;*orderRetentionOnStopHibernation* | boolean | Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'true'.|
+| &emsp;*orderRetentionOnStopHibernation* | boolean | Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. <br/>If not defined, the default value is 'false'.|
 | } | | |
 | **optionalParameters** [**optionalParameters**] | array | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
 | { | | |
