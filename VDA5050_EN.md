@@ -464,7 +464,7 @@ Is the mobile robot in an idle state according to [6.6.8 Idle state of the mobil
 
 5) **is start of new order close enough to current position?**:	Is the mobile robot already standing on the node, or is it in the node's deviation range ([6.1.1 Concept and logic](#611-concept-and-logic))?
 
-6) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the mobile robot?
+6) **is received order update deprecated?**: Is `orderUpdateId` less than or equal to one currently on the mobile robot?
 
 7) **is order update following cancelOrder?**: No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
 
