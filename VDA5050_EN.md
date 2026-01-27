@@ -1021,7 +1021,7 @@ The edge shall then also be removed from the `edgeStates` and the actions that w
 
 The traversal of the node also marks the moment when the mobile robot enters the following edge, if there is one.
 The edge's actions shall be triggered, if any.
-An exception to this rule is if the mobile robot shall pause on the node (because of a soft or hard blocking action, or otherwise) – then the mobile robot only enters the following edge once it begins driving again.
+An exception to this rule is if the mobile robot shall stop on the node (because of a soft or hard blocking action) – then the mobile robot only enters the following edge once it begins driving again.
 
 ![Figure 19 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 19 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
