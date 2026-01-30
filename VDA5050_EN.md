@@ -1391,6 +1391,7 @@ actionId | | string | Unique ID to identify the action and map them to the `acti
 *actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 blockingType | | string | Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br> 'SINGLE': allows driving but no other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
 ***actionParameters [actionParameter]*** | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.3.1 Format of action parameters]((#731-format-of-action-parameters)).
+*requiredForOrder* | | boolean | Indicates whether an action is necessary for executing an order. <br>"true": Action is mandatory for order, if action fails, throw a 'CRITICAL' error. <br>"false": action is optional and a failure does not leat to a 'CRITICAL' error. <br>Default: "false".
 *retriable* <br> } | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails.<br>Default: "false".
 
 Object structure | Unit | Data type | Description
