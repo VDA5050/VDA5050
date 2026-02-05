@@ -273,7 +273,6 @@
             "description": "Describes an action that the mobile robot can perform.",
             "required": [
                 "actionType",
-                "actionId",
                 "blockingType"
             ],
             "properties": {
