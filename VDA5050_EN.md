@@ -1049,6 +1049,8 @@ The fleet control shall not use the information for logic; they shall only be us
 ### 6.6.5 Errors
 
 The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
+
+#### 6.6.5.1 Error levels
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
@@ -1059,7 +1061,7 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
-#### 6.6.5.1 Error references
+#### 6.6.5.2 Error references
 
 If an error occurs due to an erroneous order or execution failure, the mobile robot can return meaningful error references in the field `errorReferences` to support finding the cause of the error.
 This can include the following information:
@@ -1072,6 +1074,26 @@ This can include the following information:
 
 Additional hints can be put to the `errorHints` array.
 
+#### 6.6.5.3 Predefined error types
+
+The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
+
+Error Type | Description
+---|---
+'UNSUPPORTED_PARAMETER'|
+'NO_ORDER_TO_CANCEL' |
+'VALIDATION_FAILURE'|
+'INVALID_ORDER' |
+'OUTDATED_ORDER_UPDATE'|
+'SAME_ORDER_UPDATE_ID'|
+'ORDER_UPDATE_FOLLOWING_CANCEL'|
+'OUTSIDE_OF_CORRIDOR'|
+'DUPLICATE_MAP'|
+'BLOCKED_ZONE_VIOLATION'|
+'RELEASE_LOST'|
+'ZONE_ACTION_CONFLICT'|
+'NODE_UNREACHABLE'|
+'LOCALIZATION_ERROR'|
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
