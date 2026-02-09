@@ -48,7 +48,7 @@
                 "HIBERNATING",
                 "CONNECTION_BROKEN"
             ],
-            "description": "ONLINE: connection between mobile robot and broker is active. OFFLINE: connection between mobile robot and broker has gone offline in a coordinated way. HIBERNATING: connection between mobile robot and broker is active, but mobile robot does not state messages. This mode is intended for power-saving or communication reduction. The mobile robot can resume to ONLINE when instructed. CONNECTIONBROKEN: The connection between mobile robot and broker has unexpectedly ended."
+            "description": "ONLINE: connection between mobile robot and broker is active. OFFLINE: connection between mobile robot and broker has gone offline in a coordinated way. HIBERNATING: connection between mobile robot and broker is active, but mobile robot does not state messages. This mode is intended for power-saving or communication reduction. The mobile robot can resume to ONLINE when instructed. CONNECTION_BROKEN: The connection between mobile robot and broker has unexpectedly ended."
         }
     }
 }
