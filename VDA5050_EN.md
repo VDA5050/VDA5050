@@ -1541,9 +1541,6 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 ## 7.7 Implementation of the connection message
 
-
-The last will message is defined as a JSON structure message with the following fields:
-
 Identifier | Data type | Description
 ---|---|---
 headerId | uint32 | Header ID of the message. <br>The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
@@ -1817,8 +1814,6 @@ Objects `plannedPath`, `intermediatePaht`, `mobileRobotPosition` and `velocity` 
 
 
 ## 7.10 Implementation of the factsheet message
-
-The factsheet consists of the JSON objects listed in the following table.
 
 | **Field** | **data type** | **description** |
 | --- | --- | --- |
