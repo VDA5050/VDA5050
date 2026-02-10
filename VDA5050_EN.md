@@ -439,12 +439,7 @@ In order to release actions for the mobile robot to execute on a node it is alre
 
 The horizon may be modified or deleted entirely with any order update, or the base may be extended in a way different from the previous horizon.
 
-To allow loops in orders (like going from node a to b and then back to a) a `sequenceId` is assigned to the node and edge objects.
-This `sequenceId` runs over the nodes and edges (first node of an order: `sequenceId` = 0, first edge: `sequenceId` = 1, second node: `sequenceId` = 2, and so forth).
-This is necessary to unambiguously refer to nodes of the order, as nodes may be contained more than once (e.g., when driving a circular path).
-
 Once a `sequenceId` is assigned and the node is released, it does not change with order updates (see Figure 6).
-
 
 Figure 8 describes the process of accepting an order or order update.
 
