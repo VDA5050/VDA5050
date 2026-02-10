@@ -1078,7 +1078,7 @@ Additional hints can be put to the `errorHints` array.
 
 The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
 
-Error Type | Description
+Error Type | Error level | Description
 ---|---
 'UNSUPPORTED_PARAMETER'|
 'NO_ORDER_TO_CANCEL' |
