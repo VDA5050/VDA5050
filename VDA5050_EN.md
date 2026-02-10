@@ -206,7 +206,7 @@ For a local broker the MQTT topic levels are suggested as followed:
 
 Example:
 ```
-uagv/v2/KIT/0001/order
+uagv/v3/KIT/0001/order
 ```
 
 MQTT Topic Level | Data type | Description
@@ -1550,7 +1550,7 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 The suggested last will topic structure is:
 
-**uagv/v2/manufacturer/SN/connection**
+**uagv/v3/manufacturer/SN/connection**
 
 The last will message is defined as a JSON structure message with the following fields:
 
