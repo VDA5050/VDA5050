@@ -1510,9 +1510,9 @@ A single zone object has the following structure:
 | *zoneDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
 | *maximumSpeed* | float64 | Required only for SPEED_LIMIT zone as defined in chapter  [6.3.1 Zone types](#631-zone-types).| 
-| ***entryActions[Action]***| array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
-| ***duringActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
-| ***exitActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
+| ***entryActions[zoneAction]***| array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
+| ***duringActions[zoneAction]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
+| ***exitActions[zoneAction]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
 | *releaseLossBehavior* | string | Required only for RELEASE zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 | *priorityFactor* | float64 | Required only for PRIORITY zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 | *penaltyFactor* | float64 | Required only for PENALTY zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
@@ -1520,8 +1520,16 @@ A single zone object has the following structure:
 | *directedLimitation* | string | Required only for a DIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 | *bidirectedLimitation* | string | Required only for a BIDIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
 
-Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
+A `zoneAction` follows the structure of an action, except the mobile robot generates the `actionId` itself.
 
+Object structure | Unit | Data type | Description
+---|---|---|---
+**zoneAction** { | | JSON object | Describes an action that the mobile robot can perform.
+actionType | | string | Name of action as described in the first column of "Actions and Parameters". <br> Identifies the function of the action.
+*actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
+blockingType | | string | Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br> 'SINGLE': allows driving but no other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
+***actionParameters [actionParameter]*** | | array | Array of actionParameter objects for the indicated action, e.g., "deviceId", "loadId", "external triggers". <br><br> An example implementation can be found in [7.3.1 Format of action parameters]((#731-format-of-action-parameters)).
+*retriable* <br> } | | boolean | "true": action can enter RETRIABLE state if it fails.<br>"false": action enters FAILED state directly after it fails.<br>Default: "false".
 
 The shape of each zone object is defined through a polygon, which is communicated through its vertices. A zone with less than three vertices is invalid and shall be rejected. If the first entry of the vertex array is not identical to the last, the polygon is implicitly closed by a connecting line to the first vertex. Only simple polygons (i.e. without intersections) shall be used. The array of vertices defining a zone is provided as a list of x-y tuples in the globally defined project-specific coordinate system in a counterclockwise direction: 
 
