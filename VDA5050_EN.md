@@ -1078,10 +1078,10 @@ Additional hints can be put to the `errorHints` array.
 
 The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
 
-Error Type | Error level | Description
----|---
-'UNSUPPORTED_PARAMETER'|
-'NO_ORDER_TO_CANCEL' |
+Error Type | Error level | Description | Reference | Report until
+---|---|---|---|---
+'UNSUPPORTED_PARAMETER'|'CRITICAL'|The mobile robot received message with a parameter that it does not support. | - | Until a valid message is received.
+'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `cancelOrder` `actionId` | Until new order is received.
 'VALIDATION_FAILURE'|
 'INVALID_ORDER' |
 'OUTDATED_ORDER_UPDATE'|
