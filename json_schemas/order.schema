@@ -179,8 +179,6 @@
                     "edgeId",
                     "sequenceId",
                     "released",
-                    "startNodeId",
-                    "endNodeId",
                     "actions"
                 ],
                 "properties": {
@@ -200,14 +198,6 @@
                     "released": {
                         "type": "boolean",
                         "description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
-                    },
-                    "startNodeId": {
-                        "type": "string",
-                        "description": "The nodeId of the start node."
-                    },
-                    "endNodeId": {
-                        "type": "string",
-                        "description": "The nodeId of the end node."
                     },
                     "maximumSpeed": {
                         "type": "number",
