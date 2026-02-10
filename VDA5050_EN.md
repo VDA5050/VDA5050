@@ -567,7 +567,7 @@ Resolution:
 
 Example:
 
-- Fleet control resent the order because it did not receive any state message containing the latest `orderUpdateId` in time.
+- Fleet control resends the order because it did not yet receive any state message with the respective `orderUpdateId`.
 
 Resolution:
 
