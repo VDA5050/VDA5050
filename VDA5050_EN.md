@@ -1094,6 +1094,9 @@ Error Type | Error level | Description | Reference | Report until
 'ZONE_ACTION_CONFLICT'|
 'NODE_UNREACHABLE'|
 'LOCALIZATION_ERROR'|
+'NO_ROUTE_TO_TARGET'| 'CRITICAL' | 
+'OTHER_ORDER_ACTIVE'| 'WARNING' |
+'START_NODE_OUT_OF_RANGE'| 'CRITICAL' |
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
