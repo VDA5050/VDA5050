@@ -642,7 +642,7 @@ If there is no way to map some action to one of the actions of the following sec
 
 #### 6.2.3.1 Definition, parameters, effects and scope
 
-action name | counter action | description | idempotent | parameters | linked state | instant | node | edge | zone
+action type | counter action | description | idempotent | parameters | linked state | instant | node | edge | zone
 ---|---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Actions that can be paused (`pauseAllowed`=`true`), shall be paused, other actions continue. Order execution is resumed after stopPause. | yes | - | paused | yes | no | no | no
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any).<br>A linked state is required because many mobile robots can be paused by using a hardware switch. <br>stopPause can also restart mobile robots that were stopped with a hardware button that triggered startPause (if configured). | yes | - | paused | yes | no | no | no
@@ -676,7 +676,7 @@ updateCertificate | - | Request the mobile robot to download and activate a new 
 
 #### 6.2.3.2 Action states
 
-action | 'INITIALIZING' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'FAILED' | 'RETRIABLE'
+action type | 'INITIALIZING' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'FAILED' | 'RETRIABLE'
 ---|---|---|---|---|---|---
 startPause | - | Activation of the mode is in preparation.<br>If the mobile robot supports an instant transition, this state can be omitted. | - | Mobile robot stands still. <br>All pauseable actions are paused. <br>The pause mode is activated. <br>The mobile robot reports paused: "true". | The pause mode cannot be activated for some reason (e.g., overridden by hardware switch).
 stopPause | - | Deactivation of the mode is in preparation. <br>If the mobile robot supports an instant transition, this state can be omitted. | - | The pause mode is deactivated. <br>All paused actions are resumed. <br>The mobile robot reports paused: "false". | The pause mode cannot be deactivated for some reason (e.g., overridden by hardware switch). | -
@@ -1374,7 +1374,7 @@ theta<br>} | rad | float64 | Rotation angle (the angle from the positive horizon
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **action** { | | JSON object | Describes an action that the mobile robot can perform.
-actionType | | string | Name of action. For predefined actions this is described in the first column of table 4. <br> Identifies the function of the action.
+actionType | | string | Type of the action. For predefined actions this is defined in the first column of table 4. <br> Identifies the function of the action.
 actionId | | string | Unique ID to identify the action and map them to the `actionState` in the state. <br>Suggestion: Use UUIDs.
 *actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 blockingType | | string | Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'}: <br> 'NONE': allows driving and other actions;<br> 'SINGLE': allows driving but no other actions;<br>'SOFT': allows other actions but not driving;<br>'HARD': is the only allowed action at that time.
