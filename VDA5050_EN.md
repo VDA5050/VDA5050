@@ -1749,8 +1749,8 @@ actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
-**batteryState** { | | JSON object | 
-batteryCharge | % | float64 | State of Charge: <br> If mobile robot only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good). 
+**powerSupply** { | | JSON object | 
+stateOfCharge | % | float64 | Range: [0 ... 100]<br><br>State of charge of the mobile robot. For permanently powered mobile robots, this field shall be 100.
 *batteryVoltage* | V | float64 | Battery voltage.
 *batteryCurrent* | A | float64 | Battery current.
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
