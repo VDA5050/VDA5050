@@ -1577,7 +1577,7 @@ lastNodeSequenceId | | uint32 | Sequence ID of the last reached node or, if the 
 ***plannedPath*** | | JSON object | Represents a path within the robot's currently active order as NURBS.
 ***intermediatePath*** | | JSON object | Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors.
 ***mobileRobotPosition*** | | JSON object | Current position of the mobile robot on the map.<br><br>Optional: Can only be omitted for mobile robots without the capability to localize themselves, e.g., line-guided mobile robots.
-***velocity*** | | JSON object | The mobile robot velocity in its coordinates.
+**velocity** | | JSON object | The mobile robot velocity in its coordinates.
 ***loads [load]*** | | array | Loads, that are currently handled by the mobile robot.<br><br>Optional: If the mobile robot cannot determine the load state, this field shall be omitted completely and not be reported as an empty array. <br>If the mobile robot can determine the load state, but the array is empty, the mobile robot is considered unloaded.
 driving | | boolean | "true": indicates, that the mobile robot is driving (manual or automatic). Other movements (e.g., lift movements) are not included here.<br>"false": indicates that the mobile robot is not driving.
 *paused* | | boolean | "true": the mobile robot is currently in a paused state, either because of the push of a physical button on the mobile robot or because of an instantAction. <br>The mobile robot can resume the order.<br><br>"false": the mobile robot is currently not in a paused state.
@@ -1690,7 +1690,7 @@ mapId <br> } | | string | Unique identification of the map in which the position
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **velocity** { | | JSON object |
-*vx* | m/s | float64 | The mobile robot's velocity in its X-direction.
+vx | m/s | float64 | The mobile robot's velocity in its X-direction.
 *vy* | m/s | float64 | The mobile robot's velocity in its Y-direction.
 *omega*<br>}| rad/s | float64 | The mobile robot's turning speed around its Z-axis.
 
