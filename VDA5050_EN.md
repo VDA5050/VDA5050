@@ -1543,7 +1543,6 @@ The shape of each zone object is defined through a polygon, which is communicate
 
 The suggested last will topic structure is:
 
-
 The last will message is defined as a JSON structure message with the following fields:
 
 Identifier | Data type | Description
