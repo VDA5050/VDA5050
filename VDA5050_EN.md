@@ -459,7 +459,7 @@ Is the mobile robot in an idle state according to [6.6.8 Idle state of the mobil
 
 5) **is start of new order close enough to current position?**:	Is the mobile robot already standing on the node, or is it in the node's deviation range ([6.1.1 Concept and logic](#611-concept-and-logic))?
 
-6) **is received order update deprecated?**: Is `orderUpdateId` smaller than the one currently on the mobile robot?
+6) **is received order update deprecated?**: Is `orderUpdateId` less than or equal to one currently on the mobile robot?
 
 7) **is order update following cancelOrder?**: No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
 
@@ -525,12 +525,12 @@ There are several scenarios, when an order shall be rejected.
 These scenarios are shown in Figure 8 and described below.
 
 
-#### 6.1.4.1 Mobile robot gets a malformed new order
+#### 6.1.4.1 Mobile robot receives a malformed new order
 
 Resolution:
 
 1. Mobile robot does NOT take over the new order in its internal buffer.
-2. The mobile robot reports an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
+2. The mobile robot shall report an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
@@ -544,22 +544,35 @@ Examples:
 Resolution:
 
 1. Mobile robot does NOT take over the new order in its internal buffer
-2. Mobile robot reports an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
+2. Mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.3 Mobile robot gets a new order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
+#### 6.1.4.3 Mobile robot receives an order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution:
 
 1. Mobile robot does NOT take over the new order in its internal buffer.
 2. Mobile robot keeps the previous order in its buffer.
-3. The mobile robot reports an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
+3. The mobile robot shall report an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
-If the mobile robot receives an order with the same `orderId` and `orderUpdateId` twice, the reaction depends on the content of the message:
-- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order. This might happen, if the fleet control resends the order because the robot did not acknowledge the order in time.
-- If the content differs, the mobile robot shall report an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
+
+#### 6.1.4.4 Mobile robot receives an order with the same orderId and same orderUpdateId as the current orderUpdateId
+
+Example:
+
+- Fleet control resends the order because it did not yet receive any state message with the respective `orderUpdateId`.
+
+Resolution:
+
+1. Mobile robot does NOT take over the new order in its internal buffer.
+2. Mobile robot keeps the previous order in its buffer.
+3. Reporting depends on the content of the message:
+	- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order.
+	- If the content of the new order differs, the mobile robot shall report an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
+5. The mobile robot continues with executing the previous order.
+
 
 ### 6.1.5 Corridors
 
