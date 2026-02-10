@@ -1305,8 +1305,8 @@ All field names are in camelCase.
 
 If a variable is marked as optional, it is optional for the sender as the variable might not be applicable in certain cases (e.g., when the fleet control sends an order to a mobile robot, some mobile robots plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
-If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and cannot ignore the field.
-If the mobile robot cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
+If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and shall not ignore the field.
+If the mobile robot cannot process the message accordingly, it shall communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
 Fleet control shall only send optional information that the mobile robot supports.
 
