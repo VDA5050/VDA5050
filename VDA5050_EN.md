@@ -1027,7 +1027,6 @@ The allowedDeviationXY is defined as an ellipse around the node position to allo
 ![Figure 20 allowedDeviationXY ellipse](./assets/ellipse.png)
 >Figure 20 - allowedDeviation ellipse
 
-A fleet control system which does not internally support ellipses can choose `a` = `b` and `theta` = 0.0 to define a circle. A mobile robot which does not internally support ellipses can choose the smaller half axis as a circle radius and ignore `theta`  to still comply to a given ellipse.
 
 ### 6.6.3 Base request
 
