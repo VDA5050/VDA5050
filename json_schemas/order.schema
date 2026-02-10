@@ -240,12 +240,12 @@
                     },
                     "length": {
                         "type": "number",
-                        "description": "Distance of the path from startNode to endNode in meters. Optional: This value is used by line-guided mobile robots to decrease their speed before reaching a stop position.",
+                        "description": "Distance of the path from the start node to the end node in meters. Optional: This value is used by line-guided mobile robots to decrease their speed before reaching a stop position.",
                         "unit": "m"
                     },
                     "trajectory": {
                         "type": "object",
-                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between startNode and endNode. Optional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
+                        "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between the start node and the end node. Optional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
                         "required": [
                             "degree",
                             "knotVector",

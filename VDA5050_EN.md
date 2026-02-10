@@ -328,7 +328,7 @@ The fleet control only includes edges in a mobile robot order which the concerni
 >Figure 2 - Graph representation in fleet control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
-The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed.
+The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed. The 'sequenceId' is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `seuquenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
 
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
