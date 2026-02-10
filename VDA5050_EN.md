@@ -95,7 +95,6 @@ Version 3.0.0
   [6.7 Visualization](#67-visualization)<br>
   [6.8 Sharing of planned paths for freely navigating mobile robots](#68-sharing-of-planned-paths-for-freely-navigating-mobile-robots)<br>
   [6.9 Request/response mechanism](#69-requestresponse-mechanism)<br>
-    [6.9.1 Response for edge requests](#691-response-for-edge-requests)<br>
   [6.10 Factsheet](#610-factsheet)<br>
 [7 Message specification](#7-message-specification)<br>
   [7.1 Symbols of the tables and meaning of formatting](#71-symbols-of-the-tables-and-meaning-of-formatting)<br>
