@@ -1773,6 +1773,7 @@ Object structure | Unit | Data type | Description
 infoType | | string | Type/name of information.
 *infoReferences [infoReference]* | | array | Array of references.
 *infoDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
+*infoDescriptorTranslations[translation]* | | array | Array of translations of the info descriptor. If a particular language is not included in the collection, the value of the infoDescriptor field, if present, shall be used as the default.
 infoLevel <br>}| | string | Enum {'DEBUG', 'INFO'}<br><br>'DEBUG': used for debugging.<br> 'INFO': used for visualization.
 
 Object structure | Unit | Data type | Description
