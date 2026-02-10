@@ -939,7 +939,6 @@ Thus, the fleet control can detect a disconnection event by subscribing the conn
 The disconnection is detected via a heartbeat that is exchanged between the broker and the client.
 Thus, the fleet control can detect a disconnection event by subscribing to the `connection` topic of each mobile robot.
 
-The Quality of Service level for the `connection` topic shall be 1 (At Least Once).
 
 As a result, the timestamp and headerId fields will always be outdated.
 
