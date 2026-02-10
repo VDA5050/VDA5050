@@ -1223,12 +1223,6 @@ If no response is received within the time frame required by the application, th
 
 A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from fleet control is required.
 
-### 6.9.1 Response for edge requests
-
-As with zone requests, the fleet control can grant edge requests through a `response` object sent on the dedicated /response topic.
-
-Additionally, the fleet control has the option to add a `leaseExpiry` timestamp to the response. If the robot has not finished its request by the time of expiry, it must then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
-
 ## 6.10 Factsheet
 
 The factsheet provides basic information about a specific mobile robot type series.
