@@ -563,7 +563,7 @@ Resolution:
 4. The mobile robot continues with executing the previous order.
 
 
-#### 6.1.4.4 Mobile robot receives an order with the same orderId and same orderUpdateId than the current orderUpdateId
+#### 6.1.4.4 Mobile robot receives an order with the same orderId and same orderUpdateId as the current orderUpdateId
 
 Example:
 
