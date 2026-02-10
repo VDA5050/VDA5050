@@ -206,7 +206,7 @@ For a local broker the MQTT topic levels are suggested as followed:
 
 Example:
 ```
-uagv/v2/KIT/0001/order
+vda5050/v3/KIT/0001/order
 ```
 
 MQTT Topic Level | Data type | Description
@@ -939,17 +939,17 @@ As a result, the timestamp and headerId fields will always be outdated.
 
 Mobile robot wants to disconnect gracefully:
 
-1. Mobile robot sends "uagv/v3/manufacturer/serialNumber/connection" with `connectionState` set to `OFFLINE`.
+1. Mobile robot sends "vda5050/v3/manufacturer/serialNumber/connection" with `connectionState` set to `OFFLINE`.
 2. Disconnect the MQTT connection with a disconnect command.
 
 Mobile robot comes online:
 
-1. Set the last will to "uagv/v3/manufacturer/serialNumber/connection" with the field `connectionState` set to 'CONNECTION_BROKEN', when the MQTT connection is created.
-2. Send the topic "uagv/v3/manufacturer/serialNumber/connection" with `connectionState` set to 'ONLINE'.
+1. Set the last will to "vda5050/v3/manufacturer/serialNumber/connection" with the field `connectionState` set to 'CONNECTION_BROKEN', when the MQTT connection is created.
+2. Send the topic "vda5050/v3/manufacturer/serialNumber/connection" with `connectionState` set to 'ONLINE'.
 
 All messages on this topic shall be sent with a `retained` flag.
 
-When connection between the mobile robot and the broker stops unexpectedly, the broker will send the last will topic: "uagv/v3/manufacturer/serialNumber/connection" with the field `connectionState` set to 'CONNECTION_BROKEN'.
+When connection between the mobile robot and the broker stops unexpectedly, the broker will send the last will topic: "vda5050/v3/manufacturer/serialNumber/connection" with the field `connectionState` set to 'CONNECTION_BROKEN'.
 
 
 ## 6.6 State
