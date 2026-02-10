@@ -1081,7 +1081,7 @@ The mobile robot can use predefined error types to report specific issues. The f
 Error Type | Error level | Description | Reference | Report until
 ---|---|---|---|---
 'UNSUPPORTED_PARAMETER'|'CRITICAL'|The mobile robot received message with a parameter that it does not support. | - | Until a valid message is received.
-'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `cancelOrder` `actionId` | Until new order is received.
+'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is received.
 'VALIDATION_FAILURE'|
 'INVALID_ORDER' |
 'OUTDATED_ORDER_UPDATE'|
@@ -1097,6 +1097,7 @@ Error Type | Error level | Description | Reference | Report until
 'NO_ROUTE_TO_TARGET'| 'CRITICAL' | 
 'OTHER_ORDER_ACTIVE'| 'WARNING' |
 'START_NODE_OUT_OF_RANGE'| 'CRITICAL' |
+'MOBILE_ROBOT_NOT_AVAILABLE'| 'WARNING' |The mobile robot received a order or order update, but is currently not in the 'AUTOMATIC' operating mode.. | `orderId` | Until operating mode is swithced to 'AUTOMATIC'.
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
