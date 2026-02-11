@@ -273,17 +273,12 @@
             "description": "Describes an action that the mobile robot can perform.",
             "required": [
                 "actionType",
-                "actionId",
                 "blockingType"
             ],
             "properties": {
                 "actionType": {
                     "type": "string",
                     "description": "Name of action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
-                },
-                "actionId": {
-                    "type": "string",
-                "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
                 },
                 "actionDescriptor": {
                     "type": "string",
