@@ -604,7 +604,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.8 Mobile robot receives an order while in an order mode that does not allow new orders
+#### 6.1.4.8 Mobile robot receives an order while in an operating mode that does not allow new orders
 
 Resolution:
 
