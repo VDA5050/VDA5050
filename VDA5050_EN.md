@@ -586,7 +586,7 @@ Resolution:
 5. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.6 Mobile robot receives with the start node being out of range
+#### 6.1.4.6 Mobile robot receives an order with the start node being out of range
 
 Resolution:
 
@@ -595,7 +595,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.7 Mobile robot receives with at least one node not being reachable
+#### 6.1.4.7 Mobile robot receives an order with at least one node not being reachable
 
 Resolution:
 
@@ -1125,26 +1125,26 @@ Additional hints can be put to the `errorHints` array.
 
 The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
 
-Error Type | Error level | Description | Reference | Report until
+Error Type | Error level | Description | Reference | Report duration
 ---|---|---|---|---
-'UNSUPPORTED_PARAMETER'|'CRITICAL'|The mobile robot received message with a parameter that it does not support. | - | Until a valid message is received.
-'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is received.
-'VALIDATION_FAILURE'|
-'INVALID_ORDER' |
-'OUTDATED_ORDER_UPDATE'|
-'SAME_ORDER_UPDATE_ID'|
-'ORDER_UPDATE_FOLLOWING_CANCEL'|
-'OUTSIDE_OF_CORRIDOR'|
-'DUPLICATE_MAP'|
-'BLOCKED_ZONE_VIOLATION'|
-'RELEASE_LOST'|
-'ZONE_ACTION_CONFLICT'|
-'NODE_UNREACHABLE'|
-'LOCALIZATION_ERROR'|
-'NO_ROUTE_TO_TARGET'| 'CRITICAL' | 
-'OTHER_ORDER_ACTIVE'| 'WARNING' |
-'START_NODE_OUT_OF_RANGE'| 'CRITICAL' |
-'MOBILE_ROBOT_NOT_AVAILABLE'| 'WARNING' |The mobile robot received a order or order update, but is currently not in the 'AUTOMATIC' operating mode.. | `orderId` | Until operating mode is swithced to 'AUTOMATIC'.
+'UNSUPPORTED_PARAMETER'|'CRITICAL'|Receival of message with an unsupported optional parameter. | `headerId` of message | Until a valid message on this topic is received.
+'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
+'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
+'INVALID_ORDER' | 'WARNING' | Receival of an order containing unsupported actions or parameters. | `orderId` | Until new order is accepted.
+'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId`but outdated `orderUpdateId`. | `headerId` of order message | Until new order message is accepted.
+'SAME_ORDER_UPDATE_ID'| 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order message is accepted.
+'ORDER_UPDATE_FOLLOWING_CANCEL'|'WARNING'| Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order message is accepted.
+'OUTSIDE_OF_CORRIDOR'|'CRITICAL'| Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
+'DUPLICATE_MAP'|'WARNING'| Receival of a map with `mapId` and `mapVersion` already existing. | `headerId` of map message | As long as relevant.
+'BLOCKED_ZONE_VIOLATION'|'CRITICAL'| Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
+'RELEASE_LOST'|'CRITICAL'| Losing the release for a 'RELEASE' zone. | `zoneId` | Until the mobile robot is no longer within the 'RELEASE' zone or is granted a the release again.
+'ZONE_ACTION_CONFLICT'|'CRITICAL'| Conflict between zone behavior and zone actions. | `zoneId` of 'ACTION' zone | Until the mobile robot is no longer violating the zone behavior.
+'NODE_UNREACHABLE'|'CRITICAL'| The mobile robot cannot reach a node in its order. | `nodeId` | Until new order message is accepted.
+'LOCALIZATION_ERROR'|'FATAL'| The mobile robot is not localized. | | Until localization is regained.
+'NO_ROUTE_TO_TARGET'| 'WARNING' | Receival of an order with at least one unreachable node. | `orderId` | Until new order message is accepted.
+'OTHER_ORDER_ACTIVE'| 'WARNING' | Receival of a new order while another order is still active. | `orderId` | Until new order message is accepted.
+'START_NODE_OUT_OF_RANGE'| 'WARNING' | Receival of an order with unreachale first node. | `orderId` | Until new order message is accepted.
+'MOBILE_ROBOT_NOT_AVAILABLE'| 'WARNING' |Receival of an order while not in the 'AUTOMATIC' operating mode. | `orderId` | Until operating mode is switched to 'AUTOMATIC'.
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
