@@ -525,11 +525,11 @@ There are several scenarios, when an order shall be rejected.
 These scenarios are shown in Figure 8 and described below.
 
 
-#### 6.1.4.1 Mobile robot receives a malformed new order
+#### 6.1.4.1 Mobile robot receives a malformed order
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
 2. The mobile robot shall report an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
@@ -543,8 +543,8 @@ Examples:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer
-2. Mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
+1. The mobile robot shall not take over the new order in its internal buffer
+2. The mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
@@ -552,8 +552,8 @@ Resolution:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
-2. Mobile robot keeps the previous order in its buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall keep the previous order in its buffer.
 3. The mobile robot shall report an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
@@ -566,12 +566,58 @@ Example:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
-2. Mobile robot keeps the previous order in its buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall keep the previous order in its buffer.
 3. Reporting depends on the content of the message:
-	- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order.
+	- If the content of the new order is the same as the content of the previous one, the mobile robot shall ignore the new order.
 	- If the content of the new order differs, the mobile robot shall report an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
-5. The mobile robot continues with executing the previous order.
+4. The mobile robot shall continue with executing the previous order.
+5. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.5 Mobile robot receives an order with orderId different to the orderId of an active order
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot keeps the previous order in its buffer.
+3. The mobile robot shall report an error of type 'OTHER_ORDER_ACTIVE' and level 'WARNING'.
+4. The mobile robot continues with executing the previous order.
+5. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.6 Mobile robot receives with the start node being out of range
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'START_NODE_OUT_OF_RANGE' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.7 Mobile robot receives with at least one node not being reachable
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'NO_ROUTE_TO_TARGET' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.8 Mobile robot receives an order while in an order mode that does not allow new orders
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'MOBILE_ROBOT_NOT_AVAILABLE' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot is in an order mode that allows for new orders.
+
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'NO_ROUTE_TO_TARGET' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
 ### 6.1.5 Corridors
