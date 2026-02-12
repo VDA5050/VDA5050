@@ -249,6 +249,8 @@ Moving | Any change in the spatial position or orientation of the mobile robot o
 Driving | The mobile robot is considered to be driving when any component of its velocity vector (translational or rotational) is non-zero.
 Automatic Driving | The mobile robot is driving without human intervention.
 Manual Driving | The mobile robot is driving while under control of a human.
+Line-Guided mobile robots | Mobile robots that follow a predefined trajectories either sent by fleet control or defined on the robot explicitly or implicitly as the direct connection between the nodes.
+Freely-navigating mobile robots | Mobile robots that plan their own trajectories. If fleet control sends a trajectory within the order, the robot shall follow this trajectory.
 
 >Table 4 Definitions of terms used in this document
 
