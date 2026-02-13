@@ -88,7 +88,7 @@ Version 3.0.0
     [6.6.4 Information](#664-information)<br>
     [6.6.5 Errors](#665-errors)<br>
     [6.6.6 Operating Mode](#666-operating-mode)<br>
-    [6.6.7 Clearing the order](#667-clearing-the-order)<br>
+    [6.6.7 Clearing the order on the mobile robot](#667-clearing-the-order-on-the-mobile-robot)<br>
     [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot)<br>	
     [6.6.9 Action states](#669-action-states)<br>
     [6.6.10 Request use of Corridors](#6610-request-use-of-corridors)<br>
@@ -1093,17 +1093,18 @@ TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 
 ### 6.6.7 Clearing the order on the mobile robot
 
-In response to one of the following events, not triggered by fleet control, the mobile robot has to stop executing the current order:
+In response to one of the following events, the mobile robot has to stop executing the current order:
 - The mobile robot is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.6.6 Operating Mode](#666-operating-mode)).
-- The mobile robot receives a `cancelOrder` as an instant action from fleet control.
+- The mobile robot receives a `cancelOrder` instant action from fleet control.
+The mobile robot receives a `startHibernation` instant action from fleet control.
 
 In these cases the mobile robot has to clear its current order which means that:
 
 - Any scheduled actions in the `actionStates` shall be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running actions in the `actionStates` action should also be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running actions in the `actionStates` action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
-- `orderId` and `orderUpdateId` are kept.
-- `nodeStates` and `edgeStates` are emptied.
+- The value of `orderId`, `orderUpdateId`, `lastNodeId` and `lastNodeSequenceId` remain unchanged.
+- The arrays `nodeStates` and `edgeStates` are set to empty lists.
 - `lastNodeId` and `lastNodeSequenceId` are kept.
 - Any requests shall be removed from the state.
 
