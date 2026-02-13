@@ -95,7 +95,6 @@ Version 3.0.0
   [6.7 Visualization](#67-visualization)<br>
   [6.8 Sharing of planned paths for freely navigating mobile robots](#68-sharing-of-planned-paths-for-freely-navigating-mobile-robots)<br>
   [6.9 Request/response mechanism](#69-requestresponse-mechanism)<br>
-    [6.9.1 Response for edge requests](#691-response-for-edge-requests)<br>
   [6.10 Factsheet](#610-factsheet)<br>
 [7 Message specification](#7-message-specification)<br>
   [7.1 Symbols of the tables and meaning of formatting](#71-symbols-of-the-tables-and-meaning-of-formatting)<br>
@@ -854,7 +853,7 @@ The following contour-based zones are defined:
 | BLOCKED | none | | Mobile robots shall not enter this zone. If a mobile robot has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the predefined trajectories on edges. Mobile robots may only enter this zone if the route is explicitly specified by the fleet control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the fleet control or a predefined trajectory on the mobile robot. A corridor can be sent to allow the mobile robot to deviate from the trajectory. | 
 | RELEASE | | - | Mobile robots are only allowed entering this zone once they have been granted access through fleet control. | 
-| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the mobile robot can either 'STOP', 'CONTINUE', or 'EVACUATE' the zone. This action is only executed, when the mobile robot is already in the zone and the release expires or is revoked. If not defined, the mobile robot is expected to STOP and report an error. 'STOP': Mobile robot stops and sends a 'RELEASE_LOST' error with level 'CRITICAL'. 'EVACUATE': Execute the evacuation behavior of the mobile robot to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left. 'CONTINUE': If the release is revoked or expires after the mobile robot has already entered the zone, the mobile robot continues its path, keeping the zoneRequest object granting the zone release in its state. If the order ends inside the zone, the mobile robot waits for a new order.|
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the mobile robot can either 'STOP', 'CONTINUE', or 'EVACUATE' the zone. This action is only executed, when the mobile robot is already in the zone and the release expires or is revoked. If not defined, the mobile robot is expected to STOP and report an error.<br>'STOP': Mobile robot stops and sends a 'RELEASE_LOST' error with level 'CRITICAL'.<br>'EVACUATE': Execute the evacuation behavior of the mobile robot to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left.<br>'CONTINUE': If the release is revoked or expires after the mobile robot has already entered the zone, the mobile robot continues its path, keeping the `zoneRequest` object granting the zone release in its state. If the order ends inside the zone, the mobile robot waits for a new order.|
 | COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Mobile robots are only allowed adjusting their path if granted permission by fleet control. | 
 | SPEED_LIMIT | | | Mobile robots shall not drive faster than the defined maximum speed within this zone. | 
 | | maximumSpeed | float64 | Maximum permitted speed for mobile robot within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
@@ -1250,7 +1249,10 @@ If the corridors within a mobile robot's currently active order have the `releas
 The `requestStatus` is set to REQUESTED and the combination of `edgeId` and `sequenceId` references the edge's trajectory the robot asks to deviate from. The mobile robot has the option to request the approval for several edges simulatenously as long as they are part of its current base. The usage of each corridor shall be requested in a dedicated `edgeRequest` and each request shall be approved inidivdually by fleet control via the `response` topic (see Section [6.9 Request/response mechanism](#69-requestresponse-mechanism)).
 
 The robot shall remain on the predefined trajectory of its current edge until a `response` is received from the fleet control. Once the robot has received the approval to start maneuvering, it sets the `requestStatus` to 'GRANTED' and may now use the corridor. As long as the robot requires the corridor, it shall keep the `edgeRequest` in its state. If the mobile robot no longer requires the use of a corridor (e.g., because it might have successfully completed its avoidance procedure, no more need to avoid an obstacle, etc.), it indicates this to the fleet control by removing the corresponding `edgeRequest` object from its state. From there on, the mobile robot shall act as a line-guided mobile robot again. If it wishes to deviate from the predefined trajectory once more, it shall issue a new `edgeRequest`.
-If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and wishes to continue to the upcoming corridor, which is not yet released, it shall stop at the border of its current `corridor`, send a dedicated edge request, and await its approval through the fleet control. If the robot's approval expires or the fleet control revokes a granted request, it shall initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
+If during the avoidance procedure the robot reaches the end of its current edge's `corridor` and plans to continue to the upcoming corridor, which is not yet released, it shall stop at the border of its current `corridor`, send a dedicated edge request, and await its approval through the fleet control.
+
+If the mobile robot's approval expires according to the `leaseExpiry` of the response or when fleet control revokes a granted request, the mobile robot shall initiate the fallback action predefined in the `releaseLossBehavior` of the corridor of the edge.
+Recovery strategies for loss of release are either the mobile robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
 
 
 ## 6.7 Visualization
@@ -1304,17 +1306,12 @@ If a request is answered with 'QUEUED', fleet control acknowledges reception of 
 
 If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a `leaseExpiry` is present, the permission shall only be considered valid until this time. Fleet control can extend a lease by sending an updated response with the same `requestId` and a new `leaseExpiry`.
 
-If a request is answered with 'REVOKED', or if the `leaseExpiry` is reached, the mobile robot shall update the `requestStatus` accordingly ('REVOKED' or 'EXPIRED') and shall act according to the `releaseLossBehavior` and shall keep the request in its state until the zone is exited. If the zone was not entered, the mobile robot shall remove the request from its state.
+If a request is answered with 'REVOKED', or if the `leaseExpiry` is reached, the mobile robot shall act according to the `releaseLossBehavior` defined for the requested resource. 
+If the requested operation was already started, the mobile robot shall update the `requestStatus` accordingly ('REVOKED' or 'EXPIRED') and keep it in its state until the `releaseLossBehavior` is finished. If the requested operation was not started, the mobile robot shall remove the request from its state.
 
 If no response is received within the time frame required by the application, the mobile robot shall behave as if the request had not been granted and shall not perform the operation that requires explicit permission. The handling of timeouts and retries shall be defined during integration.
 
 A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from fleet control is required.
-
-### 6.9.1 Response for edge requests
-
-As with zone requests, the fleet control can grant edge requests through a `response` object sent on the dedicated /response topic.
-
-Additionally, the fleet control has the option to add a `leaseExpiry` timestamp to the response. If the robot has not finished its request by the time of expiry, it shall then execute the defined `releaseLossBehavior`. Feasible recovery strategies for loss of release are either the robot returning to the predefined trajectory of the edge along the path it took to deviate from it or stopping in its current position and awaiting manual intervention.
 
 ## 6.10 Factsheet
 
@@ -1512,7 +1509,7 @@ leftWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of t
 rightWidth | m | float64 | Range: [0.0 ... float64.max]<br>Defines the width of the corridor in meters to the right related to the trajectory of the mobile robot (see Figure 10).
 *corridorReferencePoint*| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the mobile robot. If not specified the boundaries are valid to the mobile robot's kinematic center.<br> Enum { 'KINEMATIC_CENTER' , 'CONTOUR' }
 *releaseRequired* | | boolean | Optional flag that indicates whether the robot shall request approval from fleet control.<br>Default: "false".
-*releaseLossBehavior* <br> } | | string | Enum { 'STOP' , 'RETURN' }<br>Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the fleet control.<br>Default: "RETURN".
+*releaseLossBehavior* <br> } | | string | Enum { 'STOP' , 'RETURN' }<br>Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the fleet control.<br>'STOP': Mobile robot shall stop and await manual intervention. 'RETURN': Mobile robot shall return to the predefined trajectory of the edge it deviated from<br>Default: 'STOP'.
 
 ### 7.3.1 Format of action parameters
 
