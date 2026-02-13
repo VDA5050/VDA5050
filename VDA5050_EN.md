@@ -1105,7 +1105,6 @@ In these cases the mobile robot has to clear its current order which means that:
 - Any running actions in the `actionStates` action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
 - The value of `orderId`, `orderUpdateId`, `lastNodeId` and `lastNodeSequenceId` remain unchanged.
 - The arrays `nodeStates` and `edgeStates` are set to empty lists.
-- `lastNodeId` and `lastNodeSequenceId` are kept.
 - Any requests shall be removed from the state.
 
 As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN' is reported.
