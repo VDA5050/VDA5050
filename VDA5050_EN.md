@@ -1127,24 +1127,24 @@ The mobile robot can use predefined error types to report specific issues. The f
 
 Error Type | Error level | Description | Reference | Report duration
 ---|---|---|---|---
-'UNSUPPORTED_PARAMETER'|'CRITICAL'|Receival of message with an unsupported optional parameter. | `headerId` of message | Until a valid message on this topic is received.
+'UNSUPPORTED_PARAMETER' | 'CRITICAL' | Receival of message with an unsupported optional parameter. | `headerId` of message | Until new order is accepted.
 'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
 'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
 'INVALID_ORDER' | 'WARNING' | Receival of an order containing unsupported actions or parameters. | `orderId` | Until new order is accepted.
 'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId`but outdated `orderUpdateId`. | `headerId` of order message | Until new order message is accepted.
-'SAME_ORDER_UPDATE_ID'| 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order message is accepted.
-'ORDER_UPDATE_FOLLOWING_CANCEL'|'WARNING'| Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order message is accepted.
-'OUTSIDE_OF_CORRIDOR'|'CRITICAL'| Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
+'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order is accepted.
+'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order is accepted.
+'OUTSIDE_OF_CORRIDOR' | 'CRITICAL' | Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
 'DUPLICATE_MAP'|'WARNING'| Receival of a map with `mapId` and `mapVersion` already existing. | `headerId` of map message | As long as relevant.
-'BLOCKED_ZONE_VIOLATION'|'CRITICAL'| Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
-'RELEASE_LOST'|'CRITICAL'| Losing the release for a 'RELEASE' zone. | `zoneId` | Until the mobile robot is no longer within the 'RELEASE' zone or is granted a the release again.
-'ZONE_ACTION_CONFLICT'|'CRITICAL'| Conflict between zone behavior and zone actions. | `zoneId` of 'ACTION' zone | Until the mobile robot is no longer violating the zone behavior.
-'NODE_UNREACHABLE'|'CRITICAL'| The mobile robot cannot reach a node in its order. | `nodeId` | Until new order message is accepted.
+'BLOCKED_ZONE_VIOLATION' | 'CRITICAL' | Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
+'RELEASE_LOST' | 'CRITICAL' | Losing the release for a 'RELEASE' zone. | `zoneId` | Until the mobile robot is no longer within the 'RELEASE' zone or is granted a the release again.
+'ZONE_ACTION_CONFLICT' | 'CRITICAL' | Conflict between zone behavior and zone actions. | `zoneId` of 'ACTION' zone | Until the mobile robot is no longer violating the zone behavior.
+'NODE_UNREACHABLE'|'CRITICAL'| The mobile robot cannot reach a node in its order. | `nodeId` | Until new order is accepted.
 'LOCALIZATION_ERROR'|'FATAL'| The mobile robot is not localized. | | Until localization is regained.
-'NO_ROUTE_TO_TARGET'| 'WARNING' | Receival of an order with at least one unreachable node. | `orderId` | Until new order message is accepted.
-'OTHER_ORDER_ACTIVE'| 'WARNING' | Receival of a new order while another order is still active. | `orderId` | Until new order message is accepted.
-'START_NODE_OUT_OF_RANGE'| 'WARNING' | Receival of an order with unreachale first node. | `orderId` | Until new order message is accepted.
-'MOBILE_ROBOT_NOT_AVAILABLE'| 'WARNING' |Receival of an order while not in the 'AUTOMATIC' operating mode. | `orderId` | Until operating mode is switched to 'AUTOMATIC'.
+'NO_ROUTE_TO_TARGET' | 'WARNING' | Receival of an order with at least one unreachable node. | `orderId` | Until new order is accepted.
+'OTHER_ORDER_ACTIVE' | 'WARNING' | Receival of a new order while another order is still active. | `orderId` | Until new order is accepted.
+'START_NODE_OUT_OF_RANGE' | 'WARNING' | Receival of an order with unreachable first node. | `orderId` | Until new order is accepted.
+'MOBILE_ROBOT_NOT_AVAILABLE' | 'WARNING' | Receival of an order while not in 'AUTOMATIC', 'SEMIAUTOMATIC' or 'INTERVENED' operating mode. | `orderId` | Until operating mode allows for new orders
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
@@ -1357,7 +1357,7 @@ All field names are in camelCase.
 If a variable is marked as optional, it is optional for the sender as the variable might not be applicable in certain cases (e.g., when the fleet control sends an order to a mobile robot, some mobile robots plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
 If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and shall not ignore the field.
-If the mobile robot cannot process the message accordingly, it shall communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
+If the mobile robot cannot process the order due to an unsupported parameter, it shall communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
 Fleet control shall only send optional information that the mobile robot supports.
 
