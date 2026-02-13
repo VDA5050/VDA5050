@@ -556,17 +556,17 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
-                            "polygonPoints"
+                            "setName",
+                            "verticies"
                         ],
                         "properties": {
-                            "set": {
+                            "setName": {
                                 "type": "string",
                                 "description": "Name of the envelope curve set"
                             },
-                            "polygonPoints": {
+                            "verticies": {
                                 "type": "array",
-                                "description": "Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
+                                "description": "The envelope curve in form of a polygon. It shall be assumed as closed. Only simple polygons (i.e. without intersections) shall be used.",
                                 "items": {
                                     "type": "object",
                                     "required": [

@@ -2052,7 +2052,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 | } | | |
 | ***envelopes2d** [**envelope2d**]* | array | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | { | | |
-| &emsp;set | string | Name of the envelope curve set. |
+| &emsp;setName | string | Name of the envelope curve set. |
 | &emsp;**vertices[vertex]** | array | The envelope curve in form of a polygon. It shall be assumed as closed. Only simple polygons (i.e. without intersections) shall be used. |
 | &emsp;{ | | |
 |&emsp;&emsp; x | float64 | [m], X-position of polygon point. |
