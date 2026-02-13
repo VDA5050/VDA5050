@@ -915,7 +915,7 @@ In the following matrix possible interactions between zones are described. The m
 1) If actions would conflict with other zones' behavior, report a 'ZONE_ACTION_CONFLICT' error with level 'CRITICAL' (order error) and stop the mobile robot.
 2) Planned trajectory must be granted for all 'COORDINATED_REPLANNING' zones.
 3) If a trajectory is predefined for the edge, it shall be sent in the zone request.
-4) The lowest of the competing `maximumSpeed`s applies.
+4) The lowest of the competing `maximumSpeed` values applies.
 5) Execute all actions.
 6) The most restrictive one is always selected here; for PRIORITY zones, the lowest `priorityFactor` is used; for overlapping PRIORITY and PENALTY zones, the highest `penaltyFactor` is used; for overlapping PENALTY zones, the highest `penaltyFactor` is used.
 7) For kinematic center-based zones the mobile robot can only be completely within or outside the zone, so this overlap is not possible.
