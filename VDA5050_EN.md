@@ -527,11 +527,11 @@ There are several scenarios, when an order shall be rejected.
 These scenarios are shown in Figure 8 and described below.
 
 
-#### 6.1.4.1 Mobile robot receives a malformed new order
+#### 6.1.4.1 Mobile robot receives a malformed order
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
 2. The mobile robot shall report an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
@@ -545,8 +545,8 @@ Examples:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer
-2. Mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
+1. The mobile robot shall not take over the new order in its internal buffer
+2. The mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
@@ -554,8 +554,8 @@ Resolution:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
-2. Mobile robot keeps the previous order in its buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall keep the previous order in its buffer.
 3. The mobile robot shall report an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
 4. The mobile robot continues with executing the previous order.
 
@@ -568,12 +568,53 @@ Example:
 
 Resolution:
 
-1. Mobile robot does NOT take over the new order in its internal buffer.
-2. Mobile robot keeps the previous order in its buffer.
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall keep the previous order in its buffer.
 3. Reporting depends on the content of the message:
-	- If the content of the new order is the same as the content of the previous one, the mobile robot shall ingore the new order.
+	- If the content of the new order is the same as the content of the previous one, the mobile robot shall ignore the new order.
 	- If the content of the new order differs, the mobile robot shall report an error of type 'SAME_ORDER_UPDATE_ID' and level 'WARNING'.
-5. The mobile robot continues with executing the previous order.
+4. The mobile robot shall continue with executing the previous order.
+5. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.5 Mobile robot receives an order with orderId different to the orderId of an active order
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot keeps the previous order in its buffer.
+3. The mobile robot shall report an error of type 'OTHER_ORDER_ACTIVE' and level 'WARNING'.
+4. The mobile robot continues with executing the previous order.
+5. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.6 Mobile robot receives an order with the start node being out of range
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'START_NODE_OUT_OF_RANGE' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.7 Mobile robot receives an order with at least one node not being reachable
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'NO_ROUTE_TO_TARGET' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot has accepted a new order.
+
+
+#### 6.1.4.8 Mobile robot receives an order while in an operating mode that does not allow new orders
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'MOBILE_ROBOT_NOT_AVAILABLE' and level 'WARNING'.
+3. The warning shall be reported until the mobile robot is in an order mode that allows for new orders.
+
+
 
 
 ### 6.1.5 Corridors
@@ -1052,6 +1093,8 @@ The fleet control shall not use the information for logic; they shall only be us
 ### 6.6.5 Errors
 
 The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
+
+#### 6.6.5.1 Error levels
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
@@ -1062,7 +1105,7 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
-#### 6.6.5.1 Error references
+#### 6.6.5.2 Error references
 
 If an error occurs due to an erroneous order or execution failure, the mobile robot can return meaningful error references in the field `errorReferences` to support finding the cause of the error.
 This can include the following information:
@@ -1075,6 +1118,30 @@ This can include the following information:
 
 Additional hints can be put to the `errorHints` array.
 
+#### 6.6.5.3 Predefined error types
+
+The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
+
+Error Type | Error level | Description | Reference | Report duration
+---|---|---|---|---
+'UNSUPPORTED_PARAMETER' | 'CRITICAL' | Receival of message with an unsupported optional parameter. | `headerId` of message | Until new order is accepted.
+'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
+'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
+'INVALID_ORDER' | 'WARNING' | Receival of an order containing unsupported actions or parameters. | `orderId` | Until new order is accepted.
+'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `headerId` of order message | Until new order is accepted.
+'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order is accepted.
+'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order is accepted.
+'OUTSIDE_OF_CORRIDOR' | 'CRITICAL' | Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
+'DUPLICATE_MAP' | 'WARNING' | Receival of a map with `mapId` and `mapVersion` already existing. | `mapId` and `mapVersion` of duplicate | Until a new map related instantAction was accepted.
+'BLOCKED_ZONE_VIOLATION' | 'CRITICAL' | Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
+'RELEASE_LOST' | 'CRITICAL' | Losing the release for a 'RELEASE' zone. | `zoneId` | Until the mobile robot is no longer within the 'RELEASE' zone or is granted a the release again.
+'ZONE_ACTION_CONFLICT' | 'CRITICAL' | Conflict between zone behavior and zone actions. | `zoneId` of 'ACTION' zone | Until the mobile robot is no longer violating the zone behavior.
+'NODE_UNREACHABLE'|'CRITICAL'| The mobile robot cannot reach a node in its order. | `nodeId` | Until new order is accepted.
+'LOCALIZATION_ERROR'|'FATAL'| The mobile robot is not localized. | | Until localization is regained.
+'NO_ROUTE_TO_TARGET' | 'WARNING' | Receival of an order with at least one unreachable node. | `orderId` | Until new order is accepted.
+'OTHER_ORDER_ACTIVE' | 'WARNING' | Receival of a new order while another order is still active. | `orderId` | Until new order is accepted.
+'START_NODE_OUT_OF_RANGE' | 'WARNING' | Receival of an order with unreachable first node. | `orderId` | Until new order is accepted.
+'MOBILE_ROBOT_NOT_AVAILABLE' | 'WARNING' | Receival of an order while not in 'AUTOMATIC', 'SEMIAUTOMATIC' or 'INTERVENED' operating mode. | `orderId` | Until operating mode allows for new orders
 
 ### 6.6.6 Operating Mode
 For regular order execution, fleet control must be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
@@ -1286,8 +1353,8 @@ All field names are in camelCase.
 
 If a variable is marked as optional, it is optional for the sender as the variable might not be applicable in certain cases (e.g., when the fleet control sends an order to a mobile robot, some mobile robots plan their trajectory themselves and the field `trajectory` within the `edge` object of the order can be omitted).
 
-If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and cannot ignore the field.
-If the mobile robot cannot process the message accordingly then the expected behavior is to communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
+If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and shall not ignore the field.
+If the mobile robot cannot process the order due to an unsupported parameter, it shall communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
 Fleet control shall only send optional information that the mobile robot supports.
 
