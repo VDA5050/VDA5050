@@ -1690,7 +1690,7 @@ mapId <br> } | | string | Unique identification of the map in which the position
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **velocity** { | | JSON object |
-vx | m/s | float64 | The mobile robot's velocity in its X-direction.
+*vx* | m/s | float64 | The mobile robot's velocity in its X-direction.
 *vy* | m/s | float64 | The mobile robot's velocity in its Y-direction.
 *omega*<br>}| rad/s | float64 | The mobile robot's turning speed around its Z-axis.
 

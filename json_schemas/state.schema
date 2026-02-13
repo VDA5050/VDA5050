@@ -368,9 +368,6 @@
         "velocity": {
             "type": "object",
             "description": "The mobile robot's velocity in mobile robot coordinates",
-            "required": [
-                "vx"
-            ],
             "properties": {
                 "vx": {
                     "type": "number",
