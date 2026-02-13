@@ -1096,7 +1096,7 @@ TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 In response to one of the following events, the mobile robot shall stop executing the current order:
 - The mobile robot is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.6.6 Operating Mode](#666-operating-mode)).
 - The mobile robot cannot determine its position anymore.
-- The mobile robot receives a `startHibernation` instant action from fleet control.
+- The mobile robot receives a `startHibernation` instant action.
 
 In these cases the mobile robot has to clear any current order which means that similar to a cancellation:
 
