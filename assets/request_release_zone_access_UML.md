@@ -2,7 +2,7 @@ This markdown file is the original UML diagram from which map_distribution_proce
 
 ```
 @startuml
-skinparam dpi 400
+skinparam dpi 200
 !pragma teoz true
 skinparam defaultTextAlignment center
 skinparam participantFontColor white
@@ -36,11 +36,6 @@ end
 group optional - expired access (after expiration time)
 "Mobile Robot" -> "Fleet Control": Status Update containing corresponding zoneRequest \n with requestStatus EXPIRED.
 "Mobile Robot" -> "Mobile Robot": Vehicle behaves according \n to releaseLossBehavior. 
-group extend expired access
-"Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType GRANTED and new leaseExpiry.
-"Mobile Robot" -> "Fleet Control": Status Update containing corresponding zoneRequest \n with requestStatus GRANTED.
-"Mobile Robot" -> "Mobile Robot": Continue order execution. 
-end
 end
 group Leave zone
 "Mobile Robot" -> "Mobile Robot": Vehicle decides, that it \n has left the zone.
@@ -51,9 +46,9 @@ group optional - Reject access
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType REJECTED
 "Mobile Robot" -> "Fleet Control": Status Update without the rejected request.
 end
-deactivate "Mobile Robot"
-deactivate "Fleet Control"
+"Mobile Robot" -> "Fleet Control": Status Update with removed zoneRequest after no longer relevant.
 end
-
+deactivate "Fleet Control"
+deactivate "Mobile Robot"
 @enduml
 ```
