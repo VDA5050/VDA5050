@@ -613,11 +613,6 @@ Resolution:
 3. The warning shall be reported until the mobile robot is in an order mode that allows for new orders.
 
 
-Resolution:
-
-1. The mobile robot shall not take over the new order in its internal buffer.
-2. The mobile robot shall report an error of type 'NO_ROUTE_TO_TARGET' and level 'WARNING'.
-3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
 ### 6.1.5 Corridors
