@@ -1131,11 +1131,11 @@ Error Type | Error level | Description | Reference | Report duration
 'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
 'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
 'INVALID_ORDER' | 'WARNING' | Receival of an order containing unsupported actions or parameters. | `orderId` | Until new order is accepted.
-'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId`but outdated `orderUpdateId`. | `headerId` of order message | Until new order message is accepted.
+'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `headerId` of order message | Until new order is accepted.
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order is accepted.
 'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order is accepted.
 'OUTSIDE_OF_CORRIDOR' | 'CRITICAL' | Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
-'DUPLICATE_MAP'|'WARNING'| Receival of a map with `mapId` and `mapVersion` already existing. | `headerId` of map message | As long as relevant.
+'DUPLICATE_MAP' | 'WARNING' | Receival of a map with `mapId` and `mapVersion` already existing. | `mapId` and `mapVersion` of duplicate | Until a new map related instantAction was accepted.
 'BLOCKED_ZONE_VIOLATION' | 'CRITICAL' | Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
 'RELEASE_LOST' | 'CRITICAL' | Losing the release for a 'RELEASE' zone. | `zoneId` | Until the mobile robot is no longer within the 'RELEASE' zone or is granted a the release again.
 'ZONE_ACTION_CONFLICT' | 'CRITICAL' | Conflict between zone behavior and zone actions. | `zoneId` of 'ACTION' zone | Until the mobile robot is no longer violating the zone behavior.
