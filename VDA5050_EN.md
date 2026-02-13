@@ -88,7 +88,7 @@ Version 3.0.0
     [6.6.4 Information](#664-information)<br>
     [6.6.5 Errors](#665-errors)<br>
     [6.6.6 Operating Mode](#666-operating-mode)<br>
-    [6.6.7 Clearing the order](#667-clearing-the-order)<br>
+    [6.6.7 Clearing the order on the mobile robot](#667-clearing-the-order-on-the-mobile-robot)<br>
     [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot)<br>	
     [6.6.9 Action states](#669-action-states)<br>
     [6.6.10 Request use of Corridors](#6610-request-use-of-corridors)<br>
@@ -480,7 +480,7 @@ After the mobile robot has traversed the last node of an order and has finished 
 
 ### 6.1.3 Order cancellation
 
-In the event of an unplanned change in the base nodes, the order shall be canceled by using the instantAction `cancelOrder`.
+Fleet control can cancel an active order using the instantAction `cancelOrder`.
 
 Fleet control can optionally pass an `orderId` to reference which order it wants to cancel.
 After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
@@ -1173,22 +1173,25 @@ TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 
 >Table 10 - Overview of operating modes and their implications
 
-### 6.6.7 Clearing the order
+### 6.6.7 Clearing the order on the mobile robot
 
-In response to one of the following events, not triggered by fleet control, the mobile robot has to stop executing the current order:
+In response to one of the following events, the mobile robot has to stop executing the current order:
 - The mobile robot is changing the operating mode to 'MANUAL', 'STARTUP', 'SERVICE' or 'TEACH_IN' (see also [6.6.6 Operating Mode](#666-operating-mode)).
-- The mobile robot cannot determine its position anymore.
+- The mobile robot receives a `cancelOrder` instant action from fleet control.
+The mobile robot receives a `startHibernation` instant action from fleet control.
 
-In these cases the mobile robot has to clear any current order which means that similar to a cancellation:
+In these cases the mobile robot has to clear its current order which means that:
 
 - Any scheduled actions in the `actionStates` shall be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running actions in the `actionStates` action should also be cancelled and be reported as 'FAILED' in `actionStates`.
 - Any running actions in the `actionStates` action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
-- `orderId` and `orderUpdateId` are kept.
-- `nodeStates` and `edgeStates` are emptied.
+- The value of `orderId`, `orderUpdateId`, `lastNodeId` and `lastNodeSequenceId` remain unchanged.
+- The arrays `nodeStates` and `edgeStates` are set to empty lists.
 - Any requests shall be removed from the state.
 
 As long as the actions of an order are not in state 'FINISHED' or 'FAILED' the mobile robot shall not report operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN'. `nodesStates` and `edgeStates` shall not be emptied before the operating mode 'MANUAL', 'SERVICE' or 'TEACH_IN' is reported.
+
+An order cancellation can only be triggered by fleet control.
 
 
 ### 6.6.8 Idle state of the mobile robot
