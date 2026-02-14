@@ -534,22 +534,28 @@ Resolution:
 2. The mobile robot shall report an error of type 'VALIDATION_FAILURE' and level 'WARNING‘
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
-
-#### 6.1.4.2 Mobile robot receives an order with actions it cannot perform or with fields that it cannot use
-
-Examples:
-
-- Non-executable actions: lifting height higher than maximum lifting height, lifting actions although no stroke is installed, etc.
-- Non-useable fields: trajectory, etc.
+#### 6.1.4.2 Mobile robot receives an order with optional fields it cannot use
 
 Resolution:
 
 1. The mobile robot shall not take over the new order in its internal buffer
-2. The mobile robot shall report an error of type 'INVALID_ORDER' with level 'WARNING' and the erroneous fields as errorReferences
+2. The mobile robot shall report an error of type 'UNSUPPORTED_PARAMETER' with level 'CRITICAL' and the erroneous fields as errorReferences
+3. The error shall be reported until the mobile robot has accepted a new order.
+
+#### 6.1.4.3 Mobile robot receives an order with actions it cannot perform
+
+Example:
+- lifting height higher than maximum lifting height
+- lifting actions although no stroke is installed, etc.
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer
+2. The mobile robot shall report an error of type 'INVALID_ORDER_ACTION' with level 'WARNING' and the erroneous fields as errorReferences
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.3 Mobile robot receives an order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
+#### 6.1.4.4 Mobile robot receives an order with the same orderId, but a lower orderUpdateId than the current orderUpdateId
 
 Resolution:
 
@@ -559,7 +565,7 @@ Resolution:
 4. The mobile robot continues with executing the previous order.
 
 
-#### 6.1.4.4 Mobile robot receives an order with the same orderId and same orderUpdateId as the current orderUpdateId
+#### 6.1.4.5 Mobile robot receives an order with the same orderId and same orderUpdateId as the current orderUpdateId
 
 Example:
 
@@ -576,7 +582,7 @@ Resolution:
 5. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.5 Mobile robot receives an order with orderId different to the orderId of an active order
+#### 6.1.4.6 Mobile robot receives an order with orderId different to the orderId of an active order
 
 Resolution:
 
@@ -587,7 +593,7 @@ Resolution:
 5. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.6 Mobile robot receives an order with the start node being out of range
+#### 6.1.4.7 Mobile robot receives an order with the start node being out of range
 
 Resolution:
 
@@ -596,7 +602,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.7 Mobile robot receives an order with at least one node not being reachable
+#### 6.1.4.8 Mobile robot receives an order with at least one node not being reachable
 
 Resolution:
 
@@ -605,7 +611,7 @@ Resolution:
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
 
-#### 6.1.4.8 Mobile robot receives an order while in an operating mode that does not allow new orders
+#### 6.1.4.9 Mobile robot receives an order while in an operating mode that does not allow new orders
 
 Resolution:
 
@@ -665,6 +671,8 @@ When a mobile robot receives an `instantAction`, an appropriate `actionStatus` i
 The `actionStatus` is updated according to the progress of the action.
 See also Figure 11 for the different transitions of an `actionStatus`.
 The `blockingType` of an instant action is always 'NONE'.
+
+When the mobile robot receives an `instantAction` it cannot execute, it shall report an 'INVALID_INSTANT_ACTION' error with level 'WARNING' and the `actionId` of the `instantAction` as `errorReference`.
 
 ### 6.2.2 Action blocking types and sequence
 
@@ -1135,7 +1143,8 @@ Error Type | Error level | Description | Reference | Report duration
 'UNSUPPORTED_PARAMETER' | 'CRITICAL' | Receival of message with an unsupported optional parameter. | `headerId` of message | Until new order is accepted.
 'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
 'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
-'INVALID_ORDER' | 'WARNING' | Receival of an order containing unsupported actions or parameters. | `orderId` | Until new order is accepted.
+'INVALID_ORDER_ACTION' | 'WARNING' | Receival of an order containing unsupported actions. | `orderId` | Until new order is accepted.
+'INVALID_INSTANT_ACTION' | 'WARNING' | Receival of an unsupported instant action. | `actionId` of `instantAction` | Until new instantAction is accepted.
 'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `headerId` of order message | Until new order is accepted.
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order is accepted.
 'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order is accepted.
