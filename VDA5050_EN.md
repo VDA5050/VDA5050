@@ -188,7 +188,7 @@ The use of this feature is described in Section [6.5 Connection](#65-connection)
 
 If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`. QoS level 1 (At Least Once) shall be used for the topic `connection`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `responses` and `visualization`. QoS level 1 (At Least Once) shall be used for the topic `connection`.
 
 Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
@@ -234,7 +234,7 @@ visualization | mobile robot | visualization systems | High frequency communicat
 connection | broker / mobile robot | fleet control | Indicates when mobile robot connection is lost. Not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
-response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | response.schema
+responses | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | responses.schema
 
 >Table 3 Topics for communication between fleet control and mobile robot
 
@@ -906,7 +906,7 @@ The `zoneSetStatus` of a newly added zone set shall always be set to 'DISABLED' 
 
 ## 6.4.3 Communication for interactive zones 
 
-For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by fleet control to respond to these requests.
+For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `responses` is used by fleet control to respond to these requests.
 
 Before entering an interactive zone, the mobile robot shall state a request.
 A request before entry of an interactive zone is necessary, even if the order contains released nodes within the zone.
@@ -926,14 +926,14 @@ If a mobile robot navigates through a workspace on the map that is covered by tw
 
 The parameter `requestStatus` shall be initially set to 'REQUESTED' by the mobile robot when stating its request.
 
-Fleet control responds to zone requests via the `response` topic.
-The response message contains an array of `zoneResponse` objects. Each `zoneResponse` shall only respond to a single request referenced by the `requestId`.
+Fleet control responds to zone requests via the `responses` topic.
+The response message contains an array of `response` objects. Each `response` shall only respond to a single request referenced by the `requestId`.
 Each response has a `responseType` that is either 'GRANTED', 'QUEUED', 'REVOKED', or 'REJECTED'.
 If the `responseType` is 'GRANTED', the mobile robot is allowed to enter the zone or use the requested trajectory.
 Fleet control can set the `responseType` to 'QUEUED' to acknowledge the mobile robot's request without giving permission, informing the mobile robot that its request is being processed.
 If the `responseType` is 'REJECTED', the mobile robot shall not enter the zone or use the requested trajectory.
 The `responseType` 'REVOKED' indicates that the permission is no longer valid. The fleet control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the mobile robot is set to 'REVOKED'.
-The `zoneResponse` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a response message with an updated `leaseExpiry` time.
+The `response` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a response message with an updated `leaseExpiry` time.
 
 The mobile robot shall acknowledge the fleet controls response by setting the `requestStatus` accordingly and keep the request for as long as it considers the information relevant. See also Section [6.9 Request/response mechanism](#69-requestresponse-mechanism).
 
@@ -1290,7 +1290,7 @@ Certain coordination tasks between mobile robots and the fleet control require e
 ![Figure 21 Visualization of request state transitions](./assets/request_state_transitions.png)
 >Figure 21 - Request lifecycle: request states and logic of possible transitions. 
 
-A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
+A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the `responses` topic.
 
 Each request is represented on the mobile robot by a request object (e.g. zoneRequest) which is included in the state message. The request object shall contain at minimum:
 
@@ -1305,7 +1305,7 @@ The field `requestStatus` describes the life cycle of the request and shall supp
 - 'REVOKED': Fleet control revokes previously granted request. 
 - 'EXPIRED': request has expired. 
 - 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
-Fleet control receives requests from the state topic and shall answer via the response topic containing a response object that includes:
+Fleet control receives requests from the state topic and shall answer via the `responses` topic containing a response object that includes:
 - The `requestId` of the corresponding request,
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
