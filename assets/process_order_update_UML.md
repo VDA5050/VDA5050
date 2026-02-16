@@ -2,9 +2,7 @@ This markdown file is the original UML diagram from which process_order_update.p
 
 ```
 @startuml
-skinparam dpi 300
-' or additionally / alternatively:
-' scale 2
+skinparam dpi 250
 start
 :Mobile robot receives order via MQTT;
 #lightgreen:validate JSON;
