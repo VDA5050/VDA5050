@@ -562,7 +562,8 @@ Resolution:
 1. The mobile robot shall not take over the new order in its internal buffer.
 2. The mobile robot shall keep the previous order in its buffer.
 3. The mobile robot shall report an error of type 'OUTDATED_ORDER_UPDATE' and level 'WARNING'.
-4. The mobile robot continues with executing the previous order.
+4. The mobile robot shall continue with executing the previous order.
+5. The warning shall be reported until the mobile robot has accepted a new order.
 
 
 #### 6.1.4.5 Mobile robot receives an order with the same orderId and same orderUpdateId as the current orderUpdateId
@@ -589,7 +590,7 @@ Resolution:
 1. The mobile robot shall not take over the new order in its internal buffer.
 2. The mobile robot keeps the previous order in its buffer.
 3. The mobile robot shall report an error of type 'OTHER_ORDER_ACTIVE' and level 'WARNING'.
-4. The mobile robot continues with executing the previous order.
+4. The mobile robot shall continue with executing the previous order.
 5. The warning shall be reported until the mobile robot has accepted a new order.
 
 
@@ -1144,7 +1145,7 @@ Error Type | Error level | Description | Reference | Report duration
 'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
 'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | `orderId` | Until new order is accepted.
 'INVALID_ORDER_ACTION' | 'WARNING' | Receival of an order containing unsupported actions. | `orderId` | Until new order is accepted.
-'INVALID_INSTANT_ACTION' | 'WARNING' | Receival of an unsupported instant action. | `actionId` of `instantAction` | Until new instantAction is accepted.
+'INVALID_INSTANT_ACTION' | 'WARNING' | Receival of an unsupported instant action. | `actionId` of `instantAction` | Until new instant action is accepted.
 'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `headerId` of order message | Until new order is accepted.
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate order message (same `orderId` and `orderUpdateId`) | `headerId` of order message | Until new order is accepted.
 'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `headerId` of order message | Until new order is accepted.
