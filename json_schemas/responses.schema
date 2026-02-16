@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "response",
+    "title": "responses",
     "description": "Responses from fleet control to mobile robot's requests.",
-    "subtopic": "/response",
+    "subtopic": "/responses",
     "type": "object",
     "required": [
         "headerId",

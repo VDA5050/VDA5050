@@ -188,7 +188,7 @@ The use of this feature is described in Section [6.5 Connection](#65-connection)
 
 If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
-To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `response` and `visualization`. QoS level 1 (At Least Once) shall be used for the topic `connection`.
+To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall be used for the topics `order`, `instantActions`, `state`, `factsheet`, `zoneSet`, `responses` and `visualization`. QoS level 1 (At Least Once) shall be used for the topic `connection`.
 
 Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
@@ -234,7 +234,7 @@ visualization | mobile robot | visualization systems | High frequency communicat
 connection | broker / mobile robot | fleet control | Indicates when mobile robot connection is lost. Not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
-response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | response.schema
+responses | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | responses.schema
 
 >Table 3 Topics for communication between fleet control and mobile robot
 
@@ -320,7 +320,6 @@ The topic `order` is the MQTT topic via which the mobile robot receives an order
 The core of a transport order is a node-edge-graph segment defining the route to be travelled.
 The mobile robot is expected to traverse the nodes and edges to fulfill the order.
 The full graph of all connected nodes and edges is held by fleet control.
-*Remark: An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a mobile robot follows when driving from the start node to the end node. For freely navigating mobile robots, this trajectory is calculated onboard at runtime and shared with fleet control through the `plannedPath` field of its state. For line-guided mobile robots, the trajectory that a mobile robot takes between the start and end nodes is either defined by fleet control via the `trajectory` edge attribute or assigned to the mobile robot as a predefined trajectory. Depending on the internal state of the mobile robot, the selected trajectory may vary.*
 The graph representation in the fleet control contains restrictions, e.g., which mobile robot is allowed to traverse which edge.
 These restrictions will not be communicated to the mobile robot.
 The fleet control only includes edges in a mobile robot order which the concerning mobile robot is allowed to traverse.
@@ -329,7 +328,7 @@ The fleet control only includes edges in a mobile robot order which the concerni
 >Figure 2 - Graph representation in fleet control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
-The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed. The 'sequenceId' is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `seuquenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
+The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed. The 'sequenceId' is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `sequenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
 
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
@@ -721,7 +720,7 @@ downloadMap | - | Trigger the download of a new map. Active during the download.
 deleteMap | - | Trigger the removal of a map from the mobile robot's memory. | yes | mapId (string)<br>mapVersion (string) | maps | yes | no | no | no
 downloadZoneSet | - | Trigger the download of a zone set. Active during the download. Errors reported in mobile robot state. Finished after verifying the successful download, preparing the zone set for use and setting the zone set in the state. | yes | zoneSetDownloadLink (string)<br>zoneSetHash (string, optional) | zoneSets | yes | no | no | no
 enableZoneSet | - | Enable a previously downloaded zone set explicitly to be used in orders. | yes | zoneSetId (string)<br> | zoneSets | yes | yes | no | no
-deleteZoneSet | - | Trigger the removal of a zoneSet from the mobile robot's memory. | yes | zoneSetId (string) | zoneSets | yes | no | no | no
+deleteZoneSet | - | Trigger the removal of a zone set from the mobile robot's memory. | yes | zoneSetId (string) | zoneSets | yes | no | no | no
 clearInstantActions | - | Removes all finished or failed instant actions from the mobile robot state. | yes | - | instantActionStates | yes | yes | no | no
 clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot's state. | yes | - | zoneActionStates | yes | yes | no | no
 stateRequest | - | Requests the mobile robot to send a new state message. | yes | - | - | yes | no | no | no
@@ -845,7 +844,7 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 Zones are used to define rules for specific areas of the mobile robot workspace. In this way, zones allow mobile robots to navigate freely between nodes while giving the fleet control the ability to manage traffic. Zones can be used to locally deny mobile robots access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone types: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
-Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.4.4 Interaction between zones](#644-interactions-between-zones). For released nodes that are part of the order but are restricted due to zones (e.g., node located within a 'BLOCKED' or 'RELEASE' zone), the robot is expected to act according to the zones (e.g., not enter or wait for RELEASE state of the request).
+Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.4.4 Interaction between zones](#644-interactions-between-zones). For released nodes that are part of the order but are restricted due to zones (e.g., node located within a 'BLOCKED' or 'RELEASE' zone), the robot is expected to act according to the zones (e.g., not enter or wait for 'GRANTED' state of the request).
 Some mobile robots cannot process zones at all, while other mobile robots might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All mobile robots shall therefore report to fleet control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided mobile robots can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
 A zone set shall only be changed and distributed by fleet control to keep consistency in the system.
@@ -915,7 +914,7 @@ The `zoneSetStatus` of a newly added zone set shall always be set to 'DISABLED' 
 
 ## 6.4.3 Communication for interactive zones 
 
-For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `response` is used by fleet control to respond to these requests.
+For communicating requests for the interactive zones 'RELEASE' and 'COORDINATED_REPLANNING', the field `zoneRequests` in the state message is used. The separate topic `responses` is used by fleet control to respond to these requests.
 
 Before entering an interactive zone, the mobile robot shall state a request.
 A request before entry of an interactive zone is necessary, even if the order contains released nodes within the zone.
@@ -935,14 +934,14 @@ If a mobile robot navigates through a workspace on the map that is covered by tw
 
 The parameter `requestStatus` shall be initially set to 'REQUESTED' by the mobile robot when stating its request.
 
-Fleet control responds to zone requests via the `response` topic.
-The response message contains an array of `zoneResponse` objects. Each `zoneResponse` shall only respond to a single request referenced by the `requestId`.
+Fleet control responds to zone requests via the `responses` topic.
+The response message contains an array of `response` objects. Each `response` shall only respond to a single request referenced by the `requestId`.
 Each response has a `responseType` that is either 'GRANTED', 'QUEUED', 'REVOKED', or 'REJECTED'.
 If the `responseType` is 'GRANTED', the mobile robot is allowed to enter the zone or use the requested trajectory.
 Fleet control can set the `responseType` to 'QUEUED' to acknowledge the mobile robot's request without giving permission, informing the mobile robot that its request is being processed.
 If the `responseType` is 'REJECTED', the mobile robot shall not enter the zone or use the requested trajectory.
 The `responseType` 'REVOKED' indicates that the permission is no longer valid. The fleet control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the mobile robot is set to 'REVOKED'.
-The `zoneResponse` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a response message with an updated `leaseExpiry` time.
+The `response` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a response message with an updated `leaseExpiry` time.
 
 The mobile robot shall acknowledge the fleet controls response by setting the `requestStatus` accordingly and keep the request for as long as it considers the information relevant. See also Section [6.9 Request/response mechanism](#69-requestresponse-mechanism).
 
@@ -1300,7 +1299,7 @@ Certain coordination tasks between mobile robots and the fleet control require e
 ![Figure 21 Visualization of request state transitions](./assets/request_state_transitions.png)
 >Figure 21 - Request lifecycle: request states and logic of possible transitions. 
 
-A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
+A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the `responses` topic.
 
 Each request is represented on the mobile robot by a request object (e.g. zoneRequest) which is included in the state message. The request object shall contain at minimum:
 
@@ -1315,7 +1314,7 @@ The field `requestStatus` describes the life cycle of the request and shall supp
 - 'REVOKED': Fleet control revokes previously granted request. 
 - 'EXPIRED': request has expired. 
 - 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
-Fleet control receives requests from the state topic and shall answer via the response topic containing a response object that includes:
+Fleet control receives requests from the state topic and shall answer via the `responses` topic containing a response object that includes:
 - The `requestId` of the corresponding request,
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
