@@ -154,7 +154,7 @@
             "type": "string",
             "description": "Current operating mode of the mobile robot.",
             "enum": [
-                "STARTUP",
+                "START_UP",
                 "AUTOMATIC",
                 "SEMIAUTOMATIC",
                 "INTERVENED",
