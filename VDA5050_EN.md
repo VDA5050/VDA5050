@@ -672,9 +672,9 @@ When the mobile robot receives an `instantAction` it cannot execute, it shall re
 
 ### 6.2.2 Action blocking types and sequence
 
-The order of multiple actions in a list define the sequence, in which those actions are to be executed.
-The parallel execution of actions is governed by their respective `blockingType`.
+The order of multiple actions in a list defines the sequence in which the mobile robot shall execute them.
 
+The parallel execution of actions is governed by their respective `blockingType`.
 Actions can have four distinct blocking types, described in Table 3.
 
 -| Parallel execution allowed | Parallel execution not allowed
