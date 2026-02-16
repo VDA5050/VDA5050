@@ -1110,13 +1110,14 @@ The fleet control shall not use the information for logic; they shall only be us
 
 ### 6.6.5 Errors
 
-The mobile robot reports issues that it wants to inform the operator about via the `errors` array.
+The mobile robot reports any issues via the `errors` array.
 
 #### 6.6.5.1 Error levels
+
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and is able to take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
-- An 'URGENT' level issue requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order, and is able to take new orders.
+- An 'URGENT' level issue requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order and is able to take new orders.
 - A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot shall not continue driving since it can not continue its current order but is able to take new orders.
 - A 'FATAL' level issue requires user intervention, e.g., losing localization. The mobile robot shall not continue driving since it can neither continue its currently active order nor take any new orders.
 
@@ -1138,7 +1139,7 @@ Additional hints can be put to the `errorHints` array.
 
 #### 6.6.5.3 Predefined error types
 
-The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
+The mobile robot shall use predefined error types to report specific issues. The following table lists the predefined error types and their description.
 
 Error Type | Error level | Description | Reference | Report duration
 ---|---|---|---|---
