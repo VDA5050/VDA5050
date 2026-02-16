@@ -1067,14 +1067,14 @@ The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the m
 
 ### 6.6.2 Traversal of nodes and edges
 
-The mobile robot decides on its own, when a node should count as traversed.
+The mobile robot decides on its own when a node should count as traversed.
 A requirement for the traversal is that the mobile robot's control point shall be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
 The `allowedDeviationXY` defines at what point a line-guided mobile robot can deviate from its predefined trajectory, to cut the corner along a smoother path rather than reaching the node's exact position. When leaving the `allowedDeviationXY` the mobile robot shall be back on its predefined trajectory of the subsequent edge.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
 In case the mobile robot is located too far away from the first node of an order, the fleet control can add an extended `allowedDeviationXY` to this node to include the mobile robot's current position.
 
-The mobile robot reports the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
+The mobile robot shall report the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
 
 As soon as the mobile robot reports the node as traversed, the mobile robot shall trigger the actions associated with the node, if any.
 The traversal of a node also necessarily implies leaving the edge that is leading up to the node.
