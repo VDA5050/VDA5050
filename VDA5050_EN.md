@@ -501,13 +501,13 @@ After the cancellation of an order, the mobile robot is idle and shall be ready 
 
 In the case of a mobile robot that can only localize itself on a node, the new order shall begin on the node the mobile robot is now standing on (see also Figure 4).
 
-In case of a mobile robot that can stop in between nodes, the choice is up to fleet control how the next order should be started.
+In case of a mobile robot that can stop in between nodes, fleet control can decide how to start the next order.
 The mobile robot shall accept both methods.
 
 There are two options:
 
-- Send an order, where the first node is a temporary node that is positioned where the mobile robot currently stands. The mobile robot shall then realize that this node is trivially reachable and accept the order.
-- Send an order, where the first node is the last traversed node of the previous order but set the allowed deviation so large that the mobile robot is within this range. Thus, the mobile robot shall immediately treat this node as traversed and accept the order.
+- The first node of the new order is a temporary node that is positioned at the mobile robot's current position. The mobile robot shall then recognize that this node is trivially reachable and accept the order.
+- The first node of the new order is the last traversed node of the previous order. The allowed deviation of this node is set large enough to ensure that the mobile robot is within this range. Thus, the mobile robot shall immediately treat this node as traversed and accept the order.
 
 #### 6.1.3.2 Receiving a cancelOrder action when mobile robot is idle
 
