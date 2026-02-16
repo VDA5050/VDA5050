@@ -911,6 +911,8 @@ The content of a zone set with a unique `zoneSetId` shall not change. If changes
 
 The `zoneSetStatus` of a newly added zone set shall always be set to 'DISABLED' and shall be enabled through the `enableZoneSet` instant action before use.
 
+If the mobile robot receives a new zone set via the `zoneSet` topic or `downloadZoneSet` instant action with the same `zoneSetId` as an existing one, it shall report an error of type 'DUPLICATE_ZONE_SET' and level 'WARNING' until it accepts a new zone set.
+
 
 ## 6.4.3 Communication for interactive zones 
 
