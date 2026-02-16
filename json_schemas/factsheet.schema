@@ -557,16 +557,16 @@
                         "type": "object",
                         "required": [
                             "setName",
-                            "verticies"
+                            "vertices"
                         ],
                         "properties": {
                             "setName": {
                                 "type": "string",
                                 "description": "Name of the envelope curve set"
                             },
-                            "verticies": {
+                            "vertices": {
                                 "type": "array",
-                                "description": "The envelope curve in form of a polygon. It shall be assumed as closed. Only simple polygons (i.e. without intersections) shall be used.",
+                                "description": "The envelope curve in defined as a polygon. It shall be assumed as closed. Only simple polygons shall be used.",
                                 "items": {
                                     "type": "object",
                                     "required": [
