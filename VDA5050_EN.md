@@ -635,7 +635,7 @@ Depending on the internal state of the mobile robot, the selected trajectory may
 The area in which the mobile robot is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
 The optional `corridorReferencePoint` field specifies whether the mobile robot control point or the mobile robot contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the mobile robot is inside the boundaries of the new and now current edge as soon as it passes a node.
-Instead of setting the corridor boundaries to zero, fleet control shall not use the `corridor` attribute if the mobile robot is not supposed to deviate from the trajectory.
+Instead of setting the corridor boundaries to zero, fleet control shall not use the `corridor` attribute if the mobile robot shall not deviate from the trajectory.
 
 The mobile robot's motion control software shall constantly check that the mobile robot is within the defined boundaries.
 If not, the mobile robot shall stop because it is out of the allowed navigation space and report an error of type 'OUTSIDE_OF_CORRIDOR' with level 'CRITICAL'.
