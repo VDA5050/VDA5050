@@ -556,13 +556,13 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "setName",
+                            "envelope2dId",
                             "vertices"
                         ],
                         "properties": {
-                            "setName": {
+                            "envelope2dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
                             "vertices": {
                                 "type": "array",
@@ -600,13 +600,13 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
+                            "envelope3dId",
                             "format"
                         ],
                         "properties": {
-                            "set": {
+                            "envelope3dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
                             "format": {
                                 "type": "string",

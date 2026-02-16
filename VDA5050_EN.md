@@ -2052,7 +2052,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 | } | | |
 | ***envelopes2d** [**envelope2d**]* | array | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
 | { | | |
-| &emsp;envelopes2dId | string | Identifier of the envelope curve set. |
+| &emsp;envelope2dId | string | Identifier of the envelope curve set. |
 | &emsp;**vertices[vertex]** | array | The envelope curve in form of a polygon. It shall be assumed as closed. Only simple polygons shall be used. |
 | &emsp;{ | | |
 |&emsp;&emsp; x | float64 | [m], X-position of polygon point. |
@@ -2062,7 +2062,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 | *}* | | |
 | ***envelopes3d [envelope3d]*** | array | Array of mobile robot envelope curves in 3D. |
 | *{* | | |
-| &emsp;envelopes3dId | string | Identifier of the envelope curve set. |
+| &emsp;envelope3dId | string | Identifier of the envelope curve set. |
 | &emsp;format | string | Format of data, e.g., DXF. |
 | &emsp;***data*** | JSON object | 3D-envelope curve data, format specified in 'format'. |
 | &emsp;*url* | string | Protocol and URL definition for downloading the 3D-envelope curve data, e.g., <ftp://xxx.yyy.com/ac4dgvhoif5tghji>. |
