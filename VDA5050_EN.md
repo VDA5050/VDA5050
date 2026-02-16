@@ -283,9 +283,8 @@ The mobile robot shall communicate this information via the topic `factsheet` in
 
 The configuration of routes and the route network described above are not part of this document.
 They form the basis for enabling order control and driving course assignment by the fleet control based on this information and the transport requirements to be completed.
-The resulting orders to be executed by the robotic fleet are then transferred to the individual mobile robots via an MQTT message broker. 
-The mobile robot then continuously reports its status to the fleet control in parallel with the execution of the order.
-This is also done using the MQTT message broker.
+The resulting orders to be executed by the robotic fleet are transferred to the individual mobile robots via MQTT. 
+The mobile robot then continuously reports its status to the fleet control in parallel with the execution of the order, also using MQTT.
 
 Functions of the fleet control are:
 - Assignment of orders to the mobile robots
