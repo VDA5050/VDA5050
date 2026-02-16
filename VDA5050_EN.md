@@ -318,10 +318,9 @@ The topic `order` is the MQTT topic via which the mobile robot receives an order
 
 The core of a transport order is a node-edge-graph segment defining the route to be travelled.
 The mobile robot is expected to traverse the nodes and edges to fulfill the order.
-The full graph of all connected nodes and edges is held by fleet control.
-The graph representation in the fleet control contains restrictions, e.g., which mobile robot is allowed to traverse which edge.
+The full graph of all connected nodes and edges is held by fleet control. It may contain restrictions, e.g., which mobile robot is allowed to traverse which edge.
 These restrictions will not be communicated to the mobile robot.
-The fleet control only includes edges in a mobile robot order which the concerning mobile robot is allowed to traverse.
+The fleet control only includes edges in an order which the concerning mobile robot is allowed to traverse.
 
 ![Figure 2 Graph representation in fleet control and graph transmitted in orders](./assets/graph_representation_transmission.png)
 >Figure 2 - Graph representation in fleet control and graph transmitted in orders
