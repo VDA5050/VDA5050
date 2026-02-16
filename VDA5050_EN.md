@@ -655,18 +655,16 @@ Actions that are triggered on nodes can run as long as they need to run and shou
 ### 6.2.1 Instant Actions
 
 In certain cases, it is necessary to send actions to the mobile robot that need to be performed immediately.
-This is made possible by publishing an `instantAction` message to the topic `instantActions`.
-These shall not conflict with the content of the mobile robot's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
+This is possible by publishing an `instantAction` message to the topic `instantActions`.
+These actions shall not conflict with the content of the mobile robot's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are:
-- pause the mobile robot without changing anything in the current order;
-- resume order after pause;
-- activate signal (optical, audio, etc.).
+- pause the mobile robot without changing anything in the current order
+- resume order after pause
+- activate signal (optical, audio, etc.)
 
-For additional information, see Section [8 Best practice](#8-best-practice).
-
-When a mobile robot receives an `instantAction`, an appropriate `actionStatus` is added to the `instantActionStates` array of the mobile robot's state.
-The `actionStatus` is updated according to the progress of the action.
+When a mobile robot receives an `instantAction`, an appropriate `actionStatus` shall be added to the `instantActionStates` array of the mobile robot's state.
+The `actionStatus` shall be updated according to the progress of the action.
 See also Figure 11 for the different transitions of an `actionStatus`.
 The `blockingType` of an instant action is always 'NONE'.
 
