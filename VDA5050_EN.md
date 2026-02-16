@@ -83,7 +83,7 @@ Version 3.0.0
   [6.5 Connection](#65-connection)<br>
   [6.6 State](#66-state)<br>
     [6.6.1 Concept and logic](#661-concept-and-logic)<br>
-    [6.6.2 Traversal of nodes and entering/leaving edges, triggering of actions](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)<br>
+    [6.6.2 Traversal of nodes and edges](#662-traversal-of-nodes-and-edges)<br>
     [6.6.3 Base request](#663-base-request)<br>
     [6.6.4 Information](#664-information)<br>
     [6.6.5 Errors](#665-errors)<br>
@@ -642,7 +642,7 @@ If not, the mobile robot shall stop because it is out of the allowed navigation 
 The fleet control can decide if user interaction is required or if the mobile robot can continue by canceling the current order and sending a new order to the mobile robot with corridor information that allows the mobile robot to move again.
 
 *Remark: Allowing the mobile robot to deviate from the trajectory increases the possible footprint of the mobile robot during driving. This circumstance shall be considered during initial operation, and when the fleet control makes a traffic control decision based on the mobile robot's footprint.*
-See also Section [6.6.2 Traversal of nodes and entering/leaving edges, triggering of actions](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
+See also Section [6.6.2 Traversal of nodes and edges](#662-traversal-of-nodes-and-edges) for further information.
 
 
 ## 6.2 Actions
