@@ -223,7 +223,7 @@ Wildcard characters `+` and `#` as well as the character `$` that is reserved fo
 
 ### 3.3 Topics for communication
 
-The mobile robot protocol uses the following topics for information exchange between fleet control and mobile robots.
+The protocol uses the following topics for information exchange between fleet control and mobile robots.
 
 Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 ---|---|---|---|---|---
