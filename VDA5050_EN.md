@@ -478,8 +478,8 @@ After the mobile robot has traversed the last node of an order and has finished 
 Fleet control can cancel an active order using the instantAction `cancelOrder`.
 
 Fleet control can optionally pass an `orderId` to reference which order shall be canceled.
-After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible, for mobile robots with line-guided behavior this could be the next feasible node.
-A mobile robot which plans and replans the trajectory between two nodes by itself shall stop as soon as possible, not merely at the next node.
+After receiving the instantAction `cancelOrder`, the mobile robot shall attempt to stop as soon as possible.
+For line-guided mobile robots, this could be the next feasible node. A freely navigating mobile robot shall stop as soon as possible, not merely at the next node.
 
 If there are actions in the `actionStates` scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are actions in the `actionStates` running, those actions should be cancelled and also be reported as 'FAILED'.
