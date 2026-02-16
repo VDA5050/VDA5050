@@ -556,17 +556,17 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
-                            "polygonPoints"
+                            "envelope2dId",
+                            "vertices"
                         ],
                         "properties": {
-                            "set": {
+                            "envelope2dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
-                            "polygonPoints": {
+                            "vertices": {
                                 "type": "array",
-                                "description": "Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
+                                "description": "The envelope curve in defined as a polygon. It shall be assumed as closed. Only simple polygons shall be used.",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -600,13 +600,13 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
+                            "envelope3dId",
                             "format"
                         ],
                         "properties": {
-                            "set": {
+                            "envelope3dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
                             "format": {
                                 "type": "string",
