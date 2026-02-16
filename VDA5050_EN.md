@@ -218,7 +218,7 @@ topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Comm
 
 >Table 2 Explanation of suggested MQTT topic levels
 
-Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
+Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 Wildcard characters `+` and `#` as well as the character `$` that is reserved for broker internal topics should not be used either.
 
 ### 3.3 Topics for communication
