@@ -1057,7 +1057,7 @@ If two events correlate with each other (e.g., the receiving of a new order usua
 ### 6.6.1 Concept and logic
 
 The order progress is tracked by the `nodeStates` and `edgeStates`.
-Additionally, if the mobile robot is able to derive its current position, it shall publish its position via the `mobileRobotPosition` field.
+Additionally, if the mobile robot is capable of determining its current position, it shall publish it via the `mobileRobotPosition` field.
 
 The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the mobile robot to traverse.
 
