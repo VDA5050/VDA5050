@@ -320,7 +320,6 @@ The topic `order` is the MQTT topic via which the mobile robot receives an order
 The core of a transport order is a node-edge-graph segment defining the route to be travelled.
 The mobile robot is expected to traverse the nodes and edges to fulfill the order.
 The full graph of all connected nodes and edges is held by fleet control.
-*Remark: An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a mobile robot follows when driving from the start node to the end node. For freely navigating mobile robots, this trajectory is calculated onboard at runtime and shared with fleet control through the `plannedPath` field of its state. For line-guided mobile robots, the trajectory that a mobile robot takes between the start and end nodes is either defined by fleet control via the `trajectory` edge attribute or assigned to the mobile robot as a predefined trajectory. Depending on the internal state of the mobile robot, the selected trajectory may vary.*
 The graph representation in the fleet control contains restrictions, e.g., which mobile robot is allowed to traverse which edge.
 These restrictions will not be communicated to the mobile robot.
 The fleet control only includes edges in a mobile robot order which the concerning mobile robot is allowed to traverse.
@@ -329,7 +328,7 @@ The fleet control only includes edges in a mobile robot order which the concerni
 >Figure 2 - Graph representation in fleet control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the order message.
-The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed. The 'sequenceId' is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `seuquenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
+The order of the nodes and edges within those lists also governs in which sequence the nodes and edges shall be traversed. The 'sequenceId' is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `sequenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
 
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
@@ -712,7 +711,7 @@ downloadMap | - | Trigger the download of a new map. Active during the download.
 deleteMap | - | Trigger the removal of a map from the mobile robot's memory. | yes | mapId (string)<br>mapVersion (string) | maps | yes | no | no | no
 downloadZoneSet | - | Trigger the download of a zone set. Active during the download. Errors reported in mobile robot state. Finished after verifying the successful download, preparing the zone set for use and setting the zone set in the state. | yes | zoneSetDownloadLink (string)<br>zoneSetHash (string, optional) | zoneSets | yes | no | no | no
 enableZoneSet | - | Enable a previously downloaded zone set explicitly to be used in orders. | yes | zoneSetId (string)<br> | zoneSets | yes | yes | no | no
-deleteZoneSet | - | Trigger the removal of a zoneSet from the mobile robot's memory. | yes | zoneSetId (string) | zoneSets | yes | no | no | no
+deleteZoneSet | - | Trigger the removal of a zone Set from the mobile robot's memory. | yes | zoneSetId (string) | zoneSets | yes | no | no | no
 clearInstantActions | - | Removes all finished or failed instant actions from the mobile robot state. | yes | - | instantActionStates | yes | yes | no | no
 clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot's state. | yes | - | zoneActionStates | yes | yes | no | no
 stateRequest | - | Requests the mobile robot to send a new state message. | yes | - | - | yes | no | no | no
@@ -749,7 +748,7 @@ initializePosition | - | Initializing of the new pose in progress (confidence ch
 | deleteMap | - | Mobile robot deletes map with requested mapId and mapVersion from its internal memory. | - | Mobile robot removes mapId/mapVersion from its state. | Can not delete map, if map is currently in use. The requested mapId/mapVersion combination was already deleted before. | -
 downloadZoneSet | Initialize the connection to the zone set server. | Mobile robot is downloading the zone set, until download is finished. | - | Mobile robot updates its state by setting a corresponding zoneSet object in its state with zoneSetStatus 'DISABLED'. | The download failed, updated in mobile robot state (e.g., connection lost, server unreachable, zoneSet not existing). | Download failed or was interrupted. The mobile robot is waiting for intervention from fleet control.
 enableZoneSet | - | Mobile robot enables the zoneSet with the requested zoneSetId while disabling other versions for the same mapId. | - | The mobile robot updates the corresponding zoneSetStatus of the requested zoneSet to 'ENABLED' and the other versions for the same mapId to 'DISABLED'. | The requested zoneSet does not exist.| -
-deleteZoneSet | - | Mobile robot deletes zoneSet with requested zoneSetId from its internal memory. | - | Mobile robot removes zoneSet object from its state. | Can not delete zoneSet, if zoneSet is currently in use. The requested zoneSet was already deleted before. | -
+deleteZoneSet | - | Mobile robot deletes zone set with requested zoneSetId from its internal memory. | - | Mobile robot removes zoneSet object from its state. | Can not delete zoneSet, if zoneSet is currently in use. The requested zoneSet was already deleted before. | -
 | clearInstantActions | - | | - | The instant actions array has been cleaned from all FINISHED or FAILED instantActions. | - | - 
 | clearZoneActions | - | | - | The zone actions array has been cleaned from all FINISHED or FAILED instantActions. | - | - 
 stateRequest | - | - | - | The state has been communicated | - | - 
@@ -836,7 +835,7 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 Zones are used to define rules for specific areas of the mobile robot workspace. In this way, zones allow mobile robots to navigate freely between nodes while giving the fleet control the ability to manage traffic. Zones can be used to locally deny mobile robots access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone types: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
-Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.4.4 Interaction between zones](#644-interactions-between-zones). For released nodes that are part of the order but are restricted due to zones (e.g., node located within a 'BLOCKED' or 'RELEASE' zone), the robot is expected to act according to the zones (e.g., not enter or wait for RELEASE state of the request).
+Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.4.4 Interaction between zones](#644-interactions-between-zones). For released nodes that are part of the order but are restricted due to zones (e.g., node located within a 'BLOCKED' or 'RELEASE' zone), the robot is expected to act according to the zones (e.g., not enter or wait for 'GRANTED' state of the request).
 Some mobile robots cannot process zones at all, while other mobile robots might only be able to work with a certain subset of zone types, such as 'BLOCKED'. All mobile robots shall therefore report to fleet control which zones they are able to understand by adding the according zone names to the `supportedZones` array under `typeSpecifications` in their factsheet.
 Also (virtually) line-guided mobile robots can choose to support zone-based navigation if they can implement the logic of the corresponding zone types defined in the following. 
 A zone set shall only be changed and distributed by fleet control to keep consistency in the system.
