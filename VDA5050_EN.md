@@ -1119,7 +1119,7 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 - A 'FATAL' level issue requires user intervention, e.g., losing localization. The mobile robot shall not continue driving since it can neither continue its currently active order nor take any new orders.
 
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array.
-The fields `errorDescription` and `errorHint` can contain human readable text to explain the error or to propose a possible resolution. 
+The fields `errorDescription` and `errorHint` may provide human-readable text explaining the error or suggesting a possible resolution.
 
 Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
