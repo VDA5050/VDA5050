@@ -1341,8 +1341,7 @@ A request shall be removed from the mobile robot’s state once the correspondin
 ## 6.10 Factsheet
 
 The factsheet provides basic information about a specific mobile robot type series.
-This information allows comparison of different mobile robot types and can be applied for the planning, dimensioning, and simulation of a mobile robot system.
-The factsheet also includes information about mobile robot communication interfaces which are required for the integration of a mobile robot type series into a VDA-5050-compliant fleet control.
+This information allows comparison of different mobile robot types and can be applied for the planning, dimensioning, simulation or integration of a mobile robot system.
 
 The values for some fields in the mobile robot factsheet can only be specified during system integration, for example the assignment of project-specific load and station types, together with the list of station and load types which are supported by this mobile robot.
 The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the fleet control application, and thus is specified as a JSON document.
