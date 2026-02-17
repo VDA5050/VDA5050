@@ -1924,7 +1924,7 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
 | ***velocity*** | JSON object | The mobile robot velocity in mobile robot coordinates. |
 
-Objects `plannedPath`, `intermediatePaht`, `mobileRobotPosition` and `velocity` are defined in [7.8 Implementation of the state message](#78-implementation-of-the-state-message).
+Objects `plannedPath`, `intermediatePath`, `mobileRobotPosition` and `velocity` are defined in [7.8 Implementation of the state message](#78-implementation-of-the-state-message).
 
 
 ## 7.10 Implementation of the factsheet message
