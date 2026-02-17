@@ -1136,6 +1136,12 @@ This can include the following information:
 - List of parameters if error was caused by erroneous action parameters
 
 
+#### 6.6.5.3 Error translations
+
+For both `errorDescription` and `errorHint`, the mobile robot can provide translations by using the `errorDescriptionTranslations` and `errorHintTranslations` arrays.
+Each translation consists of an ISO 639-1 language code and the corresponding translated text.
+
+
 #### 6.6.5.4 Predefined error types
 
 The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
