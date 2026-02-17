@@ -1309,7 +1309,7 @@ Certain coordination tasks between mobile robots and the fleet control require e
 
 A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control shall evaluate the request and return its decision via the `responses` topic.
 
-Each request is represented on the mobile robot by a request object (e.g. zoneRequest) which is included in the state message. The request object shall contain at minimum:
+Each request shall be represented on the mobile robot by a request object (e.g., zoneRequest) included in the state message. The request object shall contain at minimum:
 
 	- a `requestId` that is unique per mobile robot for all currently active requests,
 	- a `requestType` that specifies the kind of operation the request refers to (access, replanning, use of corridor),
