@@ -1786,13 +1786,14 @@ eta | | string | Estimated time of arrival/traversal. ETA is formatted as a `tim
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **mobileRobotPosition** { | | JSON object | Defines the position on a map in project-specific coordinates. Each floor has its own map.
-localized | | boolean | "true": Mobile robot is localized. `x`, `y`, and `theta` can be trusted.<br>"false": Mobile robot is not localized. `x`, `y`, and `theta` cannot be trusted.<br>Changing to the state to "false" shall only happen if the mobile robot cannot determine its position anymore. The mobile robot shall report this state via an error (`errorType` = 'LOCALIZATION_ERROR', `errorLevel` = 'FATAL'). While this is set to "false", the mobile robot shall not resume automatic driving or continue its order.
-*localizationScore* | | float64 | Range: [0.0 ... 1.0]<br>Describes the quality of the localization and can therefore be used, e.g., by SLAM mobile robots to describe how accurate the current position information is.<br>0.0: lowest possible confidence<br>1.0: highest possible confidence.<br>Only for logging and visualization purposes.
-*deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br>Only for logging and visualization purposes.
 x | m | float64 | X-position on the map in reference to the project-specific coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the project-specific coordinate system. <br>Precision is up to the specific implementation.
 theta | | float64 | Range: [-Pi ... Pi]<br><br>Orientation of the mobile robot.
-mapId <br> } | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When a mobile robot uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
+mapId | | string | Unique identification of the map in which the position is referenced.<br><br>Each map has the same origin of coordinates.<br>When a mobile robot uses an elevator from a departure floor to a destination floor, it leaves the map of the departure floor and spawns on the corresponding elevator node on the map of the destination floor.
+localized | | boolean | "true": Mobile robot is localized. `x`, `y`, and `theta` can be trusted.<br>"false": Mobile robot is not localized. `x`, `y`, and `theta` cannot be trusted.<br>Changing to the state to "false" shall only happen if the mobile robot cannot determine its position anymore. The mobile robot shall report this state via an error (`errorType` = 'LOCALIZATION_ERROR', `errorLevel` = 'FATAL'). While this is set to "false", the mobile robot shall not resume automatic driving or continue its order.
+*localizationScore* | | float64 | Range: [0.0 ... 1.0]<br>Describes the quality of the localization and can therefore be used, e.g., by SLAM mobile robots to describe how accurate the current position information is.<br>0.0: lowest possible confidence<br>1.0: highest possible confidence.<br>Only for logging and visualization purposes.
+*deviationRange* | m | float64 | Value for the deviation range of the position in meters.<br>Only for logging and visualization purposes.
+} | | |
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
