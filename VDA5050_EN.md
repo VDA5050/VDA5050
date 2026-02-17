@@ -1164,6 +1164,7 @@ Error Type | Error level | Description | Reference | Report duration
 'MOBILE_ROBOT_NOT_AVAILABLE' | 'WARNING' | Receival of an order while not in 'AUTOMATIC', 'SEMIAUTOMATIC' or 'INTERVENED' operating mode. | `orderId` | Until operating mode allows for new orders
 
 ### 6.6.6 Operating Mode
+
 For regular order execution, fleet control shall be in full control of the mobile robot. There are however situations where this is not possible, e.g., when manual human interaction on the mobile robot is required. The mobile robot shall report this using the field `operatingMode`.
 
 The following lists describe the values of the field `operatingMode`, their meaning, and implications on the interaction between mobile robot and fleet control:
@@ -1193,6 +1194,7 @@ TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 
 >Table 10 - Overview of operating modes and their implications
 
+
 ### 6.6.7 Clearing the order on the mobile robot
 
 In response to one of the following events, the mobile robot shall stop executing the current order:
@@ -1204,8 +1206,9 @@ In response to one of the following events, the mobile robot shall stop executin
 In these cases the mobile robot shall clear its current order which means that:
 
 - Any scheduled actions in the `actionStates` shall be cancelled and be reported as 'FAILED' in `actionStates`.
-- Any running actions in the `actionStates` action should also be cancelled and be reported as 'FAILED' in `actionStates`.
-- Any running actions in the `actionStates` action that cannot be interrupted shall be reflected by reporting 'RUNNING' as long as it is running, and afterwards be reported by the respective state ('FINISHED', if successful and 'FAILED', if not).
+- Any running action in the `actionStates` that
+	- can be cancelled (cancelAllowed = true) shall be cancelled and be reported as 'FAILED' in `actionStates`.
+	- cannot be cancelled (cancelAllowed = false) shall be reflected by reporting 'RUNNING' while being executed, and afterwards as the respective state ('FINISHED' if successful, 'FAILED' otherwise).
 - The value of `orderId`, `orderUpdateId`, `lastNodeId` and `lastNodeSequenceId` remain unchanged.
 - The arrays `nodeStates` and `edgeStates` are set to empty lists.
 - Any requests shall be removed from the state.
