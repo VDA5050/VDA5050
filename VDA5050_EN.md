@@ -1338,17 +1338,19 @@ If no response is received within the time frame required by the application, th
 
 A request shall be removed from the mobile robot’s state once the corresponding operation has been completed, aborted, or rejected and no further decision from fleet control is required.
 
+
 ## 6.10 Factsheet
 
 The factsheet provides basic information about a specific mobile robot type series.
 This information allows comparison of different mobile robot types and can be applied for the planning, dimensioning, simulation or integration of a mobile robot system.
 
-The values for some fields in the mobile robot factsheet can only be specified during system integration, for example the assignment of project-specific load and station types, together with the list of station and load types which are supported by this mobile robot.
+The values for some fields in the mobile robot factsheet can only be specified during system integration, for example the assignment of project-specific load supported by a mobile robot.
 The factsheet is intended as both a human-readable document and for machine processing, e.g., an import by the fleet control application, and thus is specified as a JSON document.
 
 The fleet control can request the factsheet from the mobile robot by sending the instant action `factsheetRequest`.
 
 All messages on this topic shall be sent with a `retained` flag.
+
 
 # 7 Message specification
 
@@ -1356,6 +1358,7 @@ The different messages are presented in tables describing the contents of the fi
 
 In addition, JSON schemas are available for validation in the public git repository (https://github.com/VDA5050/VDA5050).
 The JSON schemas are updated with every release of the VDA5050. If there are differences between the JSON schemas and this document, the variant in this document applies.
+
 
 ## 7.1 Symbols of the tables and meaning of formatting
 
