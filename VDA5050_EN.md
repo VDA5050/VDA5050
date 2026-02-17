@@ -1812,6 +1812,21 @@ Object structure | Unit | Data type | Description
 ***loadDimensions*** | | JSON object | Dimensions of the load's bounding box in meters.
 *weight*<br>} | kg | float64 | Range: [0.0 ... float64.max]<br><br>Absolute weight of the load measured in kg.
 
+Object structure | Unit | Data type | Description
+---|---|---|---
+**boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
+x | | float64 | X-coordinate of the point of reference.
+y | | float64 | Y-coordinate of the point of reference.
+z | | float 64 | Z-coordinate of the point of reference.
+*theta*<br> } | | float64 | Orientation of the loads bounding box. <br>Important for tuggers, trains, etc.
+
+Object structure | Unit | Data type | Description
+---|---|---|---
+**loadDimensions** { | | JSON object | Dimensions of the load's bounding box in meters.
+length | m | float64 | Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box.
+width | m | float64 | Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box.
+*height* <br>}| m | float64 | Absolute height of the load's bounding box.<br><br>Optional: Set value only if known.
+
 | **Object structure** | **Data type** | **Description** |
 | --- | --- | --- |
 | zoneRequest <br> { | JSON object | Request information sent by the mobile robot to fleet control. |
@@ -1830,21 +1845,6 @@ Object structure | Unit | Data type | Description
 | edgeId | string | Globally unique identifier referencing the edge the request is related to. |
 | sequenceId | uint32 | Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order. |
 | requestStatus <br><br> } | enum | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
-
-Object structure | Unit | Data type | Description
----|---|---|---
-**boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
-x | | float64 | X-coordinate of the point of reference.
-y | | float64 | Y-coordinate of the point of reference.
-z | | float 64 | Z-coordinate of the point of reference.
-*theta*<br> } | | float64 | Orientation of the loads bounding box. <br>Important for tuggers, trains, etc.
-
-Object structure | Unit | Data type | Description
----|---|---|---
-**loadDimensions** { | | JSON object | Dimensions of the load's bounding box in meters.
-length | m | float64 | Absolute length (along the mobile robot’s coordinate system's x-axis) of the load's bounding box.
-width | m | float64 | Absolute width (along the mobile robot’s coordinate system's y-axis) of the load's bounding box.
-*height* <br>}| m | float64 | Absolute height of the load's bounding box.<br><br>Optional: Set value only if known.
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
