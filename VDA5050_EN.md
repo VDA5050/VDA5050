@@ -1118,7 +1118,10 @@ The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 - A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot shall not continue driving since it can not continue its current order but is able to take new orders.
 - A 'FATAL' level issue requires user intervention, e.g., losing localization. The mobile robot shall not continue driving since it can neither continue its currently active order nor take any new orders.
 
-The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array as well as `errorHints` to propose a possible resolution. Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
+The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array.
+The fields `errorDescription` and `errorHint` can contain human readable text to explain the error or to propose a possible resolution. 
+
+Regardless of the level of the issue, the mobile robot shall never clear its order due to it.
 
 
 #### 6.6.5.2 Error references
@@ -1132,9 +1135,8 @@ This can include the following information:
 - `actionId` if error was caused by an action
 - List of parameters if error was caused by erroneous action parameters
 
-Additional hints can be put to the `errorHints` array.
 
-#### 6.6.5.3 Predefined error types
+#### 6.6.5.4 Predefined error types
 
 The mobile robot can use predefined error types to report specific issues. The following table lists the predefined error types and their description.
 
