@@ -1577,11 +1577,11 @@ Object `action` is defined in [7.3 Implementation of the order message](#73-impl
 
 Object structure/Identifier | Data type | Description
 | --- | --- | --- |
-|headerId | | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
-|timestamp | | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
-|version | | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
-|manufacturer | | string | Manufacturer of the mobile robot.
-|serialNumber | | string | Serial number of the mobile robot.
+|headerId | uint32 | Header ID of the message.<br> The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.
+|timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
+|version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
+|manufacturer | string | Manufacturer of the mobile robot.
+|serialNumber | string | Serial number of the mobile robot.
 |**responses[response]** | array | Array of response objects. |
 
 Object structure/Identifier | Data type | Description
