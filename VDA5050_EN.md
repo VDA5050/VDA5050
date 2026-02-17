@@ -1074,7 +1074,7 @@ If the edge attribute `corridor` of the subsequent edge is set, these boundaries
 
 In case the mobile robot is located too far away from the first node of an order, the fleet control can add an extended `allowedDeviationXY` to this node to include the mobile robot's current position.
 
-The mobile robot shall report the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId`, `lastNodeSequenceId` to the traversed node's values.
+The mobile robot shall report the traversal of a node by removing its `nodeState` from the `nodeStates` array and setting the `lastNodeId` and `lastNodeSequenceId` to the traversed node's values.
 
 As soon as the mobile robot reports the node as traversed, the mobile robot shall trigger the actions associated with the node, if any.
 The traversal of a node also necessarily implies leaving the edge that is leading up to the node.
