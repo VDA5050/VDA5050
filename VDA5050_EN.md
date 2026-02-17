@@ -1117,7 +1117,7 @@ The mobile robot reports any issues via the `errors` array.
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 
 - A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and is able to take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
-- An 'URGENT' level issue requires immediate attention, e.g., a low battery level. The mobile robot can continue its current order and is able to take new orders.
+- An 'URGENT' level issue, e.g., a low battery level, requires immediate attention. The mobile robot can continue its current order and is able to take new orders.
 - A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot shall not continue driving since it can not continue its current order but is able to take new orders.
 - A 'FATAL' level issue requires user intervention, e.g., losing localization. The mobile robot shall not continue driving since it can neither continue its currently active order nor take any new orders.
 
