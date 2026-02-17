@@ -1458,8 +1458,8 @@ orderUpdateId | | uint32 | Order update identification.<br>Shall be unique per o
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **node** { | | JSON object|
-nodeId | | string | Unique node identification
-sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+nodeId | | string | Identifier of a node. May not be unique among the nodes of the same order.
+sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The sequenceId is shared between nodes and edges and defines the sequence of traversal.
 *nodeDescriptor* | | string | Additional information on the node
 released | | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon.
 ***nodePosition*** | | JSON object | Node position. <br>Optional for mobile robot types that do not require the node position (e.g., line-guided mobile robots).
@@ -1495,8 +1495,8 @@ blockingType | | string | Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'}: <br> 'NONE': 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **edge** { | | JSON object | Directional connection between two nodes.
-edgeId | | string | Unique edge identification.
-sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+edgeId | | string | Identifier of an edge. May not be unique among the edges of the same order.
+sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The sequenceId is shared between nodes and edges and defines the sequence of traversal.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
 *maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the mobile robot.
