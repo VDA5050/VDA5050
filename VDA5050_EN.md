@@ -801,7 +801,7 @@ Each map is uniquely identified by a combination of a map identifier (field `map
 
 In order to minimize downtime and make it easier for the fleet control to synchronize the process of enabling of new maps, maps shall be pre-loaded or buffered on the mobile robots. The status of the maps on the mobile robot is reflected in the mobile robot's state. Transferring a map to a mobile robot and enabling the map are different processes. To enable a pre-loaded map on a mobile robot, the fleet control shall send an instant action. As a result, any other map with the same map identifier but a different map version shall be disabled by the mobile robot.
 
-Maps can also be deleted by the fleet control via instant action.
+Deletion of maps can also be done by the fleet control via an instant action.
 
 The map distribution process is shown in Figure 13.
 
