@@ -1719,8 +1719,8 @@ zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>'ENABLED': Indicates
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON object | |
-nodeId | | string | Unique node identification.
-sequenceId | | uint32 | Sequence ID to discern multiple nodes with same nodeId.
+nodeId | | string | Identifier of the node.
+sequenceId | | uint32 | `sequenceId` of the node to discern multiple nodes with same nodeId.
 *nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released| | boolean | "true" indicates that the node is part of the base.<br>"false" indicates that the node is part of the horizon.
 ***nodePosition***<br><br>}| | JSON object | Node position. <br>Optional: Fleet control has this information. Can be sent additionally, e.g., for debugging purposes.
@@ -1737,8 +1737,8 @@ mapId | | string | Unique identification of the map on which the position is ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **edgeState** { | | JSON object | |
-edgeId | | string | Unique edge identification.
-sequenceId | | uint32 | sequence ID to differentiate between multiple edges with the same edgeId.
+edgeId | | string | Identifier of the edge.
+sequenceId | | uint32 | `sequenceId` of the edge to discern multiple edges with same edgeId.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
 ***trajectory*** <br><br>} | | JSON object | Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order.<br><br>The trajectory is to be communicated as NURBS and is defined in Section [7.3 Implementation of the order message](#73-implementation-of-the-order-message)<br><br>Trajectory segments start from the point, where the mobile robot enters the edge, and terminate at the point, where the mobile robot reports that the end node was traversed.
