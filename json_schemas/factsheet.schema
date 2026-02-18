@@ -899,20 +899,20 @@
                         "criticalLowChargingLevel": {
                             "type": "number",
                             "description": "Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "minimumDesiredChargingLevel": {
                             "type": "number",
                             "description": "Specifies the minimum desired charging level in percent.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "maximumDesiredChargingLevel": {
                             "type": "number",
                             "description": "Specifies the maximum desired charging level in percent.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "minimumChargingTime": {
                             "type": "number",
