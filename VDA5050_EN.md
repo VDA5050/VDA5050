@@ -2000,6 +2000,7 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*instantActions* | uint32 | Maximum number of instant actions per message processable by the mobile robot. |
 | &emsp;*trajectory.knotVector* | uint32 | Maximum number of knots per trajectory processable by the mobile robot. |
 | &emsp;*trajectory.controlPoints* | uint32 | Maximum number of control points per trajectory processable by the mobile robot. |
+| &emsp;*zoneSet.zones* | uint32 | Maximum number of zones per `zoneSet` processable by the mobile robot. |
 | &emsp;*state.nodeStates* | uint32 | Maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot. |
 | &emsp;*state.edgeStates* | uint32 | Maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot. |
 | &emsp;*state.loads* | uint32 | Maximum number of load objects sent by the mobile robot. |
@@ -2010,7 +2011,6 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 | &emsp;*state.information* | uint32 | Maximum number of information sent by the mobile robot in one state message. |
 | &emsp;*error.errorReferences* | uint32 | Maximum number of error references sent by the mobile robot for each error. |
 | &emsp;*information.infoReferences* | uint32 | Maximum number of info references sent by the mobile robot for each information. |
-| &emsp;*zoneSet.zones* | uint32 | Maximum number of zones per `zoneSet` processable by the mobile robot. |
 | } | | |
 | **timing** { | JSON object | Timing information. |
 | &emsp;minimumOrderInterval | float32 | [s], Minimum interval sending order messages to the mobile robot. |
