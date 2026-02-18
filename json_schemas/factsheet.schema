@@ -69,7 +69,7 @@
                 },
                 "mobileRobotKinematics": {
                     "type": "string",
-                    "description": "Simplified description of mobile robots kinematics-type. Extensible enum: DIFFERENTIAL, OMNIDIRECTIONAL, THREEWHEEL"
+                    "description": "Simplified description of mobile robots kinematics-type. Extensible enum: DIFFERENTIAL, OMNIDIRECTIONAL, THREE_WHEEL"
                 },
                 "mobileRobotClass": {
                     "type": "string",
@@ -308,12 +308,12 @@
                         },
                         "state.instantActionStates": {
                             "type": "integer",
-                            "description": "Maximum number of actionStates sent by the mobile robot",
+                            "description": "Maximum number of instantActionStates sent by the mobile robot",
 							"minimum": 0
                         },
                         "state.zoneActionStates": {
                             "type": "integer",
-                            "description": "Maximum number of actionStates sent by the mobile robot",
+                            "description": "Maximum number of zoneActionStates sent by the mobile robot",
 							"minimum": 0
                         },
                         "state.errors": {
