@@ -18,7 +18,7 @@ This recommendation describes the communication interface for exchanging informa
 
 
 # Disclaimer
-The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet management system. They are intended to be freely accessible to all users and are non binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
+The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet management system. They are intended to be freely accessible to all users and are non-binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
 Users must consider the applicable state of the art at the time the guidelines are applied. The use of these proposals does not relieve any party of responsibility for its own actions. These statements do not claim to be exhaustive, nor do they constitute an authoritative interpretation of existing laws. They do not replace the need to review and comply with relevant policies, legislation, or regulations.
 In addition, the specific characteristics of the respective products and their various potential applications must be considered. All users act at their own risk. Any liability on the part of the VDA and VDMA or any individuals involved in the development or application of these proposals is excluded.
 If you identify any inaccuracies in the application of these proposals or potential risks of misinterpretation, please notify the VDA immediately so that any necessary corrections can be made.
@@ -107,7 +107,7 @@ Version 3.0.0
 
 # 1 Foreword
 
-The specification for this interface has been jointly developed by the Verband der Automobilindustrie e.V. (VDA) and the VDMA e.V. (Mechanical Engineering Industry Association). 
+The specification for this interface has been jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V. (Mechanical Engineering Industry Association). 
 The VDA represents the German automotive sector, including OEMs and Tier‑1/Tier‑n suppliers, and contributes its expertise in vehicle architectures, system integration, and safety‑critical communication. 
 The VDMA represents companies across the European mechanical and plant engineering industry and brings extensive knowledge in automation technology, machinery interoperability, and production system standardization.
 Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long‑term maintainability of cross‑domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed‑industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
@@ -120,42 +120,42 @@ The objective of this recommendation is to support the integration and efficient
 The following additional documents are relevant for understanding or implementing this specification. VDI Guideline 2510 (October 2005) provides foundational principles for driverless transport systems, covering their design, operation, and general system behavior. VDI Guideline 4451 Sheet 7 (October 2005) complements this by addressing the compatibility requirements of driverless transport systems fleet control systems, focusing on interoperability and coordinated fleet management across heterogeneous systems.
 Further applicable standards include ISO 9787:2013-05, which defines coordinate systems and motion nomenclature for robots and robotic devices, ensuring consistent terminology and geometric alignment across automation technologies. ISO 3691-4:2023-12 specifies safety requirements and verification procedures for industrial trucks, particularly driverless trucks and their associated systems, providing guidance for safe integration in industrial environments.
 Additionally, the Layout Interchange Format (LIF), published in March 2024, defines a standardized data format for exchanging track layout information between integrators of driverless transport mobile robots and third party fleet control systems. This format enables efficient and unambiguous communication of navigation-relevant spatial data across different vendor ecosystems.
-The recommendation uses a semantic versioning schema. Major version changes (x.0.0) typically involve breaking changes, such as the introduction of new non optional fields. Minor version changes (3.x.0) generally introduce new features, for example the addition of an optional parameter for visualization. Patch version changes (3.0.x), on the other hand, usually address smaller corrections, such as fixing typographical errors in the documentation.
+The recommendation uses a semantic versioning schema. Major version changes (x.0.0) typically involve breaking changes, such as the introduction of new non optional fields. Minor version changes (3.x.0) generally introduce new features, for example the addition of an optional parameter for visualization. Patch version changes (3.0.x) usually address smaller corrections, such as fixing typographical errors in the documentation.
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub repository at: <https://github.com/vda5050/vda5050>.
 
-# 2 Scope
+# 3 Scope
 
-This document describes a standardized, and vendor neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non binding, and its application is at the discretion of the respective stakeholders.
+This document describes a standardized and vendor-neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non binding, and its application is at the discretion of the respective stakeholders.
 
-Note on adoption:
+## 3.1 Note on adoption:
 The adoption of this specification is entirely voluntary. It does not establish mandatory requirements, nor does it constitute a regulatory, contractual, or legally enforceable framework. Organizations remain free to apply, adapt, or disregard the specification based on their individual technical, operational, or commercial considerations.
-The objectives of this voluntary specification are:
+The objectives of this specification are:
 - to reduce complexity when connecting mobile robots to a fleet control system.
 - to enable the coordinated operation of heterogeneous mobile robot fleets from different manufacturers within a shared physical environment.
 - to provide a generic and domain independent set of interface definitions applicable to mobile robots with varying navigation principles, physical dimensions, load handling or manipulation capabilities, and autonomy levels.
 
 This document further establishes a conceptual foundation for coordinated multi robot systems. It outlines the required interaction logic and describes the expected behavior of mobile robots when participating in fleet level coordination and traffic related processes. Its use remains entirely voluntary and does not impose any binding obligations.
 
-Exclusions
-This voluntary specification does not address the following topics:
+## 3.2 Exclusions
+This specification does not address the following topics:
 - Safety Requirements: This document does not define functional, operational, or system safety requirements and shall not be regarded or applied as a safety standard.
 - Traffic Management Logic: Strategies, algorithms, or decision making processes for traffic coordination (e.g., routing, prioritization, congestion handling, or deadlock resolution) are not included.
-- Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots—such as interfaces to peripheral equipment, infrastructure components, or external IT systems—are excluded from the scope.
+- Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots - such as interfaces to peripheral equipment, infrastructure components, or external IT systems - are excluded from the scope.
 - Project Coordination and Implementation Procedures: Project management activities, integration methodologies, commissioning workflows, validation and acceptance procedures, and similar organizational processes are not covered.
 - Operational Responsibilities: This document does not allocate responsibilities among operators, system integrators, vehicle manufacturers, or fleet control providers with respect to planning, operation, maintenance, or safety.
 - Cybersecurity Measures: Mechanisms, technologies, or processes for secure communication or data protection are not specified.
 
-# 2. Definitions
+# 4 Definitions
 For the purposes of this document, the following terms and definitions apply.
 
-## 2.1 Mobile Robots
-A driverless systems for material transport primarily in operational settings, controlled by automation independently of their level of autonomy [Source ISO 3691-4]
+## 2.1 Mobile Robot
+A driverless system for material transport primarily in operational settings, controlled by automation independently of their level of autonomy [Source ISO 3691-4]
 
 ## 2.2 Driverless Transport System
 Consists of at least one Mobile Robot and a higher-level system controller, which can be integrated in the mobile robot or located externally. 
 
 ## 2.3 Moving
-state in which a mobile robot or any of its components undergoes a change in spatial position or orientation, including movement of wheels, load handling devices, or the robot body.
+State in which a mobile robot or any of its components undergoes a change in spatial position or orientation, including movement of wheels, load handling devices, or the robot body.
 
 ## 2.4 Driving
 Operating state in which the mobile robot has a non zero translational and/or rotational velocity.
@@ -166,7 +166,7 @@ Driving state in which the mobile robot operates without human intervention.
 ## 2.6 Manual driving
 Driving state in which the mobile robot operates under direct human control.
 
-# 3 General
+# 3 Transport protocol
 ## 3.1 Transport protocol
 
 Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
