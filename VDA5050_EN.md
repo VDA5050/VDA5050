@@ -8,15 +8,6 @@
 
 ![Fleet control system and mobile robots](./assets/csagv.png)
 
-
-
-### Brief information
-
-Definition of a communication interface for driverless transport systems (DTS).
-This recommendation describes the communication interface for exchanging information between a central fleet control and mobile robots.
-
-
-
 # Disclaimer
 The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet management system. They are intended to be freely accessible to all users and are non-binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
 Users must consider the applicable state of the art at the time the guidelines are applied. The use of these proposals does not relieve any party of responsibility for its own actions. These statements do not claim to be exhaustive, nor do they constitute an authoritative interpretation of existing laws. They do not replace the need to review and comply with relevant policies, legislation, or regulations.
@@ -37,17 +28,26 @@ Version 3.0.0
 
 
 ## Table of contents
-[1 Foreword](#1-foreword)<br>
+[0 Foreword](#0-foreword)<br>
+[1 Introduction](#1-introduction)<br>
 [2 Scope](#2-scope)<br>
-  [2.1 Exclusions](#21-exclusions)<br>
-  [2.2 Other applicable documents](#22-other-applicable-documents)<br>
-  [2.3 Protocol version](#23-protocol-version)<br>
-[3 Transport protocol (MQTT)](#3-transport-protocol-mqtt)<br>
-  [3.1 Connection handling, security and QoS](#31-connection-handling-security-and-qos)<br>
-  [3.2 Topic levels](#32-topic-levels)<br>
-  [3.3 Topics for communication](#33-topics-for-communication)<br>
-[4 Definitions](#4-definitions)<br>
+[3 Definitions](#3-definitions)<br>
+  [3.1 Mobile Robot](#31-mobile-robot)<br>
+  [3.2 Moving](#32-moving)<br>
+  [3.3 Driving](#33-driving)<br>
+  [3.4 Automatic driving](#34-automatic-driving)<br>
+  [3.5 Manual driving](#35-manual-driving)<br>
+  [3.6 Line-guided mobile robot](#36-line-guided-mobile-robot)<br>
+  [3.7 Freely navigating mobile robot](#37-freely-navigating-mobile-robot)<br>
+[4 Transport protocol (MQTT)](#4-transport-protocol-mqtt)<br>
+  [4.1 Connection handling, security and QoS](#41-connection-handling-security-and-qos)<br>
+  [4.2 Topic levels](#42-topic-levels)<br>
+  [4.3 Topics for communication](#43-topics-for-communication)<br>
 [5 Process and content of communication](#5-process-and-content-of-communication)<br>
+  [5.1 General](#51-general)<br>
+  [5.2 Implementation Phase](#52-implementation-phase)<br>
+  [5.3 Functions of the fleet control](#53-functions-of-the-fleet-control)<br>
+  [5.4 Functions of the mobile robots](#54-functions-of-the-mobile-robots)<br>
 [6 Protocol specification](#6-protocol-specification)<br>
   [6.1 Order](#61-order)<br>
     [6.1.1 Concept and logic](#611-concept-and-logic)<br>
@@ -105,68 +105,64 @@ Version 3.0.0
   [7.9 Implementation of the visualization message](#79-implementation-of-the-visualization-message)<br>
   [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message)<br>
 
-# 1 Foreword
+# 0 Foreword
 
 The specification for this interface has been jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V. (Mechanical Engineering Industry Association). 
 The VDA represents the German automotive sector, including OEMs and Tier‑1/Tier‑n suppliers, and contributes its expertise in vehicle architectures, system integration, and safety‑critical communication. 
 The VDMA represents companies across the European mechanical and plant engineering industry and brings extensive knowledge in automation technology, machinery interoperability, and production system standardization.
 Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long‑term maintainability of cross‑domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed‑industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
-The Institute for Material Handling and Logistics (IFL) at Karlsruhe Institute of Technology (KIT) is part of the Faculty of Mechanical Engineering and focuses on combining research, teaching, and industrial application. Its interdisciplinary team works on future logistics challenges, including material flow analysis, Industry 4.0, automation, robotics, digitalization, AI, sustainability, and system design. 
+The Institute for Material Handling and Logistics (IFL) at Karlsruhe Institute of Technology (KIT) is part of the Faculty of Mechanical Engineering and focuses on combining research, teaching, and industrial application. Its interdisciplinary team works on future logistics challenges, including material flow analysis, Industry 4.0, automation, robotics, digitalization, AI, sustainability, and system design.
 The Institute is commissioned by the VDA and the VDMA to manage the development of the VDA 5050 and contributes by leading the development, supporting issue review and manages on the official GitHub repository.
 
-# 2 Introduction
+# 1 Introduction
 This recommendation describes the communication interface for exchanging information between central fleet control and mobile robots.
 The objective of this recommendation is to support the integration and efficient operation of mobile robot fleets under the supervision of a centralized fleet control system. This is achieved through the implementation of a standardized, vendor neutral communication interface that ensures interoperability between the fleet control system and individual mobile robots.
-The following additional documents are relevant for understanding or implementing this specification. VDI Guideline 2510 (October 2005) provides foundational principles for driverless transport systems, covering their design, operation, and general system behavior. VDI Guideline 4451 Sheet 7 (October 2005) complements this by addressing the compatibility requirements of driverless transport systems fleet control systems, focusing on interoperability and coordinated fleet management across heterogeneous systems.
-Further applicable standards include ISO 9787:2013-05, which defines coordinate systems and motion nomenclature for robots and robotic devices, ensuring consistent terminology and geometric alignment across automation technologies. ISO 3691-4:2023-12 specifies safety requirements and verification procedures for industrial trucks, particularly driverless trucks and their associated systems, providing guidance for safe integration in industrial environments.
-Additionally, the Layout Interchange Format (LIF), published in March 2024, defines a standardized data format for exchanging track layout information between integrators of driverless transport mobile robots and third party fleet control systems. This format enables efficient and unambiguous communication of navigation-relevant spatial data across different vendor ecosystems.
+Various national technical guidelines and legal frameworks may offer general orientation in this context. They could provide indicative information on aspects such as planning, operation, safety, or coordination of automated systems. In addition, national standards and regulatory provisions may help ensure that technical processes and terminology are considered within a consistent overall framework.
 The recommendation uses a semantic versioning schema. Major version changes (x.0.0) typically involve breaking changes, such as the introduction of new non optional fields. Minor version changes (3.x.0) generally introduce new features, for example the addition of an optional parameter for visualization. Patch version changes (3.0.x) usually address smaller corrections, such as fixing typographical errors in the documentation.
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub repository at: <https://github.com/vda5050/vda5050>.
 
-# 3 Scope
+# 2 Scope
 
-This document describes a standardized and vendor-neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non binding, and its application is at the discretion of the respective stakeholders.
+This document describes a standardized and vendor-neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non-binding, and its application is at the discretion of the respective stakeholders.
 
-## 3.1 Note on adoption:
-The adoption of this specification is entirely voluntary. It does not establish mandatory requirements, nor does it constitute a regulatory, contractual, or legally enforceable framework. Organizations remain free to apply, adapt, or disregard the specification based on their individual technical, operational, or commercial considerations.
 The objectives of this specification are:
 - to reduce complexity when connecting mobile robots to a fleet control system.
 - to enable the coordinated operation of heterogeneous mobile robot fleets from different manufacturers within a shared physical environment.
 - to provide a generic and domain independent set of interface definitions applicable to mobile robots with varying navigation principles, physical dimensions, load handling or manipulation capabilities, and autonomy levels.
 
-
-## 3.2 Exclusions
 This specification does not address the following topics:
 - Safety Requirements: This document does not define functional, operational, or system safety requirements and shall not be regarded or applied as a safety standard.
 - Traffic Management Logic: Strategies, algorithms, or decision making processes for traffic coordination (e.g., routing, prioritization, congestion handling, or deadlock resolution) are not included.
-- Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots - such as interfaces to peripheral equipment, infrastructure components, or external IT systems - are excluded from the scope.
+- Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots are excluded, such as interfaces to peripheral equipment, infrastructure components, or external IT systems.
 - Project Coordination and Implementation Procedures: Project management activities, integration methodologies, commissioning workflows, validation and acceptance procedures, and similar organizational processes are not covered.
 - Operational Responsibilities: This document does not allocate responsibilities among operators, system integrators, vehicle manufacturers, or fleet control providers with respect to planning, operation, maintenance, or safety.
 - Cybersecurity Measures: Mechanisms, technologies, or processes for secure communication or data protection are not specified.
 
-# 4 Definitions
+# 3 Definitions
 For the purposes of this document, the following terms and definitions apply.
 
-## 2.1 Mobile Robot
+## 3.1 Mobile Robot
 A driverless system for material transport primarily in operational settings, controlled by automation independently of their level of autonomy [Source ISO 3691-4]
 
-## 2.2 Driverless Transport System
-Consists of at least one Mobile Robot and a higher-level system controller, which can be integrated in the mobile robot or located externally. 
-
-## 2.3 Moving
+## 3.2 Moving
 State in which a mobile robot or any of its components undergoes a change in spatial position or orientation, including movement of wheels, load handling devices, or the robot body.
 
-## 2.4 Driving
+## 3.3 Driving
 Operating state in which the mobile robot has a non zero translational and/or rotational velocity.
 
-## 2.5 Automatic driving
+## 3.4 Automatic driving
 Driving state in which the mobile robot operates without human intervention.
 
-## 2.6 Manual driving
+## 3.5 Manual driving
 Driving state in which the mobile robot operates under direct human control.
 
-# 3 Transport protocol
-## 3.1 Transport protocol
+# 3.6 Line-guided mobile robot
+Mobile robots that follow predefined trajectories either sent by fleet control or defined on the robot explicitly or implicitly as the direct connection between the nodes.
+
+# 3.7 Freely navigating mobile robot
+Mobile robots that plan their own trajectories. If fleet control sends a trajectory within the order, the robot shall follow this trajectory.
+
+# 4 Transport protocol
 
 Communication is expected to be done via wireless networks, considering the effects of connection failures and potential loss of messages.
 
@@ -177,7 +173,7 @@ Participants in the MQTT network subscribe to these topics and receive informati
 
 The JSON format allows for future extensions of the protocol with additional parameters as well as validation against schemas.
 
-### 3.2 Connection handling, security and QoS
+### 4.2 Connection handling, security and QoS
 
 The MQTT protocol provides the option of setting a last will message for a client.
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
@@ -190,7 +186,7 @@ To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall b
 Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
 
-### 3.3 Topic levels
+### 4.3 Topic levels
 
 The MQTT topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
 For a cloud-based MQTT broker the topic structure might have to be adapted individually, but it should roughly follow the proposed structure.
@@ -213,12 +209,12 @@ manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Unique mobile robot serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
 topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Communication](#313-topics-for-communication)
 
->Table 2 Explanation of suggested MQTT topic levels
+>Table 1 Explanation of suggested MQTT topic levels
 
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 Wildcard characters `+` and `#` as well as the character `$` that is reserved for broker internal topics should not be used either.
 
-### 3.4 Topics for communication
+### 4.4 Topics for communication
 
 The mobile robot protocol uses the following topics for information exchange between fleet control and mobile robot.
 
@@ -233,12 +229,12 @@ factsheet | mobile robot | fleet control | Parameters or vendor-specific informa
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
 response | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | response.schema
 
->Table 3 Topics for communication between fleet control and mobile robot
+>Table 2 Topics for communication between fleet control and mobile robot
 
 
 # 5 Process and content of communication
 
-## 4.1 General
+## 5.1 General
 
 There are at least the following participants for the operation of driverless transport system:
 
@@ -252,14 +248,14 @@ During implementation or modification, the mobile robot and the fleet control ar
 ![Figure 1 Structure of the information flow](./assets/information_flow_VDA5050.png)
 >Figure 1 - Structure of the information flow
 
-## 4.2 Implementation Phase
+## 5.2 Implementation Phase
 
 During the implementation phase, the DTS consisting of fleet control and mobile robots is set up.
 The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the fleet control by importing from other systems.
 Essentially, this concerns the following content:
 
 - Definition of routes:
-Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (see Section [2.2 Other applicable documents](#22-other-applicable-documents)).
+Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (LIF – Layout Interchange Format, VDMA 2024-03).
 Alternatively, routes can also be implemented manually in the fleet control by the operator.
 Routes can be one-way streets, restricted for certain mobile robot groups (based on the size ratios), etc.
 - Route network configuration:
@@ -273,7 +269,7 @@ The resulting orders to be executed by the robotic fleet are then transferred to
 The mobile robot then continuously reports its status to the fleet control in parallel with the execution of the order.
 This is also done using the MQTT message broker.
 
-## 4.3 Functions of the fleet control
+## 5.3 Functions of the fleet control
 
 The fleet control system performs, at minimum, the following functions:
 - Assignment of orders to the mobile robots
@@ -285,7 +281,7 @@ The fleet control system performs, at minimum, the following functions:
 - Communication with peripheral systems such as doors, gates, elevators, etc.
 - Detection and resolution of communication errors
 
-## 4.4 Functions of the mobile robots
+## 5.4 Functions of the mobile robots
 
 Each mobile robot shall perform the following functions:
 - Localization
@@ -768,7 +764,6 @@ After successfully deleting a map, it is important to remove that map's entry fr
 
 ## 6.4 Zones
 
-### 6.4.1 General
 Zones are used to define rules for specific areas of the mobile robot workspace. In this way, zones allow mobile robots to navigate freely between nodes while giving the fleet control the ability to manage traffic. Zones can be used to locally deny mobile robots access to areas or to link access to conditions (zone types: 'BLOCKED' and 'RELEASE'). It is also possible to enforce specific behavior while within the zone (zone types: 'LINE_GUIDED', 'SPEED_LIMIT', 'COORDINATED_REPLANNING', and 'ACTION') or influence the driving behavior by incentivizing or penalizing certain areas (zone types: 'PRIORITY' and 'PENALTY') or giving a predefined driving direction (zone types: 'DIRECTED', 'BIDIRECTED'). The zone types are defined in the following sections.
 
 Potential conflicts in orders due to overlapping of zones or combination of zone and edge properties and how to resolve them are addressed in section [6.4.4 Interaction between zones](#644-interactions-between-zones).
@@ -1123,7 +1118,7 @@ When a mobile robot receives an `action` as part of the order (attached to a `no
 When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
 When a mobile robot executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report planned `zoneAction` here.
 
-The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState` (see Table 2).
+The current stage of an action is reflected in the field `actionStatus` of the corresponding `actionState` (see Table 11).
 
 actionStatus | Description
 ---|---
@@ -1587,7 +1582,7 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 **instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the state message until action clearInstantActions is executed. The robot may throw an errorType 'INSTANT_ACTION_STATES_FULL' with errorLevel 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
 ***zoneActionStates [actionState]*** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until action clearZoneActions is executed. If action zones are supported, this field is required. The robot may throw an errorType 'ZONE_ACTION_STATES_FULL' with errorLevel 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
 **batteryState** | | JSON object | Contains all battery-related information.
-operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table in Section [6.6.6 Operating Mode](#666-operating-mode).
+operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table 9 in Section [6.6.6 Operating Mode](#666-operating-mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the mobile robot shall be in the array.<br>An empty array indicates that the mobile robot has no active errors.
 ***information [info]*** | | array | Array of info objects. <br>An empty array indicates, that the mobile robot has no information. <br>This should only be used for visualization or debugging – it shall not be used for logic in fleet control.
 **safetyState** | | JSON object | Contains all safety-related information.
