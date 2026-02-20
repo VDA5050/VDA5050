@@ -134,7 +134,6 @@ The objectives of this specification are:
 - to enable the coordinated operation of heterogeneous mobile robot fleets from different manufacturers within a shared physical environment.
 - to provide a generic and domain independent set of interface definitions applicable to mobile robots with varying navigation principles, physical dimensions, load handling or manipulation capabilities, and autonomy levels.
 
-This document further establishes a conceptual foundation for coordinated multi robot systems. It outlines the required interaction logic and describes the expected behavior of mobile robots when participating in fleet level coordination and traffic related processes. Its use remains entirely voluntary and does not impose any binding obligations.
 
 ## 3.2 Exclusions
 This specification does not address the following topics:
