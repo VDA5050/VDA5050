@@ -39,7 +39,7 @@ Version 3.0.0
   [3.5 Manual driving](#35-manual-driving)<br>
   [3.6 Line-guided mobile robot](#36-line-guided-mobile-robot)<br>
   [3.7 Freely navigating mobile robot](#37-freely-navigating-mobile-robot)<br>
-[4 Transport protocol (MQTT)](#4-transport-protocol-mqtt)<br>
+[4 Transport protocol](#4-transport-protocol)<br>
   [4.1 Connection handling, security and QoS](#41-connection-handling-security-and-qos)<br>
   [4.2 Topic levels](#42-topic-levels)<br>
   [4.3 Topics for communication](#43-topics-for-communication)<br>
@@ -173,11 +173,11 @@ Participants in the MQTT network subscribe to these topics and receive informati
 
 The JSON format allows for future extensions of the protocol with additional parameters as well as validation against schemas.
 
-### 4.2 Connection handling, security and QoS
+### 4.1 Connection handling, security and QoS
 
 The MQTT protocol provides the option of setting a last will message for a client.
 If the client disconnects unexpectedly for any reason, the last will is distributed by the broker to other subscribed clients.
-The use of this feature is described in Section [6.8 Connection](#68-connection).
+The use of this feature is described in Section [6.5 Connection](#65-connection).
 
 If the mobile robot disconnects from the broker, it keeps all the order information and fulfills the order up to the last released node.
 
@@ -186,7 +186,7 @@ To reduce the communication overhead, the MQTT QoS level 0 (Best Effort) shall b
 Protocol security needs to be taken into account by broker configuration, but is not addressed within this guideline.
 
 
-### 4.3 Topic levels
+### 4.2 Topic levels
 
 The MQTT topic structure is not strictly defined due to the mandatory topic structure of cloud providers.
 For a cloud-based MQTT broker the topic structure might have to be adapted individually, but it should roughly follow the proposed structure.
@@ -207,14 +207,14 @@ interfaceName | string | Name of the used interface
 majorVersion | string | Major version number of the VDA 5050 recommendation, preceded by "v"
 manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Unique mobile robot serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
-topic | string | Topic (e.g., order or state) see Section [3.1.3 Topics for Communication](#313-topics-for-communication)
+topic | string | Topic (e.g., order or state) see Section [4.4 Topics for Communication](#44-topics-for-communication)
 
 >Table 1 Explanation of suggested MQTT topic levels
 
 Note: Since the `/` character is used to define topic hierarchies, it shall not be used in any of the aforementioned fields.
 Wildcard characters `+` and `#` as well as the character `$` that is reserved for broker internal topics should not be used either.
 
-### 4.4 Topics for communication
+### 4.3 Topics for communication
 
 The mobile robot protocol uses the following topics for information exchange between fleet control and mobile robot.
 
@@ -556,7 +556,7 @@ If the mobile robot receives an order with the same `orderId` and `orderUpdateId
 
 The optional `corridor` edge attribute allows the mobile robot to deviate from the edge trajectory for obstacle avoidance and defines the boundaries within which the mobile robot is allowed to operate.
 To use the `corridor` attribute, a predefined trajectory is required that the mobile robot would follow if no `corridor` attribute was defined. This can be either the trajectory defined on the mobile robot known to the fleet control or the trajectory sent in an order. The behavior of a mobile robot using the `corridor` attribute is still the behavior of a line-guided mobile robot, except that it's allowed to temporarily deviate from a trajectory to avoid obstacles.
-Note that a corridor communicated within an order is released for the mobile robot by default. If the `releaseRequired` flag is set to true, the mobile robot must request approval from fleet control before using the corridor as described in chapter [6.5.10 Request use of Corridors](#6510-request-use-of-corridors).
+Note that a corridor communicated within an order is released for the mobile robot by default. If the `releaseRequired` flag is set to true, the mobile robot must request approval from fleet control before using the corridor as described in chapter [6.6.10 Request use of Corridors](#6610-request-use-of-corridors).
 *Remark:
 An edge inside an order defines a logical connection between two nodes and not necessarily the (real) trajectory that a mobile robot follows when driving from the start node to the end node.
 Depending on the mobile robot type, the trajectory that a mobile robot takes between the start and end nodes is either defined by fleet control via the trajectory edge attribute or assigned to the mobile robot as a predefined trajectory.
@@ -574,13 +574,13 @@ If not, the mobile robot shall stop because it is out of the allowed navigation 
 The fleet control can decide if user interaction is required or if the mobile robot can continue by canceling the current order and sending a new order to the mobile robot with corridor information that allows the mobile robot to move again.
 
 *Remark: Allowing the mobile robot to deviate from the trajectory increases the possible footprint of the mobile robot during driving. This circumstance shall be considered during initial operation, and when the fleet control makes a traffic control decision based on the mobile robot's footprint.*
-See also Section [6.5.2 Traversal of nodes and entering/leaving edges, triggering of actions](#652-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
+See also Section [6.6.2 Traversal of nodes and entering/leaving edges, triggering of actions](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions) for further information.
 
 
 ## 6.2 Actions
 
 If the mobile robot supports actions other than driving, these actions are instructed via the `actions` array that is attached to a node or an edge, sent via the separate topic `instantActions` (see section [6.2.1 Instant actions](#621-instant-actions)) or configured via action zones (see section [6.4.1 Zone types](#641-zone-types)).
-Actions that are to be executed on an edge shall only run while the mobile robot is on the edge (see Section [6.5.2 Traversal of nodes and entering/leaving edges, triggering of actions](#652-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+Actions that are to be executed on an edge shall only run while the mobile robot is on the edge (see Section [6.6.2 Traversal of nodes and entering/leaving edges, triggering of actions](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 
 Actions that are triggered on nodes can run as long as they need to run and should be self-terminating (e.g., an audio signal that lasts for five seconds or a pick action, that is finished after picking up a load) or formulated pairwise (e.g., "activateWarningLights" and "deactivateWarningLights"), although there may be exceptions.
 
@@ -869,7 +869,7 @@ The mobile robot keeps the requests for as long as it consideres thie informatio
 
 The mobile robot shall acknowledge the fleet controls response by setting the `requestStatus` accordingly.
 
-The interaction between the mobile robot and the fleet control for 'RELEASE' zones shall be according to Figure 15.
+The interaction between the mobile robot and the fleet control for 'RELEASE' zones shall be according to Figure 16.
 
 While the mobile robot remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform fleet control that it is still inside the zone. After mobile robot has exited the zone, it shall remove the corresponding `zoneRequest` entry from its state message.
 When receiving a response with `responseType` 'REVOKED', the mobile robot shall remove the request from its state. When the `leaseExpiry` has passed, the requestStatus shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall report a warning and react according to the `releaseLossBehavior` defined in the zone definition.
@@ -877,7 +877,7 @@ When receiving a response with `responseType` 'REVOKED', the mobile robot shall 
 ![Figure 16 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
 >Figure 16 - Zone request behavior for a RELEASE zone.
 
-The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to Figure 16.
+The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to Figure 17.
 
 The mobile robot shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus`to 'GRANTED' while removing all other requests from its state.
 When receiving a response with `responseType` 'REVOKED', the mobile robot shall remove the request from its state and not enter the 'COORDINATED_REPLANNING' zone. When the `leaseExpiry` has passed, the `requestStatus` shall be set to 'EXPIRED' and the zone shall not be entered. If the mobile robot is already inside the 'RELEASE' zone when the `leaseExpiry` has passed or the request is 'REVOKED', it shall stop driving and report a warning. To continue, the mobile robot shall state a new request.
@@ -1186,10 +1186,10 @@ The parameters `plannedPath` and `intermediatePath` shall be used only for traje
 
 ## 6.9 Request/response mechanism
 
-Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in figure 21.
+Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in figure 22.
 
-![Figure 21 Visualization of request state transitions](./assets/request_state_transitions.png)
->Figure 21 - Request lifecycle: request states and logic of possible transitions. 
+![Figure 22 Visualization of request state transitions](./assets/request_state_transitions.png)
+>Figure 22 - Request lifecycle: request states and logic of possible transitions. 
 
 A request is always initiated by the mobile robot and communicated as part of the state message. The fleet control evaluates the request and returns its decision via the response topic.
 
@@ -1358,7 +1358,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a mobile robot shall match on a node for it to be considered traversed.<br>If defined, the mobile robot shall match the orientation on this node.<br>If previous edge disallows rotation, the mobile robot shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the mobile robot shall rotate on the node to the edges desired rotation before entering the edge.
-***allowedDeviationXY*** | m | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [Order cancellation](#614-order-cancellation) and [Traversal of nodes](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
+***allowedDeviationXY*** | m | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [Order cancellation](#613-order-cancellation) and [Traversal of nodes](#662-traversal-of-nodes-and-enteringleaving-edges-triggering-of-actions)).
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a mobile robot shall match the orientation of a node for it to be considered traversed.<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the mobile robot orientation.<br>If = 0.0: no deviation is allowed, which means the mobile robot shall reach the node orientation as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume this value as 0.0.
 mapId | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 
@@ -1506,19 +1506,19 @@ A single zone object has the following structure:
 | --------------------- | ------------- | ------------------- |
 | zone{ | JSON object | |
 | zoneId | string | Locally (within the zone set) unique identifier. |
-| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to section [6.3.1 Zone types](#631-zone-types). |
+| zoneType | string | Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}, Zone type according to section [6.4.1 Zone types](#641-zone-types). |
 | *zoneDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
-| *maximumSpeed* | float64 | Required only for SPEED_LIMIT zone as defined in chapter  [6.3.1 Zone types](#631-zone-types).| 
-| ***entryActions[Action]***| array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
-| ***duringActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
-| ***exitActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.3.1 Zone types](#631-zone-types).| 
-| *releaseLossBehavior* | string | Required only for RELEASE zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
-| *priorityFactor* | float64 | Required only for PRIORITY zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
-| *penaltyFactor* | float64 | Required only for PENALTY zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
-| *direction* | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
-| *directedLimitation* | string | Required only for a DIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
-| *bidirectedLimitation* | string | Required only for a BIDIRECTED zone as defined in chapter [6.3.1 Zone types](#631-zone-types).|
+| *maximumSpeed* | float64 | Required only for SPEED_LIMIT zone as defined in chapter  [6.4.1 Zone types](#641-zone-types).| 
+| ***entryActions[Action]***| array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| ***duringActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| ***exitActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| *releaseLossBehavior* | string | Required only for RELEASE zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+| *priorityFactor* | float64 | Required only for PRIORITY zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+| *penaltyFactor* | float64 | Required only for PENALTY zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+| *direction* | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+| *directedLimitation* | string | Required only for a DIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+| *bidirectedLimitation* | string | Required only for a BIDIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 
 Object `action` is defined in [7.3 Implementation of the order message](#73-implementation-of-the-order-message).
 
@@ -1737,7 +1737,7 @@ Object structure | Unit | Data type | Description
 actionId | |string | Unique identifier of the action.
 *actionType* | | string | Type of the action.<br><br>Optional: Only for informational or visualization purposes. Fleet control is aware of action type as dispatched in the order.
 *actionDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
-actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.5.8 Action states](#658-action-states).
+actionStatus | | string | Enum {'WAITING', 'INITIALIZING', 'RUNNING', 'PAUSED', 'FINISHED', 'FAILED'}<br><br>See Section [6.6.9 Action states](#669-action-states).
 *actionResult*<br>} | | string | Description of the result, e.g., the result of an RFID reading.<br><br>Errors will be transmitted in errors.
 
 Object structure | Unit | Data type | Description
@@ -1754,7 +1754,7 @@ Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
 errorType | | string | Error type, extensible enumeration including the following predefined values <br>Enum {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'OUTSIDE_OF_CORRIDOR', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', ...}.
-***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.<br>For additional information see [8 Best practice](#8-best-practice).
+***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array | Array of translations of the error description. If a particular language is not included in the collection, the value of the errorDescription field, if present, shall be used as the default. 
 *errorHint* | | string | Hint on how to approach or solve the reported error.
