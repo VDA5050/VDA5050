@@ -1376,7 +1376,7 @@ All messages on this topic shall be sent with a `retained` flag.
 
 # 7 Message specification
 
-The different messages are presented in tables describing the contents of the fields of the JSON that is sent as an order, state, etc.
+The different messages are presented in tables describing the contents of the fields of the JSON.
 
 In addition, JSON schemas are available for validation in the public git repository (https://github.com/VDA5050/VDA5050).
 The JSON schemas are updated with every release of the VDA5050. If there are differences between the JSON schemas and this document, the variant in this document applies.
@@ -1407,7 +1407,7 @@ If a variable is marked as optional, it is optional for the sender as the variab
 If the mobile robot receives a message that contains a field which is marked as optional in this protocol, the mobile robot is expected to act accordingly and shall not ignore the field.
 If the mobile robot cannot process the order due to an unsupported parameter, it shall communicate this with an error of type 'UNSUPPORTED_PARAMETER' and error level 'CRITICAL' and to reject the order.
 
-Fleet control shall only send optional information that the mobile robot supports.
+Fleet control shall only send optional fields that the mobile robot supports.
 
 Example: Trajectories are optional.
 If a mobile robot cannot process trajectories, fleet control shall not send a trajectory to the mobile robot.
@@ -1428,7 +1428,7 @@ If a mobile robot's memory is insufficient to process an incoming order, it shal
 
 The matching of maximum field lengths, string lengths or value ranges is up to the integrator.
 
-For ease of integration, mobile robot vendors shall supply a mobile robot factsheet that is detailed in [Factsheet](#710-implementation-of-the-factsheet-message).
+For ease of integration, mobile robot vendors shall supply a mobile robot factsheet that is detailed in Section [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message).
 
 
 ### 7.1.3 Notation of fields, topics and enumerations
@@ -1449,7 +1449,6 @@ Numerical data types are specified with type and precision, e.g., float64 or uin
 ## 7.2 Protocol header
 
 Each JSON message starts with a header.
-In the following sections, the following fields will be referenced as header for readability.
 The header consists of the following individual elements.
 The header is not a JSON object.
 
