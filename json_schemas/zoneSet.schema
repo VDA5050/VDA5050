@@ -10,7 +10,7 @@
         "version", 
         "manufacturer", 
         "serialNumber",
-        "zoneSets"
+        "zoneSet"
     ],
     "properties": {
         "headerId": {
