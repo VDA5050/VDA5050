@@ -1034,12 +1034,12 @@ When connection between the mobile robot and the broker stops unexpectedly, the 
 
 ## 6.6 State
 
-The mobile robot state will be transmitted on only one topic.
-Compared to separate messages (e.g., for orders, battery state and errors) using one topic will reduce the workload of the broker and the fleet control for handling messages, while also keeping the information about the mobile robot state synchronized.
+The mobile robot state shall be published on a single topic.
+Compared to separate messages (e.g., for current order progress, battery state and errors), using a single topic reduces the workload of both the broker and the fleet control system when handling messages, while also keeping the mobile robot state information synchronized.
 
-The mobile robot state message shall be published with occurrence of relevant events or at the latest every 30s via MQTT broker to fleet control.
+The mobile robot state message shall be published when relevant events occur or at least every 30 seconds.
 
-Events that shall trigger the transmission of the state message are:
+The following events shall trigger a transmission of the state message:
 - Receiving an order
 - Receiving an order update
 - Changes in the `load` object
