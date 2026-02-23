@@ -37,13 +37,13 @@ endif
             stop
         endif
         ->no;
-            if ((7) is order update following cancelOrder?) then (yes)
+            if ((7) Is order update following cancelOrder?) then (yes)
                 #orange:reject order\nthrow error;
                 stop
             endif
             ->no;
             if ((8) Is order update currently on mobile robot?) then (yes - mobile robot already\n has received this update)
-                if (did order content change?) then (yes)
+                if (Did order content change?) then (yes)
                     #orange:reject order\nthrow error;
                 else (no)
                     #lightgreen: discard message;
