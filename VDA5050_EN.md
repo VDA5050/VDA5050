@@ -1479,7 +1479,7 @@ orderUpdateId | | uint32 | Order update identification.<br>Shall be unique per o
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **node** { | | JSON object|
-nodeId | | string | Identifier of the node. May not be unique among the nodes of the same order.
+nodeId | | string | Unique identifier of the node. <br>The same node can be referenced multiple times within one order message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The sequenceId is shared between nodes and edges and defines the sequence of traversal.
 *nodeDescriptor* | | string | Additional information on the node
 released | | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon.
@@ -1516,7 +1516,7 @@ blockingType | | string | Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'}: <br> 'NONE': 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **edge** { | | JSON object | Directional connection between two nodes.
-edgeId | | string | Identifier of the edge. May not be unique among the edges of the same order.
+edgeId | | string | Unique identifier of the edge. <br>The same edge can be referenced multiple times within one order message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The sequenceId is shared between nodes and edges and defines the sequence of traversal.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
@@ -1740,7 +1740,7 @@ zoneSetStatus <br>}| | string | Enum {ENABLED, DISABLED}<br>'ENABLED': Indicates
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **nodeState** { | JSON object | |
-nodeId | | string | Identifier of the node.
+nodeId | | string | Unique identifier of the node. <br>The same node can be referenced multiple times within one state message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | `sequenceId` of the node to discern multiple nodes with same nodeId.
 *nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released| | boolean | "true" indicates that the node is part of the base.<br>"false" indicates that the node is part of the horizon.
@@ -1758,7 +1758,7 @@ mapId | | string | Unique identification of the map on which the position is ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **edgeState** { | | JSON object | |
-edgeId | | string | Identifier of the edge.
+edgeId | | string | Unique identifier of the edge. <br>The same edge can be referenced multiple times within one order message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | `sequenceId` of the edge to discern multiple edges with same edgeId.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
