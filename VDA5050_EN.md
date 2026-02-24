@@ -1758,7 +1758,7 @@ mapId | | string | Unique identification of the map on which the position is ref
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **edgeState** { | | JSON object | |
-edgeId | | string | Unique identifier of the edge. <br>The same edge can be referenced multiple times within one order message. `sequenceId` is used to differentiate the sequence of traversal.
+edgeId | | string | Unique identifier of the edge. <br>The same edge can be referenced multiple times within one state message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | `sequenceId` of the edge to discern multiple edges with same edgeId.
 *edgeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon.
