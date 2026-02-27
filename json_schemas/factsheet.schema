@@ -220,7 +220,7 @@
                         },
                         "maximumIdLength": {
                             "type": "integer",
-                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId, edge.endNodeId"
+                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId"
                         },
                         "idNumericalOnly": {
                             "type": "boolean",
@@ -346,16 +346,6 @@
             ],
             "description": "Supported features of VDA5050 protocol",
             "properties": {
-                "orderHandling": {
-                    "type": "object",
-                    "description": "Defines the mobile robot’s behavior and capabilities related to order processing.",
-                    "properties": {
-                        "clearOrderOnStopHibernation": {
-                            "type": "string",
-                            "description": "Indicates whether the mobile robot retains its current order when entering the HIBERNATING connection state. If true, the mobile robot will keep the active order and will resume execution after returning to ONLINE. If not defined, the default value is true."
-                        }
-                    }
-                },
                 "optionalParameters": {
                     "type": "array",
                     "description": "List of supported and/or required optional parameters. Optional parameters, that are not listed here, are assumed to be not supported by the mobile robot.",
@@ -566,17 +556,17 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
-                            "polygonPoints"
+                            "envelope2dId",
+                            "vertices"
                         ],
                         "properties": {
-                            "set": {
+                            "envelope2dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
-                            "polygonPoints": {
+                            "vertices": {
                                 "type": "array",
-                                "description": "Envelope curve as a x/y-polygon polygon is assumed as closed and must be non-self-intersecting",
+                                "description": "The envelope curve in defined as a polygon. It shall be assumed as closed. Only simple polygons shall be used.",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -610,13 +600,13 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "set",
+                            "envelope3dId",
                             "format"
                         ],
                         "properties": {
-                            "set": {
+                            "envelope3dId": {
                                 "type": "string",
-                                "description": "Name of the envelope curve set"
+                                "description": "Identifier of the envelope curve set."
                             },
                             "format": {
                                 "type": "string",

@@ -22,7 +22,7 @@ else (yes)
     #lightgreen: stop;
 endif
 
-#lightgreen: delete all nodeStates and edgeStates and \nkeep actionStates\n\nset <B>cancelOrder</B> action status to <B>FINISHED</B>;
+#lightgreen: clear the order,\nkeep actionStates\n\nset <B>cancelOrder</B> action status to <B>FINISHED</B>;
 stop
 @enduml
 ```
