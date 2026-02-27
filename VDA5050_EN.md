@@ -1626,15 +1626,16 @@ A single zone object has the following structure:
 | *zoneDescriptor* | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes. | 
 | **vertices[vertex]**| array | Array of vertices that define the geometric shape of the zone in a counterclockwise direction. |
 | *maximumSpeed* | float64 | Required only for SPEED_LIMIT zone as defined in chapter  [6.4.1 Zone types](#641-zone-types).| 
-| ***entryActions[Action]***| array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
-| ***duringActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
-| ***exitActions[Action]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| ***entryActions[zoneAction]***| array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| ***duringActions[zoneAction]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
+| ***exitActions[zoneAction]*** | array | Required only for ACTION zone as defined in chapter [6.4.1 Zone types](#641-zone-types).| 
 | *releaseLossBehavior* | string | Required only for RELEASE zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 | *priorityFactor* | float64 | Required only for PRIORITY zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 | *penaltyFactor* | float64 | Required only for PENALTY zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 | *direction* | float64 | Required only for DIRECTED and BIDIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 | *directedLimitation* | string | Required only for a DIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
 | *bidirectedLimitation* | string | Required only for a BIDIRECTED zone as defined in chapter [6.4.1 Zone types](#641-zone-types).|
+|} | | |
 
 A `zoneAction` follows the structure of an action, except the mobile robot generates the `actionId` itself.
 
