@@ -155,10 +155,10 @@ Driving state in which the mobile robot operates without human intervention.
 ## 3.5 Manual driving
 Driving state in which the mobile robot operates under direct human control.
 
-# 3.6 Line-guided mobile robot
+## 3.6 Line-guided mobile robot
 Mobile robots that follow predefined trajectories. Predefined trajectories are sent by fleet control as part of the order or defined on the robot, either explicitly or implicitly as the direct connection between nodes.
 
-# 3.7 Freely navigating mobile robot
+## 3.7 Freely navigating mobile robot
 Mobile robots that plan their own trajectories. If fleet control sends a trajectory within the order, the robot shall follow this trajectory.
 
 # 4 Transport protocol
