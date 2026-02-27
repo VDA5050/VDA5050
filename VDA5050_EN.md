@@ -2033,7 +2033,7 @@ This JSON object details the software and hardware versions running on the mobil
 | *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
 | &emsp;} | | |
 
-# Appendix
+# Bibliography
 
 Referenced standards and documents:
 
