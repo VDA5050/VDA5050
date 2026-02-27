@@ -2035,8 +2035,6 @@ This JSON object details the software and hardware versions running on the mobil
 
 # Bibliography
 
-Referenced standards and documents:
-
 Document | Version | Description
 ---|---|---
 ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
