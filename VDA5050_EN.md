@@ -104,6 +104,7 @@ Version 3.0.0
   [7.9 Implementation of the visualization message](#79-implementation-of-the-visualization-message)<br>
   [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message)<br>
 
+
 # 0 Foreword
 
 The specification for this interface has been jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V. (Mechanical Engineering Industry Association). 
@@ -113,12 +114,14 @@ Both organizations collaborate to ensure that the interface specification reflec
 The Institute for Material Handling and Logistics (IFL) at Karlsruhe Institute of Technology (KIT) is part of the department of mechanical engineering and focuses on combining research, teaching, and industrial application. Its interdisciplinary team works on future logistics challenges, including material flow analysis, automation, robotics, digitalization, AI, sustainability, and system design.
 The Institute has been commissioned by the VDA and the VDMA to oversee the development of the VDA 5050. It contributes to this process by taking the lead in development, supporting issue review, and managing the official GitHub repository.
 
+
 # 1 Introduction
 This recommendation describes the communication interface for exchanging information between central fleet control and mobile robots.
 The objective of this recommendation is to support the integration and efficient operation of mobile robot fleets under the supervision of a centralized fleet control system. This is achieved through the implementation of a standardized, vendor neutral communication interface that ensures interoperability between the fleet control system and individual mobile robots.
 Various national technical guidelines and legal frameworks may offer general orientation in this context. They could provide indicative information on aspects such as planning, operation, safety, or coordination of automated systems. In addition, national standards and regulatory provisions may help ensure that technical processes and terminology are considered within a consistent overall framework.
 The recommendation uses a semantic versioning schema. Major version changes (x.0.0) typically involve breaking changes, such as the introduction of new non optional fields. Minor version changes (3.x.0) generally introduce new features, for example the addition of an optional parameter for visualization. Patch version changes (3.0.x) usually address smaller corrections, such as fixing typographical errors in the documentation.
 Stakeholders are invited to submit proposals for modifications or enhancements to the interface. Such proposals shall be submitted via the GitHub repository at: <https://github.com/vda5050/vda5050>.
+
 
 # 2 Scope
 
@@ -138,7 +141,7 @@ This specification does not address the following topics:
 - Cybersecurity Measures: Mechanisms, technologies, or processes for secure communication or data protection are not specified.
 
 # 3 Definitions
-For the purposes of this document, the following terms and definitions apply.
+The following terms and definitions apply for the purposes of this document. Terms that are not officially defined by standardization organizations may be interpreted differently in other contexts.
 
 ## 3.1 Mobile Robot
 A driverless system for material transport primarily in operational settings, controlled by automation independently of their level of autonomy [Source ISO 3691-4]
@@ -160,6 +163,7 @@ Mobile robots that follow predefined trajectories. Predefined trajectories are s
 
 ## 3.7 Freely navigating mobile robot
 Mobile robots that plan their own trajectories. If fleet control sends a trajectory within the order, the robot shall follow this trajectory.
+
 
 # 4 Transport protocol
 
