@@ -1,4 +1,4 @@
-# VDA5050 - Release Candidate for Version 3.0.0 for Public Review
+# VDA5050 - Version 3.0.0
 
 An open standard for communication between mobile robot fleets and a central fleet control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the Mechanical Engineering Industry Association (www.vdma.org), as well as the Institute for Material Flow and Logistics (IFL) at KIT (www.ifl.kit.edu) and many contributors from the AMR industry.
 
@@ -14,7 +14,7 @@ Anyone is free to raise issues or suggest new improvements to the protocol using
 - V3.1.0: Non-breaking, backward-compatible changes,
 - V4.0.0 (Currently not planned): Breaking changes, which would mean reworking structures or variable names.
 
-When creating pull requests, please create them against the *development* branch. The *main* branch contains the latest published version of VDA 5050 (currently version 2.1.0).
+When creating pull requests, please create them against the *development* branch. The *main* branch contains the latest published version of VDA 5050 (currently version 3.0.0).
 
 ## Legal notice regarding the scope of support for VDA 5050 on GitHub
 Use of this GitHub repository and all content, information, and support services offered therein is at your own risk.
