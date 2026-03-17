@@ -69,12 +69,7 @@
                 },
                 "mobileRobotKinematics": {
                     "type": "string",
-                    "description": "Simplified description of mobile robots kinematics-type.",
-                    "enum": [
-                        "DIFF",
-                        "OMNI",
-                        "THREEWHEEL"
-                    ]
+                    "description": "Simplified description of mobile robots kinematics-type. Extensible enum: DIFFERENTIAL, OMNIDIRECTIONAL, THREE_WHEEL"
                 },
                 "mobileRobotClass": {
                     "type": "string",
@@ -99,11 +94,7 @@
                     "description": "List of path planning types supported by the mobile robot, sorted by priority",
                     "items": {
                         "type": "string",
-                        "enum": [
-                            "PHYSICAL_LINE_GUIDED",
-                            "VIRTUAL_LINE_GUIDED",
-                            "FREELY_NAVIGATING"
-                        ]
+						"description": "Planning type. Extensible enum: PHYSICAL_LINE_GUIDED, VIRTUAL_LINE_GUIDED, FREELY_NAVIGATING"
                     }
                 },
                 "supportedZones": {
@@ -144,27 +135,32 @@
                 "minimumSpeed": {
                     "type": "number",
                     "description": "Minimal controlled continuous speed of the mobile robot",
-                    "unit": "m/s"
+                    "unit": "m/s",
+					"minimum": 0.0
                 },
                 "maximumSpeed": {
                     "type": "number",
                     "description": "Maximum speed of the mobile robot",
-                    "unit": "m/s"
+                    "unit": "m/s",
+					"minimum": 0.0
                 },
                 "minimumAngularSpeed": {
                     "type": "number",
                     "description": "Minimal controlled continuous rotation speed of the mobile robot",
-                    "unit": "rad/s"
+                    "unit": "rad/s",
+					"minimum": 0.0
                 },
                 "maximumAngularSpeed": {
                     "type": "number",
                     "description": "Maximum rotation speed of the mobile robot",
-                    "unit": "rad/s"
+                    "unit": "rad/s",
+					"minimum": 0.0
                 },
                 "maximumAcceleration": {
                     "type": "number",
                     "description": "Maximum acceleration with maximum load",
-                    "unit": "m/s^2"
+                    "unit": "m/s^2",
+					"minimum": 0.0
                 },
                 "maximumDeceleration": {
                     "type": "number",
@@ -174,22 +170,22 @@
                 "minimumHeight": {
                     "type": "number",
                     "description": "Minimum height of mobile robot",
-                    "unit": "m"
+                    "unit": "m",
                 },
                 "maximumHeight": {
                     "type": "number",
                     "description": "Maximum height of mobile robot",
-                    "unit": "m"
+                    "unit": "m",
                 },
                 "width": {
                     "type": "number",
                     "description": "Width of the mobile robot",
-                    "unit": "m"
+                    "unit": "m",
                 },
                 "length": {
                     "type": "number",
                     "description": "Length of the mobile robot",
-                    "unit": "m"
+                    "unit": "m",
                 }
             }
         },
@@ -208,31 +204,32 @@
                     "properties": {
                         "maximumMessageLength": {
                             "type": "integer",
-                            "description": "Maximum MQTT Message length"
+                            "description": "Maximum MQTT Message length",
+							"minimum": 0
                         },
                         "maximumTopicSerialLength": {
                             "type": "integer",
-                            "description": "Maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber"
+                            "description": "Maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber",
+							"minimum": 0
                         },
                         "maximumTopicElementLength": {
                             "type": "integer",
-                            "description": "Maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer"
+                            "description": "Maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer",
+							"minimum": 0
                         },
                         "maximumIdLength": {
                             "type": "integer",
-                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId"
+                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId",
+							"minimum": 0
                         },
                         "idNumericalOnly": {
                             "type": "boolean",
                             "description": "If true ID-strings need to contain numerical values only"
                         },
-                        "maximumEnumLength": {
-                            "type": "integer",
-                            "description": "Maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType, action.blockingType, edge.direction, actionParameter.key, state.operatingMode, load.loadPosition, load.loadType, actionState.actionStatus, error.errorType, error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel, safetyState.eStop, connection.connectionState"
-                        },
                         "maximumLoadIdLength": {
                             "type": "integer",
-                            "description": "Maximum length of loadId Strings"
+                            "description": "Maximum length of loadId Strings",
+							"minimum": 0
                         }
                     }
                 },
@@ -242,67 +239,98 @@
                     "properties": {
                         "order.nodes": {
                             "type": "integer",
-                            "description": "Maximum number of nodes per order processable by the mobile robot"
+                            "description": "Maximum number of nodes per order processable by the mobile robot",
+							"minimum": 0
                         },
                         "order.edges": {
                             "type": "integer",
-                            "description": "Maximum number of edges per order processable by the mobile robot"
+                            "description": "Maximum number of edges per order processable by the mobile robot",
+							"minimum": 0
                         },
                         "node.actions": {
                             "type": "integer",
-                            "description": "Maximum number of actions per node processable by the mobile robot"
+                            "description": "Maximum number of actions per node processable by the mobile robot",
+							"minimum": 0
                         },
                         "edge.actions": {
                             "type": "integer",
-                            "description": "Maximum number of actions per edge processable by the mobile robot"
+                            "description": "Maximum number of actions per edge processable by the mobile robot",
+							"minimum": 0
                         },
                         "actions.actionsParameters": {
                             "type": "integer",
-                            "description": "Maximum number of parameters per action processable by the mobile robot"
+                            "description": "Maximum number of parameters per action processable by the mobile robot",
+							"minimum": 0
                         },
                         "instantActions": {
                             "type": "integer",
-                            "description": "Maximum number of instant actions per message processable by the mobile robot"
+                            "description": "Maximum number of instant actions per message processable by the mobile robot",
+							"minimum": 0
                         },
                         "trajectory.knotVector": {
                             "type": "integer",
-                            "description": "Maximum number of knots per trajectory processable by the mobile robot"
+                            "description": "Maximum number of knots per trajectory processable by the mobile robot",
+							"minimum": 0
                         },
                         "trajectory.controlPoints": {
                             "type": "integer",
-                            "description": "Maximum number of control points per trajectory processable by the mobile robot"
+                            "description": "Maximum number of control points per trajectory processable by the mobile robot",
+							"minimum": 0
+                        },
+                        "zoneSet.zones": {
+                            "type": "integer",
+                            "description": "Maximum number of zones per zoneSet processable by the mobile robot",
+							"minimum": 0
                         },
                         "state.nodeStates": {
                             "type": "integer",
-                            "description": "Maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot"
+                            "description": "Maximum number of nodeStates sent by the mobile robot, maximum number of nodes in base of mobile robot",
+							"minimum": 0
                         },
                         "state.edgeStates": {
                             "type": "integer",
-                            "description": "Maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot"
+                            "description": "Maximum number of edgeStates sent by the mobile robot, maximum number of edges in base of mobile robot",
+							"minimum": 0
                         },
                         "state.loads": {
                             "type": "integer",
-                            "description": "Maximum number of load-objects sent by the mobile robot"
+                            "description": "Maximum number of load-objects sent by the mobile robot",
+							"minimum": 0
                         },
                         "state.actionStates": {
                             "type": "integer",
-                            "description": "Maximum number of actionStates sent by the mobile robot"
+                            "description": "Maximum number of actionStates sent by the mobile robot",
+							"minimum": 0
+                        },
+                        "state.instantActionStates": {
+                            "type": "integer",
+                            "description": "Maximum number of instantActionStates sent by the mobile robot",
+							"minimum": 0
+                        },
+                        "state.zoneActionStates": {
+                            "type": "integer",
+                            "description": "Maximum number of zoneActionStates sent by the mobile robot",
+							"minimum": 0
                         },
                         "state.errors": {
                             "type": "integer",
-                            "description": "Maximum number of errors sent by the mobile robot in one state-message"
+                            "description": "Maximum number of errors sent by the mobile robot in one state-message",
+							"minimum": 0
                         },
                         "state.information": {
                             "type": "integer",
-                            "description": "Maximum number of information objects sent by the mobile robot in one state-message"
+                            "description": "Maximum number of information objects sent by the mobile robot in one state-message",
+							"minimum": 0
                         },
                         "error.errorReferences": {
                             "type": "integer",
-                            "description": "Maximum number of error references sent by the mobile robot for each error"
+                            "description": "Maximum number of error references sent by the mobile robot for each error",
+							"minimum": 0
                         },
                         "information.infoReferences": {
                             "type": "integer",
-                            "description": "Maximum number of info references sent by the mobile robot for each information"
+                            "description": "Maximum number of info references sent by the mobile robot for each information",
+							"minimum": 0
                         }
                     }
                 },
@@ -317,22 +345,26 @@
                         "minimumOrderInterval": {
                             "type": "number",
                             "description": "Minimum interval sending order messages to the mobile robot",
-                            "unit": "s"
+                            "unit": "s",
+							"minimum": 0.0
                         },
                         "minimumStateInterval": {
                             "type": "number",
                             "description": "Minimum interval for sending state-messages",
-                            "unit": "s"
+                            "unit": "s",
+							"minimum": 0.0
                         },
                         "defaultStateInterval": {
                             "type": "number",
                             "description": "Default interval for sending state-messages if not defined, the default value from the main document is used",
-                            "unit": "s"
+                            "unit": "s",
+							"minimum": 0.0
                         },
                         "visualizationInterval": {
                             "type": "number",
                             "description": "Default interval for sending messages on visualization topic",
-                            "unit": "s"
+                            "unit": "s",
+							"minimum": 0.0
                         }
                     }
                 }
@@ -445,7 +477,7 @@
                                     }
                                 }
                             },
-                            "resultDescription": {
+                            "actionResult": {
                                 "type": "string",
                                 "description": "Free text: description of the result"
                             },
@@ -716,17 +748,20 @@
                             "maximumWeight": {
                                 "type": "number",
                                 "description": "Maximum weight of loadtype",
-                                "unit": "kg"
+                                "unit": "kg",
+								"minimum": 0.0
                             },
                             "minimumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "Minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference"
+                                "description": "Minimum allowed height for handling of this load-type and –weight. References to boundingBoxReference",
+								"minimum": 0.0
                             },
                             "maximumLoadhandlingHeight": {
                                 "type": "number",
                                 "unit": "m",
-                                "description": "Maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference"
+                                "description": "Maximum allowed height for handling of this load-type and –weight. references to boundingBoxReference",
+								"minimum": 0.0
                             },
                             "minimumLoadhandlingDepth": {
                                 "type": "number",
@@ -751,12 +786,14 @@
                             "maximumSpeed": {
                                 "type": "number",
                                 "unit": "m/s^2",
-                                "description": "Maximum allowed speed for this load-type and –weight"
+                                "description": "Maximum allowed speed for this load-type and –weight",
+								"minimum": 0.0
                             },
                             "maximumAcceleration": {
                                 "type": "number",
                                 "unit": "m/s^2",
-                                "description": "Maximum allowed acceleration for this load-type and –weight"
+                                "description": "Maximum allowed acceleration for this load-type and –weight",
+								"minimum": 0.0
                             },
                             "maximumDeceleration": {
                                 "type": "number",
@@ -766,12 +803,14 @@
                             "pickTime": {
                                 "type": "number",
                                 "unit": "s",
-                                "description": "Approximate time for picking up the load"
+                                "description": "Approximate time for picking up the load",
+								"minimum": 0.0
                             },
                             "dropTime": {
                                 "type": "number",
                                 "unit": "s",
-                                "description": "Approximate time for dropping the load"
+                                "description": "Approximate time for dropping the load",
+								"minimum": 0.0
                             },
                             "description": {
                                 "type": "string",
@@ -856,25 +895,26 @@
                         "criticalLowChargingLevel": {
                             "type": "number",
                             "description": "Specifies the critical charging level in percent at or below which the fleet control should only send orders that command the mobile robot to a charging station.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "minimumDesiredChargingLevel": {
                             "type": "number",
                             "description": "Specifies the minimum desired charging level in percent.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "maximumDesiredChargingLevel": {
                             "type": "number",
                             "description": "Specifies the maximum desired charging level in percent.",
-                            "minimum": 0,
-                            "maximum": 1
+                            "minimum": 0.0,
+                            "maximum": 100.0
                         },
                         "minimumChargingTime": {
                             "type": "number",
                             "description": "Specifies the desired minimum charging time in seconds.",
-                            "unit": "s"
+                            "unit": "s",
+							"minimum": 0.0
                         }
                     }
                 }

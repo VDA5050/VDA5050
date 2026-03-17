@@ -10,9 +10,7 @@
         "version", 
         "manufacturer", 
         "serialNumber",
-        "zoneSetId",
-        "mapId",
-        "zones"
+        "zoneSet"
     ],
     "properties": {
         "headerId": {
@@ -42,27 +40,40 @@
             "type": "string",
             "description": "Serial number of the mobile robot."
         },
-        "zoneSetId": {
-            "type": "string",
-            "description": "Globally unique identifier of the zone set."
-        },
-        "mapId": {
-            "type": "string",
-            "description": "Globally unique identifier of the map the zone set particularizes."
-        },
-        "zoneSetDescriptor": {
-            "type": "string",
-            "description": "Human readable description of the zone set."
-        },
-        "zones": {
-            "type": "array",
-            "description": "Array of zone objects.",
-            "items": {
-                    "$ref": "#/definitions/zone"
-            }
-        }
+        "zoneSet":  {
+			"$ref": "#/definitions/zoneSet"
+		}
     },
     "definitions": {
+        "zoneSet": {
+            "type": "object",
+                "required": [
+                    "mapId", 
+                    "zoneSetId", 
+                    "zones"
+                    ],
+                "properties": {
+                    "mapId": {
+                        "type": "string",
+                        "description": "Globally unique identifier of the map the zone set particularizes."
+                    },
+                    "zoneSetId": {
+                        "type": "string",
+                        "description": "Globally unique identifier of the zone set."
+                    },
+                    "zoneSetDescriptor": {
+                        "type": "string",
+                        "description": "A user-defined, human-readable name or descriptor."
+                    },
+                    "zones": {
+                        "type": "array",
+                        "description": "Array of zone objects.",
+                        "items": {
+                                "$ref": "#/definitions/zone"
+                        }
+                    }
+            }
+        },
         "zone": {
             "type": "object",
             "required": [
@@ -96,12 +107,12 @@
                     "description": "User-defined human-readable name or descriptor."
                 },
                 "vertices": {
-                "type": "array",
-                "description": "Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone.",
-                "minItems": 3,
-                "items": {
-                    "$ref": "#/definitions/vertex"
-                }
+                    "type": "array",
+                    "description": "Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone.",
+                    "minItems": 3,
+                    "items": {
+                        "$ref": "#/definitions/vertex"
+                    }
                 }
             },
             "allOf": [
