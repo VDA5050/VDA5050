@@ -171,25 +171,21 @@
                     "type": "number",
                     "description": "Minimum height of mobile robot",
                     "unit": "m",
-					"exclusiveMinimum": 0.0
                 },
                 "maximumHeight": {
                     "type": "number",
                     "description": "Maximum height of mobile robot",
                     "unit": "m",
-					"exclusiveMinimum": 0.0
                 },
                 "width": {
                     "type": "number",
                     "description": "Width of the mobile robot",
                     "unit": "m",
-					"exclusiveMinimum": 0.0
                 },
                 "length": {
                     "type": "number",
                     "description": "Length of the mobile robot",
                     "unit": "m",
-					"exclusiveMinimum": 0.0
                 }
             }
         },
