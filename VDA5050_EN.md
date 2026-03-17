@@ -8,11 +8,37 @@
 
 ![Fleet control system and mobile robots](./assets/csagv.png)
 
+<<<<<<< dev/V3.0.0
 # Disclaimer
 The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet management system. They are intended to be freely accessible to all users and are non-binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
 Users must consider the applicable state of the art at the time the guidelines are applied. The use of these proposals does not relieve any party of responsibility for its own actions. These statements do not claim to be exhaustive, nor do they constitute an authoritative interpretation of existing laws. They do not replace the need to review and comply with relevant policies, legislation, or regulations.
 In addition, the specific characteristics of the respective products and their various potential applications must be considered. All users act at their own risk. Any liability on the part of the VDA and VDMA or any individuals involved in the development or application of these proposals is excluded.
 If you identify any inaccuracies in the application of these proposals or potential risks of misinterpretation, please notify the VDA immediately so that any necessary corrections can be made.
+=======
+
+
+### Brief information
+
+Definition of a communication interface for driverless transport systems (DTS).
+This recommendation describes the communication interface for exchanging order and status data between a central master control and automated guided vehicles (AGVs) for intralogistics processes.
+
+
+
+### Disclaimer
+
+The following explanations serve as an indication for the execution of an interface for communication between automated guided vehicles (AGVs) and master control and one that is freely applicable to everyone and is non-binding.
+Those who apply them shall ensure that they are applied properly in the specific case.
+
+They shall take into account the state of the art prevailing at the time of each issue.
+By applying the proposals, no one is evasive of responsibility for their own actions.
+The statements do not claim to be exhaustive or to the exact interpretation of the existing legislation.
+They may not replace the study of relevant policies, laws, and regulations.
+Furthermore, the special features of the respective products as well as their different possible applications shall be taken into account.
+Everyone acts at their own risk in this regard.
+Liability of the VDA and those involved in the development or application of the proposals is excluded.
+
+If you encounter any inaccuracies in the application of the proposals or the possibility of an incorrect interpretation, please inform the VDA immediately so that any defects can be rectified.
+>>>>>>> main
 
 **Publisher**
 Verband der Automobilindustrie e. V. (VDA)
@@ -663,7 +689,31 @@ The `actionStatus` shall be updated according to the progress of the action.
 See also Figure 11 for the different transitions of an `actionStatus`.
 The `blockingType` of an instant action is always 'NONE'.
 
+<<<<<<< dev/V3.0.0
 When the mobile robot receives an `instantAction` it cannot execute, it shall report an 'INVALID_INSTANT_ACTION' error with level 'WARNING' and the `actionId` of the `instantAction` as `errorReference`.
+=======
+Object structure | Unit | Data type | Description
+---|---|---|---
+**edge** { | | JSON object | Directional connection between two nodes.
+edgeId | | string | Unique edge identification.
+sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued.
+*edgeDescription* | | string | Additional information on the edge.
+released | | boolean | "true" indicates that the edge is part of the base.<br>"false" indicates that the edge is part of the horizon. 
+startNodeId | | string | nodeId of first node within the order.
+endNodeId | | string | nodeId of the last node within the order.
+*maxSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the vehicle.
+*maxHeight* | m | float64 | Permitted maximum height of the vehicle, including the load, on the edge.
+*minHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
+*orientation* | rad | float64 | Orientation of the AGV on the edge. The value `orientationType` defines if it has to be interpreted relative to the global project-specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad will lead to a rotation of 90 degrees.<br><br>If the AGV starts in a different orientation, rotate the vehicle on the edge to the desired orientation, if `rotationAllowed` is set to "true".<br>If `rotationAllowed` is "false", rotate before entering the edge.<br>If that is not possible, reject the order.<br><br>If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge.<br>If a trajectory is defined for the edge, apply the orientation to the trajectory.
+*orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system;<br>'TANGENTIAL': tangential to the edge.<br><br>If not defined, the default value is 'TANGENTIAL'.
+*direction* | | string | Sets direction at junctions for line-guided or wire-guided vehicles, to be defined initially (vehicle-individual).<br> Examples: "left", "right", "straight".
+*rotationAllowed* | | boolean | "true": rotation is allowed on the edge.<br>"false": rotation is not allowed on the edge.<br><br>Optional:<br>No limit, if not set.
+*maxRotationSpeed* | rad/s | float64| Maximum rotation speed<br><br>Optional:<br>No limit, if not set.
+***trajectory*** | | JSON object | Trajectory JSON object for this edge as NURBS. <br>Defines the path, on which the AGV should move between the start node and the end node of the edge.<br><br>Optional:<br>Can be omitted, if the AGV cannot process trajectories or if the AGV plans its own trajectory.
+*length* | m | float64 | Length of the path from the start node to the end node<br><br>Optional:<br>This value is used by line-guided AGVs to decrease their speed before reaching a stop position.
+***corridor*** | | JSON object | Definition of boundaries in which a vehicle can deviate from its trajectory, e.g., to avoid obstacles.<br>
+**actions [action]** <br> } | | array | Array of actions to be executed on the edge. <br>Empty array, if no actions required. <br>An action triggered by an edge will only be active for the time that the AGV is traversing the edge which triggered the action. <br>When the AGV leaves the edge, the action will stop and the state before entering the edge will be restored.
+>>>>>>> main
 
 ### 6.2.2 Action blocking types and sequence
 

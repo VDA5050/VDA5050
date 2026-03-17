@@ -67,6 +67,9 @@
                 "mapId": {
                     "type": "string"
                 },
+                "mapDescription": {
+                    "type": "string"
+                },
                 "positionInitialized": {
                     "type": "boolean",
                     "description": "True if the mobile robot's position is initialized, false, if position is not initizalized."
