@@ -1,8 +1,8 @@
 # VDA5050 - Version 3.0.0
 
-An open standard for communication between mobile robot fleets and a central fleet control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the Mechanical Engineering Industry Association (www.vdma.org), as well as the Institute for Material Flow and Logistics (IFL) at KIT (www.ifl.kit.edu) and many contributors from the AMR industry.
+An open standard for communication between mobile robot fleets and a central fleet control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the VDMA (www.vdma.org), as well as the Institute for Material Handling and Logistics (IFL) at the Karlsruhe Institute of Technology (www.ifl.kit.edu) and many contributors from the mobile robot industry.
 
-**Note**: We are constantly working to improve the VDA 5050. If there are any differences between the markdown document/JSON schemas on GitHub and the published document by the VDA, the PDF on the VDA website is valid. The current version of the official VDA 5050 document can be found here ([German](https://www.vda.de/de/suche#"5050")/[English](https://www.vda.de/en/search#"5050")).
+**Note**: We are constantly working to improve the VDA 5050. If there are any differences between the markdown document/JSON schemas on GitHub and the published document by the VDA, the PDF on the VDA website is valid. The current version of the official VDA 5050 document can be found ([here](https://www.vda.de/vda-5050)).
 
 ## How to contribute
 If you work for a VDA / VDMA member, ask your contact person if you can join the working group.
