@@ -1,9 +1,17 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "visualization",
-    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
+    "description": "Mobile robot position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
     "subtopic": "/visualization",
     "type": "object",
+    "required": [
+        "headerId",
+        "timestamp", 
+        "version", 
+        "manufacturer", 
+        "serialNumber",
+        "referenceStateHeaderId"
+    ],
     "properties": {
         "headerId": {
             "type": "integer",
@@ -12,9 +20,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -26,68 +34,199 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
-        "agvPosition": {
+        "plannedPath": {
+            "$ref": "#/definitions/plannedPath"
+        },
+        "intermediatePath": {
+            "$ref": "#/definitions/intermediatePath"
+        },
+        "mobileRobotPosition": {
+            "$ref": "#/definitions/mobileRobotPosition"
+        },
+        "velocity": {
+            "$ref": "#/definitions/velocity"
+        },
+    },
+    "definitions": {
+		"plannedPath": {
+			"type": "object",
+            "description": "Represents a path within the robot's currently active order as NURBS.",
+            "required": [
+                "trajectory"
+            ],
+            "properties": {
+                "trajectory": {
+                    "$ref": "#/definitions/trajectory"
+                },
+                "traversedNodes": {
+                    "type": "array",
+                    "description": "Array of nodeIds as communicated in the currently executed order that are traversed within the shared planned path.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+		},
+        "trajectory": {
             "type": "object",
-            "title": "agvPosition",
-            "description": "The AGVs position",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message. Trajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed.",
+            "required": [
+                "controlPoints"
+            ],
+            "properties": {
+                "degree": {
+                    "type": "integer",
+                    "description": "Defines the number of control points that influence any given point on the curve. Increasing the degree increases differentiability. If not defined, the default value is 1.",
+                    "minimum": 1
+                },
+                "knotVector": {
+                    "type": "array",
+                    "description": "Sequence of parameter values that determine where and how the control points affect the NURBS curve. knotVector has size of number of control points + degree + 1.",
+                    "items": {
+                        "type": "number",
+                        "maximum": 1.0,
+                        "minimum": 0.0
+                    }
+                },
+                "controlPoints": {
+                    "type": "array",
+                    "description": "List of JSON controlPoint objects defining the control points of the NURBS, which includes the beginning and end point.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "x",
+                            "y"
+                        ],
+                        "properties": {
+                            "x": {
+                                "type": "number"
+                            },
+                            "y": {
+                                "type": "number"
+                            },
+                            "weight": {
+                                "type": "number",
+                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0.",
+                            }
+                        }
+                    }
+                }
+            }
+        },
+		"intermediatePath": {
+			"type": "object",
+            "description": "Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors.",
+            "required": [
+                "polyline"
+            ],
+            "properties": {
+                "polyline": {
+                    "type": "array",
+                    "description": "Array of end points of segments of a polyline.",
+                    "items": {
+                        "type": "object",
+                        "description": "Endpoint of a segment within a defined polyline.",
+                        "required": [
+                            "x",
+                            "y",
+                            "eta"
+                        ],
+                        "properties": {
+                            "x": {
+                                "type": "number",
+                                "description": "X-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
+                            },
+                            "y": {
+                                "type": "number",
+                                "description": "Y-coordinate described in the project-specific coordinate system.",
+                                "unit": "m"
+                            },
+                            "theta": {
+                                "type": "number",
+                                "description": "Absolute orientation of the mobile robot in the project-specific coordinate system.",
+                                "unit": "rad",
+                                "minimum": -3.14159265359,
+                                "maximum": 3.14159265359
+                            },
+                            "eta": {
+                                "type": "string",
+                                "description": "Estimated time of arrival/traversal. Formatted as a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+                            }
+                        }
+                    }
+                }
+            }
+		},
+		"mobileRobotPosition": {
+			"type": "object",
+            "description": "Defines the position on a map in world coordinates. Each floor has its own map.",
             "required": [
                 "x",
                 "y",
                 "theta",
                 "mapId",
-                "positionInitialized"
+                "localized"
             ],
             "properties": {
                 "x": {
-                    "type": "number"
+                    "type": "number",
+                    "unit": "m"
                 },
                 "y": {
-                    "type": "number"
+                    "type": "number",
+                    "unit": "m"
                 },
                 "theta": {
-                    "type": "number"
+                    "type": "number",
+                    "unit": "rad",
+                    "minimum": -3.14159265359,
+                    "maximum": 3.14159265359
                 },
                 "mapId": {
-                    "type": "string"
+                    "type": "string",
+					"description": "Unique identification of the map."
                 },
-                "mapDescription": {
-                    "type": "string"
-                },
-                "positionInitialized": {
+                "localized": {
                     "type": "boolean",
-                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                    "description": "True: mobile robot is localized. x, y, and theta can be trusted. False: mobile robot is not localized. x, y, and theta cannot be trusted."
                 },
                 "localizationScore": {
                     "type": "number",
-                    "description": "Localization score for SLAM based vehicles, if the AGV can communicate it.",
+                    "description": "Describes the quality of the localization and therefore, can be used, e.g., by SLAM mobile robot to describe how accurate the current position information is.\n0.0: position unknown\n1.0: position known\nOptional for vehicles that cannot estimate their localization score.\nOnly for logging and visualization purposes",
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
                 "deviationRange": {
                     "type": "number",
-                    "description": "Value for position deviation range in meters. Can be used if the AGV is able to derive it."
+                    "description": "Value for position deviation range in meters. Optional for vehicles that cannot estimate their deviation, e.g., grid-based localization. Only for logging and visualization purposes.",
+                    "unit": "m",
+                    "minimum": 0.0
                 }
             }
-        },
+		},
         "velocity": {
             "type": "object",
             "title": "velocity",
-            "description": "The AGVs velocity in vehicle coordinates",
+            "description": "The mobile robot's velocity in mobile robot's coordinates",
             "properties": {
                 "vx": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "The mobile robot's velocity in its X-direction."
                 },
                 "vy": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "The mobile robot's velocity in its Y-direction."
                 },
                 "omega": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "The mobile robot's turning speed around its Z-axis."
                 }
             }
         }

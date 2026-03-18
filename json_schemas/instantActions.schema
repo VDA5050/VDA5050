@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "instantActions",
-    "description": "JSON Schema for publishing instantActions that the AGV is to execute as soon as they arrive.",
+    "description": "JSON Schema for publishing instantActions that the mobile robot is to execute as soon as they arrive.",
     "required": [
         "headerId",
         "timestamp",
@@ -22,9 +22,9 @@
             "title": "timestamp",
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ffZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -37,17 +37,17 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the mobile robot"
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "actions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "description": "Describes an action that the AGV can perform.",
+                "description": "Describes an action that the mobile robot can perform.",
                 "required": [
                     "actionId",
                     "actionType",
@@ -56,28 +56,26 @@
                 "properties": {
                     "actionType": {
                         "type": "string",
-                        "description": "Name of action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
+                        "description": "Name of action. Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
-                        "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUIDs."
+                        "description": "Unique ID to identify the action and map them to the actionState in the state. Suggestion: Use UUID."
                     },
-                    "actionDescription": {
+                    "actionDescriptor": {
                         "type": "string",
                         "description": "Additional information on the action."
                     },
                     "blockingType": {
                         "type": "string",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": "The blocking type of an instant action is always NONE: action can happen in parallel with others, including movement.",
                         "enum": [
-                            "NONE",
-                            "SOFT",
-                            "HARD"
+                            "NONE"
                         ]
                     },
                     "actionParameters": {
                         "type": "array",
-                        "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
+                        "description": "Action parameters for the indicated action, e.g., deviceId, loadId, external Triggers.",
                         "items": {
                             "title": "actionParameter",
                             "type": "object",
@@ -100,7 +98,8 @@
                                         "array",
                                         "boolean",
                                         "number",
-                                        "string",
+                                        "integer",
+                                        "string", 
                                         "object"
                                     ],
                                     "description": "The value of the action parameter",
@@ -113,7 +112,11 @@
                                             "are",
                                             "also",
                                             "valid"
-                                        ]
+                                        ],
+                                        {
+                                            "objects": "as",
+                                            "well": true
+                                        }
                                     ]
                                 }
                             }

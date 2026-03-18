@@ -1,0 +1,68 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "responses",
+    "description": "Responses from fleet control to mobile robot's requests.",
+    "subtopic": "/responses",
+    "type": "object",
+    "required": [
+        "headerId",
+        "timestamp", 
+        "version", 
+        "manufacturer", 
+        "serialNumber", 
+        "responses"
+    ],
+    "properties": {
+        "headerId": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the protocol [Major].[Minor].[Patch]",
+            "examples": [
+                "1.3.2"
+            ]
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the mobile robot."
+        },
+        "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the mobile robot."
+        },
+        "responses": {
+            "type": "array",
+            "description": "Array of zone response objects.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "requestId", 
+                    "grantType"
+                    ],
+                "properties": {
+                    "requestId": {
+                        "type": "string",
+                        "description": "Unique per mobile robot identifier within all active requests."
+                    },
+                    "grantType": {
+                        "type": "string",
+                        "enum": ["GRANTED", "QUEUED", "REVOKED", "REJECTED"],
+                        "description": "Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}. 'GRANTED': fleet control grants request. 'REVOKED': fleet control revokes previously granted request. 'REJECTED': fleet control rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue."
+                    },
+                    "leaseExpiry": {
+                        "type": "string",
+                        "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+                    }
+                }
+            }
+        }
+    }
+}

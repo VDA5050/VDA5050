@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "connection",
-    "description": "The last will message of the AGV. Has to be sent with retain flag.\nOnce the AGV comes online, it has to send this message on its connect topic, with the connectionState enum set to \"ONLINE\".\n The last will message is to be configured with the connection state set to \"CONNECTIONBROKEN\".\nThus, if the AGV disconnects from the broker, master control gets notified via the topic \"connection\".\nIf the AGV is disconnecting in an orderly fashion (e.g. shutting down, sleeping), the AGV is to publish a message on this topic with the connectionState set to \"DISCONNECTED\".",
+    "description": "The last will message of the mobile robot. Has to be sent with retain flag. Once the mobile robot comes online, it has to send this message on its connect topic, with the connectionState enum set to \"ONLINE\". The last will message is to be configured with the connection state set to \"CONNECTIONBROKEN\".\nThus, if the mobile robot disconnects from the broker, fleet control gets notified via the topic \"connection\". If the mobile robot is disconnecting in an orderly fashion (e.g. shutting down, sleeping), the mobile robot is to publish a message on this topic with the connectionState set to \"DISCONNECTED\".",
     "subtopic": "/connection",
     "type": "object",
     "required": [
@@ -20,9 +20,9 @@
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.ssZ).",
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.12Z"
+                "1991-03-11T11:40:03.123Z"
             ]
         },
         "version": {
@@ -34,20 +34,21 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV."
+            "description": "Manufacturer of the mobile robot."
         },
         "serialNumber": {
             "type": "string",
-            "description": "Serial number of the AGV."
+            "description": "Serial number of the mobile robot."
         },
         "connectionState": {
             "type": "string",
             "enum": [
                 "ONLINE",
                 "OFFLINE",
-                "CONNECTIONBROKEN"
+                "HIBERNATING",
+                "CONNECTION_BROKEN"
             ],
-            "description": "ONLINE: connection between AGV and broker is active. OFFLINE: connection between AGV and broker has gone offline in a coordinated way. CONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended."
+            "description": "ONLINE: connection between mobile robot and broker is active. OFFLINE: connection between mobile robot and broker has gone offline in a coordinated way. HIBERNATING: connection between mobile robot and broker is active, but mobile robot does not state messages. This mode is intended for power-saving or communication reduction. The mobile robot can resume to ONLINE when instructed. CONNECTION_BROKEN: The connection between mobile robot and broker has unexpectedly ended."
         }
     }
 }
