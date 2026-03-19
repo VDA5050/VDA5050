@@ -2156,7 +2156,7 @@ This JSON object details the software and hardware versions running on the mobil
 Document | Version | Description
 ---|---|---
 ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verification-Part 4: Driverless trucks and their systems
-ISO 9787 | May 2013 | Robots and robotic devices — Coordinate systems and motion nomenclatures
+ISO 9787 | May 2013 | Robots and robotic devices: Coordinate systems and motion nomenclatures
 ISO 639 |November 2023 | Language code for the representation of the world's languages and language groups
-ISO 8601  | February 2019 | Date and time — Representations for information interchange
+ISO 8601  | February 2019 | Date and time: Representations for information interchange
 LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system.
