@@ -128,11 +128,13 @@ Stakeholders are invited to submit proposals for modifications or enhancements t
 This document describes a standardized and vendor-neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non-binding, and its application is at the discretion of the respective stakeholders.
 
 The objectives of this specification are:
+
 - to reduce complexity when connecting mobile robots to a fleet control system.
 - to enable the coordinated operation of heterogeneous mobile robot fleets from different manufacturers within a shared physical environment.
 - to provide a generic and domain independent set of interface definitions applicable to mobile robots with varying navigation principles, physical dimensions, load handling or manipulation capabilities, and autonomy levels.
 
 This specification does not address the following topics:
+
 - Safety Requirements: This document does not define functional, operational, or system safety requirements and shall not be regarded or applied as a safety standard.
 - Traffic Management Logic: Strategies, algorithms, or decision making processes for traffic coordination (e.g., routing, prioritization, congestion handling, or deadlock resolution) are not included.
 - Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots are excluded, such as interfaces to peripheral equipment, infrastructure components, or external IT systems.
@@ -274,6 +276,7 @@ The mobile robot then continuously reports its status to the fleet control in pa
 ## 5.3 Functions of the fleet control
 
 The fleet control system performs, at minimum, the following functions:
+
 - Assignment of orders to the mobile robots
 - Route calculation and guidance of line-guided mobile robots (taking into account the limitations of the individual physical properties of each mobile robot, e.g., size, maneuverability, etc.)
 - Detection and resolution of blockages ("deadlocks")
@@ -286,6 +289,7 @@ The fleet control system performs, at minimum, the following functions:
 ## 5.4 Functions of the mobile robots
 
 Each mobile robot shall perform the following functions:
+
 - Localization
 - Execution of associated routes (line-guided or freely navigating)
 - Execution of actions
@@ -529,6 +533,7 @@ Resolution:
 #### 6.1.4.3 Mobile robot receives an order with actions it cannot perform
 
 Example:
+
 - lifting height higher than maximum lifting height
 - lifting actions although no stroke is installed, etc.
 
@@ -654,6 +659,7 @@ This is possible by publishing an `instantAction` message to the topic `instantA
 These actions shall not conflict with the content of the mobile robot's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are:
+
 - pause the mobile robot without changing anything in the current order
 - resume order after pause
 - activate signal (optical, audio, etc.)
@@ -1028,6 +1034,7 @@ Compared to separate messages (e.g., for current order progress, battery state a
 The mobile robot state message shall be published when relevant events occur or at least every 30 seconds.
 
 The following events shall trigger a transmission of the state message:
+
 - Receiving an order
 - Receiving an order update
 - Changes in the `load` object
@@ -1305,6 +1312,7 @@ The update rate for this topic is defined by the integrator.
 Freely navigating mobile robots shall communicate their planned trajectory to the fleet control system via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
 
 Mobile robots share their `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors, and their `plannedPath`, which represents a longer path within the mobile robot's currently active order. Both paths shall start from the mobile robot's current position, independent of any nodes that are part of the order. The mobile robot can decide on the length of the shared paths, as it may be situation dependent. If the mobile robot is freely navigating, both `intermediatePath` and `plannedPath` shall be shared in each state.
+
 - The `plannedPath` is defined as NURBS as defined in the `trajectory` field of the `edgeState`. The `plannedPath` can contain an array of nodes, referenced by their `nodeId`, that will be traversed as part of the current path. It should be updated whenever a significant change has occurred in the mobile robot's `plannedPath`. The `plannedPath` shall at least cover the mobile robot's current base.
 - The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the mobile robot and the `ETA` indicating the estimated time of arrival.
 The `intermediatePath` shall be updated with every sent state or visualization message and always begin at the mobile robot's current position.
@@ -1329,12 +1337,15 @@ Each request shall be represented on the mobile robot by a request object (e.g.,
 - a `requestStatus`.
 
 The field `requestStatus` describes the life cycle of the request and shall support the following values:
+
 - 'REQUESTED': Mobile robot states a request.
 - 'GRANTED': The fleet control grants the request.
 - 'REVOKED': Fleet control revokes previously granted request. 
 - 'EXPIRED': request has expired. 
 - 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
+
 Fleet control receives requests from the state topic and shall answer via the `responses` topic containing a response object that includes:
+
 - The `requestId` of the corresponding request,
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
