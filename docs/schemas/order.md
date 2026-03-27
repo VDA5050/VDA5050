@@ -46,7 +46,7 @@
 | --- | --- | --- | --- |
 | x | number | ✅ | 지도 좌표계를 기준으로 지도의 X 위치입니다. 정밀도는 특정 구현에 달려 있습니다. |
 | y | number | ✅ | 지도 좌표계를 기준으로 지도의 Y 위치입니다. 정밀도는 특정 구현에 달려 있습니다. |
-| theta | number | ❌ | 노드에서 모바일 로봇의 절대 방향입니다. 선택 사항: 모바일 로봇은 스스로 경로를 계획할 수 있습니다. 정의된 경우 모바일 로봇은 이 노드에서 세타 각도를 가정해야 합니다. 이전 가장자리가 회전을 허용하지 않는 경우 모바일 로봇은 노드에서 회전해야 합니다. 다음 가장자리에 다른 방향이 정의되어 있지만 회전이 허용되지 않는 경우 모바일 로봇은 가장자리에 들어가기 전에 노드에서 회전을 원하는 가장자리로 회전해야 합니다. |
+| theta | number | ❌ | 노드에서 모바일 로봇의 절대 방향입니다. 선택 사항: 모바일 로봇은 스스로 경로를 계획할 수 있습니다. 정의된 경우 모바일 로봇은 이 노드에서 세타 각도를 가정해야 합니다. 이전 edge가 회전을 허용하지 않는 경우 모바일 로봇은 노드에서 회전해야 합니다. 다음 edge에 다른 방향이 정의되어 있지만 회전이 허용되지 않는 경우 모바일 로봇은 edge에 들어가기 전에 노드에서 회전을 원하는 edge로 회전해야 합니다. |
 | allowedDeviationXY | object | ❌ | 이동 로봇이 이동된 것으로 간주되기 위해 노드의 위치와 얼마나 정확하게 일치해야 하는지를 나타냅니다. a = b= 0.0인 경우: 편차가 허용되지 않습니다. 이는 모바일 로봇이 기술적으로 모바일 로봇에 대해 가능한 한 정확하게 모바일 로봇 제어 지점을 사용하여 노드 위치에 도달하거나 통과해야 함을 의미합니다. 이는 allowedDeviationXY가 모바일 로봇에 대해 기술적으로 실행 가능한 것보다 작은 경우에도 적용됩니다. 모바일 로봇이 이 속성을 지원하지만 차량 제어에 의해 이 노드에 대해 정의되지 않은 경우 모바일 로봇은 a 및 b 값을 0.0으로 가정합니다. 노드의 좌표는 타원의 중심을 정의합니다. |
 | allowedDeviationTheta | number | ❌ | 세타 각도의 편차가 얼마나 큰지 나타냅니다. 허용 가능한 가장 낮은 각도는 theta - allowedDeviationTheta이고 허용 가능한 가장 높은 각도는 theta + allowedDeviationTheta입니다. |
 | mapId | string | ✅ | 위치가 참조되는 지도의 고유 ID입니다. |
@@ -81,19 +81,19 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| edgeId | string | ✅ | 가장자리의 식별자입니다. 동일한 차수의 가장자리에서는 고유하지 않을 수 있습니다. |
+| edgeId | string | ✅ | edge의 식별자입니다. 동일한 차수의 edge에서는 고유하지 않을 수 있습니다. |
 | sequenceId | integer | ✅ | Order 내 노드와 edge의 순서를 추적하고 Order update를 단순화하기 위한 번호입니다. sequenceId는 노드와 edge가 공유하며 통과 순서를 정의합니다. |
-| edgeDescriptor | string | ❌ | 가장자리에 대한 추가 정보입니다. |
-| released | boolean | ✅ | True는 가장자리가 밑면의 일부임을 나타냅니다. False는 가장자리가 수평선의 일부임을 나타냅니다. |
-| maximumSpeed | number | ❌ | 가장자리에 허용되는 최대 속도(m/s)입니다. 속도는 이동 로봇의 가장 빠른 측정으로 정의됩니다. |
-| maximumMobileRobotHeight | number | ❌ | 하중을 포함하여 가장자리에서 모바일 로봇의 허용되는 최대 높이(미터)입니다. |
-| minimumLoadHandlingDeviceHeight | number | ❌ | 가장자리에 있는 화물 취급 장치의 허용된 최소 높이(미터) |
-| orientation | number | ❌ | 가장자리에 있는 모바일 로봇의 방향입니다. OrientationType 값은 전역 프로젝트별 지도 좌표계를 기준으로 해석해야 하는지 또는 가장자리에 접선으로 해석해야 하는지 정의합니다. 모서리에 대한 접선으로 해석된 경우 0.0 = 앞으로, PI = 뒤로. 예: 방향 Pi/2 rad는 90도 회전으로 이어집니다. 모바일 로봇이 다른 방향으로 시작하는 경우 회전 허용이 True로 설정된 경우 가장자리의 모바일 로봇을 원하는 방향으로 회전시킵니다. RotationAllowed가 False인 경우 가장자리에 들어가기 전에 회전합니다. 이것이 불가능할 경우 Order를 거부하십시오. 궤적이 정의되지 않은 경우 가장자리의 두 연결 노드 사이의 직접 경로에 회전을 적용합니다. 모서리에 대한 궤적이 정의된 경우 궤적에 방향을 적용합니다. |
-| orientationType | string | ❌ | Enum {GLOBAL, TANGENTIAL}: GLOBAL: 전역 프로젝트별 지도 좌표계를 기준으로 합니다. TANGENTIAL: 가장자리에 접선입니다. 정의되지 않은 경우 기본값은 TANGENTIAL입니다. |
+| edgeDescriptor | string | ❌ | edge에 대한 추가 정보입니다. |
+| released | boolean | ✅ | True는 edge가 밑면의 일부임을 나타냅니다. False는 edge가 수평선의 일부임을 나타냅니다. |
+| maximumSpeed | number | ❌ | edge에 허용되는 최대 속도(m/s)입니다. 속도는 이동 로봇의 가장 빠른 측정으로 정의됩니다. |
+| maximumMobileRobotHeight | number | ❌ | 하중을 포함하여 edge에서 모바일 로봇의 허용되는 최대 높이(미터)입니다. |
+| minimumLoadHandlingDeviceHeight | number | ❌ | edge에 있는 화물 취급 장치의 허용된 최소 높이(미터) |
+| orientation | number | ❌ | edge에 있는 모바일 로봇의 방향입니다. OrientationType 값은 전역 프로젝트별 지도 좌표계를 기준으로 해석해야 하는지 또는 edge에 접선으로 해석해야 하는지 정의합니다. edge에 대한 접선으로 해석된 경우 0.0 = 앞으로, PI = 뒤로. 예: 방향 Pi/2 rad는 90도 회전으로 이어집니다. 모바일 로봇이 다른 방향으로 시작하는 경우 회전 허용이 True로 설정된 경우 edge의 모바일 로봇을 원하는 방향으로 회전시킵니다. RotationAllowed가 False인 경우 edge에 들어가기 전에 회전합니다. 이것이 불가능할 경우 Order를 거부하십시오. 궤적이 정의되지 않은 경우 edge의 두 연결 노드 사이의 직접 경로에 회전을 적용합니다. edge에 대한 궤적이 정의된 경우 궤적에 방향을 적용합니다. |
+| orientationType | string | ❌ | Enum {GLOBAL, TANGENTIAL}: GLOBAL: 전역 프로젝트별 지도 좌표계를 기준으로 합니다. TANGENTIAL: edge에 접선입니다. 정의되지 않은 경우 기본값은 TANGENTIAL입니다. |
 | direction | string | ❌ | 초기에 정의할 라인 가이드 또는 와이어 가이드 모바일 로봇의 교차점에서 방향을 설정합니다(이동 로봇-개별). |
-| reachOrientationBeforeEntering | boolean | ❌ | True: 가장자리에 들어가기 전에 원하는 가장자리 방향에 도달해야 합니다. 거짓: 모바일 로봇이 가장자리에서 원하는 방향으로 회전할 수 있습니다. 기본값: 거짓. |
+| reachOrientationBeforeEntering | boolean | ❌ | True: edge에 들어가기 전에 원하는 edge 방향에 도달해야 합니다. 거짓: 모바일 로봇이 edge에서 원하는 방향으로 회전할 수 있습니다. 기본값: 거짓. |
 | maxRotationSpeed | number | ❌ | 최대 회전 속도(rad/s). 선택사항: 설정되지 않은 경우 제한이 없습니다. |
-| trajectory | object | ❌ | NURBS로서의 이 가장자리에 대한 궤적 JSON 개체입니다. 모바일 로봇이 시작 노드와 끝 노드 사이를 이동해야 하는 곡선을 정의합니다. 선택 사항: 이동 로봇이 궤적을 처리할 수 없거나 이동 로봇이 자체 궤적을 계획하는 경우 생략할 수 있습니다. |
+| trajectory | object | ❌ | NURBS로서의 이 edge에 대한 궤적 JSON 개체입니다. 모바일 로봇이 시작 노드와 끝 노드 사이를 이동해야 하는 곡선을 정의합니다. 선택 사항: 이동 로봇이 궤적을 처리할 수 없거나 이동 로봇이 자체 궤적을 계획하는 경우 생략할 수 있습니다. |
 | length | number | ❌ | 시작 노드에서 끝 노드까지의 경로 거리(미터)입니다. 선택 사항: 이 값은 라인 유도 모바일 로봇이 정지 위치에 도달하기 전에 속도를 줄이는 데 사용됩니다. |
 | corridor | object | ❌ |  |
 | actions | array | ✅ | 자세한 정보가 포함된 작업 개체 배열입니다. |

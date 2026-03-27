@@ -91,10 +91,10 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| edgeId | string | ✅ | 고유한 가장자리 식별 |
-| sequenceId | integer | ✅ | 동일한 edgeId를 가진 여러 가장자리를 구별하기 위한 시퀀스 ID |
+| edgeId | string | ✅ | 고유한 edge 식별 |
+| sequenceId | integer | ✅ | 동일한 edgeId를 가진 여러 edge를 구별하기 위한 시퀀스 ID |
 | edgeDescriptor | string | ❌ | 사용자가 정의하고 사람이 읽을 수 있는 이름 또는 설명자입니다. |
-| released | boolean | ✅ | True는 가장자리가 밑면의 일부임을 나타냅니다. False는 가장자리가 수평선의 일부임을 나타냅니다. |
+| released | boolean | ✅ | True는 edge가 밑면의 일부임을 나타냅니다. False는 edge가 수평선의 일부임을 나타냅니다. |
 | trajectory | object | ❌ | 레이아웃 내에서 선험적으로 정의되었거나 Order의 일부로 이 edge에 대해 전송된 궤적을 보고합니다. |
 
 ### trajectory

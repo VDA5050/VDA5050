@@ -92,7 +92,7 @@
 | trajectory.controlPoints | integer | ❌ | 모바일 로봇이 처리할 수 있는 궤적당 최대 제어점 수 |
 | zoneSet.zones | integer | ❌ | 모바일 로봇이 처리할 수 있는 zoneSet당 최대 영역 수 |
 | state.nodeStates | integer | ❌ | 모바일 로봇이 보내는 최대 nodeState 수, 모바일 로봇 기반의 최대 노드 수 |
-| state.edgeStates | integer | ❌ | 모바일 로봇이 전송한 최대 edgeState 수, 모바일 로봇 베이스의 최대 가장자리 수 |
+| state.edgeStates | integer | ❌ | 모바일 로봇이 전송한 최대 edgeState 수, 모바일 로봇 base의 최대 edge 수 |
 | state.loads | integer | ❌ | 모바일 로봇이 보내는 최대 로드 객체 수 |
 | state.actionStates | integer | ❌ | 모바일 로봇이 전송하는 최대 actionState 수 |
 | state.instantActionStates | integer | ❌ | 모바일 로봇이 전송하는 최대 instantActionStates 수 |
