@@ -4,7 +4,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "VDA5050",
   description:
-    "Interface for the Communication between Mobile Robots and a Fleet Control",
+    "Interface for the Communication between Mobile Robots and a Fleet Control. (Unofficial Korean translation)",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
