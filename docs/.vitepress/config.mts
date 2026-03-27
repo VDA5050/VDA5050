@@ -7,6 +7,10 @@ export default defineConfig({
     "Interface for the Communication between Mobile Robots and a Fleet Control. (Unofficial Korean translation)",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    search: {
+      provider: "local",
+    },
+
     nav: [
       { text: "Home", link: "/" },
       { text: "VDA 5050 Spec", link: "/spec/" },
