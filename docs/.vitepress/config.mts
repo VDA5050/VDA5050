@@ -43,9 +43,19 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "VDA 5050 Spec", link: "/spec/" },
+      { text: "릴리스 노트", link: "/updates" },
     ],
 
     sidebar: [
+      {
+        text: "릴리스 노트",
+        items: [
+          {
+            text: "VDA 5050 3.0.0",
+            link: "/updates",
+          },
+        ],
+      },
       {
         text: "JSON Schemas",
         items: [

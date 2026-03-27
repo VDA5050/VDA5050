@@ -4,6 +4,7 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import BilingualSection from './components/BilingualSection.vue'
+import AISummaryCollapse from './components/AISummaryCollapse.vue'
 
 export default {
   extends: DefaultTheme,
@@ -15,5 +16,6 @@ export default {
   enhanceApp({ app, router, siteData }) {
     // Register the custom component globally
     app.component('BilingualSection', BilingualSection)
+    app.component('AISummaryCollapse', AISummaryCollapse)
   }
 } satisfies Theme
