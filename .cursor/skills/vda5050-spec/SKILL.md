@@ -59,6 +59,7 @@ description: VDA5050_EN.md → docs/spec 분할·한영 병기 번역. split/str
 ### 3.3 전문 용어
 
 - **영문 유지(한글 슬롯 포함)**: 규격 고유명·메시지 타입 — `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`. MQTT 토픽 세그먼트·JSON 필드명·열거값은 **항상 원문**(`order`, `state`, `visualization`, `connection`, `orderId`, …).
+- **영문 유지(그래프 용어)**: `edge`, `edges`와 파생 필드(`edgeId`, `edgeState`, `edgeStates`, `edgeRequests`)는 한국어로 치환하지 않는다. (`가장자리`/`모서리`/`엣지` 금지)
 - **쓰지 않음(규격 의미에서)**: Order → 「주문」「순서」로만 치환, State 메시지 → 「상태 메시지」만, Visualization → 「시각화 메시지/목적」만, Zone Set → 「구역 세트」, Responses(메시지) → 「응답」만으로 대체, 토픽 나열 → 「시각화.」「연결.」 등 한글 토픽명.
 - **구분**: 일반 단어 *order*(순서)·*response*(응답)·*connection*(연결)과 **Order / Responses / Connection** 메시지를 문맥으로 구분한다. Order *update*는 「Order update」 또는 설명부에 한글 보조를 붙여도 되나 핵심 타입명은 영문 유지.
 - **허용 예**: 「`State` 메시지」, 「`Visualization` 메시지」, 「Order를 이행」, 「Zone Set 배포」, 「Instant Action `cancelOrder`」, 「`responses` 토픽」.

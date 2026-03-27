@@ -62,6 +62,7 @@ description: VDA5050 json_schemas를 문서화할 때 참고한다.
 
 - **전문 용어 유지**: 한글 설명(`#ko` 표·도입문)에서도 아래는 **영문 그대로** 둔다:
   - 메시지·규격명: `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`
+  - 그래프 용어/필드명: `edge`, `edges`, `edgeId`, `edgeState`, `edgeStates`, `edgeRequests` (`가장자리`, `모서리`, `엣지`로 치환하지 않음)
   - MQTT 토픽 일부·JSON 경로: `order.*`, `state.*`, `visualization.*`, `connection.*` 등 — 한글로 바꾸지 않음 (예: ~~`시각화.serialNumber`~~ → `visualization.serialNumber`)
 - **금지 예시**: Order → 「주문」, State(메시지) → 「상태 메시지」만 단독 사용, Zone Set → 「구역 세트」, `responses` 배열 설명을 「zone 응답」만으로 표기, 영문 *order*와 혼동되는 「순서 업데이트」(의도가 *order update*일 때).
 - **번역 문장 안 표기**: 타입을 가리킬 때는 「Order」「Order update」「State 메시지」처럼 **영문 타입명 + 한글 조사** 형태를 쓴다.
