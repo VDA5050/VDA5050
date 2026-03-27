@@ -122,5 +122,10 @@ export default defineConfig({
     socialLinks: [
       { icon: "github", link: "https://github.com/VDA5050/VDA5050" },
     ],
+    footer: {
+      message:
+        'Based on <a href="https://github.com/VDA5050/VDA5050" target="_blank" rel="noreferrer">VDA 5050 Version 3.0.0</a>. Original specification copyright belongs to VDA.',
+      copyright: "Repository code and supporting materials: see LICENSE",
+    },
   },
 });

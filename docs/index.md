@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "VDA 5050"
   text: "Interface for mobile robots and fleet control"
-  tagline: 통합된 로봇 플릿 관리를 위한 표준 인터페이스 사양
+  tagline: 비공식(Unofficial) 한국어 번역·정리 문서
   actions:
     - theme: brand
       text: 문서 읽기
@@ -31,5 +31,15 @@ features:
     VDA 5050은 모바일 로봇(AGV/AMR)과 중앙 플릿 제어 시스템 간의 통신을 위한 개방형 표준입니다.
     독일 자동차 산업 협회(VDA)와 VDMA가 공동으로 개발하였으며, 이 프로젝트는 해당 사양을
     더 쉽게 이해할 수 있도록 한글 번역과 함께 제공합니다.
+  </p>
+</div>
+
+<div style="text-align: center; padding: 2rem 2rem 4rem;">
+  <h2>Copyright and License Notice</h2>
+  <p style="max-width: 800px; margin: 0 auto; line-height: 1.6;">
+    This site is an unofficial Korean translation and documentation project based on VDA 5050 Version 3.0.0.
+    Copyright in the original VDA 5050 specification belongs to Verband der Automobilindustrie (VDA).
+    Reproduction of the original specification and reproduced portions is permitted only with specification of the source.
+    The code and project-specific supporting materials in this repository are provided under the terms described in the LICENSE file.
   </p>
 </div>
