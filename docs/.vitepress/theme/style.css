@@ -44,6 +44,8 @@
  * -------------------------------------------------------------------------- */
 
 :root {
+  --vp-layout-max-width: 1680px;
+
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
   --vp-c-default-3: var(--vp-c-gray-3);
