@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "spec:strip-template-indent": "node scripts/strip-bilingual-template-indent.mjs",
+    "spec:wrap-template-div": "node scripts/wrap-bilingual-template-div.mjs",
+    "spec:assemble-6-1": "node scripts/build-ko-json-from-parts.mjs docs/spec/6/bilingual-ko 6.1 6 && node scripts/assemble-spec-bilingual-h3.mjs docs/spec/6/6.1.md docs/spec/6/bilingual-ko/6.1.ko.json docs/spec/6/6.1.md"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.31"
+  }
+}
