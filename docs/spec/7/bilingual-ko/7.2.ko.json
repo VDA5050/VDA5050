@@ -1,0 +1,3 @@
+[
+  "각 JSON 메시지는 헤더로 시작합니다.\n헤더는 다음 개별 요소로 구성됩니다.\n헤더는 JSON 객체가 아닙니다.\n\n| Object structure | Data type | Description |\n| --- | --- | --- |\n| headerId | uint32 | 메시지의 Header ID.<br> headerId는 토픽별로 정의되며, 보낸(수신 여부와 무관) 메시지마다 1씩 증가합니다. |\n| timestamp | string | 타임스탬프(ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (예: \"2017-04-15T11:40:03.123Z\"). |\n| version | string | 프로토콜 버전 [Major].[Minor].[Patch] (예: 1.3.2). |\n| manufacturer | string | 모바일 로봇 제조사. |\n| serialNumber | string | 모바일 로봇 시리얼 번호. |"
+]
