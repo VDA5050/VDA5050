@@ -58,7 +58,11 @@ description: VDA5050_EN.md → docs/spec 분할·한영 병기 번역. split/str
 
 ### 3.3 전문 용어
 
-- 한글에도 관례적으로 영문 유지: `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`, 토픽명·필드명·MQTT·JSON 식별자 등.
+- **영문 유지(한글 슬롯 포함)**: 규격 고유명·메시지 타입 — `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`. MQTT 토픽 세그먼트·JSON 필드명·열거값은 **항상 원문**(`order`, `state`, `visualization`, `connection`, `orderId`, …).
+- **쓰지 않음(규격 의미에서)**: Order → 「주문」「순서」로만 치환, State 메시지 → 「상태 메시지」만, Visualization → 「시각화 메시지/목적」만, Zone Set → 「구역 세트」, Responses(메시지) → 「응답」만으로 대체, 토픽 나열 → 「시각화.」「연결.」 등 한글 토픽명.
+- **구분**: 일반 단어 *order*(순서)·*response*(응답)·*connection*(연결)과 **Order / Responses / Connection** 메시지를 문맥으로 구분한다. Order *update*는 「Order update」 또는 설명부에 한글 보조를 붙여도 되나 핵심 타입명은 영문 유지.
+- **허용 예**: 「`State` 메시지」, 「`Visualization` 메시지」, 「Order를 이행」, 「Zone Set 배포」, 「Instant Action `cancelOrder`」, 「`responses` 토픽」.
+- **스키마·표**: `docs/schemas`와 동일 용어·토픽 표기를 맞춘다(§ `vda5050-schemas` SKILL 3절).
 
 ### 3.4 정확성·교차 참고
 
@@ -78,7 +82,7 @@ description: VDA5050_EN.md → docs/spec 분할·한영 병기 번역. split/str
 - [ ] 서술 문단이 `<pre><code>`면 **strip**(들여쓰기), 빌드가 `missing end tag`면 **wrap**(div)을 검토했는가?
 - [ ] `split` 결과 영문이 `VDA5050_EN.md` 해당 구간과 대응하는가(스크립트 보정 제외)?
 - [ ] `#en` 원문·`#ko` 번역·장절 순서·표 구조가 규칙에 맞는가?
-- [ ] 전문 용어·링크가 스키마·프로젝트 규칙과 충돌하지 않는가?
+- [ ] 전문 용어(§3.3)·토픽·필드명 표기가 스키마·프로젝트 규칙과 충돌하지 않는가?
 
 ## 6. 관련 스킬·규칙
 

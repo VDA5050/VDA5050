@@ -72,8 +72,8 @@
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
 | maximumMessageLength | integer | ❌ | 최대 MQTT 메시지 길이 |
-| maximumTopicSerialLength | integer | ❌ | MQTT 주제의 일련번호 부분의 최대 길이입니다. 영향을 받는 매개변수: order.serialNumber, instantActions.serialNumber, state.SerialNumber, 시각화.serialNumber, 연결.serialNumber |
-| maximumTopicElementLength | integer | ❌ | MQTT 주제의 다른 모든 부분의 최대 길이입니다. 영향을 받는 매개변수: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, 시각화.timestamp, 시각화.version, 시각화.manufacturer, 연결.timestamp, 연결.version, 연결.manufacturer |
+| maximumTopicSerialLength | integer | ❌ | MQTT 주제의 일련번호 부분의 최대 길이입니다. 영향을 받는 매개변수: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber |
+| maximumTopicElementLength | integer | ❌ | MQTT 주제의 다른 모든 부분의 최대 길이입니다. 영향을 받는 매개변수: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer |
 | maximumIdLength | integer | ❌ | ID 문자열의 최대 길이. 영향을 받는 매개변수: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId |
 | idNumericalOnly | boolean | ❌ | 실제 ID 문자열이 숫자 값만 포함해야 하는 경우 |
 | maximumLoadIdLength | integer | ❌ | loadId 문자열의 최대 길이 |
@@ -82,8 +82,8 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| order.nodes | integer | ❌ | 모바일 로봇이 처리할 수 있는 주문당 최대 노드 수 |
-| order.edges | integer | ❌ | 모바일 로봇이 처리할 수 있는 주문당 최대 모서리 수 |
+| order.nodes | integer | ❌ | 모바일 로봇이 처리할 수 있는 Order당 최대 노드 수 |
+| order.edges | integer | ❌ | 모바일 로봇이 처리할 수 있는 Order당 최대 edge 수 |
 | node.actions | integer | ❌ | 모바일 로봇이 처리할 수 있는 노드당 최대 작업 수 |
 | edge.actions | integer | ❌ | 모바일 로봇이 처리할 수 있는 엣지당 최대 작업 수 |
 | actions.actionsParameters | integer | ❌ | 모바일 로봇이 처리할 수 있는 작업당 최대 매개변수 수 |
@@ -97,8 +97,8 @@
 | state.actionStates | integer | ❌ | 모바일 로봇이 전송하는 최대 actionState 수 |
 | state.instantActionStates | integer | ❌ | 모바일 로봇이 전송하는 최대 instantActionStates 수 |
 | state.zoneActionStates | integer | ❌ | 모바일 로봇이 전송하는 최대 zoneActionStates 수 |
-| state.errors | integer | ❌ | 하나의 상태 메시지에서 모바일 로봇이 보낸 최대 오류 수 |
-| state.information | integer | ❌ | 하나의 상태 메시지에서 이동 로봇이 보내는 최대 정보 개체 수 |
+| state.errors | integer | ❌ | 하나의 State 메시지에서 모바일 로봇이 보낸 최대 오류 수 |
+| state.information | integer | ❌ | 하나의 State 메시지에서 이동 로봇이 보내는 최대 정보 개체 수 |
 | error.errorReferences | integer | ❌ | 각 오류에 대해 모바일 로봇이 보낸 최대 오류 참조 수 |
 | information.infoReferences | integer | ❌ | 각 정보에 대해 모바일 로봇이 보내는 최대 정보 참조 수 |
 
@@ -106,10 +106,10 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| minimumOrderInterval | number | ✅ | 모바일 로봇에 주문 메시지를 보내는 최소 간격 |
-| minimumStateInterval | number | ✅ | 상태 메시지 전송을 위한 최소 간격 |
-| defaultStateInterval | number | ❌ | 상태 메시지 전송을 위한 기본 간격이 정의되지 않은 경우 기본 문서의 기본값이 사용됩니다. |
-| visualizationInterval | number | ❌ | 시각화 주제에 대한 메시지 전송의 기본 간격 |
+| minimumOrderInterval | number | ✅ | 모바일 로봇에 Order 메시지를 보내는 최소 간격 |
+| minimumStateInterval | number | ✅ | State 메시지 전송을 위한 최소 간격 |
+| defaultStateInterval | number | ❌ | State 메시지 전송을 위한 기본 간격이 정의되지 않은 경우 기본 문서의 기본값이 사용됩니다. |
+| visualizationInterval | number | ❌ | `visualization` 토픽에 대한 메시지 전송의 기본 간격 |
 
 ### protocolFeatures
 
@@ -216,7 +216,7 @@
 | setName | string | ✅ | 로드 세트의 고유 이름(예: DEFAULT, SET1, ...) |
 | loadType | string | ✅ | 부하 유형(예: EPAL, XLT1200, …) |
 | loadPositions | array | ❌ | 로드 위치 목록 btw. 화물 취급 장치에 대해 이 로드 세트가 유효합니다. 이 매개변수가 존재하지 않거나 비어 있으면 이 로드 세트는 이 모바일 로봇의 모든 하중 처리 장치에 유효합니다. |
-| boundingBoxReference | object | ❌ | 상태 메시지의 매개변수 load[]에 정의된 경계 상자 참조 |
+| boundingBoxReference | object | ❌ | State 메시지의 매개변수 load[]에 정의된 경계 상자 참조 |
 | loadDimensions | object | ❌ |  |
 | maximumWeight | number | ❌ | 적재 유형의 최대 중량 |
 | minimumLoadhandlingHeight | number | ❌ | 이 하중 유형 및 중량을 취급하는 데 허용되는 최소 높이입니다. 경계 상자 참조에 대한 참조 |

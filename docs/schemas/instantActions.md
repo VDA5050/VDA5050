@@ -32,7 +32,7 @@
 | actionType | string | ✅ | 작업의 이름입니다. 작업의 기능을 식별합니다. |
 | actionId | string | ✅ | 작업을 식별하고 이를 상태의 actionState에 매핑하는 고유 ID입니다. 제안: UUID를 사용하세요. |
 | actionDescriptor | string | ❌ | 작업에 대한 추가 정보입니다. |
-| blockingType | enum | ✅ | 즉각적인 작업의 차단 유형은 항상 NONE입니다. 작업은 이동을 포함하여 다른 작업과 동시에 발생할 수 있습니다. |
+| blockingType | enum | ✅ | Instant Action의 차단 유형은 항상 NONE입니다. 작업은 이동을 포함하여 다른 작업과 동시에 발생할 수 있습니다. |
 | actionParameters | array | ❌ | 표시된 작업에 대한 작업 매개변수(예: deviceId, loadId, 외부 트리거)입니다. |
 
 ### .actionParameters.items

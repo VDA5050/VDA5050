@@ -2,7 +2,7 @@
 
 <BilingualSection>
   <template #ko>
-    시각화 목적으로 로봇의 위치, 경로, 속도를 전송하는 Visualization 메시지 사양입니다.
+    Visualization 목적으로 로봇의 위치, 경로, 속도를 전송하는 Visualization 메시지 사양입니다.
     `plannedPath`, `intermediatePath`, `mobileRobotPosition`, `velocity`는 선택 사항이지만, 헤더 필드와 `referenceStateHeaderId`는 필수입니다.
   </template>
   <template #en>
@@ -76,8 +76,8 @@
 | theta | number | ✅ |  |
 | mapId | string | ✅ | 지도의 고유 식별입니다. |
 | localized | boolean | ✅ | 사실: 모바일 로봇이 현지화되었습니다. x, y, theta는 신뢰할 수 있습니다. 거짓: 모바일 로봇이 현지화되지 않았습니다. x, y, theta는 신뢰할 수 없습니다. |
-| localizationScore | number | ❌ | 위치 파악 품질을 설명하므로 SLAM 모바일 로봇 등에서 현재 위치 정보가 얼마나 정확한지 설명하는 데 사용할 수 있습니다. 0.0: 위치를 알 수 없음 1.0: 알려진 위치 현지화 점수를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 시각화 목적으로만 사용 |
-| deviationRange | number | ❌ | 위치 편차 범위 값(미터)입니다. 그리드 기반 위치 파악과 같이 편차를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 시각화 목적으로만 사용됩니다. |
+| localizationScore | number | ❌ | 위치 파악 품질을 설명하므로 SLAM 모바일 로봇 등에서 현재 위치 정보가 얼마나 정확한지 설명하는 데 사용할 수 있습니다. 0.0: 위치를 알 수 없음 1.0: 알려진 위치 현지화 점수를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 Visualization 목적으로만 사용 |
+| deviationRange | number | ❌ | 위치 편차 범위 값(미터)입니다. 그리드 기반 위치 파악과 같이 편차를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 Visualization 목적으로만 사용됩니다. |
 
 ### velocity
 

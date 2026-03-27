@@ -25,30 +25,30 @@
 | serialNumber | string | ✅ | 모바일 로봇의 일련번호입니다. |
 | maps | array | ❌ | 현재 모바일 로봇에 저장되어 있는 지도 객체의 배열입니다. |
 | zoneSets | array | ❌ | 현재 모바일 로봇에 저장되어 있는 zoneSet 객체의 배열입니다. |
-| orderId | string | ✅ | 현재 주문 또는 이전 완료된 주문의 고유한 주문 ID입니다. orderId는 새 주문이 수신될 때까지 유지됩니다. 이전 orderId를 사용할 수 없는 경우 빈 문자열("")입니다. |
-| orderUpdateId | integer | ✅ | 주문 업데이트 식별은 모바일 로봇이 주문 업데이트를 수락했는지 식별합니다. 이전 orderUpdateId를 사용할 수 없는 경우 0입니다. |
+| orderId | string | ✅ | 현재 Order 또는 이전에 완료된 Order의 고유 식별입니다. orderId는 새 Order가 수신될 때까지 유지됩니다. 이전 orderId를 사용할 수 없는 경우 빈 문자열("")입니다. |
+| orderUpdateId | integer | ✅ | Order update 식별. 모바일 로봇이 Order update를 수락했는지 구분합니다. 이전 orderUpdateId를 사용할 수 없는 경우 0입니다. |
 | lastNodeId | string | ✅ | 마지막으로 도달한 노드의 노드 ID 또는 모바일 로봇이 현재 노드에 있는 경우 현재 노드(예: "node7")입니다. lastNodeId를 사용할 수 없는 경우 빈 문자열("")입니다. |
 | lastNodeSequenceId | integer | ✅ | 마지막으로 도달한 노드의 순서 ID, 또는 모바일 로봇이 현재 노드에 있는 경우 현재 노드의 순서 ID입니다. lastNodeSequenceId를 사용할 수 없는 경우 0입니다. |
-| nodeStates | array | ✅ | 주문을 이행하기 위해 통과해야 하는 nodeState-Object의 배열입니다. 유휴 상태이면 목록이 비어 있습니다. |
-| edgeStates | array | ✅ | 주문을 이행하기 위해 통과해야 하는 edgeState-Object 배열, 유휴 상태인 경우 빈 목록. |
+| nodeStates | array | ✅ | Order를 이행하기 위해 통과해야 하는 nodeState-Object의 배열입니다. 유휴 상태이면 목록이 비어 있습니다. |
+| edgeStates | array | ✅ | Order를 이행하기 위해 통과해야 하는 edgeState-Object 배열, 유휴 상태인 경우 빈 목록. |
 | plannedPath | object | ❌ |  |
 | intermediatePath | object | ❌ |  |
 | mobileRobotPosition | object | ❌ |  |
 | velocity | object | ❌ | 이동로봇 좌표로 표현된 이동로봇의 속도 |
 | loads | array | ❌ | 현재 모바일 로봇이 처리하는 하중입니다. 선택 사항: 모바일 로봇이 로드 상태를 확인할 수 없는 경우 어레이를 상태에서 제외하십시오. 모바일 로봇이 로드 상태를 확인할 수 있지만 배열이 비어 있는 경우 모바일 로봇은 언로드된 것으로 간주됩니다. |
 | driving | boolean | ✅ | True: 모바일 로봇이 운전 및/또는 회전 중임을 나타냅니다. 모바일 로봇의 다른 움직임(예: 리프트 움직임)은 여기에 포함되지 않습니다. False: 모바일 로봇이 운전도 회전도 하지 않음을 나타냅니다. |
-| paused | boolean | ❌ | 참: 모바일 로봇의 물리적 버튼을 누르거나 instantAction으로 인해 모바일 로봇이 현재 일시 중지된 상태입니다. 모바일 로봇이 주문을 재개할 수 있습니다. 거짓: 모바일 로봇이 현재 일시 중지된 상태가 아닙니다. |
+| paused | boolean | ❌ | 참: 모바일 로봇의 물리적 버튼을 누르거나 instantAction으로 인해 모바일 로봇이 현재 일시 중지된 상태입니다. 모바일 로봇이 Order를 재개할 수 있습니다. 거짓: 모바일 로봇이 현재 일시 중지된 상태가 아닙니다. |
 | newBaseRequest | boolean | ❌ | 사실: 모바일 로봇이 기지 끝에 거의 도달했으며 새 기지가 전송되지 않으면 속도가 감소합니다. 새로운 기지를 보내기 위해 함대 통제를 위한 트리거 거짓: 기본 업데이트가 필요하지 않습니다. |
 | zoneRequests | array | ❌ | 현재 모바일 로봇에서 활성화된 zoneRequest 객체의 배열입니다. 활성 영역 요청이 없으면 빈 배열입니다. |
 | edgeRequests | array | ❌ | 현재 모바일 로봇에서 활성화된 edgeRequest 객체의 배열입니다. 활성 엣지 요청이 없으면 빈 배열입니다. |
 | distanceSinceLastNode | number | ❌ | lineguided 차량에서 lastNodeId를 지나 주행한 거리를 나타내는 데 사용됩니다. 거리는 미터 단위입니다. |
-| actionStates | array | ✅ | 현재 작업과 아직 완료되지 않은 작업의 배열입니다. 여기에는 아직 진행 중인 이전 노드의 작업이 포함될 수 있습니다. 작업이 완료되면 업데이트된 상태 메시지가 actionStatus가 완료됨으로 설정되고 해당하는 경우 해당 resultDescriptor와 함께 게시됩니다. actionStates는 새로운 주문이 수신될 때까지 유지됩니다. |
-| instantActionStates | array | ✅ | 모바일 로봇이 수신한 모든 즉각적인 작업 상태의 배열입니다. 모바일 로봇이 즉각적인 조치를 받지 못한 경우 빈 배열입니다. 즉시 작업은 다시 시작하거나 작업 ClearInstantActions가 실행될 때까지 해당 상태를 유지합니다. |
-| zoneActionStates | array | ❌ | 종료 상태이거나 현재 실행 중인 모든 영역 작업의 배열입니다. 예정된 작업을 공유하는 것은 선택 사항입니다. 영역 작업 상태는 다시 시작 또는 작업clearZoneActions가 실행될 때까지 상태 메시지에 유지됩니다. |
+| actionStates | array | ✅ | 현재 작업과 아직 완료되지 않은 작업의 배열입니다. 여기에는 아직 진행 중인 이전 노드의 작업이 포함될 수 있습니다. 작업이 완료되면 갱신된 State 메시지가 actionStatus가 완료됨으로 설정되고 해당하는 경우 해당 resultDescriptor와 함께 게시됩니다. actionStates는 새 Order가 수신될 때까지 유지됩니다. |
+| instantActionStates | array | ✅ | 모바일 로봇이 수신한 모든 Instant Action 상태의 배열입니다. Instant Action을 받지 못한 경우 빈 배열입니다. Instant Action은 재시작하거나 `clearInstantActions`가 실행될 때까지 해당 상태를 유지합니다. |
+| zoneActionStates | array | ❌ | 종료 상태이거나 현재 실행 중인 모든 Zone 작업의 배열입니다. 예정된 작업을 공유하는 것은 선택 사항입니다. Zone 작업 상태는 재시작 또는 `clearZoneActions`가 실행될 때까지 State 메시지에 유지됩니다. |
 | powerSupply | object | ✅ |  |
 | operatingMode | enum | ✅ | 모바일 로봇의 현재 작동 모드입니다. |
 | errors | array | ✅ | 오류 객체의 배열. 모바일 로봇의 모든 활성 오류가 목록에 있어야 합니다. 빈 배열은 모바일 로봇에 활성 오류가 없음을 나타냅니다. |
-| information | array | ❌ | 정보 객체의 배열. 빈 배열은 모바일 로봇에 정보가 없음을 나타냅니다. 이는 시각화 또는 디버깅에만 사용해야 하며 차량 제어의 논리에는 사용해서는 안 됩니다. |
+| information | array | ❌ | 정보 객체의 배열. 빈 배열은 모바일 로봇에 정보가 없음을 나타냅니다. 이는 Visualization 또는 디버깅에만 사용해야 하며 차량 제어의 논리에는 사용해서는 안 됩니다. |
 | safetyState | object | ✅ |  |
 
 ### map
@@ -66,7 +66,7 @@
 | --- | --- | --- | --- |
 | zoneSetId | string | ✅ | 현재 지도에 대해 활성화된 구역 집합의 고유 식별자입니다.<br> 이 필드는 모바일 로봇에 해당 지도에 대해 정의된 구역이 없는 경우에만 비워 두어야 합니다. |
 | mapId | string | ✅ | 해당 지도의 식별자입니다. |
-| zoneSetStatus | enum | ✅ | ENABLED: 이 구역 세트가 현재 모바일 로봇에서 활성화/사용되고 있음을 나타냅니다. 각 맵에 대해 최대 하나의 구역 세트의 상태가 ENABLED로 설정될 수 있습니다. 비활성화됨: 이 구역 세트가 현재 모바일 로봇에서 활성화되어 있지 않으므로 차량 제어에 의해 활성화되거나 삭제될 수 있음을 나타냅니다. |
+| zoneSetStatus | enum | ✅ | ENABLED: 이 Zone Set이 현재 모바일 로봇에서 활성화/사용되고 있음을 나타냅니다. 각 맵에 대해 최대 하나의 Zone Set 상태가 ENABLED로 설정될 수 있습니다. DISABLED: 이 Zone Set이 현재 모바일 로봇에서 활성화되어 있지 않으므로 차량 제어에 의해 활성화되거나 삭제될 수 있음을 나타냅니다. |
 
 ### nodeState
 
@@ -95,7 +95,7 @@
 | sequenceId | integer | ✅ | 동일한 edgeId를 가진 여러 가장자리를 구별하기 위한 시퀀스 ID |
 | edgeDescriptor | string | ❌ | 사용자가 정의하고 사람이 읽을 수 있는 이름 또는 설명자입니다. |
 | released | boolean | ✅ | True는 가장자리가 밑면의 일부임을 나타냅니다. False는 가장자리가 수평선의 일부임을 나타냅니다. |
-| trajectory | object | ❌ | 레이아웃 내에서 선험적으로 정의되었거나 주문의 일부로 이 가장자리에 대해 전송된 궤적을 보고합니다. |
+| trajectory | object | ❌ | 레이아웃 내에서 선험적으로 정의되었거나 Order의 일부로 이 edge에 대해 전송된 궤적을 보고합니다. |
 
 ### trajectory
 
@@ -144,8 +144,8 @@
 | theta | number | ✅ |  |
 | mapId | string | ✅ | 지도의 고유 식별입니다. |
 | localized | boolean | ✅ | 사실: 모바일 로봇이 현지화되었습니다. x, y, theta는 신뢰할 수 있습니다. 거짓: 모바일 로봇이 현지화되지 않았습니다. x, y, theta는 신뢰할 수 없습니다. |
-| localizationScore | number | ❌ | 위치 파악 품질을 설명하므로 SLAM 모바일 로봇 등에서 현재 위치 정보가 얼마나 정확한지 설명하는 데 사용할 수 있습니다. 0.0: 위치를 알 수 없음 1.0: 알려진 위치 현지화 점수를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 시각화 목적으로만 사용 |
-| deviationRange | number | ❌ | 위치 편차 범위 값(미터)입니다. 그리드 기반 위치 파악과 같이 편차를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 시각화 목적으로만 사용됩니다. |
+| localizationScore | number | ❌ | 위치 파악 품질을 설명하므로 SLAM 모바일 로봇 등에서 현재 위치 정보가 얼마나 정확한지 설명하는 데 사용할 수 있습니다. 0.0: 위치를 알 수 없음 1.0: 알려진 위치 현지화 점수를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 Visualization 목적으로만 사용 |
+| deviationRange | number | ❌ | 위치 편차 범위 값(미터)입니다. 그리드 기반 위치 파악과 같이 편차를 추정할 수 없는 차량의 경우 선택 사항입니다. 로깅 및 Visualization 목적으로만 사용됩니다. |
 
 ### velocity
 
@@ -189,7 +189,7 @@
 | --- | --- | --- | --- |
 | requestId | string | ✅ | 모든 활성 요청 내에서 모바일 로봇 식별자별로 고유합니다. |
 | requestType | enum | ✅ | 요청과 관련된 영역 유형을 지정하는 열거형입니다. 가능한 값은 ACCESS 또는 REPLANNING입니다. |
-| zoneId | string | ✅ | 요청이 관련된 구역을 참조하는 로컬(구역 세트 내) 고유 식별자입니다. |
+| zoneId | string | ✅ | 요청이 관련된 Zone을 참조하는 로컬(Zone Set 내) 고유 식별자입니다. |
 | zoneSetId | string | ✅ | zoneId는 zoneSet에만 고유하므로 zoneSetId는 요청의 일부입니다. |
 | requestStatus | enum | ✅ | 요청을 기술할 때 이는 REQUESTED로 설정됩니다. Fleet Control의 응답 또는 업데이트 후 GRANTED 또는 REVOKED로 설정됩니다. 임대 기간이 만료되면 EXPIRED가 됩니다. |
 | trajectory | object | ❌ |  |
@@ -201,7 +201,7 @@
 | requestId | string | ✅ | 모든 활성 요청에서 모바일 로봇 식별자별로 고유합니다. |
 | requestType | enum | ✅ | 요청과 관련된 에지 유형을 지정하는 열거형입니다. |
 | edgeId | string | ✅ | 요청과 관련된 에지를 참조하는 전역 고유 식별자입니다. |
-| sequenceId | integer | ✅ | 주문 내의 가장자리 시퀀스에 대한 추적 번호입니다. 주문 내에서 참조된 모서리를 고유하게 식별하는 데 필요합니다. |
+| sequenceId | integer | ✅ | Order 내 edge 시퀀스에 대한 추적 번호입니다. Order 내에서 참조된 edge를 고유하게 식별하는 데 필요합니다. |
 | requestStatus | enum | ✅ | 요청을 기술할 때 이는 REQUESTED로 설정됩니다. Fleet Control의 응답 또는 업데이트 후 GRANTED 또는 REVOKED로 설정됩니다. 임대 시간이 만료되면 EXPIRED로 설정됩니다. |
 
 ### actionState
@@ -209,7 +209,7 @@
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
 | actionId | string | ✅ | 고유한 작업 ID |
-| actionType | string | ❌ | 작업의 actionType입니다. 선택 사항: 정보 제공 또는 시각화 목적으로만 사용됩니다. 주문은 유형을 알고 있습니다. |
+| actionType | string | ❌ | 작업의 actionType입니다. 선택 사항: 정보 제공 또는 Visualization 목적으로만 사용됩니다. Order는 유형을 알고 있습니다. |
 | actionDescriptor | string | ❌ | 사용자가 정의하고 사람이 읽을 수 있는 이름 또는 설명자입니다. |
 | actionStatus | enum | ✅ | WAITING: 트리거를 기다리고 있습니다(모드 통과, 에지 진입). 초기화 중: 작업이 시작되었으며 준비 조치가 시작되었습니다. RUNNING: 작업이 실행 중입니다. RETRIABLE: 실패했지만 재시도할 수 있는 작업입니다. PAUSED: instantAction 또는 외부 트리거에 의해 일시 중지되었습니다. FINISHED: 작업이 완료되었습니다. 실패: 작업을 수행할 수 없습니다. |
 | actionResult | string | ❌ | 결과에 대한 설명(예: RFID 판독 결과) 오류는 오류로 전송됩니다. |
@@ -235,7 +235,7 @@
 | errorDescriptionTranslations | array | ❌ | 오류 설명의 번역 배열입니다. |
 | errorHint | string | ❌ | 보고된 오류에 접근하거나 해결하는 방법에 대한 힌트입니다. |
 | errorHintTranslations | array | ❌ | 오류 힌트의 번역 배열입니다. |
-| errorLevel | enum | ✅ | 경고: 즉각적인 조치가 필요하지 않습니다. 모바일 로봇은 계속 활성 상태를 유지하고 새 주문을 수락할 수 있습니다. 긴급: 즉각적인 주의가 필요합니다. 모바일 로봇은 계속 활동하고 새로운 주문을 받아들일 수 있습니다. 중요: 즉각적인 주의가 필요합니다. 모바일 로봇은 활성 주문을 계속할 수 없지만 새 주문을 수락할 수 있습니다. 치명적: 사용자 개입이 필요합니다. 모바일 로봇이 계속 활성 상태이거나 새 주문을 수락할 수 없습니다. |
+| errorLevel | enum | ✅ | WARNING: 즉각적인 주의가 필요하지 않습니다. 모바일 로봇은 계속 활성 Order가 있으면 이행하고 Order update나 새 Order를 수락할 수 있습니다. URGENT: 즉각적인 주의가 필요합니다. 모바일 로봇은 계속 활동하고 활성 Order가 있으면 이행하며 Order update나 새 Order를 수락할 수 있습니다. CRITICAL: 즉각적인 주의가 필요합니다. 모바일 로봇은 활성 Order를 계속할 수 없지만 새 Order는 수락할 수 있습니다. FATAL: 사용자 개입이 필요합니다. 모바일 로봇이 활성 Order를 계속하거나 Order update·새 Order를 수락할 수 없습니다. |
 
 ### .errorReferences.items
 
@@ -258,7 +258,7 @@
 | infoType | string | ✅ | 정보의 유형/이름. |
 | infoReferences | array | ❌ |  |
 | infoDescriptor | string | ❌ | 사용자가 정의하고 사람이 읽을 수 있는 이름 또는 설명자입니다. |
-| infoLevel | enum | ✅ | DEBUG: 디버깅에 사용됩니다. INFO: 시각화에 사용됩니다. |
+| infoLevel | enum | ✅ | DEBUG: 디버깅에 사용됩니다. INFO: Visualization에 사용됩니다. |
 
 ### .infoReferences.items
 

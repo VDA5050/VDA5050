@@ -21,7 +21,7 @@
 | version | string | ✅ | 프로토콜 버전 [Major].[Minor].[Patch] |
 | manufacturer | string | ✅ | 모바일 로봇의 제조사입니다. |
 | serialNumber | string | ✅ | 모바일 로봇의 시리얼 번호입니다. |
-| responses | array | ✅ | zone 응답 객체 배열입니다. |
+| responses | array | ✅ | zone response 객체의 배열입니다. |
 
 ### responses
 
@@ -102,7 +102,7 @@
         },
         "responses": {
             "type": "array",
-            "description": "zone 응답 객체 배열.",
+            "description": "zone response 객체의 배열.",
             "items": {
                 "type": "object",
                 "required": [

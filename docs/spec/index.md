@@ -209,7 +209,7 @@ Version 3.0.0
     [6.3.5 Delete maps on the mobile robot](/spec/6/6.3#635-delete-maps-on-the-mobile-robot)<br>
   [6.4 Zones](/spec/6/6.4#64-zones)<br>
     [6.4.1 Zone types](/spec/6/6.4#641-zone-types)<br>
-    [6.4.2 Zone set transfer](/spec/6/6.4#642-zone-set-transfer)<br>
+    [6.4.2 Zone Set transfer](/spec/6/6.4#642-zone-set-transfer)<br>
     [6.4.3 Communication for interactive zones](/spec/6/6.4#643-communication-for-interactive-zones)<br>
     [6.4.4 Interaction between zones](/spec/6/6.4#644-interactions-between-zones)<br>
     [6.4.5 Error handling within zones](/spec/6/6.4#645-error-handling-within-zones)<br>

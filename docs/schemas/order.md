@@ -23,18 +23,18 @@
 | version | string | ✅ | 프로토콜 버전 [Major].[Minor].[Patch] |
 | manufacturer | string | ✅ | 이동로봇 제조사 |
 | serialNumber | string | ✅ | 모바일 로봇의 일련번호입니다. |
-| orderId | string | ✅ | 주문 식별. 이는 동일한 주문에 속하는 여러 주문 메시지를 식별하는 데 사용됩니다. |
-| orderUpdateId | integer | ✅ | 업데이트 식별을 주문하세요. 이는 orderId별로 고유하며 새 주문의 경우 0부터 시작합니다. 주문 업데이트가 거부되면 이 필드가 거부 메시지에 전달됩니다. |
-| orderDescription | string | ❌ | 시각화 목적으로만 사람이 읽을 수 있는 추가 정보 이는 논리적 프로세스에 사용되지 않습니다. |
-| nodes | array | ✅ | 주문을 이행하기 위해 통과할 노드 객체의 배열입니다. 유효한 주문에는 노드 1개면 충분합니다. 해당 경우 가장자리 목록을 비워 두세요. |
-| edges | array | ✅ | 두 노드 사이의 방향 연결. 순서를 이행하기 위해 통과할 가장자리 객체의 배열입니다. 유효한 주문에는 노드 1개면 충분합니다. 해당 경우 가장자리 목록을 비워 두세요. |
+| orderId | string | ✅ | Order 식별. 동일 Order에 속하는 여러 Order 메시지를 구분하는 데 사용됩니다. |
+| orderUpdateId | integer | ✅ | Order update 식별. orderId별로 고유하며 새 Order의 경우 0부터 시작합니다. Order update가 거부되면 이 필드가 해당 오류에 전달됩니다. |
+| orderDescription | string | ❌ | Visualization 목적으로만 사람이 읽을 수 있는 추가 정보이며 논리적 프로세스에 사용되지 않습니다. |
+| nodes | array | ✅ | Order를 이행하기 위해 통과할 노드 객체의 배열입니다. 유효한 Order에는 노드 1개면 충분합니다. 해당 경우 edge 목록을 비워 두세요. |
+| edges | array | ✅ | 두 노드 사이의 방향 연결. Order를 이행하기 위해 통과할 edge 객체의 배열입니다. 유효한 Order에는 노드 1개면 충분합니다. 해당 경우 edge 목록을 비워 두세요. |
 
 ### node
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| nodeId | string | ✅ | 노드의 식별자입니다. 동일한 순서의 노드 간에는 고유하지 않을 수 있습니다. |
-| sequenceId | integer | ✅ | 순서대로 노드와 모서리의 순서를 추적하고 순서 업데이트를 단순화하기 위한 번호입니다. 주요 목적은 하나의 orderId 내에서 두 번 이상 전달된 노드를 구별하는 것입니다. SequenceId는 노드와 에지 간에 공유되며 순회 순서를 정의합니다. |
+| nodeId | string | ✅ | 노드의 식별자입니다. 동일 Order 내 노드끼리는 고유하지 않을 수 있습니다. |
+| sequenceId | integer | ✅ | Order 내 노드와 edge의 순서를 추적하고 Order update를 단순화하기 위한 번호입니다. 주요 목적은 하나의 orderId 안에서 두 번 이상 지나는 노드를 구별하는 것입니다. sequenceId는 노드와 edge가 공유하며 통과 순서를 정의합니다. |
 | nodeDescriptor | string | ❌ | 노드에 대한 추가 정보입니다. |
 | released | boolean | ✅ | True는 노드가 기본의 일부임을 나타냅니다. False는 노드가 수평선의 일부임을 나타냅니다. |
 | nodePosition | object | ❌ | 전역 프로젝트별 세계 좌표계에서 지도의 위치를 ​​정의합니다. 각 층에는 자체 지도가 있습니다. 모든 맵은 동일한 프로젝트별 글로벌 원점을 사용해야 합니다. 노드 위치가 필요하지 않은 모바일 로봇 유형(예: 라인 유도 모바일 로봇)의 경우 선택 사항입니다. |
@@ -82,13 +82,13 @@
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
 | edgeId | string | ✅ | 가장자리의 식별자입니다. 동일한 차수의 가장자리에서는 고유하지 않을 수 있습니다. |
-| sequenceId | integer | ✅ | 순서대로 노드와 모서리의 순서를 추적하고 순서 업데이트를 단순화하기 위한 번호입니다. SequenceId는 노드와 에지 간에 공유되며 순회 순서를 정의합니다. |
+| sequenceId | integer | ✅ | Order 내 노드와 edge의 순서를 추적하고 Order update를 단순화하기 위한 번호입니다. sequenceId는 노드와 edge가 공유하며 통과 순서를 정의합니다. |
 | edgeDescriptor | string | ❌ | 가장자리에 대한 추가 정보입니다. |
 | released | boolean | ✅ | True는 가장자리가 밑면의 일부임을 나타냅니다. False는 가장자리가 수평선의 일부임을 나타냅니다. |
 | maximumSpeed | number | ❌ | 가장자리에 허용되는 최대 속도(m/s)입니다. 속도는 이동 로봇의 가장 빠른 측정으로 정의됩니다. |
 | maximumMobileRobotHeight | number | ❌ | 하중을 포함하여 가장자리에서 모바일 로봇의 허용되는 최대 높이(미터)입니다. |
 | minimumLoadHandlingDeviceHeight | number | ❌ | 가장자리에 있는 화물 취급 장치의 허용된 최소 높이(미터) |
-| orientation | number | ❌ | 가장자리에 있는 모바일 로봇의 방향입니다. OrientationType 값은 전역 프로젝트별 지도 좌표계를 기준으로 해석해야 하는지 또는 가장자리에 접선으로 해석해야 하는지 정의합니다. 모서리에 대한 접선으로 해석된 경우 0.0 = 앞으로, PI = 뒤로. 예: 방향 Pi/2 rad는 90도 회전으로 이어집니다. 모바일 로봇이 다른 방향으로 시작하는 경우 회전 허용이 True로 설정된 경우 가장자리의 모바일 로봇을 원하는 방향으로 회전시킵니다. RotationAllowed가 False인 경우 가장자리에 들어가기 전에 회전합니다. 이것이 불가능할 경우 주문을 거부하십시오. 궤적이 정의되지 않은 경우 가장자리의 두 연결 노드 사이의 직접 경로에 회전을 적용합니다. 모서리에 대한 궤적이 정의된 경우 궤적에 방향을 적용합니다. |
+| orientation | number | ❌ | 가장자리에 있는 모바일 로봇의 방향입니다. OrientationType 값은 전역 프로젝트별 지도 좌표계를 기준으로 해석해야 하는지 또는 가장자리에 접선으로 해석해야 하는지 정의합니다. 모서리에 대한 접선으로 해석된 경우 0.0 = 앞으로, PI = 뒤로. 예: 방향 Pi/2 rad는 90도 회전으로 이어집니다. 모바일 로봇이 다른 방향으로 시작하는 경우 회전 허용이 True로 설정된 경우 가장자리의 모바일 로봇을 원하는 방향으로 회전시킵니다. RotationAllowed가 False인 경우 가장자리에 들어가기 전에 회전합니다. 이것이 불가능할 경우 Order를 거부하십시오. 궤적이 정의되지 않은 경우 가장자리의 두 연결 노드 사이의 직접 경로에 회전을 적용합니다. 모서리에 대한 궤적이 정의된 경우 궤적에 방향을 적용합니다. |
 | orientationType | string | ❌ | Enum {GLOBAL, TANGENTIAL}: GLOBAL: 전역 프로젝트별 지도 좌표계를 기준으로 합니다. TANGENTIAL: 가장자리에 접선입니다. 정의되지 않은 경우 기본값은 TANGENTIAL입니다. |
 | direction | string | ❌ | 초기에 정의할 라인 가이드 또는 와이어 가이드 모바일 로봇의 교차점에서 방향을 설정합니다(이동 로봇-개별). |
 | reachOrientationBeforeEntering | boolean | ❌ | True: 가장자리에 들어가기 전에 원하는 가장자리 방향에 도달해야 합니다. 거짓: 모바일 로봇이 가장자리에서 원하는 방향으로 회전할 수 있습니다. 기본값: 거짓. |

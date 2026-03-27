@@ -60,8 +60,11 @@ description: VDA5050 json_schemas를 문서화할 때 참고한다.
 
 ## 3. 코드 작성 규칙 (TypeScript & JSON)
 
-- **전문 용어 유지**: 다음 전문 용어들은 한글 번역 시에도 번역하지 않고 원문 그대로 사용함:
-  - `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`
+- **전문 용어 유지**: 한글 설명(`#ko` 표·도입문)에서도 아래는 **영문 그대로** 둔다:
+  - 메시지·규격명: `Order`, `State`, `Connection`, `Instant Actions`, `Factsheet`, `Visualization`, `Responses`, `Zone Set`
+  - MQTT 토픽 일부·JSON 경로: `order.*`, `state.*`, `visualization.*`, `connection.*` 등 — 한글로 바꾸지 않음 (예: ~~`시각화.serialNumber`~~ → `visualization.serialNumber`)
+- **금지 예시**: Order → 「주문」, State(메시지) → 「상태 메시지」만 단독 사용, Zone Set → 「구역 세트」, `responses` 배열 설명을 「zone 응답」만으로 표기, 영문 *order*와 혼동되는 「순서 업데이트」(의도가 *order update*일 때).
+- **번역 문장 안 표기**: 타입을 가리킬 때는 「Order」「Order update」「State 메시지」처럼 **영문 타입명 + 한글 조사** 형태를 쓴다.
 - **스키마 기반 우선**: 타입/설명/필수 여부 판단은 반드시 `json_schemas/*.schema`를 기준으로 함
 - **설명 정확성**: 표의 설명 텍스트는 원문 `description`을 요약하지 않고 그대로 사용함
 - **원문 보존**: 스키마 원문 블록에서는 `description` 번역 외 다른 필드를 번역하거나 변형하지 않음
@@ -81,3 +84,4 @@ description: VDA5050 json_schemas를 문서화할 때 참고한다.
 - 각 스키마 페이지의 `필드 정의` 섹션이 테이블인지 확인 (`| 필드 | 타입 | 필수 | 설명 |`)
 - `필드 정의` 섹션에 TypeScript 코드 블록(```typescript)이 남아 있지 않은지 확인
 - `스키마 원문` 섹션은 원문 구조/키/값을 유지하고 `description`만 번역했는지 확인
+- 한글 표 설명에 §3 전문 용어(Order, State, Zone Set, `visualization` 등)가 규칙대로 유지되었는지 확인

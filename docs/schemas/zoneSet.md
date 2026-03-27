@@ -29,8 +29,8 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
-| mapId | string | ✅ | 구역 세트가 특정화하는 지도의 전역적으로 고유한 식별자입니다. |
-| zoneSetId | string | ✅ | 구역 세트의 전역적으로 고유한 식별자입니다. |
+| mapId | string | ✅ | Zone Set이 특정하는 맵의 전역적으로 고유한 식별자입니다. |
+| zoneSetId | string | ✅ | Zone Set의 전역적으로 고유한 식별자입니다. |
 | zoneSetDescriptor | string | ❌ | 사용자가 정의하고 사람이 읽을 수 있는 이름 또는 설명자입니다. |
 | zones | array | ✅ | 영역 개체의 배열입니다. |
 
@@ -39,7 +39,7 @@
 | 필드 | 타입 | 필수 | 설명 |
 | --- | --- | --- | --- |
 | zoneId | string | ✅ | 로컬로(영역 세트 내에서) 고유 식별자입니다. |
-| zoneType | enum | ✅ | 구역 카테고리. |
+| zoneType | enum | ✅ | Zone 카테고리. |
 | zoneDescriptor | string | ❌ | 사용자가 정의한 사람이 읽을 수 있는 이름 또는 설명자입니다. |
 | vertices | array | ✅ | 영역의 기하학적 모양을 정의하는 정점 배열(x-y 좌표)입니다. |
 
