@@ -170,22 +170,22 @@
                 "minimumHeight": {
                     "type": "number",
                     "description": "Minimum height of mobile robot",
-                    "unit": "m",
+                    "unit": "m"
                 },
                 "maximumHeight": {
                     "type": "number",
                     "description": "Maximum height of mobile robot",
-                    "unit": "m",
+                    "unit": "m"
                 },
                 "width": {
                     "type": "number",
                     "description": "Width of the mobile robot",
-                    "unit": "m",
+                    "unit": "m"
                 },
                 "length": {
                     "type": "number",
                     "description": "Length of the mobile robot",
-                    "unit": "m",
+                    "unit": "m"
                 }
             }
         },
@@ -613,7 +613,7 @@
                                         },
                                         "y": {
                                             "type": "number",
-                                            "description": " Y-position of polygon-point",
+                                            "description": "Y-position of polygon-point",
                                             "unit": "m"
                                         }
                                     }
@@ -888,7 +888,7 @@
                         }
                     }
                 },
-                "batteryCharging ": {
+                "batteryCharging": {
                     "type": "object",
                     "description": "Information about battery charging parameters.",
                     "properties": {
