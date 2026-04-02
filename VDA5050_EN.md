@@ -128,11 +128,13 @@ Stakeholders are invited to submit proposals for modifications or enhancements t
 This document describes a standardized and vendor-neutral communication interface between a fleet control system and mobile robots. Its purpose is to provide a common reference that supports interoperability in environments where multiple mobile robots operate under the coordination of a fleet control system. The use of this specification is optional and non-binding, and its application is at the discretion of the respective stakeholders.
 
 The objectives of this specification are:
+
 - to reduce complexity when connecting mobile robots to a fleet control system.
 - to enable the coordinated operation of heterogeneous mobile robot fleets from different manufacturers within a shared physical environment.
 - to provide a generic and domain independent set of interface definitions applicable to mobile robots with varying navigation principles, physical dimensions, load handling or manipulation capabilities, and autonomy levels.
 
 This specification does not address the following topics:
+
 - Safety Requirements: This document does not define functional, operational, or system safety requirements and shall not be regarded or applied as a safety standard.
 - Traffic Management Logic: Strategies, algorithms, or decision making processes for traffic coordination (e.g., routing, prioritization, congestion handling, or deadlock resolution) are not included.
 - Other Communication Interfaces: Interfaces unrelated to the communication between a fleet control system and mobile robots are excluded, such as interfaces to peripheral equipment, infrastructure components, or external IT systems.
@@ -274,6 +276,7 @@ The mobile robot then continuously reports its status to the fleet control in pa
 ## 5.3 Functions of the fleet control
 
 The fleet control system performs, at minimum, the following functions:
+
 - Assignment of orders to the mobile robots
 - Route calculation and guidance of line-guided mobile robots (taking into account the limitations of the individual physical properties of each mobile robot, e.g., size, maneuverability, etc.)
 - Detection and resolution of blockages ("deadlocks")
@@ -286,6 +289,7 @@ The fleet control system performs, at minimum, the following functions:
 ## 5.4 Functions of the mobile robots
 
 Each mobile robot shall perform the following functions:
+
 - Localization
 - Execution of associated routes (line-guided or freely navigating)
 - Execution of actions
@@ -529,6 +533,7 @@ Resolution:
 #### 6.1.4.3 Mobile robot receives an order with actions it cannot perform
 
 Example:
+
 - lifting height higher than maximum lifting height
 - lifting actions although no stroke is installed, etc.
 
@@ -654,6 +659,7 @@ This is possible by publishing an `instantAction` message to the topic `instantA
 These actions shall not conflict with the content of the mobile robot's current order (e.g., `instantAction` to lower fork, while order says to raise fork).
 
 Some examples for which instant actions could be relevant are:
+
 - pause the mobile robot without changing anything in the current order
 - resume order after pause
 - activate signal (optical, audio, etc.)
@@ -864,7 +870,7 @@ The following contour-based zones are defined:
 | BLOCKED | none | | Mobile robots shall not enter this zone. If a mobile robot has entered the zone or finds itself within one, it shall stop and throw an 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the predefined trajectories on edges. Mobile robots may only enter this zone if the route is explicitly specified by the fleet control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the fleet control or a predefined trajectory on the mobile robot. A corridor can be sent to allow the mobile robot to deviate from the trajectory. | 
 | RELEASE | | - | Mobile robots are only allowed entering this zone once they have been granted access through fleet control. | 
-| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}</br>When the access to this zone is revoked or expired, the mobile robot can either 'STOP', 'CONTINUE', or 'EVACUATE' the zone. This action is only executed, when the mobile robot is already in the zone and the release expires or is revoked. If not defined, the mobile robot is expected to STOP and report an error.<br>'STOP': Mobile robot stops and sends a 'RELEASE_LOST' error with level 'CRITICAL'.<br>'EVACUATE': Execute the evacuation behavior of the mobile robot to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left.<br>'CONTINUE': If the release is revoked or expires after the mobile robot has already entered the zone, the mobile robot continues its path, keeping the `zoneRequest` object granting the zone release in its state. If the order ends inside the zone, the mobile robot waits for a new order.|
+| | releaseLossBehavior | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}<br>When the access to this zone is revoked or expired, the mobile robot can either 'STOP', 'CONTINUE', or 'EVACUATE' the zone. This action is only executed, when the mobile robot is already in the zone and the release expires or is revoked. If not defined, the mobile robot is expected to STOP and report an error.<br>'STOP': Mobile robot stops and sends a 'RELEASE_LOST' error with level 'CRITICAL'.<br>'EVACUATE': Execute the evacuation behavior of the mobile robot to leave the zone, keeping the `zoneRequest` object granting release in its state until the zone is left.<br>'CONTINUE': If the release is revoked or expires after the mobile robot has already entered the zone, the mobile robot continues its path, keeping the `zoneRequest` object granting the zone release in its state. If the order ends inside the zone, the mobile robot waits for a new order.|
 | COORDINATED_REPLANNING | none | | No autonomous replanning is allowed within this zone. Mobile robots are only allowed adjusting their path if granted permission by fleet control. | 
 | SPEED_LIMIT | | | Mobile robots shall not drive faster than the defined maximum speed within this zone. | 
 | | maximumSpeed | float64 | Maximum permitted speed for mobile robot within the zone in m/s. The speed limit shall already be reached upon entering the zone.|
@@ -1028,6 +1034,7 @@ Compared to separate messages (e.g., for current order progress, battery state a
 The mobile robot state message shall be published when relevant events occur or at least every 30 seconds.
 
 The following events shall trigger a transmission of the state message:
+
 - Receiving an order
 - Receiving an order update
 - Changes in the `load` object
@@ -1171,6 +1178,8 @@ Error Type | Error level | Description | Reference | Report duration
 'MOBILE_ROBOT_NOT_AVAILABLE' | 'WARNING' | Receival of an order while not in 'AUTOMATIC', 'SEMIAUTOMATIC' or 'INTERVENED' operating mode. | `orderId` | Until operating mode allows for new orders
 'UNKNOWN_MAP_ID' | 'WARNING' | Receival of an order containing nodes referencing an unknown `mapId`. | `orderId` | Until new order is accepted.
 
+> Table 9 - Predefined error types
+
 
 ### 6.6.6 Operating Mode
 
@@ -1188,7 +1197,7 @@ STARTUP | Fleet control is not in control of the mobile robot. The mobile robot 
 SERVICE | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>Authorized personnel can reconfigure the mobile robot.
 TEACH_IN | Fleet control is not in control of the mobile robot. <br>Fleet control shall not send orders or actions to the mobile robot. <br>When the mobile robot enters this mode, it immediately clears any current order.<br>The mobile robot shall set `lastNodeId` to an empty string ("").<br>The mobile robot is being taught, e.g., mapping is done by an operator.
 
->Table 9 - Operating modes of the mobile robot
+>Table 10 - Operating modes of the mobile robot
 
 
 Operating Mode | Fleet Control in control | Valid state message content | Clear order when entering | Set `lastNodeId` to empty | Clear zone requests when entering | Sending instant actions allowed | Sending orders allowed
@@ -1201,7 +1210,7 @@ STARTUP | NO | NO | YES | YES | YES | NO | NO
 SERVICE | NO | YES | YES | YES | YES | NO | NO
 TEACH_IN | NO | YES | YES | YES | YES | NO | NO
 
->Table 10 - Overview of operating modes and their implications
+>Table 11 - Overview of operating modes and their implications
 
 
 ### 6.6.7 Clearing the order on the mobile robot
@@ -1250,7 +1259,7 @@ actionStatus | Description
 'FINISHED' | The action is finished. <br>A result is reported via the `actionResult`.
 'FAILED' | Action could not be finished for whatever reason.
 
->Table 11 - Feasible values for the `actionStatus` field
+>Table 12 - Feasible values for the `actionStatus` field
 
 All possible action state transitions are visualized in Figure 21 and examples are given in the following matrix:
 
@@ -1264,7 +1273,7 @@ All possible action state transitions are visualized in Figure 21 and examples a
 | **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual mode, action finally failed due to not returning the desired results | action returned desired result, possible after abort via cancelOrder, if action can not be interrupted and has to finish. |
 | **RETRIABLE** | - | retries action via retry, external trigger | - | retries action via retry, external trigger | - | failed via skipRetry, failed via cancelOrder, external trigger, switch to manual mode | fixed by operator via external input |
 
->Table 12 Examples for possible action state transitions
+>Table 13 Examples for possible action state transitions
 
 ![Figure 21 All possible status transitions for actionStates](./assets/action_state_transition.png)
 >Figure 21 - All possible status transitions for actionStates
@@ -1303,6 +1312,7 @@ The update rate for this topic is defined by the integrator.
 Freely navigating mobile robots shall communicate their planned trajectory to the fleet control system via the state message. For a higher frequency of sharing, the `visualization` topic can be used.
 
 Mobile robots share their `intermediatePath`, which represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors, and their `plannedPath`, which represents a longer path within the mobile robot's currently active order. Both paths shall start from the mobile robot's current position, independent of any nodes that are part of the order. The mobile robot can decide on the length of the shared paths, as it may be situation dependent. If the mobile robot is freely navigating, both `intermediatePath` and `plannedPath` shall be shared in each state.
+
 - The `plannedPath` is defined as NURBS as defined in the `trajectory` field of the `edgeState`. The `plannedPath` can contain an array of nodes, referenced by their `nodeId`, that will be traversed as part of the current path. It should be updated whenever a significant change has occurred in the mobile robot's `plannedPath`. The `plannedPath` shall at least cover the mobile robot's current base.
 - The `intermediatePath` is defined as a polyline. The polyline consists of linear line segments between waypoints. Each `waypoint` consists of its `x` and `y` position, an optional orientation of the mobile robot and the `ETA` indicating the estimated time of arrival.
 The `intermediatePath` shall be updated with every sent state or visualization message and always begin at the mobile robot's current position.
@@ -1321,18 +1331,21 @@ A request is always initiated by the mobile robot and communicated as part of th
 
 Each request shall be represented on the mobile robot by a request object (e.g., zoneRequest) included in the state message. The request object shall contain at minimum:
 
-	- a `requestId` that is unique per mobile robot for all currently active requests,
-	- a `requestType` that specifies the kind of operation the request refers to (access, replanning, use of corridor),
-	- a reference to the resource the request addresses (e.g. zone, zone set, map, edgeId, sequenceId), and
-	- a `requestStatus`.
+- a `requestId` that is unique per mobile robot for all currently active requests,
+- a `requestType` that specifies the kind of operation the request refers to (access, replanning, use of corridor),
+- a reference to the resource the request addresses (e.g. zone, zone set, map, edgeId, sequenceId), and
+- a `requestStatus`.
 
 The field `requestStatus` describes the life cycle of the request and shall support the following values:
+
 - 'REQUESTED': Mobile robot states a request.
 - 'GRANTED': The fleet control grants the request.
 - 'REVOKED': Fleet control revokes previously granted request. 
 - 'EXPIRED': request has expired. 
 - 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
+
 Fleet control receives requests from the state topic and shall answer via the `responses` topic containing a response object that includes:
+
 - The `requestId` of the corresponding request,
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
@@ -1382,7 +1395,7 @@ standard | Variable is an elementary data type
 ***italic and bold***| Variable is optional and a non-elementary data type
 arrayName[arrayDataType] | Variable (here arrayName) is an array of the data type included in the square brackets (here the data type is arrayDataType)
 
->Table 13 - Symbols of the tables and meaning of formatting
+>Table 14 - Symbols of the tables and meaning of formatting
 
 All keywords are case sensitive.
 All field names are in camelCase.
@@ -1555,7 +1568,7 @@ Parameters for errors, information and actions are designed as an array of JSON 
 |---|---|---|
 **actionParameter** { | JSON object | actionParameter for the indicated action, e.g., deviceId, loadId, external triggers.
 key | string | The key of the parameter.
-value <br><br><br>} | One of:</br>array,</br>boolean,</br>number,</br>integer,</br>string,</br>object | The value of the parameter that belongs to the key.
+value <br><br><br>} | One of:<br>array,<br>boolean,<br>number,<br>integer,<br>string,<br>object | The value of the parameter that belongs to the key.
 
 Examples for the `actionParameter` of an action "someAction" with key-value pairs for stationType and loadType:
 
@@ -1787,7 +1800,7 @@ Object structure | Unit | Data type | Description
 **waypoint** { | | JSON object | Endpoint of a segment within a defined polyline.
 x | m | float64 | X-coordinate described in the project-specific coordinate system.
 y | m | float64 | Y-coordinate described in the project-specific coordinate system.
-*theta* | rad | float64 | Absolute orientation of the mobile robot in the project-specific coordinate system. <br> Range: [-Pi ... Pi] </br>
+*theta* | rad | float64 | Absolute orientation of the mobile robot in the project-specific coordinate system. <br> Range: [-Pi ... Pi] <br>
 eta | | string | Estimated time of arrival/traversal. ETA is formatted as a `timestamp` (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z").
 } | | |
 
@@ -1840,7 +1853,7 @@ width | m | float64 | Absolute width (along the mobile robot’s coordinate syst
 | --- | --- | --- |
 | zoneRequest <br> { | JSON object | Request information sent by the mobile robot to fleet control. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
-| requestType | string | Enum {'ACCESS', 'REPLANNING'} </br> Specifying the type of zone the request relates to. Feasible values are 'ACCESS' or 'REPLANNING'. |
+| requestType | string | Enum {'ACCESS', 'REPLANNING'}<br>Specifying the type of zone the request relates to. Feasible values are 'ACCESS' or 'REPLANNING'. |
 | zoneId | string | Locally (within the zone set) unique identifier referencing the zone the request is related to. |
 | zoneSetId | string | Due to the `zoneId` only being unique to a `zoneSet`, the `zoneSetId` is part of the request. |
 | requestStatus | string | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
@@ -1961,12 +1974,12 @@ This JSON object describes general properties of the mobile robot type.
 |---|---|---|
 | seriesName | string | Free text generalized series name as specified by manufacturer. |
 | *seriesDescription* | string | Free text human-readable description of the mobile robot type series. |
-| mobileRobotKinematics | string | Simplified description of the mobile robot kinematics type.<br/> Extensible enum: {'DIFFERENTIAL', 'OMNIDIRECTIONAL', 'THREE_WHEEL',...}<br/>'DIFFERENTIAL': differential drive,<br/>'OMNIDIRECTIONAL': omnidirectional mobile robot,<br/>'THREE_WHEEL': three-wheel-driven mobile robot or mobile robot with similar kinematics. |
-| mobileRobotClass | string | Simplified description of the mobile robot class.<br/> Extensible enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br/>FORKLIFT: forklift,<br/>CONVEYOR: Mobile robot with conveyors on it,</br>TUGGER: tugger,<br/>CARRIER: load carrier with or without lifting unit. |
+| mobileRobotKinematics | string | Simplified description of the mobile robot kinematics type.<br> Extensible enum: {'DIFFERENTIAL', 'OMNIDIRECTIONAL', 'THREE_WHEEL',...}<br>'DIFFERENTIAL': differential drive,<br>'OMNIDIRECTIONAL': omnidirectional mobile robot,<br>'THREE_WHEEL': three-wheel-driven mobile robot or mobile robot with similar kinematics. |
+| mobileRobotClass | string | Simplified description of the mobile robot class.<br> Extensible enum: {FORKLIFT, CONVEYOR, TUGGER, CARRIER, ...}<br>FORKLIFT: forklift,<br>CONVEYOR: Mobile robot with conveyors on it,<br>TUGGER: tugger,<br>CARRIER: load carrier with or without lifting unit. |
 | maximumLoadMass | float64 | [kg], Maximum loadable mass. |
-| localizationTypes | array of string | Simplified description of localization type.<br/>Extensible enum: {'NATURAL', 'REFLECTOR', 'RFID','DMC','SPOT','GRID',...}<br/>NATURAL: natural landmarks,<br/>REFLECTOR: laser reflectors,<br/>RFID: RFID tags,<br/>DMC: data matrix code,<br/>SPOT: magnetic spots,<br/>GRID: magnetic grid.<br/>
-| navigationTypes | array of string | Array of path planning types supported by the mobile robot, sorted by priority.</br>Extensible enum: {'PHYSICAL_LINE_GUIDED', 'VIRTUAL_LINE_GUIDED', 'FREELY_NAVIGATING', ...}<br/>'PHYSICAL_LINE_GUIDED': no path planning, the mobile robot follows physical installed paths,<br/>'VIRTUAL_LINE_GUIDED': the mobile robot follows fixed (virtual) paths,<br/>'FREELY_NAVIGATING': the mobile robot plans its path by itself.|
-| *supportedZones* | array of string | Array of zone types supported by the mobile robot.<br/>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
+| localizationTypes | array of string | Simplified description of localization type.<br>Extensible enum: {'NATURAL', 'REFLECTOR', 'RFID','DMC','SPOT','GRID',...}<br>NATURAL: natural landmarks,<br>REFLECTOR: laser reflectors,<br>RFID: RFID tags,<br>DMC: data matrix code,<br>SPOT: magnetic spots,<br>GRID: magnetic grid.<br>
+| navigationTypes | array of string | Array of path planning types supported by the mobile robot, sorted by priority.<br>Extensible enum: {'PHYSICAL_LINE_GUIDED', 'VIRTUAL_LINE_GUIDED', 'FREELY_NAVIGATING', ...}<br>'PHYSICAL_LINE_GUIDED': no path planning, the mobile robot follows physical installed paths,<br>'VIRTUAL_LINE_GUIDED': the mobile robot follows fixed (virtual) paths,<br>'FREELY_NAVIGATING': the mobile robot plans its path by itself.|
+| *supportedZones* | array of string | Array of zone types supported by the mobile robot.<br>Enum {'BLOCKED', 'LINE_GUIDED', 'RELEASE', 'COORDINATED_REPLANNING', 'SPEED_LIMIT', 'ACTION', 'PRIORITY', 'PENALTY', 'DIRECTED', 'BIDIRECTED'}.
 
 #### physicalParameters
 
@@ -1994,9 +2007,9 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 |---|---|---|
 | **maximumStringLengths** { | JSON object | Maximum lengths of strings. |
 | &emsp;*maximumMessageLength* | uint32 | Maximum MQTT message length. |
-| &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br/><br/>Affected parameters:<br/>order.serialNumber<br/>instantActions.serialNumber<br/>state.SerialNumber<br/>visualization.serialNumber<br/>connection.serialNumber<br/>zoneSet.serialNumber<br/>response.serialNumber |
-| &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br/><br/>Affected parameters:<br/>order.timestamp<br/>order.version<br/>order.manufacturer<br/>instantActions.timestamp<br/>instantActions.version<br/>instantActions.manufacturer<br/>state.timestamp<br/>state.version<br/>state.manufacturer<br/>visualization.timestamp<br/>visualization.version<br/>visualization.manufacturer<br/>connection.timestamp<br/>connection.version<br/>connection.manufacturer<br/>zoneSet.timestamp<br/>zoneSet.version<br/>zoneSet.manufacturer<br/>response.timestamp<br/>response.version<br/>response.manufacturer |
-| &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br/><br/>Affected parameters:<br/>order.orderId<br/>node.nodeId<br/>nodePosition.mapId<br/>action.actionId<br/>edge.edgeId<br/>map.mapId<br/>zoneSet.zoneSetId<br/>zone.zoneId<br/>zoneRequest.requestId<br/>edgeRequest.requestId | 
+| &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br><br>Affected parameters:<br>order.serialNumber<br>instantActions.serialNumber<br>state.SerialNumber<br>visualization.serialNumber<br>connection.serialNumber<br>zoneSet.serialNumber<br>response.serialNumber |
+| &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br><br>Affected parameters:<br>order.timestamp<br>order.version<br>order.manufacturer<br>instantActions.timestamp<br>instantActions.version<br>instantActions.manufacturer<br>state.timestamp<br>state.version<br>state.manufacturer<br>visualization.timestamp<br>visualization.version<br>visualization.manufacturer<br>connection.timestamp<br>connection.version<br>connection.manufacturer<br>zoneSet.timestamp<br>zoneSet.version<br>zoneSet.manufacturer<br>response.timestamp<br>response.version<br>response.manufacturer |
+| &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br><br>Affected parameters:<br>order.orderId<br>node.nodeId<br>nodePosition.mapId<br>action.actionId<br>edge.edgeId<br>map.mapId<br>zoneSet.zoneSetId<br>zone.zoneId<br>zoneRequest.requestId<br>edgeRequest.requestId | 
 | &emsp;*idNumericalOnly* | boolean | If "true", parameters containing Ids shall contain numerical values only. |
 | &emsp;*maximumLoadIdLength* | uint32 | Maximum length of loadId strings. |
 | } | | |
@@ -2034,18 +2047,18 @@ This JSON object defines order handling processes, actions and parameters which 
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| **optionalParameters** [**optionalParameters**] | array | Array of supported and/or required optional parameters.<br/>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
+| **optionalParameters** [**optionalParameters**] | array | Array of supported and/or required optional parameters.<br>Optional parameters that are not listed here are assumed to be not supported by the mobile robot. |
 | { | | |
 | &emsp;parameter | string | Full name of optional parameter, e.g., "*order.nodes.nodePosition.allowedDeviationTheta"*.|
-| &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br/>'SUPPORTED': optional parameter is supported like specified.<br/>'REQUIRED': optional parameter is required for proper mobile robot operation. |
+| &emsp;support | enum | Type of support for the optional parameter, the following values are possible:<br>'SUPPORTED': optional parameter is supported like specified.<br>'REQUIRED': optional parameter is required for proper mobile robot operation. |
 | &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this mobile robot type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li>|
 | } | | |
 | **mobileRobotActions** [**mobileRobotAction**] | array | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
-| &emsp;actionScopes | array of enum | Array of allowed scopes for using this action type.<br/><br/>'INSTANT': usable as instantAction.<br/>'NODE': usable on nodes.<br/>'EDGE': usable on edges.<br/>'ZONE': usable as zone action.<br/><br/>For example: ['INSTANT', 'NODE']|
-| &emsp;***actionParameters** [**actionParameter**]* | array | Array of parameters an action has.<br/>If not defined, the action has no parameters.<br/> The JSON object defined here is a different JSON object than the one used in Section [7.3 Implementation of the order message](#73-implementation-of-the-order-message) within nodes and edges.|
+| &emsp;actionScopes | array of enum | Array of allowed scopes for using this action type.<br><br>'INSTANT': usable as instantAction.<br>'NODE': usable on nodes.<br>'EDGE': usable on edges.<br>'ZONE': usable as zone action.<br><br>For example: ['INSTANT', 'NODE']|
+| &emsp;***actionParameters** [**actionParameter**]* | array | Array of parameters an action has.<br>If not defined, the action has no parameters.<br> The JSON object defined here is a different JSON object than the one used in Section [7.3 Implementation of the order message](#73-implementation-of-the-order-message) within nodes and edges.|
 |&emsp;*{* | | |
 |&emsp;&emsp;key | string | Key string for parameter. |
 |&emsp;&emsp;valueDataType | enum | Data type of value, possible data types are: 'BOOL', 'NUMBER', 'INTEGER', 'STRING', 'OBJECT', 'ARRAY'. |
@@ -2053,7 +2066,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |&emsp;&emsp;*isOptional* | boolean | "true": optional parameter. |
 |&emsp;*}* | | |
 |*actionResult* | string | Free-form text: description of the result. |
-|*blockingTypes* | array of enum | Array of possible blocking types for defined action. </br> Enum {'NONE', 'SOFT', 'SINGLE', 'HARD'} |
+|*blockingTypes* | array of enum | Array of possible blocking types for defined action. <br> Enum {'NONE', 'SOFT', 'SINGLE', 'HARD'} |
 |pauseAllowed | boolean | "true": action can be paused via startPause, "false": action cannot be paused. |
 |cancelAllowed | boolean | "true": action can be cancelled via cancelOrder, "false": action cannot be cancelled. |
 |*}* | | |
@@ -2066,7 +2079,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 |---|---|---|
 | ***wheelDefinitions** [**wheelDefinition**]* | array | Array of wheels, containing wheel arrangement and geometry. |
 | { | | |
-| &emsp;type | string | Wheel type <br/> Extensible enum {'DRIVE', 'CASTER', 'FIXED', 'MECANUM', ...}. |
+| &emsp;type | string | Wheel type <br> Extensible enum {'DRIVE', 'CASTER', 'FIXED', 'MECANUM', ...}. |
 | &emsp;isActiveDriven | boolean | "true": wheel is actively driven. |
 | &emsp;isActiveSteered | boolean | "true": wheel is actively steered. |
 | &emsp;**position** { | JSON object | |
@@ -2076,7 +2089,7 @@ This JSON object defines the geometry properties of the mobile robot, e.g., outl
 | &emsp;} | | |
 | &emsp;diameter | float64 | [m], nominal diameter of wheel. |
 | &emsp;width | float64 | [m], nominal width of wheel. |
-| &emsp;*centerDisplacement* | float64 | [m], nominal displacement of the wheel's center to the rotation point (necessary for caster wheels).<br/> If the parameter is not defined, it is assumed to be 0. |
+| &emsp;*centerDisplacement* | float64 | [m], nominal displacement of the wheel's center to the rotation point (necessary for caster wheels).<br> If the parameter is not defined, it is assumed to be 0. |
 | &emsp;*constraints* | string | Free-form text: can be used by the manufacturer to define constraints. |
 | } | | |
 | ***envelopes2d** [**envelope2d**]* | array | Array of mobile robot envelope curves in 2D, e.g., the mechanical envelopes for unloaded and loaded state, the safety fields for different speed cases. |
@@ -2104,19 +2117,19 @@ This JSON object specifies load handling and supported load types of the mobile 
 
 | **Field** | **data type** | **description** |
 |---|---|---|
-| *loadPositions* | array of string | Array of load positions / load handling devices.<br/>This array contains the valid values for the parameter "state.loads[].loadPosition" and for the action parameter "lhd" of the actions pick and drop.<br/>*If this array does not exist or is empty, the mobile robot has no load handling device.* |
+| *loadPositions* | array of string | Array of load positions / load handling devices.<br>This array contains the valid values for the parameter "state.loads[].loadPosition" and for the action parameter "lhd" of the actions pick and drop.<br>*If this array does not exist or is empty, the mobile robot has no load handling device.* |
 | ***loadSets [loadSet]*** | array | Array of load sets that can be handled by the mobile robot |
 | { | | |
 |&emsp; setName | string | Unique name of the load set, e.g., DEFAULT, SET1, etc. |
 |&emsp; loadType | string | Type of load, e.g., EPAL, XLT1200, etc. |
-|&emsp; *loadPositions* | array of string | Array of load positions btw. load handling devices, this load set is valid for.<br/>*If this parameter does not exist or is empty, this load set is valid for all load handling devices on this mobile robot.* |
+|&emsp; *loadPositions* | array of string | Array of load positions btw. load handling devices, this load set is valid for.<br>*If this parameter does not exist or is empty, this load set is valid for all load handling devices on this mobile robot.* |
 |&emsp; ***boundingBoxReference*** | JSON object | Bounding box reference as defined in parameter loads[] in state message. |
 |&emsp; ***loadDimensions*** | JSON object | Load dimensions as defined in parameter loads[] in state message. |
 |&emsp; *maximumWeight* | float64 | [kg], maximum weight of load type. |
-|&emsp; *minimumLoadhandlingHeight* | float64 | [m], minimum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *maximumLoadhandlingHeight* | float64 | [m], maximum allowed height for handling of this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *minimumLoadhandlingDepth* | float64 | [m], minimum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
-|&emsp; *maximumLoadhandlingDepth* | float64 | [m], maximum allowed depth for this load type and weight<br/>references to boundingBoxReference. |
+|&emsp; *minimumLoadhandlingHeight* | float64 | [m], minimum allowed height for handling of this load type and weight<br>references to boundingBoxReference. |
+|&emsp; *maximumLoadhandlingHeight* | float64 | [m], maximum allowed height for handling of this load type and weight<br>references to boundingBoxReference. |
+|&emsp; *minimumLoadhandlingDepth* | float64 | [m], minimum allowed depth for this load type and weight<br>references to boundingBoxReference. |
+|&emsp; *maximumLoadhandlingDepth* | float64 | [m], maximum allowed depth for this load type and weight<br>references to boundingBoxReference. |
 |&emsp; *minimumLoadhandlingTilt* | float64 | [rad], minimum allowed tilt for this load type and weight. |
 |&emsp; *maximumLoadhandlingTilt* | float64 | [rad], maximum allowed tilt for this load type and weight. |
 |&emsp; *maximumSpeed* | float64 | [m/s], maximum allowed speed for this load type and weight. |
