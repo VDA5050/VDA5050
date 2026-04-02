@@ -149,21 +149,21 @@
                                 "type": "array",
                                 "description": "Array of actions to be executed when entering the zone.",
                                 "items": {
-                                    "$ref": "#/definitions/action"
+                                    "$ref": "#/definitions/zoneAction"
                                 }
                             },
                             "duringActions": {
                                 "type": "array",
                                 "description": "Actions to be executed while crossing the zone. Empty Array, if no Actions required.",
                                 "items": {
-                                    "$ref": "#/definitions/action"
+                                    "$ref": "#/definitions/zoneAction"
                                 }
                             },
                             "exitActions": {
                                 "type": "array",
                                 "description": "Actions to be triggered when leaving the zone. Empty Array, if no Actions required.",
                                 "items": {
-                                    "$ref": "#/definitions/action"
+                                    "$ref": "#/definitions/zoneAction"
                                 }
                             }
                         }
@@ -279,7 +279,7 @@
                 }
             }
         }, 
-        "action": {
+        "zoneAction": {
             "type": "object",
             "description": "Describes an action that the mobile robot can perform.",
             "required": [
@@ -297,7 +297,7 @@
                 },
                 "blockingType": {
                     "type": "string",
-                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nNONE: action can happen in parallel with others, including movement.\nSINGLE: allows driving but no other actions.\nSOFT: action can happen simultaneously with others, but not while moving.\nHARD: no other actions can be performed while this action is running.",
                     "enum": [
                         "NONE",
                         "SOFT",
@@ -311,6 +311,10 @@
                     "items": {
                         "$ref": "#/definitions/actionParameter"
                     }
+                },
+                "retriable": {
+                    "type": "boolean",
+                    "description": "True: action can enter RETRIABLE state if it fails. False: action enters FAILED state directly after it fails. Default: false."
                 }
             }
         },
