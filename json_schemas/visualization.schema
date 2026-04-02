@@ -51,7 +51,7 @@
         },
         "velocity": {
             "$ref": "#/definitions/velocity"
-        },
+        }
     },
     "definitions": {
 		"plannedPath": {
@@ -112,7 +112,7 @@
                             },
                             "weight": {
                                 "type": "number",
-                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0.",
+                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0."
                             }
                         }
                     }

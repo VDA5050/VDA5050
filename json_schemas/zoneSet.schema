@@ -178,7 +178,7 @@
                     "then": {
                         "required": ["priorityFactor"],
                         "properties": {
-                            "priorityFactor ": {
+                            "priorityFactor": {
                                 "type": "number",
                                 "description": "Relative factor, determining the zone's preference over an area with no zone. 0.0 means no preference, as if there was no zone, 1.0 is maximum preference.",
                                 "minimum": 0.0,
@@ -196,7 +196,7 @@
                     "then": {
                         "required": ["penaltyFactor"],
                         "properties": {
-                            "penaltyFactor ": {
+                            "penaltyFactor": {
                                 "type": "number",
                                 "description": "Relative factor, determining the zone's penalty over an area with no zone. 0.0 means no penalty, as if there was no zone, 1.0 is the maximum penalty, causing the mobile robot to take this path only if no other path is possible.",
                                 "minimum": 0.0,

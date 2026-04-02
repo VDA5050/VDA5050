@@ -68,7 +68,7 @@
         },
         "orderId": {
             "type": "string",
-            "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
+            "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available."
         },
         "orderUpdateId": {
             "type": "integer",
@@ -80,7 +80,7 @@
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the mobile robot is currently on a node, sequenceId of current node. 0 if no lastNodeSequenceId is available. "
+            "description": "sequenceId of the last reached node or, if the mobile robot is currently on a node, sequenceId of current node. 0 if no lastNodeSequenceId is available."
         },
 		"nodeStates": {
             "type": "array",
@@ -135,7 +135,7 @@
         },
         "driving": {
             "type": "boolean",
-            "description": "True: indicates that the mobile robot is driving and/or rotating. Other movements of the mobile robot (e.g., lift movements) are not included here.\nFalse: indicates that the mobile robot is neither driving nor rotating "
+            "description": "True: indicates that the mobile robot is driving and/or rotating. Other movements of the mobile robot (e.g., lift movements) are not included here.\nFalse: indicates that the mobile robot is neither driving nor rotating."
         },
         "paused": {
             "type": "boolean",
@@ -304,7 +304,7 @@
 				},
 				"nodePosition": {
 					"type": "object",
-					"description": "Node position. Optional: Fleet control has this information. Can be sent additionally, e.g., for debugging purposes. ",
+					"description": "Node position. Optional: Fleet control has this information. Can be sent additionally, e.g., for debugging purposes.",
 					"required": [
 						"x",
 						"y",
