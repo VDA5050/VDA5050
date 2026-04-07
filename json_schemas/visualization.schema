@@ -40,6 +40,10 @@
             "type": "string",
             "description": "Serial number of the mobile robot."
         },
+        "referenceStateHeaderId": {
+            "type": "integer",
+            "description": "Header ID of the state message this visualization message refers to."
+        },
         "plannedPath": {
             "$ref": "#/definitions/plannedPath"
         },
