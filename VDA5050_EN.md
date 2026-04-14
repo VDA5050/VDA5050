@@ -212,7 +212,7 @@ interfaceName | string | Name of the used interface
 majorVersion | string | Major version number of the VDA 5050 recommendation, preceded by "v"
 manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Unique mobile robot serial number consisting of the following characters: <br>A-Z <br>a-z <br>0-9 <br>_ <br>. <br>: <br>-
-topic | string | Topic (e.g., order or state) see Section [4.4 Topics for Communication](#44-topics-for-communication)
+topic | string | Topic (e.g., order or state) see Section [4.4 Topics for Communication](#43-topics-for-communication)
 
 >Table 1 Explanation of suggested MQTT topic levels
 
