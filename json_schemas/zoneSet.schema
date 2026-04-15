@@ -119,6 +119,24 @@
                 {
                     "if": {
                         "properties": {
+                            "zoneType": { "const": "RELEASE" }
+                        }
+                    },
+                    "then": {
+                        "required": ["releaseLossBehavior"],
+                        "properties": {
+                            "releaseLossBehavior": {
+                                "type": "string",
+                                "enum": [
+                                    "STOP", "CONTINUE", "EVACUATE"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
                             "zoneType": { "const": "SPEED_LIMIT" }
                         }
                     },
@@ -214,7 +232,7 @@
                     "then": {
                         "required": [
                             "direction",
-                            "limitation"
+                            "directedLimitation"
                         ],
                         "properties": {
                             "direction": {
@@ -222,7 +240,7 @@
                                 "description": "Preferred direction of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system.",
                                 "unit": "rad"
                             },
-                            "limitation": {
+                            "directedLimitation": {
                                 "type": "string",
                                 "description": "SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall not deviate from the defined direction of travel (within its precision).",
                                 "enum": [
@@ -241,14 +259,14 @@
                     "then": {
                         "required": [
                             "direction",
-                            "limitation"
+                            "bidirectedLimitation"
                         ],
                         "properties": {
                             "direction": {
                                 "type": "number",
                                 "description": "Direction and its opposite direction (+ Pi) define the allowed directions of travel within the zone in radians. The direction of travel is the speed vector in the project-specific coordinate system."
                             },
-                            "limitation": {
+                            "bidirectedLimitation": {
                                 "type": "string",
                                 "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.",
                                 "enum": [
