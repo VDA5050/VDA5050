@@ -125,7 +125,7 @@
 						"theta": {
 							"type": "number",
 							"description": "Absolute orientation of the mobile robot on the node. Optional: mobile robot can plan the path by itself. If defined, the mobile robot has to assume the theta angle on this node. If previous edge disallows rotation, the mobile robot must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.",
-							"unit": "m",
+							"unit": "rad",
 							"minimum": -3.14159265359,
 							"maximum": 3.14159265359
 						},
