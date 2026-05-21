@@ -40,7 +40,7 @@
         },
         "responses": {
             "type": "array",
-            "description": "Array of zone response objects.",
+            "description": "Array of response objects.",
             "items": {
                 "type": "object",
                 "required": [
