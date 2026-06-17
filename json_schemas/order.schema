@@ -232,7 +232,11 @@
 				},
 				"orientationType":{
 					"type": "string",
-					"description": "Enum {GLOBAL, TANGENTIAL}: GLOBAL: relative to the global project specific map coordinate system; TANGENTIAL: tangential to the edge. If not defined, the default value is TANGENTIAL."
+					"description": "Enum {GLOBAL, TANGENTIAL}: GLOBAL: relative to the global project specific map coordinate system; TANGENTIAL: tangential to the edge. If not defined, the default value is TANGENTIAL.",
+                    "enum": [
+                        "GLOBAL",
+                        "TANGENTIAL"
+                    ]
 				},
 				"direction": {
 					"type": "string",
