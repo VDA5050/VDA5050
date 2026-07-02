@@ -365,7 +365,7 @@ For the sake of readability, a complete JSON example has been omitted here.
 
 ```
 {
-	orderId: "1234"
+	orderId: "1234",
 	orderUpdateId:0,
 	nodes: [
 	 	 f {released: true},
