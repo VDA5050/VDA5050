@@ -1482,7 +1482,7 @@ Object structure | Unit | Data type | Description
 **node** { | | JSON object|
 nodeId | | string | Unique identifier of the node. <br>The same node can be referenced multiple times within one order message. `sequenceId` is used to differentiate the sequence of traversal.
 sequenceId | | uint32 | Number to track the sequence of nodes and edges in an order and to simplify order updates. <br>The main purpose is to distinguish between a node, which is passed more than once within one orderId. <br>The sequenceId is shared between nodes and edges and defines the sequence of traversal.
-*nodeDescriptor* | | string | Additional information on the node
+*nodeDescriptor* | | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 released | | boolean | "true" indicates that the node is part of the base. <br> "false" indicates that the node is part of the horizon.
 ***nodePosition*** | | JSON object | Node position. <br>Optional for mobile robot types that do not require the node position (e.g., line-guided mobile robots).
 **actions [action]** <br> } | | array | Array of actions to be executed on a node. <br>Empty array, if no actions required.
