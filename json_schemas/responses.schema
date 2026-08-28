@@ -15,13 +15,16 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "format": "uint32",
-            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+            "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
+            "examples": [
+                "2017-04-15T11:40:03.123Z"
+            ]
         },
         "version": {
             "type": "string",
@@ -60,7 +63,10 @@
                     "leaseExpiry": {
                         "type": "string",
                         "format": "date-time",
-                        "description": "Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., '2017-04-15T11:40:03.123Z')."
+                        "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ). A timestamp for the release to expire shall only be sent with responses granting a request.",
+                        "examples": [
+                            "2017-04-15T11:40:03.123Z"
+                        ]
                     }
                 }
             }
