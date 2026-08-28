@@ -110,7 +110,7 @@ Version 3.0.0
 The specification for this interface has been jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V. (Mechanical Engineering Industry Association). 
 The VDA represents the German automotive sector, including OEMs and Tier-1/Tier-n suppliers, and contributes its expertise in vehicle architectures, system integration, and safety-critical communication. 
 The VDMA represents companies across the European mechanical and plant engineering industry and brings extensive knowledge in automation technology, machinery interoperability, and production system standardization.
-Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long-term maintainability of cross‑domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed-industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
+Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long-term maintainability of cross-domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed-industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
 The Institute for Material Handling and Logistics (IFL) at Karlsruhe Institute of Technology (KIT) is part of the department of mechanical engineering and focuses on combining research, teaching, and industrial application. Its interdisciplinary team works on future logistics challenges, including material flow analysis, automation, robotics, digitalization, AI, sustainability, and system design.
 The Institute has been commissioned by the VDA and the VDMA to oversee the development of the VDA 5050. It contributes to this process by taking the lead in development, supporting issue review, and managing the official GitHub repository.
 
@@ -1836,8 +1836,6 @@ Object structure | Unit | Data type | Description
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
-x | | float64 | X-coordinate of the point of reference.
-y | | float64 | Y-coordinate of the point of reference.
 x | m | float64 | X-coordinate of the point of reference.
 y | m | float64 | Y-coordinate of the point of reference.
 z | m | float64 | Z-coordinate of the point of reference.
@@ -2174,4 +2172,4 @@ ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verificat
 ISO 9787 | May 2013 | Robots and robotic devices: Coordinate systems and motion nomenclatures
 ISO 639 |November 2023 | Language code for the representation of the world's languages and language groups
 ISO 8601  | February 2019 | Date and time: Representations for information interchange
-LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system.
+LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) fleet control system.
