@@ -1353,8 +1353,8 @@ If a request is answered with 'REJECTED', the mobile robot shall not perform the
 
 If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a `leaseExpiry` is present, the permission shall only be considered valid until this time. Fleet control can extend a lease by sending an updated response with the same `requestId` and a new `leaseExpiry`.
 
-If a request is answered with 'REVOKED', or if the `leaseExpiry` is reached, the mobile robot shall act according to the `releaseLossBehavior` defined for the requested resource. 
-If the requested operation has already been started, the mobile robot shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly, until the release loss handling defined for the requested resource has been completed. If the requested operation has not been started, the mobile robot shall remove the request from its state immediately.
+If a request is answered with 'REVOKED', or if the `leaseExpiry` is reached, and the requested operation has already been started, the mobile robot shall act according to the `releaseLossBehavior` defined for the requested resource. If no `releaseLossBehavior` is defined for the requested resource, the mobile robot shall stop driving and report a 'RELEASE_LOST' error with level 'CRITICAL'. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly, until the release loss handling has been completed.
+If the requested operation has not been started, the mobile robot shall not perform it and shall remove the request from its state immediately.
 
 If no response is received within the time frame required by the application, the mobile robot shall behave as if the request had not been granted and shall not perform the operation that requires explicit permission. The handling of timeouts and retries shall be defined during integration.
 
