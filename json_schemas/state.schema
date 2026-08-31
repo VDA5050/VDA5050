@@ -27,14 +27,15 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -161,11 +162,11 @@
         },
         "distanceSinceLastNode": {
             "type": "number",
-            "description": "Used by line guided vehicles to indicate the distance it has been driving past the lastNodeId. Distance is in meters."
+            "description": "Used by line guided mobile robots to indicate the distance it has been driving past the lastNodeId. Distance is in meters."
         },
         "actionStates": {
             "type": "array",
-            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding actionDescription. The actionStates are kept until a new order is received.",
+            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding actionResult.",
             "items": {
                 "$ref": "#/$defs/actionState"
             }
@@ -242,7 +243,7 @@
 				},
 				"mapStatus": {
 					"type": "string",
-					"description": "Information on the status of the map indicating, if a map version is currently used on the mobile robot. ENABLED: Indicates this map is currently active / used on the mobile robot. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.",
+					"description": "Information on the status of the map indicating, if a map version is currently used on the mobile robot. ENABLED: Indicates this map is currently active / used on the mobile robot. At most one map per mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.",
 					"enum": [
 						"ENABLED",
 						"DISABLED"
@@ -261,7 +262,7 @@
 			"properties": {
 				"zoneSetId": {
 					"type": "string",
-					"description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the mobile robot has no zones defined for the corresponding map."
+					"description": "Unique identifier of the zone set."
 				},
 				"mapId": {
 					"type": "string",
@@ -512,7 +513,7 @@
                 },
                 "deviationRange": {
                     "type": "number",
-                    "description": "Value for position deviation range in meters. Optional for vehicles that cannot estimate their deviation, e.g., grid-based localization. Only for logging and visualization purposes.",
+                    "description": "Value for position deviation range in meters. Optional for mobile robots that cannot estimate their deviation, e.g., grid-based localization. Only for logging and visualization purposes.",
                     "unit": "m",
                     "minimum": 0.0
                 }
@@ -534,7 +535,7 @@
 				},
 				"loadPosition": {
 					"type": "string",
-					"description": "Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads. Optional for vehicles with only one loadPosition.",
+					"description": "Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads. Optional for mobile robots with only one loadPosition.",
 					"examples":[
 						"front", "back", "positionC1"
 					]
@@ -655,7 +656,7 @@
 				"requestType": {
 					"type": "string",
 					"enum": ["CORRIDOR"],
-					"description": "Enum specifying the type of edge the request relates to."
+					"description": "Enum specifying the type of request. Set to 'CORRIDOR' if requesting to deviate from the predefined trajectory within the defined work space."
 				},
 				"edgeId": {
 					"type": "string",
@@ -720,7 +721,7 @@
                 "stateOfCharge",
                 "charging"
             ],
-            "description": "Contains all battery-related information.",
+            "description": "Contains all battery related information.",
             "properties": {
                 "stateOfCharge": {
                     "type": "number",
@@ -763,7 +764,7 @@
 			"properties": {
 				"errorType": {
 					"type": "string",
-					"description": "Error type, extensible enumeration including the following predefined values."
+					"description": "Error type, extensible enumeration."
 				},
 				"errorReferences": {
 					"type": "array",

@@ -108,9 +108,9 @@ Version 3.0.0
 # 0 Foreword
 
 The specification for this interface has been jointly developed by the Verband der Automobilindustrie e. V. (VDA) and the VDMA e. V. (Mechanical Engineering Industry Association). 
-The VDA represents the German automotive sector, including OEMs and Tier‑1/Tier‑n suppliers, and contributes its expertise in vehicle architectures, system integration, and safety‑critical communication. 
+The VDA represents the German automotive sector, including OEMs and Tier-1/Tier-n suppliers, and contributes its expertise in vehicle architectures, system integration, and safety-critical communication. 
 The VDMA represents companies across the European mechanical and plant engineering industry and brings extensive knowledge in automation technology, machinery interoperability, and production system standardization.
-Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long‑term maintainability of cross‑domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed‑industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
+Both organizations collaborate to ensure that the interface specification reflects current engineering requirements, supports robust and scalable system integration, and enables consistent data exchange across heterogeneous environments. Their joint development process emphasizes harmonized communication models, compatibility with established industrial standards, and long-term maintainability of cross-domain interfaces. This cooperation ensures that the resulting specification can be reliably implemented in automotive, machinery, and mixed-industry applications, supporting high interoperability, operational safety, and future-proof system architectures.
 The Institute for Material Handling and Logistics (IFL) at Karlsruhe Institute of Technology (KIT) is part of the department of mechanical engineering and focuses on combining research, teaching, and industrial application. Its interdisciplinary team works on future logistics challenges, including material flow analysis, automation, robotics, digitalization, AI, sustainability, and system design.
 The Institute has been commissioned by the VDA and the VDMA to oversee the development of the VDA 5050. It contributes to this process by taking the lead in development, supporting issue review, and managing the official GitHub repository.
 
@@ -259,7 +259,7 @@ During the implementation phase, the DTS consisting of fleet control and mobile 
 The necessary framework conditions are defined by the operator and the required information is either entered manually by them or stored in the fleet control by importing from other systems.
 Essentially, this concerns the following content:
 
-- Definition of routes: Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system (LIF – Layout Interchange Format, VDMA 2024-03). Alternatively, routes can also be implemented manually in the fleet control by the operator. Routes can be one-way streets, restricted for certain mobile robot groups (based on the size ratios), etc.
+- Definition of routes: Using the Layout Interchange Format (LIF), routes can be imported to the fleet control. The LIF is a file format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) fleet control system (LIF – Layout Interchange Format, VDMA 2024-03). Alternatively, routes can also be implemented manually in the fleet control by the operator. Routes can be one-way streets, restricted for certain mobile robot groups (based on the size ratios), etc.
 - Route network configuration: Within the routes, stations for loading and unloading, battery charging stations, peripheral environments (gates, elevators, barriers), waiting positions, buffer stations, etc. are defined.
 - Mobile robot configuration: The physical properties of a mobile robot (size, available load carrier mounts, etc.) are stored by the operator. The mobile robot shall communicate this information via the topic `factsheet` in a specific way that is defined in Section [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message) of this document.
 
@@ -313,7 +313,7 @@ The fleet control only includes edges in an order which the concerning mobile ro
 >Figure 2 - Graph representation in fleet control and graph transmitted in orders
 
 The nodes and edges are passed as two lists in the `order` message.
-The order of the nodes and edges within those lists also governs the sequence in which the nodes and edges shall be traversed. The `sequenceId` is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `sequenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order.
+The order of the nodes and edges within those lists also governs the sequence in which the nodes and edges shall be traversed. The `sequenceId` is shared between nodes and edges and defines the sequence of traversal. The first node has a `sequenceId` of 0, the first edge has a `sequenceId` of 1, the second node has a `sequenceId` of 2, etc. An edge with `sequenceId` n connects the nodes with `sequenceId` n-1 and n+1. The `sequenceId` shall be continuous within an order (including its updates).
 
 For a valid order, there shall be at least one node and the number of edges shall be equal to the number of nodes minus one.
 
@@ -435,7 +435,7 @@ Figure 8 describes the process of accepting an order or order update.
 
 2) **Is received order new or an update of the current order?**: Is `orderId` of the received order different to `orderId` of the order the mobile robot currently holds?
 
-3) **Is mobile robot idle and not waiting for an update?**: Is the mobile robot in an idle state according to [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot) and not waiting for an update? Since nodes and edges and the corresponding action states of the order horizon are also included inside the state, the mobile robot might still have a horizon and therefore is waiting for an update and executing an order.
+3) **Is mobile robot idle and not waiting for an update?**: Is the mobile robot in an idle state according to [6.6.8 Idle state of the mobile robot](#668-idle-state-of-the-mobile-robot) and not waiting for an update? Note that the nodes, edges, and corresponding action states of the order horizon are also included in the state. A mobile robot that has finished executing its base but still has a horizon is therefore not idle, but is waiting for an order update.
 
 4) **Is OrderUpdateId 0?**: Is the `orderUpdateId` of the new order 0?
 
@@ -468,7 +468,7 @@ For line-guided mobile robots, this could be the next feasible node. A freely na
 If there are actions in the `actionStates` scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
 If there are actions in the `actionStates` running, those actions should be cancelled and also be reported as 'FAILED'.
 If the action cannot be cancelled, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
-While there are running actions in the `actionStates`, the `cancelOrder` action shall report 'RUNNING' until all actions are cancelled/finished. Actions that cannot be cancelled (`cancelAllowed` = false) shall be finished.
+While there are running actions in the `actionStates`, the `cancelOrder` action shall report 'RUNNING' until all actions are cancelled/finished. Actions that cannot be cancelled (`cancelAllowed` = false) shall be allowed to complete and then report their actual terminal state ('FINISHED' or 'FAILED').
 After all movement of the mobile robot and all of the actions in the `actionStates` are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 The mobile robot shall then be idle and ready to receive new orders.
 
@@ -483,7 +483,7 @@ Figure 9 shows the expected behavior for different mobile robot capabilities.
 
 After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the cancelled order shall be sent by the fleet control. If the mobile robot receives an order update it shall report an error of type 'ORDER_UPDATE_FOLLOWING_CANCEL' and level 'WARNING'.
 
-In the case of a mobile robot that can only localize itself on a node, the new order shall begin on the node the mobile robot is now standing on (see also Figure 4).
+In the case of a mobile robot that can only localize itself on a node, the new order shall begin on the node the mobile robot is now standing on.
 
 In case of a mobile robot that can stop in between nodes, fleet control can decide how to start the next order.
 The mobile robot shall accept both methods.
@@ -493,7 +493,7 @@ There are two options:
 - The first node of the new order is a temporary node that is positioned at the mobile robot's current position. The mobile robot shall then recognize that this node is trivially reachable and accept the order.
 - The first node of the new order is the last traversed node of the previous order. The allowed deviation of this node is set large enough to ensure that the mobile robot is within this range. Thus, the mobile robot shall immediately treat this node as traversed and accept the order.
 
-#### 6.1.3.2 Receiving a cancelOrder action when mobile robot is idle
+#### 6.1.3.2 Receiving a cancelOrder action with no order to cancel
 
 If the mobile robot receives a `cancelOrder` instant action but the mobile robot is currently idle, or the `orderId` specified in the action does not match the `orderId` of the mobile robot’s currently active order, the `cancelOrder` action shall be reported as 'FAILED'.
 
@@ -699,8 +699,8 @@ action type | counter action | description | idempotent | parameters | linked st
 ---|---|---|---|---|---|---|---|---|---
 startPause | stopPause | Activates the pause mode. <br>A linked state is required, because many mobile robots can be paused by using a hardware switch. <br>No more automatic driving - reaching next node is not necessary. Actions that can be paused (`pauseAllowed`=`true`), shall be paused, other actions continue. Order execution is resumed after `stopPause`. | yes | - | paused | yes | no | no | no
 stopPause | startPause | Deactivates the pause mode. <br>Movement and all other actions will be resumed (if any). <br>A linked state is required because many mobile robots can be paused by using a hardware switch. <br>`stopPause` can also restart mobile robots that were stopped with a hardware button that triggered `startPause` (if configured). | yes | - | paused | yes | no | no | no
-startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT broker but no longer needs to send `state` messages. The mobile robot shall report this action as 'FINISHED' before discontinuing publishing `state` messages and publish a connection state of 'HIBERNATING'. If the mobile robot has an active order, it shall clear it. Reaching the next node is not required. <br>While in 'HIBERNATING' connection state, mobile robot shall not be moving. The mobile robot shall only receive and respond to the instant action 'stopHibernation' and shall not respond to any other commands, such as orders or additional instant actions. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop 'HIBERNATING' autonomously to report an error. In case a wake‑up time is set, the mobile robot is able to autonomously exit the 'HIBERNATING' connection state at the specified time and will publish the corresponding connection state transition before resuming normal operation. Parameter `wakeUpTime` is a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z"). | yes | wakeUpTime (string, optional) | - | yes | no | no | no
-stopHibernation | startHibernation | Ends hibernate mode. To initiate wake‑up while the mobile robot is in the 'HIBERNATING' state, a control device (onboard or external) shall subscribe to the `instantActions` topic and remain connected to the MQTT broker. Because the mobile robots standard control device may be partially shut down during hibernation, the wake‑up may be triggered by a distinct MQTT client (separate from the mobile robots usual communication client).<br>Upon success, the mobile robot shall publish the connection state ONLINE.| yes | - | - | yes | no | no | no
+startHibernation | stopHibernation | Initiates hibernate mode, in which the mobile robot shall remain connected to the MQTT broker but no longer needs to send `state` messages. The mobile robot shall report this action as 'FINISHED' before discontinuing publishing `state` messages and publish a connection state of 'HIBERNATING'. If the mobile robot has an active order, it shall clear it. Reaching the next node is not required. <br>While in 'HIBERNATING' connection state, mobile robot shall not be moving. The mobile robot shall only receive and respond to the instant action 'stopHibernation' and shall not respond to any other commands, such as orders or additional instant actions. <br>If the mobile robot's battery becomes critically low while in this mode, the mobile robot may stop 'HIBERNATING' autonomously to report an error. In case a wake-up time is set, the mobile robot is able to autonomously exit the 'HIBERNATING' connection state at the specified time and will publish the corresponding connection state transition before resuming normal operation. Parameter `wakeUpTime` is a timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., "2017-04-15T11:40:03.123Z"). | yes | wakeUpTime (string, optional) | - | yes | no | no | no
+stopHibernation | startHibernation | Ends hibernate mode. To initiate wake-up while the mobile robot is in the 'HIBERNATING' state, a control device (onboard or external) shall subscribe to the `instantActions` topic and remain connected to the MQTT broker. Because the mobile robots standard control device may be partially shut down during hibernation, the wake-up may be triggered by a distinct MQTT client (separate from the mobile robots usual communication client).<br>Upon success, the mobile robot shall publish the connection state ONLINE.| yes | - | - | yes | no | no | no
 shutdown | - | Initiates a coordinated shutdown of the mobile robot, where it disconnects from the MQTT broker. The execution of the shutdown action requires the mobile robot to be in an idle state. There is no way using the VDA 5050 protocol to automatically restart due to the connection being terminated.<br>If a mobile robot is in hibernate mode but should be shut down, it shall first exit hibernation (via `stopHibernation`) before executing shutdown.| yes | - | - | yes | no | no | no
 startCharging | stopCharging | Activates the charging process. <br>Charging can be done on a charging spot (mobile robot stopped) or on a charging lane (while driving). <br>Protection against overcharging is the responsibility of the mobile robot. | yes | - | powerSupply.charging | yes | yes | no | no
 stopCharging | startCharging | Discontinues the charging process. <br>The charging process can also be interrupted by the mobile robot or the charging station, e.g., if the battery is full. | yes | - | powerSupply.charging | yes | yes | no | no
@@ -715,12 +715,12 @@ clearInstantActions | - | Removes all finished or failed instant actions from th
 clearZoneActions | - | Removes all finished or failed zone actions from the mobile robot's state. | yes | - | zoneActionStates | yes | yes | no | no
 stateRequest | - | Requests the mobile robot to send a new `state` message. | yes | - | - | yes | no | no | no
 logReport | - | Requests the mobile robot to generate and store a log report. | yes | reason<br>(string) | - | yes | no | no | no
-pick | drop<br><br>(if automated) | Request the mobile robot to pick a load. <br>Mobile robots with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter `loadHandlingDevice` needs to be present (e.g., LHD1). <br>The parameter `stationType` informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The load type informs about the load unit and can be used to switch field for example (e.g., EPAL, INDU, etc). <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action could be announced in the horizon in advance. <br>But, pre-Lift operations, etc., are not reported as 'RUNNING' in the mobile robot state, because the associated node is not released yet.<br>If on an edge, the mobile robot can use its sensing device to detect the position for picking the node. | no | loadHandlingDevice (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional) <br>loadId (string, optional)<br>height (float64, optional)<br>defines bottom of the load related to the floor<br>depth (float64, optional) for forklifts<br>side (string, optional) e.g., conveyor | loads | no | yes | yes | no
+pick | drop<br><br>(if automated) | Request the mobile robot to pick a load. <br>Mobile robots with multiple load handling devices can process multiple pick operations in parallel. <br>In this case, the parameter `loadHandlingDevice` needs to be present (e.g., LHD1). <br>The parameter `stationType` informs how the pick operation is handled in detail (e.g., floor location, rack location, passive conveyor, active conveyor, etc.). <br>The parameter loadType informs about the type of load unit (e.g., EPAL, INDU) and can be used, for example, to switch the mobile robot's protective fields accordingly. <br>For preparing the load handling device (e.g., pre-lift operations based on the height parameter), the action can be announced in the horizon in advance. Even if the mobile robot already performs such preparations as part of the pick action, the pick action itself shall still be reported as 'WAITING' (not 'RUNNING'), until the corresponding node has been reached or the corresponding edge has been entered. <br>If on an edge, the mobile robot can use its sensing device to detect the position for picking on the node. | no | loadHandlingDevice (string, optional) <br>stationType (string, optional)<br>stationName (string, optional) <br>loadType (string, optional) <br>loadId (string, optional)<br>height (float64, optional) <br>defines bottom of the load related to the floor<br>depth (float64, optional) for forklifts<br>side (string, optional) e.g., conveyor | loads | no | yes | yes | no
 drop | pick<br><br>(if automated) | Request the mobile robot to drop a load. <br>See action `pick` for more details. | no | loadHandlingDevice (string, optional)<br>stationType (string, optional)<br>stationName (string, optional)<br>loadType (string, optional)<br>loadId (string, optional)<br>height (float64, optional)<br>depth (float64, optional) <br>… | loads | no | yes | yes | no
 detectObject | - | Mobile robot detects object (e.g., load, charging spot, free parking position). | yes | objectType (string, optional) | - | no | yes | yes | yes
 finePositioning | - | On a node, mobile robot will position exactly on a target.<br>The mobile robot is allowed to deviate from its node position.<br>On an edge, the mobile robot will e.g., align on stationary equipment while traversing an edge. | yes | stationType (string, optional)<br>stationName (string, optional) | - | no | yes | yes | yes
 waitForTrigger | - | Mobile robot shall wait for a trigger of the type specified in the `triggerType` parameter, which is an array of strings. Two predefined values shall be used when semantically appropriate: 'FLEET_CONTROL' if the trigger originates from the fleet control, and 'LOCAL' if the trigger comes from an input on the mobile robot (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Fleet control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType [string] (array) | - | no | yes | no | yes
-trigger | - | Fleet control system notifies the mobile robot that a `waitForTrigger` action has been released. Typically, this occurs when the fleet control system receives information from a third-party system indicating that the process the mobile robot was waiting for has completed. | yes | - | - | yes | no | no | no
+trigger | - | Fleet control system notifies the mobile robot that all `waitForTrigger` actions in state 'RUNNING' that include 'FLEET_CONTROL' in their triggerType have been released. Typically, this occurs when the fleet control system receives information from a third-party system indicating that the process the mobile robot was waiting for has completed. | yes | - | - | yes | no | no | no
 retry | - | Mobile robot retries action defined via `actionId` that is currently in state 'RETRIABLE'. | yes | actionId (string) | - | yes | no | no | no
 skipRetry | - | Mobile robot shall skip the action defined via `actionId` that is currently in state 'RETRIABLE', setting action to 'FAILED'. | yes | actionId (string) | - | yes | no | no | no
 cancelOrder | - | Mobile robot stops as soon as possible. This could be immediately or on the next node. See Chapter 6.1.3 Order cancellation. | yes | orderId (string, optional) | - | yes | no | no | no
@@ -749,18 +749,18 @@ downloadZoneSet | Initialize the connection to the zone set server. | Mobile rob
 enableZoneSet | - | Mobile robot enables the zone set with the requested `zoneSetId` and disables any other zone set for the same `mapId`. | - | The zone set has been enabled. The mobile robot updates the corresponding `zoneSetStatus` of the requested `zoneSet` to 'ENABLED' and the other zone sets for the same `mapId` to 'DISABLED'. | The requested zone set does not exist.| -
 deleteZoneSet | - | Mobile robot deletes the zone set with requested `zoneSetId` from its internal memory. | - | The zone set has been deleted. The mobile robot removes `zoneSet` object from its state. | The zone set could not be deleted, e.g., because zone set is currently in use or the requested zone set has already been deleted before. | -
 clearInstantActions | - | | - | The instant actions array has been cleaned from all 'FINISHED' or 'FAILED' `instantActions`. | - | - 
-clearZoneActions | - | | - | The zone actions array has been cleared off all 'FINISHED' or 'FAILED' zone actions. | - | - 
+clearZoneActions | - | | - | The zone actions array has been cleared of all 'FINISHED' or 'FAILED' zone actions. | - | - 
 stateRequest | - | - | - | The state has been communicated | - | - 
-logReport | - | The report is being generated. <br>If the mobile robot supports an instant generation, this state can be omitted. | - | The report has been stored. <br>The name of the log is reported as part of the action state. | The report can not be stored (e.g., no space).| - 
-pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick has been done. <br>Load has entered the mobile robot and mobile robot reports new load state. | Pick failed, e.g., station is unexpected empty. <br> Failed pick operations should correspond with an error. | Pick failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
-drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop has been done. <br>Load has left the mobile robot and mobile robot reports new load state. | Drop failed, e.g., station is unexpected occupied. <br>Failed drop operations should correspond with an error. | Drop failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
+logReport | - | The report is being generated. <br>If the mobile robot supports an instant generation, this state can be omitted. | - | The report has been stored. <br>The name of the log is reported as part of the action state. | The report cannot be stored (e.g., no space).| - 
+pick | Initializing of the pick process, e.g., outstanding lift operations. | The pick process is running (mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The pick process is being paused, e.g., if a safety field is violated. <br>After removing the violation, the pick process continues. | Pick has been done. <br>Load has entered the mobile robot and mobile robot reports new load state. | Pick failed, e.g., station is unexpectedly empty. <br> Failed pick operations should correspond with an error. | Pick failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
+drop | Initializing of the drop process, e.g., outstanding lift operations. | The drop process is running (mobile robot is moving into station, load handling device is busy, communication with station is running, etc.). | The drop process is being paused, e.g., if a safety field is violated. <br>After removing the violation the drop process continues. | Drop has been done. <br>Load has left the mobile robot and mobile robot reports new load state. | Drop failed, e.g., station is unexpectedly occupied. <br>Failed drop operations should correspond with an error. | Drop failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
 detectObject | - | Object detection is running. | - | Object has been detected. | Could not detect the object. | Object detection failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
 finePositioning | - | Mobile robot positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br> The fine positioning continues after e.g. the violation had been resolved. | Goal position in reference to the station has been reached. | Goal position in reference to the station could not be reached. | Fine positioning failed but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
 waitForTrigger | - | Mobile robot is waiting for the trigger | - | Trigger has been triggered. | `waitForTrigger` fails, if order has been canceled. | -
 trigger | - | - | - | All `waitForTrigger` actions in state 'RUNNING' whose `triggerType` contains 'FLEET_CONTROL' have been released and report 'FINISHED'. | No `waitForTrigger` action in state 'RUNNING' has 'FLEET_CONTROL' in its `triggerType`. | -
 retry | - | Mobile robot is restarting the action defined via `actionId`. | - | The referenced action has left `actionStatus` 'RETRIABLE' and is executed again. The result is reported in the `actionState` of the referenced action. | The action could not be retried, e.g., because no action with this `actionId` exists or the action is not in state 'RETRIABLE'. | -
 skipRetry | - | - | - | The action referenced via the `actionId` has been set to 'FAILED'. | The action could not be skipped, e.g., because no action with this `actionId` exists or the action is not in `actionStatus` 'RETRIABLE'. | -
-cancelOrder | - | Mobile robot is stopping or driving, until it reaches the next node. | - | Mobile robot is not moving. Mobile robot has canceled executing the order and is in idle state. | Mobile robot has no active order.<br>The previous order has already been canceled.<br>Passed `orderId` does not match the currently active `orderId`. | -
+cancelOrder | - | Mobile robot is stopping, or continues driving until it reaches the next node. | - | Mobile robot is not moving. Mobile robot has canceled executing the order and is in idle state. | Mobile robot has no active order.<br>The previous order has already been canceled.<br>Passed `orderId` does not match the currently active `orderId`. | -
 factsheetRequest | - | - | - | The factsheet has been communicated | - | -
 updateCertificate | - | Mobile robot is downloading and installing certificates | - | Certificates have been downloaded, installed and are active. | Download or installation failed. | -
 
@@ -815,7 +815,7 @@ Note that multiple maps with different `mapId` can be enabled at the same time. 
 
 ### 6.3.3 Map download
 
-The map download shall be triggered by the `downloadMap` instant action from the fleet control. It shall contain the mandatory parameters `mapId` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the mobile robot.
+The map download shall be triggered by the `downloadMap` instant action from the fleet control. It shall contain the mandatory parameters `mapId`, `mapVersion` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the mobile robot.
 
 The mobile robot sets the `actionStatus` to 'RUNNING' as soon as it starts downloading the map file. If the download is successful, the `actionStatus` is updated to 'FINISHED'. If the download is unsuccessful, the status is set to 'FAILED'. Once the download has been successfully completed, the map shall be added to the array of `maps` in the state. Maps shall not be reported in the state until they are ready to be enabled.
 
@@ -905,7 +905,7 @@ In kinematic center-based zones, the mobile robot's kinematic center determines 
 
 Zone sets shall only be changed and distributed by fleet control to keep consistency in the system. The preferred way to distribute zone sets is via the `zoneSet` topic. If the mobile robot supports zones, the update via the `zoneSet` topic shall be supported. Larger zone sets can also be shared through the `downloadZoneSet` instant action, following the map distribution concept in figure 13.
 
-A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It is associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined in addition to a single map and it is upon fleet control to ensure that the right zone set is enabled for each map on the mobile robot. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the mobile robot. Only a single zone set can be active at once for each `mapId` on the mobile robot. Zones shall not extend beyond the spatial boundaries of a map.
+A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It is associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined for a single map and it is upon fleet control to ensure that the right zone set is enabled for each map on the mobile robot. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the mobile robot. Only a single zone set can be active at once for each `mapId` on the mobile robot. Zones shall not extend beyond the spatial boundaries of a map.
 The content of a zone set with a unique `zoneSetId` shall not change. If changes are required within a zone set, it shall be referenced with a new `zoneSetId`.
 
 The `zoneSetStatus` of a newly added zone set shall always be set to 'DISABLED' and shall be enabled through the `enableZoneSet` instant action before use.
@@ -925,7 +925,7 @@ If the response is not received in time, the mobile robot shall not enter the zo
 Requests shall only be made for zones of enabled zone sets. Zone requests can also be made for zone sets belonging to maps that the mobile robot is not currently on.
 
 The `requestId` allows fleet control to distinguish between different requests and allows the mobile robot to issue several alternative requests for the same zone at the same time.
-Each request attempt shall use a unique identifier per mobile robot. Ids can be reused after a mobile robot restart.
+Each request attempt shall use a unique identifier per mobile robot. IDs can be reused after a mobile robot restart.
 
 For requests to enter a 'RELEASE' zone, a `zoneRequest` object of `requestType` 'ACCESS' shall be added to the `state` message.
 For permission to enter a 'COORDINATED_REPLANNING' zone with a planned path or for replanning its path within the zone, the `requestType` shall be set to 'REPLANNING'.
@@ -941,7 +941,7 @@ Each response has a `grantType` that is either 'GRANTED', 'QUEUED', 'REVOKED', o
 If the `grantType` is 'GRANTED', the mobile robot is allowed to enter the zone or use the requested trajectory.
 Fleet control can set the `grantType` to 'QUEUED' to acknowledge the mobile robot's request without giving permission, informing the mobile robot that its request is being processed.
 If the `grantType` is 'REJECTED', the mobile robot shall not enter the zone or use the requested trajectory.
-The `grantType` 'REVOKED' indicates that the permission is no longer valid. The fleet control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the mobile robot is set to 'REVOKED'.
+The `grantType` 'REVOKED' indicates that the permission is no longer valid. The fleet control shall assume a 'REVOKED' request as still being 'GRANTED', until the `requestStatus` of the mobile robot is set to 'REVOKED' or 'EXPIRED', or the request is removed from the mobile robot's state.
 The `response` object can include a `leaseExpiry` which specifies until when a 'GRANTED' request is valid. To extend the `leaseExpiry` fleet control can resend a `responses` message with an updated `leaseExpiry` time.
 
 The mobile robot shall acknowledge the fleet control's response by setting the `requestStatus` accordingly and keep the request for as long as it considers the information relevant. See also Section [6.9 Request/response mechanism](#69-requestresponse-mechanism).
@@ -973,7 +973,7 @@ In the following matrix possible interactions between zones are described. The m
 ---|---|---|---|---|---|---|---|---|---|---|---|---
 **BLOCKED**|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'|'BLOCKED'
 **RELEASE**||No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict|No Conflict
-**LINE_GUIDED**|||No conflict|'LINE_GUIDED'|No Conflict| (1) |'LINE_GUIDED'|'LINE_GUIDED'|'LINE_GUIDED'|No conflict|'LINE_GUIDED'|No conflict
+**LINE_GUIDED**|||No conflict|'LINE_GUIDED'|No Conflict| (1) |'LINE_GUIDED'|'LINE_GUIDED'|'LINE_GUIDED'|'LINE_GUIDED'|'LINE_GUIDED'|No conflict
 **COORDINATED_REPLANNING**||||(2)|No conflict|(1)|No conflict|No conflict|No conflict|No conflict|'COORDINATED_REPLANNING'|(3)
 **SPEED_LIMIT** |||||(4)|No conflict|No conflict|No conflict|No conflict|No conflict|'SPEED_LIMIT'|(4)
 **ACTION** ||||||(5)|No conflict|No conflict|No conflict|No conflict|'ACTION'|(5)
@@ -1005,8 +1005,7 @@ During the connection of a mobile robot client to the broker, a last will topic 
 The disconnection is detected via a heartbeat that is exchanged between the broker and the client.
 Thus, the fleet control can detect a disconnection event by subscribing to the `connection` topic of each mobile robot.
 
-
-As a result, the `timestamp` and `headerId` fields will always be outdated.
+As the last-will message is stored by the broker at the time of connection, the `timestamp` and `headerId` fields will always be outdated.
 
 Mobile robot wants to disconnect gracefully:
 
@@ -1085,7 +1084,7 @@ The traversal of the node also marks the moment when the mobile robot enters the
 The edge's actions shall be triggered, if any.
 An exception to this rule is if the mobile robot shall stop on the node (because of a soft or hard blocking action) – then the mobile robot only enters the following edge once it begins driving again.
 
-When an active order exists, the fields `lastNodeId` and `lastNodeSequenceId` shall be updated only when the mobile robot traverses a released node that is part of this order. For example if a physically line‑guided mobile robot detects a physical marker/tag that is not part of the active order’s `nodes`, this detection shall not lead to a change of `lastNodeId` or `lastNodeSequenceId`.
+When an active order exists, the fields `lastNodeId` and `lastNodeSequenceId` shall be updated only when the mobile robot traverses a released node that is part of this order. For example if a physically line-guided mobile robot detects a physical marker/tag that is not part of the active order’s `nodes`, this detection shall not lead to a change of `lastNodeId` or `lastNodeSequenceId`.
 
 ![Figure 19 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
 >Figure 19 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
@@ -1337,11 +1336,11 @@ Each request shall be represented on the mobile robot by a request object (e.g.,
 
 The field `requestStatus` describes the life cycle of the request and shall support the following values:
 
-- 'REQUESTED': Mobile robot states a request.
+- 'REQUESTED': The mobile robot has stated the request and is waiting for a response.
 - 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
-- 'GRANTED': The fleet control grants the request.
+- 'GRANTED': Fleet control has granted the request.
 - 'REVOKED': Fleet control revokes previously granted request. 
-- 'EXPIRED': request has expired. 
+- 'EXPIRED': The leaseExpiry of the granted request has passed.
 
 Fleet control receives requests from the `state` topic and shall answer via the `responses` topic containing a response object that includes:
 
@@ -1349,7 +1348,9 @@ Fleet control receives requests from the `state` topic and shall answer via the 
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
 
-If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall set the `requestStatus` to 'QUEUED', continue to wait, and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
+If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall set the `requestStatus` to 'QUEUED', continue to wait, and shall not perform the requested operation.
+
+If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and shall remove the corresponding request object from its state.
 
 If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a `leaseExpiry` is present, the permission shall only be considered valid until this time. Fleet control can extend a lease by sending an updated response with the same `requestId` and a new `leaseExpiry`.
 
@@ -1412,12 +1413,12 @@ Fleet control shall only send optional fields that the mobile robot supports.
 Example: Trajectories are optional.
 If a mobile robot cannot process trajectories, fleet control shall not send a trajectory to the mobile robot.
 
-The mobile robot shall communicate which optional parameters it needs via a mobile robot `factsheet` message.
+The mobile robot shall communicate which optional parameters it supports (and which of them it requires) via its `factsheet` message.
 
 
 ### 7.1.2 Permitted characters and field lengths
 
-All communication is encoded in UTF-8 to enable international adaption of descriptions.
+All communication is encoded in UTF-8 to enable international adaptation of descriptions.
 The recommendation is that IDs should only use the following characters:
 
 A-Z a-z 0-9 _ - . :
@@ -1492,7 +1493,7 @@ Object structure | Unit | Data type | Description
 x | m | float64 | X-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 y | m | float64 | Y-position on the map in reference to the global project-specific coordinate system. <br>Precision is up to the specific implementation.
 *theta* | rad | float64 | Range: [-Pi ... Pi] <br><br>Absolute orientation a mobile robot shall match on a node for it to be considered traversed.<br>If defined, the mobile robot shall match the orientation on this node.<br>If previous edge disallows rotation, the mobile robot shall rotate on the node.<br>If following edge has a differing orientation defined but disallows rotation, the mobile robot shall rotate on the node to the edges desired rotation before entering the edge.
-***allowedDeviationXY*** | m | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [6.6.2 Traversal of nodes and edges](#662-traversal-of-nodes-and-edges)).
+***allowedDeviationXY*** | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br>(see also Section [6.6.2 Traversal of nodes and edges](#662-traversal-of-nodes-and-edges)).
 *allowedDeviationTheta* | rad | float64 | Range: [0.0 ... Pi] <br><br>If defined, indicates how precisely a mobile robot shall match the orientation of a node for it to be considered traversed.<br>The lowest acceptable angle is *`theta` - `allowedDeviationTheta`* and the highest acceptable angle is *`theta` + `allowedDeviationTheta`*. If `theta` is not specified no requirement exists for the mobile robot orientation.<br>If = 0.0: no deviation is allowed, which means the mobile robot shall reach the node orientation as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationTheta` is smaller than the technical tolerance of the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume this value as 0.0.
 mapId<br>} | | string | Unique identification of the map on which the position is referenced. <br> Each map has the same project-specific global origin of coordinates. <br>When a mobile robot uses an elevator, e.g., leading from a departure floor to a target floor, it will disappear off the map of the departure floor and spawn in the related lift node on the map of the target floor.
 
@@ -1556,7 +1557,7 @@ Object structure | Unit | Data type | Description
 leftWidth | m | float64 | Range: [0.0 ... float64.maximum]<br>Defines the width of the corridor in meters to the left related to the trajectory of the mobile robot (see Figure 10).
 rightWidth | m | float64 | Range: [0.0 ... float64.maximum]<br>Defines the width of the corridor in meters to the right related to the trajectory of the mobile robot (see Figure 10).
 *corridorReferencePoint*| | string | Defines whether the boundaries are valid for the kinematic center or the contour of the mobile robot. If not specified the boundaries are valid to the mobile robot's kinematic center.<br> Enum { 'KINEMATIC_CENTER' , 'CONTOUR' }
-*releaseRequired* | | boolean | Optional flag that indicates whether the robot shall request approval from fleet control.<br>Default: "false".
+*releaseRequired* | | boolean | Optional flag that indicates whether the robot shall request approval from fleet control.<br>"true": before deviating from the edge's trajectory, the mobile robot shall request a release via an `edgeRequest` and shall not deviate until granted.<br>"false": no release request required.<br>Default: "false".
 *releaseLossBehavior* <br> } | | string | Enum { 'STOP' , 'RETURN' }<br>Defines how the robot shall behave in the case of either its release of a corridor expiring or the release being revoked by the fleet control.<br>'STOP': Mobile robot shall stop and await manual intervention. 'RETURN': Mobile robot shall return to the predefined trajectory of the edge it deviated from<br>Default: 'STOP'.
 
 ### 7.3.1 Format of action parameters
@@ -1609,7 +1610,7 @@ Object structure/Identifier | Data type | Description
 | --- | --- | --- |
 | response <br> { | JSON object | Object which contains the fleet control's answer to a specific request. |
 | requestId | string | Unique per mobile robot identifier within all active requests. |
-| grantType | string | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The fleet control has granted the request.<br> 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.<br> 'REVOKED': The fleet control revokes previously granted request.<br> 'REJECTED': The Fleet control rejects a request. |
+| grantType | string | Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}<br>'GRANTED': The fleet control has granted the request.<br> 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.<br> 'REVOKED': The fleet control revokes previously granted request.<br> 'REJECTED': The fleet control rejects a request. |
 | *leaseExpiry* <br><br> } | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., “2017-04-15T11:40:03.123Z”). A timestamp for the release to expire shall only be sent with responses granting a request.
 
 
@@ -1682,7 +1683,7 @@ timestamp | string | Timestamp (ISO 8601, UTC); YYYY-MM-DDTHH:mm:ss.fffZ (e.g., 
 version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2).
 manufacturer | string | Manufacturer of the mobile robot.
 serialNumber | string | Serial number of the mobile robot.
-connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTION_BROKEN'}<br><br>'ONLINE': connection between mobile robot and broker is active.<br><br>'OFFLINE': connection between mobile robot and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The mobile robot enters a low‑power state and stops sending `state` messages. A connection to the MQTT broker shall remain active. This mode is intended for power saving or communication reduction. The mobile robot can later transition to 'ONLINE' when instructed or via a configured wake‑up mechanism.<br><br> 'CONNECTION_BROKEN': the connection between mobile robot and broker has unexpectedly ended.
+connectionState | string | Enum {'ONLINE', 'OFFLINE', 'HIBERNATING', 'CONNECTION_BROKEN'}<br><br>'ONLINE': connection between mobile robot and broker is active.<br><br>'OFFLINE': connection between mobile robot and broker has gone offline in a coordinated way. <br><br>'HIBERNATING': The mobile robot enters a low-power state and stops sending `state` messages. A connection to the MQTT broker shall remain active. This mode is intended for power saving or communication reduction. The mobile robot can later transition to 'ONLINE' when instructed or via a configured wake-up mechanism.<br><br> 'CONNECTION_BROKEN': the connection between mobile robot and broker has unexpectedly ended.
 
 
 ## 7.8 Implementation of the state message
@@ -1713,9 +1714,9 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 ***zoneRequests [zoneRequest]*** | | array | Array of `zoneRequest` objects that are currently active on the mobile robot. <br>Empty array if no zone requests are active.
 ***edgeRequests [edgeRequest]*** | | array | Array of `edgeRequest` objects that are currently active on the mobile robot. <br>Empty array if no edge requests are active.
 *distanceSinceLastNode* | m | float64 | Used by line-guided mobile robots to indicate the distance it has been driving past the `lastNodeId`. <br>Distance in meters.
-**actionStates [actionState]** | | array | Contains an array of all actions from the current order. The action states are kept as long as the order remains active and cleared when accepting a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated `state` message is published with `actionStatus` set to 'FINISHED' and if applicable with the corresponding `actionResult`.
-**instantActionStates [actionState]** | | array | An array of all instant action states that the mobile robot received. Instant actions are kept in the `state` message until action `clearInstantActions` is executed. The robot may throw an `errorType` 'INSTANT_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
-***zoneActionStates [actionState]*** | | array | An array of all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the `state` message until action `clearZoneActions` is executed. If action zones are supported, this field is required. The robot may throw an `errorType` 'ZONE_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
+**actionStates [actionState]** | | array | Contains action states of all actions from the current order. The action states are kept as long as the order remains active and cleared when accepting a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated `state` message is published with `actionStatus` set to 'FINISHED' and if applicable with the corresponding `actionResult`.
+**instantActionStates [actionState]** | | array | Contains action states of all instant actions that the mobile robot received. Instant actions are kept in the `state` message until action `clearInstantActions` is executed. The robot may throw an `errorType` 'INSTANT_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
+***zoneActionStates [actionState]*** | | array | Contains all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the `state` message until action `clearZoneActions` is executed. If action zones are supported, this field is required. The robot may throw an `errorType` 'ZONE_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
 **powerSupply** | | JSON object | Contains all power-supply related information.
 operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table in Section [6.6.6 Operating Mode](#666-operating-mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the mobile robot shall be in the array.<br>An empty array indicates that the mobile robot has no active errors.
@@ -1727,7 +1728,7 @@ Object structure | Unit | Data type | Description
 **map**{ | | JSON object|
 mapId | | string | ID of the map describing a defined area of the mobile robot's workspace.
 mapVersion | | string | Version of the map.
-mapStatus | | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently actively used on the mobile robot. At most one map with the same `mapId` can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.
+mapStatus | | string | Enum {'ENABLED', 'DISABLED'}<br>'ENABLED': Indicates this map is currently actively used on the mobile robot. At most one map per `mapId` can have its status set to 'ENABLED'.<br>'DISABLED': Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.
 *mapDescriptor* <br>}| | string | A user-defined, human-readable name or descriptor. This shall not be used for logical purposes.
 
 Object structure | Unit | Data type | Description
@@ -1836,8 +1837,6 @@ Object structure | Unit | Data type | Description
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **boundingBoxReference** { | | JSON object | Point of reference for the location of the bounding box. <br>The point of reference is always the center of the bounding box's bottom surface (at height = 0) and is described in coordinates of the mobile robot's coordinate system.
-x | | float64 | X-coordinate of the point of reference.
-y | | float64 | Y-coordinate of the point of reference.
 x | m | float64 | X-coordinate of the point of reference.
 y | m | float64 | Y-coordinate of the point of reference.
 z | m | float64 | Z-coordinate of the point of reference.
@@ -1885,13 +1884,13 @@ stateOfCharge | % | float64 | Range: [0 ... 100]<br><br>State of charge of the m
 *batteryVoltage* | V | float64 | Battery voltage.
 *batteryCurrent* | A | float64 | Battery current.
 *batteryHealth* | % | int8 | Range: [0 ... 100]<br><br>State describing the battery's health. 
-charging | | boolean | "true": charging in progress.<br>"false": the mobile robot is currently not charging. Shall only be reported as "false" if the robot is available to take orders.
+charging | | boolean | "true": charging in progress.<br>"false": the mobile robot is currently not charging.<br>The mobile robot shall not report "false" before the charging process has been fully terminated.
 *range* <br>}| m | uint32 | Range: [0 ... uint32.maximum]<br><br>Estimated distance to drive with current state of charge. 
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, extensible enumeration including the following predefined values <br>Extensible enum: {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER_ACTION', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'OUTSIDE_OF_CORRIDOR', 'INSUFFICIENT_MEMORY', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'DUPLICATE_ZONE_SET', 'RELEASE_LOSS_HANDLING','RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', 'OTHER_ORDER_ACTIVE', 'START_NODE_OUT_OF_RANGE', 'MOBILE_ROBOT_NOT_AVAILABLE', 'UNKNOWN_MAP_ID', 'INSTANT_ACTION_STATES_FULL', 'ZONE_ACTION_STATES_FULL', ...}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Extensible enum: {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER_ACTION', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'INVALID_INSTANT_ACTION', 'NO_ROUTE_TO_TARGET', 'OUTSIDE_OF_CORRIDOR', 'INSUFFICIENT_MEMORY', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'DUPLICATE_ZONE_SET', 'RELEASE_LOSS_HANDLING', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', 'OTHER_ORDER_ACTIVE', 'START_NODE_OUT_OF_RANGE', 'MOBILE_ROBOT_NOT_AVAILABLE', 'UNKNOWN_MAP_ID', 'INSTANT_ACTION_STATES_FULL', 'ZONE_ACTION_STATES_FULL', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array | Array of translations of the error description. If a particular language is not included in the collection, the value of the `errorDescription` field, if present, shall be used as the default. 
@@ -2008,10 +2007,10 @@ If a parameter is not defined or set to zero then there is no explicit limit for
 |---|---|---|
 | **maximumStringLengths** { | JSON object | Maximum lengths of strings. |
 | &emsp;*maximumMessageLength* | uint32 | Maximum MQTT message length. |
-| &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br><br>Affected parameters:<br>`order.serialNumber`<br>`instantActions.serialNumber`<br>`state.serialNumber`<br>`visualization.serialNumber`<br>`connection.serialNumber`<br>`zoneSet.serialNumber`<br>`response.serialNumber` |
-| &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br><br>Affected parameters:<br>`order.timestamp`<br>`order.version`<br>`order.manufacturer`<br>`instantActions.timestamp`<br>`instantActions.version`<br>`instantActions.manufacturer`<br>`state.timestamp`<br>`state.version`<br>`state.manufacturer`<br>`visualization.timestamp`<br>`visualization.version`<br>`visualization.manufacturer`<br>`connection.timestamp`<br>`connection.version`<br>`connection.manufacturer`<br>`zoneSet.timestamp`<br>`zoneSet.version`<br>`zoneSet.manufacturer`<br>`response.timestamp`<br>`response.version`<br>`response.manufacturer` |
+| &emsp;*maximumTopicSerialLength* | uint32 | Maximum length of serial number part in MQTT-topics.<br><br>Affected parameters:<br>`order.serialNumber`<br>`instantActions.serialNumber`<br>`state.serialNumber`<br>`visualization.serialNumber`<br>`connection.serialNumber`<br>`zoneSet.serialNumber`<br>`responses.serialNumber` |
+| &emsp;*maximumTopicElementLength* | uint32 | Maximum length of all other parts in MQTT topics.<br><br>Affected parameters:<br>`order.timestamp`<br>`order.version`<br>`order.manufacturer`<br>`instantActions.timestamp`<br>`instantActions.version`<br>`instantActions.manufacturer`<br>`state.timestamp`<br>`state.version`<br>`state.manufacturer`<br>`visualization.timestamp`<br>`visualization.version`<br>`visualization.manufacturer`<br>`connection.timestamp`<br>`connection.version`<br>`connection.manufacturer`<br>`zoneSet.timestamp`<br>`zoneSet.version`<br>`zoneSet.manufacturer`<br>`responses.timestamp`<br>`responses.version`<br>`responses.manufacturer` |
 | &emsp;*maximumIdLength* | uint32 | Maximum length of ID strings.<br><br>Affected parameters:<br>`order.orderId`<br>`node.nodeId`<br>`nodePosition.mapId`<br>`action.actionId`<br>`edge.edgeId`<br>`map.mapId`<br>`zoneSet.zoneSetId`<br>`zone.zoneId`<br>`zoneRequest.requestId`<br>`edgeRequest.requestId` | 
-| &emsp;*idNumericalOnly* | boolean | If "true", parameters containing Ids shall contain numerical values only. |
+| &emsp;*idNumericalOnly* | boolean | If "true", parameters containing IDs shall contain numerical values only. |
 | &emsp;*maximumLoadIdLength* | uint32 | Maximum length of `loadId` strings. |
 | } | | |
 | **maximumArrayLengths** { | JSON object | Maximum lengths of arrays. |
@@ -2174,4 +2173,4 @@ ISO 3691-4 | December 2023 | Industrial Trucks Safety Requirements and Verificat
 ISO 9787 | May 2013 | Robots and robotic devices: Coordinate systems and motion nomenclatures
 ISO 639 |November 2023 | Language code for the representation of the world's languages and language groups
 ISO 8601  | February 2019 | Date and time: Representations for information interchange
-LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport mobile robots and a (third-party) fleet control system.
+LIF – Layout Interchange Format| March 2024 | Definition of a format of track layouts for exchange between the integrator of the driverless transport vehicles and a (third-party) fleet control system.
