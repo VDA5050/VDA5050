@@ -1338,10 +1338,10 @@ Each request shall be represented on the mobile robot by a request object (e.g.,
 The field `requestStatus` describes the life cycle of the request and shall support the following values:
 
 - 'REQUESTED': Mobile robot states a request.
+- 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
 - 'GRANTED': The fleet control grants the request.
 - 'REVOKED': Fleet control revokes previously granted request. 
 - 'EXPIRED': request has expired. 
-- 'QUEUED': Acknowledge the mobile robot's request to the fleet control, but no permission is given yet. Request was added to some sort of a queue.
 
 Fleet control receives requests from the `state` topic and shall answer via the `responses` topic containing a response object that includes:
 
@@ -1349,7 +1349,7 @@ Fleet control receives requests from the `state` topic and shall answer via the 
 - a decision with one of the values 'GRANTED', 'QUEUED', 'REJECTED', or 'REVOKED', and
 - optionally a `leaseExpiry` timestamp that limits the validity of a 'GRANTED' decision.
 
-If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall then continue to wait and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
+If a request is answered with 'QUEUED', fleet control acknowledges reception of the request but does not yet grant permission. The mobile robot shall set the `requestStatus` to 'QUEUED', continue to wait, and shall not perform the requested operation. If a request is answered with 'REJECTED', the mobile robot shall not perform the requested operation and may remove the corresponding request object from its state when it is no longer needed.
 
 If a request is answered with 'GRANTED', the mobile robot is allowed to perform the requested operation in accordance with the semantics of the request type. If a `leaseExpiry` is present, the permission shall only be considered valid until this time. Fleet control can extend a lease by sending an updated response with the same `requestId` and a new `leaseExpiry`.
 
@@ -1857,7 +1857,7 @@ width | m | float64 | Absolute width (along the mobile robot’s coordinate syst
 | requestType | string | Enum {'ACCESS', 'REPLANNING'}<br>Specifying the type of zone the request relates to. Feasible values are 'ACCESS' or 'REPLANNING'. |
 | zoneId | string | Locally (within the zone set) unique identifier referencing the zone the request is related to. |
 | zoneSetId | string | Due to the `zoneId` only being unique to a `zoneSet`, the `zoneSetId` is part of the request. |
-| requestStatus | string | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
+| requestStatus | string | Enum {'REQUESTED', 'QUEUED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'QUEUED', 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
 | ***trajectory*** <br> } | object | Optional for 'COORDINATED_REPLANNING' zone requests only with the planned trajectory through the zone. |
 
 | **Object structure** | **Data type** | **Description** |
@@ -1867,7 +1867,7 @@ width | m | float64 | Absolute width (along the mobile robot’s coordinate syst
 | requestType | string | Enum {'CORRIDOR'}<br> Enum specifying the type of request. Set to 'CORRIDOR' if requesting to deviate from the predefined trajectory within the defined work space. |
 | edgeId | string | Globally unique identifier referencing the edge the request is related to. |
 | sequenceId | uint32 | Tracking number for sequence of edge within order. Required to uniquely identify the referenced edge within the order. |
-| requestStatus <br><br> } | string | Enum {'REQUESTED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
+| requestStatus <br><br> } | string | Enum {'REQUESTED', 'QUEUED', 'GRANTED', 'REVOKED', 'EXPIRED'}<br>When stating a request, this is set to 'REQUESTED'. After response or update from fleet control set to 'QUEUED', 'GRANTED' or 'REVOKED'. If lease time expires set to 'EXPIRED'.|
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
