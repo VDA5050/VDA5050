@@ -15,14 +15,15 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -41,10 +42,10 @@
             "description": "Serial number of the mobile robot."
         },
         "zoneSet":  {
-			"$ref": "#/definitions/zoneSet"
+			"$ref": "#/$defs/zoneSet"
 		}
     },
-    "definitions": {
+    "$defs": {
         "zoneSet": {
             "type": "object",
                 "required": [
@@ -69,7 +70,7 @@
                         "type": "array",
                         "description": "Array of zone objects.",
                         "items": {
-                                "$ref": "#/definitions/zone"
+                                "$ref": "#/$defs/zone"
                         }
                     }
             }
@@ -111,7 +112,7 @@
                     "description": "Array of vertices (in x-y-coordinates) defining the geometrical shape of the zone.",
                     "minItems": 3,
                     "items": {
-                        "$ref": "#/definitions/vertex"
+                        "$ref": "#/$defs/vertex"
                     }
                 }
             },
@@ -123,7 +124,6 @@
                         }
                     },
                     "then": {
-                        "required": ["releaseLossBehavior"],
                         "properties": {
                             "releaseLossBehavior": {
                                 "type": "string",
@@ -167,21 +167,21 @@
                                 "type": "array",
                                 "description": "Array of actions to be executed when entering the zone.",
                                 "items": {
-                                    "$ref": "#/definitions/zoneAction"
+                                    "$ref": "#/$defs/zoneAction"
                                 }
                             },
                             "duringActions": {
                                 "type": "array",
                                 "description": "Actions to be executed while crossing the zone. Empty Array, if no Actions required.",
                                 "items": {
-                                    "$ref": "#/definitions/zoneAction"
+                                    "$ref": "#/$defs/zoneAction"
                                 }
                             },
                             "exitActions": {
                                 "type": "array",
                                 "description": "Actions to be triggered when leaving the zone. Empty Array, if no Actions required.",
                                 "items": {
-                                    "$ref": "#/definitions/zoneAction"
+                                    "$ref": "#/$defs/zoneAction"
                                 }
                             }
                         }
@@ -327,7 +327,7 @@
                     "type": "array",
                     "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
                     "items": {
-                        "$ref": "#/definitions/actionParameter"
+                        "$ref": "#/$defs/actionParameter"
                     }
                 },
                 "retriable": {

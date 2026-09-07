@@ -18,14 +18,15 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -60,18 +61,18 @@
             "description": "Array of nodes objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "type": "array",
             "items": {
-                "$ref": "#/definitions/node"
+                "$ref": "#/$defs/node"
             }
         },
         "edges": {
             "type": "array",
             "description": "Directional connection between two nodes. Array of edge objects to be traversed for fulfilling the order. One node is enough for a valid order. Leave edge list empty for that case.",
             "items": {
-                "$ref": "#/definitions/edge"
+                "$ref": "#/$defs/edge"
             }
         }
     },
-    "definitions": {
+    "$defs": {
 		"node": {
 			"type": "object",
 			"title": "node",
@@ -126,8 +127,8 @@
 							"type": "number",
 							"description": "Absolute orientation of the mobile robot on the node. Optional: mobile robot can plan the path by itself. If defined, the mobile robot has to assume the theta angle on this node. If previous edge disallows rotation, the mobile robot must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.",
 							"unit": "rad",
-							"minimum": -3.14159265359,
-							"maximum": 3.14159265359
+							"minimum": -3.1416,
+							"maximum": 3.1416
 						},
 						"allowedDeviationXY":{
 						  "type": "object",
@@ -164,7 +165,7 @@
 							"description": "Indicates how big the deviation of theta angle can be. The lowest acceptable angle is theta - allowedDeviationTheta and the highest acceptable angle is theta + allowedDeviationTheta.",
 							"unit": "rad",
 							"minimum": 0,
-							"maximum": 3.141592654
+							"maximum": 3.1416
 							},
 						"mapId": {
 							"description": "Unique identification of the map in which the position is referenced.",
@@ -176,7 +177,7 @@
 					"description": "Array of actions to be executed on a node. Empty array, if no actions required.",
 					"type": "array",
 					"items": {
-						"$ref": "#/definitions/action"
+						"$ref": "#/$defs/action"
 					}
 				}
 			}
@@ -225,10 +226,10 @@
 				},
 				"orientation": {
 					"type": "number",
-					"description": "Orientation of the mobile robot on the edge. The value orientationType defines if it has to be interpreted relative to the global project specific map coordinate system or tangential to the edge. In case of interpreted tangential to the edge 0.0 = forwards and PI = backwards. Example: orientation Pi/2 rad will lead to a rotation of 90 degrees. If mobile robot starts in different orientation, rotate the mobile robot on the edge to the desired orientation if rotationAllowed is set to True. If rotationAllowed is False, rotate before entering the edge. If that is not possible, reject the order. If no trajectory is defined, apply the rotation to the direct path between the two connecting nodes of the edge. If a trajectory is defined for the edge, apply the orientation to the trajectory.",
+					"description": "Orientation of the mobile robot on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards.",
 					"unit": "rad",
-					"minimum": -3.14159265359,
-					"maximum": 3.14159265359
+					"minimum": -3.1416,
+					"maximum": 3.1416
 				},
 				"orientationType":{
 					"type": "string",
@@ -246,14 +247,14 @@
 					"type": "boolean",
 					"description": "True: Desired edge orientation shall be reached before entering the edge. False: Mobile robot can rotate into the desired orientation on the edge. Default: False."
 				},
-				"maxRotationSpeed": {
+				"maximumRotationSpeed": {
 					"type": "number",
 					"description": "Maximum rotation speed in rad/s. Optional: No limit, if not set.",
 					"unit": "rad/s"
 				},
 				"trajectory": {
 					"description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve, on which the mobile robot should move between the start node and the end node. Optional: Can be omitted, if mobile robot cannot process trajectories or if mobile robot plans its own trajectory.",
-					"$ref": "#/definitions/trajectory"
+					"$ref": "#/$defs/trajectory"
 				},
 				"length": {
 					"type": "number",
@@ -261,13 +262,13 @@
 					"unit": "m"
 				},
 				"corridor": {
-					"$ref": "#/definitions/corridor"
+					"$ref": "#/$defs/corridor"
 				},
 				"actions": {
 					"description": "Array of action objects with detailed information.",
 					"type": "array",
 					"items": {
-						"$ref": "#/definitions/action"
+						"$ref": "#/$defs/action"
 					}
 				}
 			}
@@ -315,7 +316,8 @@
 							},
 							"weight": {
 								"type": "number",
-								"description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0."
+								"description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0.",
+								"exclusiveMinimum": 0
 							}
 						}
 					}
