@@ -630,8 +630,8 @@
 				},
 				"requestStatus": {
 					"type": "string",
-					"enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires, shall be set to EXPIRED."
+					"enum": ["REQUESTED", "QUEUED", "GRANTED", "REVOKED", "EXPIRED"],
+					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to QUEUED, GRANTED or REVOKED. If lease time expires, shall be set to EXPIRED."
 				},
 				"trajectory": {
 					"$ref": "#/$defs/trajectory"
@@ -668,8 +668,8 @@
 				},
 				"requestStatus": {
 					"type": "string",
-					"enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+					"enum": ["REQUESTED", "QUEUED", "GRANTED", "REVOKED", "EXPIRED"],
+					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to QUEUED, GRANTED or REVOKED. If lease time expires set to EXPIRED."
 				}
 			}
 		},

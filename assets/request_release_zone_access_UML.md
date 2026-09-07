@@ -21,7 +21,7 @@ group Zone request
 "Fleet Control" -> "Fleet Control": Decide if zoneRequest\n can be granted
 group optional - queued request
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType QUEUED.
-"Mobile Robot" -> "Fleet Control": Continue to send status update containing corresponding zoneRequest \n with requestStatus REQUESTED.
+"Mobile Robot" -> "Fleet Control": Send status update containing corresponding zoneRequest \n with requestStatus QUEUED.
 end
 group Grant access
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType GRANTED.
