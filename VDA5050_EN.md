@@ -609,6 +609,14 @@ Resolution:
 2. The mobile robot shall report an error of type 'UNKNOWN_MAP_ID' and level 'WARNING'.
 3. The warning shall be reported until the mobile robot has accepted a new order.
 
+#### 6.1.4.11 Mobile robot receives an order with an edge orientation it cannot reach
+
+Resolution:
+
+1. The mobile robot shall not take over the new order in its internal buffer.
+2. The mobile robot shall report an error of type 'ORIENTATION_UNREACHABLE' with level 'WARNING' and the `edgeId` of the affected edge as `errorReference`.
+3. The warning shall be reported until the mobile robot has accepted a new order.
+
 
 
 ### 6.1.5 Corridors
@@ -1174,6 +1182,7 @@ Error Type | Error level | Description | Reference | Report duration
 'START_NODE_OUT_OF_RANGE' | 'WARNING' | Receival of an order with unreachable first node. | `orderId` | Until new order is accepted.
 'MOBILE_ROBOT_NOT_AVAILABLE' | 'WARNING' | Receival of an order while not in 'AUTOMATIC', 'SEMIAUTOMATIC' or 'INTERVENED' operating mode. | `orderId` | Until operating mode allows for new orders
 'UNKNOWN_MAP_ID' | 'WARNING' | Receival of an order containing nodes referencing an unknown `mapId`. | `orderId` | Until new order is accepted.
+'ORIENTATION_UNREACHABLE' | 'WARNING' | Receival of an order with an edge `orientation` that the mobile robot cannot reach. | `edgeId` | Until new order is accepted.
 'INSTANT_ACTION_STATES_FULL' | 'URGENT' | Array of `instantActionStates` is becoming too long to manage. | - | Until `instantActionStates` are cleared by fleet control.
 'ZONE_ACTION_STATES_FULL' | 'URGENT' | Array of `zoneActionStates` is becoming too long to manage. | - | Until `zoneActionStates` are cleared by fleet control.
 
@@ -1524,7 +1533,7 @@ released | | boolean | "true" indicates that the edge is part of the base.<br>"f
 *maximumSpeed* | m/s | float64 | Permitted maximum speed on the edge. <br>Speed is defined by the fastest measurement of the mobile robot.
 *maximumMobileRobotHeight* | m | float64 | Permitted maximum height of the mobile robot, including the load, on the edge.
 *minimumLoadHandlingDeviceHeight* | m | float64 | Permitted minimal height of the load handling device on the edge.
-*orientation* | rad | float64 | Orientation of the mobile robot on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the trajectory, 0.0 denotes driving forwards and PI denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the mobile robot starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the mobile robot on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.<br>If no orientation is defined, the mobile robot may assume any orientation on the edge.
+*orientation* | rad | float64 | Orientation of the mobile robot on the trajectory of the edge. The value `orientationType` defines whether it shall be interpreted relative to the global project-specific map coordinate system or tangential to the trajectory of the edge. In case of tangential to the trajectory, 0.0 denotes driving forwards and Pi denotes driving backwards. <br>Example: orientation Pi/2 rad may lead to a rotation of 90 degrees.<br><br>If the mobile robot starts in a different orientation, and if `reachOrientationBeforeEntering` is set to "false", rotate the mobile robot on the edge to the desired orientation.<br>If `reachOrientationBeforeEntering` is "true", rotate before entering the edge.<br>If this is not possible, the order shall be rejected with an error of type 'ORIENTATION_UNREACHABLE' and level 'WARNING'.<br><br>If no trajectory is defined, apply the orientation and any rotation to the direct path between the two connecting nodes of the edge.<br>If no orientation is defined, the mobile robot may assume any orientation on the edge.
 *orientationType* | | string | Enum {'GLOBAL', 'TANGENTIAL'}: <br>'GLOBAL': relative to the global project-specific map coordinate system, only valid for omnidirectional mobile robots.<br>'TANGENTIAL': tangential to the trajectory of the edge. Example use: for an omnidirectional mobile robot, any orientation is possible, for differential drive mobile robots, only orientations 0.0 (forward) and Pi (backward) may be possible.<br><br>Default: 'TANGENTIAL'.
 *direction* | | string | Sets direction at junctions for navigation type physical line guided mobile robots, possible values shall be pre-defined (mobile robot-individual).<br> Examples: "left", "right", "straight", "580 Hz".
 *reachOrientationBeforeEntering* | | boolean | This parameter is only valid for omni-directional mobile robots. "true": Desired edge orientation shall be reached before entering the edge.<br>"false": Mobile robot can rotate into the desired orientation on the edge.<br>Default: "false".
@@ -1890,7 +1899,7 @@ charging | | boolean | "true": charging in progress.<br>"false": the mobile robo
 Object structure | Unit | Data type | Description
 ---|---|---|---
 **error** { | | JSON object |
-errorType | | string | Error type, extensible enumeration including the following predefined values <br>Extensible enum: {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER_ACTION', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'INVALID_INSTANT_ACTION', 'NO_ROUTE_TO_TARGET', 'OUTSIDE_OF_CORRIDOR', 'INSUFFICIENT_MEMORY', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'DUPLICATE_ZONE_SET', 'RELEASE_LOSS_HANDLING', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', 'OTHER_ORDER_ACTIVE', 'START_NODE_OUT_OF_RANGE', 'MOBILE_ROBOT_NOT_AVAILABLE', 'UNKNOWN_MAP_ID', 'INSTANT_ACTION_STATES_FULL', 'ZONE_ACTION_STATES_FULL', ...}.
+errorType | | string | Error type, extensible enumeration including the following predefined values <br>Extensible enum: {'UNSUPPORTED_PARAMETER', 'NO_ORDER_TO_CANCEL', 'VALIDATION_FAILURE', 'INVALID_ORDER_ACTION', 'OUTDATED_ORDER_UPDATE', 'SAME_ORDER_UPDATE_ID', 'ORDER_UPDATE_FOLLOWING_CANCEL', 'INVALID_INSTANT_ACTION', 'NO_ROUTE_TO_TARGET', 'OUTSIDE_OF_CORRIDOR', 'INSUFFICIENT_MEMORY', 'DUPLICATE_MAP', 'BLOCKED_ZONE_VIOLATION', 'DUPLICATE_ZONE_SET', 'RELEASE_LOSS_HANDLING', 'RELEASE_LOST', 'ZONE_ACTION_CONFLICT', 'NODE_UNREACHABLE', 'LOCALIZATION_ERROR', 'OTHER_ORDER_ACTIVE', 'START_NODE_OUT_OF_RANGE', 'MOBILE_ROBOT_NOT_AVAILABLE', 'UNKNOWN_MAP_ID', 'ORIENTATION_UNREACHABLE', 'INSTANT_ACTION_STATES_FULL', 'ZONE_ACTION_STATES_FULL', ...}.
 ***errorReferences [errorReference]*** | | array | Array of references (e.g., `nodeId`, `edgeId`, `orderId`, `actionId`, etc.) to provide more information related to the error.
 *errorDescription* | | string | Verbose description providing details and possible causes of the error.
 ***errorDescriptionTranslations[translation]*** || array | Array of translations of the error description. If a particular language is not included in the collection, the value of the `errorDescription` field, if present, shall be used as the default. 
