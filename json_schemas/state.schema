@@ -27,14 +27,15 @@
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "type": "string",
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -56,14 +57,14 @@
             "type": "array",
             "description": "Array of map-objects that are currently stored on the mobile robot.",
             "items": {
-				"$ref": "#/definitions/map"
+				"$ref": "#/$defs/map"
 			}
         },
         "zoneSets":{
             "type": "array",
             "description": "Array of zoneSet objects that are currently stored on the mobile robot.",
             "items": {
-				"$ref": "#/definitions/zoneSet"
+				"$ref": "#/$defs/zoneSet"
 			}
         },
         "orderId": {
@@ -80,30 +81,30 @@
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the mobile robot is currently on a node, sequenceId of current node. 0 if no lastNodeSequenceId is available."
+            "description": "Sequence ID of the last reached node or, if the mobile robot is currently on a node, Sequence ID of current node. This value is only valid if `lastNodeId` is not an empty string. If `lastNodeId` is an empty string, the value of `lastNodeSequenceId` can be arbitrary and shall be ignored."
         },
 		"nodeStates": {
             "type": "array",
             "description": "Array of nodeState-Objects, that need to be traversed for fulfilling the order. Empty list if idle.",
             "items": {
-                "$ref": "#/definitions/nodeState"
+                "$ref": "#/$defs/nodeState"
             }
         },
         "edgeStates": {
             "type": "array",
             "description": "Array of edgeState-Objects, that need to be traversed for fulfilling the order, empty list if idle.",
             "items": {
-				"$ref": "#/definitions/edgeState"
+				"$ref": "#/$defs/edgeState"
 			}
         },
         "plannedPath": {
-            "$ref": "#/definitions/plannedPath"
+            "$ref": "#/$defs/plannedPath"
         },
         "intermediatePath": {
-            "$ref": "#/definitions/intermediatePath"
+            "$ref": "#/$defs/intermediatePath"
         },
         "mobileRobotPosition": {
-            "$ref": "#/definitions/mobileRobotPosition"
+            "$ref": "#/$defs/mobileRobotPosition"
         },
         "velocity": {
             "type": "object",
@@ -130,12 +131,12 @@
             "type": "array",
             "description": "Loads, that are currently handled by the mobile robot. Optional: If mobile robot cannot determine load state, leave the array out of the state. If the mobile robot can determine the load state, but the array is empty, the mobile robot is considered unloaded.",
             "items": {
-                "$ref": "#/definitions/load"
+                "$ref": "#/$defs/load"
             }
         },
         "driving": {
             "type": "boolean",
-            "description": "True: indicates that the mobile robot is driving and/or rotating. Other movements of the mobile robot (e.g., lift movements) are not included here.\nFalse: indicates that the mobile robot is neither driving nor rotating."
+            "description": "True: indicates, that the mobile robot is driving (manual or automatic). Other movements (e.g., lift movements) are not included here. False: indicates that the mobile robot is not driving."
         },
         "paused": {
             "type": "boolean",
@@ -149,43 +150,43 @@
             "description": "Array of zoneRequest objects that are currently active on the mobile robot. Empty array if no zone requests are active.",
             "type": "array",
             "items": {
-				"$ref": "#/definitions/zoneRequest"
+				"$ref": "#/$defs/zoneRequest"
             }
         },
         "edgeRequests": {
             "description": "Array of edgeRequest objects that are currently active on the mobile robot. Empty array if no edge requests are active.",
             "type": "array",
             "items": {
-				"$ref": "#/definitions/edgeRequest"
+				"$ref": "#/$defs/edgeRequest"
             }
         },
         "distanceSinceLastNode": {
             "type": "number",
-            "description": "Used by line guided vehicles to indicate the distance it has been driving past the lastNodeId. Distance is in meters."
+            "description": "Used by line guided mobile robots to indicate the distance it has been driving past the lastNodeId. Distance is in meters."
         },
         "actionStates": {
             "type": "array",
-            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescriptor. The actionStates are kept until a new order is received.",
+            "description": "Array of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding actionResult.",
             "items": {
-                "$ref": "#/definitions/actionState"
+                "$ref": "#/$defs/actionState"
             }
         },
         "instantActionStates": {
             "type": "array",
             "description": "Array of all instant action states that the mobile robot received. Empty array if the mobile robot has not received any instant actions. Instant actions are kept in the state until restart or action clearInstantActions is executed.",
             "items": {
-                "$ref": "#/definitions/actionState"
+                "$ref": "#/$defs/actionState"
             }
         },
         "zoneActionStates": {
             "type": "array",
             "description": "Array of all zone actions that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the state message until restart or action clearZoneActions is executed.",
             "items": {
-                "$ref": "#/definitions/actionState"
+                "$ref": "#/$defs/actionState"
             }
         },
         "powerSupply": {
-            "$ref": "#/definitions/powerSupply"
+            "$ref": "#/$defs/powerSupply"
         },
         "operatingMode": {
             "type": "string",
@@ -204,21 +205,21 @@
             "type": "array",
             "description": "Array of error-objects. All active errors of the mobile robot should be in the list. An empty array indicates that the mobile robot has no active errors.",
             "items": {
-				"$ref": "#/definitions/error"
+				"$ref": "#/$defs/error"
             }
         },
         "information": {
             "type": "array",
             "description": "Array of info-objects. An empty array indicates, that the mobile robot has no information. This should only be used for visualization or debugging – it must not be used for logic in fleet control.",
             "items": {
-				"$ref": "#/definitions/info"
+				"$ref": "#/$defs/info"
             }
         },
         "safetyState": {
-            "$ref": "#/definitions/safetyState"
+            "$ref": "#/$defs/safetyState"
         }
     },
-    "definitions": {
+    "$defs": {
 		"map": {
 			"type": "object",
 			"title": "map",
@@ -242,7 +243,7 @@
 				},
 				"mapStatus": {
 					"type": "string",
-					"description": "Information on the status of the map indicating, if a map version is currently used on the mobile robot. ENABLED: Indicates this map is currently active / used on the mobile robot. At most one map with the same mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.",
+					"description": "Information on the status of the map indicating, if a map version is currently used on the mobile robot. ENABLED: Indicates this map is currently active / used on the mobile robot. At most one map per mapId can have its status set to ENABLED.<br>DISABLED: Indicates this map version is currently not enabled on the mobile robot and thus could be enabled or deleted by request.",
 					"enum": [
 						"ENABLED",
 						"DISABLED"
@@ -261,7 +262,7 @@
 			"properties": {
 				"zoneSetId": {
 					"type": "string",
-					"description": "Unique identifier of the zone set that is currently enabled for the map.<br> This field shall be left empty only if the mobile robot has no zones defined for the corresponding map."
+					"description": "Unique identifier of the zone set."
 				},
 				"mapId": {
 					"type": "string",
@@ -288,7 +289,7 @@
 			"properties": {
 				"nodeId": {
 					"type": "string",
-					"description": "Unique node identification"
+					"description": "Unique identifier of the node. The same node can be referenced multiple times within one state message. `sequenceId` is used to differentiate the sequence of traversal."
 				},
 				"sequenceId": {
 					"type": "integer",
@@ -320,8 +321,8 @@
 						"theta": {
 							"type": "number",
 							"unit": "rad",
-							"minimum": -3.14159265359,
-							"maximum": 3.14159265359
+							"minimum": -3.1416,
+							"maximum": 3.1416
 						},
 						"mapId": {
 							"type": "string"
@@ -340,7 +341,7 @@
 			"properties": {
 				"edgeId": {
 					"type": "string",
-					"description": "Unique edge identification"
+					"description": "Unique identifier of the edge. The same edge can be referenced multiple times within one state message. `sequenceId` is used to differentiate the sequence of traversal."
 				},
 				"sequenceId": {
 					"type": "integer",
@@ -355,14 +356,14 @@
 					"description": "True indicates that the edge is part of the base. False indicates that the edge is part of the horizon."
 				},
 				"trajectory": {
-					"$ref": "#/definitions/trajectory",
+					"$ref": "#/$defs/trajectory",
 					"description": "Reports the trajectory that has been defined a priori within a layout or was sent for this edge as part of the order."
 				}
 			}
 		},
 		"trajectory": {
             "type": "object",
-            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 6.7 Implementation of the Order message. Trajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed.",
+            "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 7.3 Implementation of the Order message. Trajectory segments reach from the point, where the mobile robot starts to enter the edge to the point where it reports that the next node was traversed.",
             "required": [
                 "controlPoints"
             ],
@@ -399,7 +400,8 @@
                             },
                             "weight": {
                                 "type": "number",
-                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0."
+                                "description": "The weight, with which this control point pulls on the curve. When not defined, the default will be 1.0.",
+								"exclusiveMinimum": 0
                             }
                         }
                     }
@@ -414,7 +416,7 @@
             ],
             "properties": {
                 "trajectory": {
-                    "$ref": "#/definitions/trajectory"
+                    "$ref": "#/$defs/trajectory"
                 },
                 "traversedNodes": {
                     "type": "array",
@@ -458,8 +460,8 @@
                                 "type": "number",
                                 "description": "Absolute orientation of the mobile robot in the project-specific coordinate system.",
                                 "unit": "rad",
-                                "minimum": -3.14159265359,
-                                "maximum": 3.14159265359
+                                "minimum": -3.1416,
+                                "maximum": 3.1416
                             },
                             "eta": {
                                 "type": "string",
@@ -472,7 +474,7 @@
 		},
 		"mobileRobotPosition": {
 			"type": "object",
-            "description": "Defines the position on a map in world coordinates. Each floor has its own map.",
+            "description": "Current position of the mobile robot on the map.",
             "required": [
                 "x",
                 "y",
@@ -492,8 +494,8 @@
                 "theta": {
                     "type": "number",
                     "unit": "rad",
-                    "minimum": -3.14159265359,
-                    "maximum": 3.14159265359
+                    "minimum": -3.1416,
+                    "maximum": 3.1416
                 },
                 "mapId": {
                     "type": "string",
@@ -505,13 +507,13 @@
                 },
                 "localizationScore": {
                     "type": "number",
-                    "description": "Describes the quality of the localization and therefore, can be used, e.g., by SLAM mobile robot to describe how accurate the current position information is.\n0.0: position unknown\n1.0: position known\nOptional for vehicles that cannot estimate their localization score.\nOnly for logging and visualization purposes",
+                    "description": "Describes the quality of the localization and can therefore be used, e.g., by SLAM mobile robots to describe how accurate the current position information is. 0.0: lowest possible confidence 1.0: highest possible confidence. Only for logging and visualization purposes.",
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
                 "deviationRange": {
                     "type": "number",
-                    "description": "Value for position deviation range in meters. Optional for vehicles that cannot estimate their deviation, e.g., grid-based localization. Only for logging and visualization purposes.",
+                    "description": "Value for position deviation range in meters. Optional for mobile robots that cannot estimate their deviation, e.g., grid-based localization. Only for logging and visualization purposes.",
                     "unit": "m",
                     "minimum": 0.0
                 }
@@ -533,7 +535,7 @@
 				},
 				"loadPosition": {
 					"type": "string",
-					"description": "Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads. Optional for vehicles with only one loadPosition.",
+					"description": "Indicates, which load handling/carrying unit of the mobile robot is used, e.g., in case the mobile robot has multiple spots/positions to carry loads. Optional for mobile robots with only one loadPosition.",
 					"examples":[
 						"front", "back", "positionC1"
 					]
@@ -628,11 +630,11 @@
 				},
 				"requestStatus": {
 					"type": "string",
-					"enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires, shall be to EXPIRED."
+					"enum": ["REQUESTED", "QUEUED", "GRANTED", "REVOKED", "EXPIRED"],
+					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to QUEUED, GRANTED or REVOKED. If lease time expires, shall be set to EXPIRED."
 				},
 				"trajectory": {
-					"$ref": "#/definitions/trajectory"
+					"$ref": "#/$defs/trajectory"
 				}
 			}
 		},
@@ -654,7 +656,7 @@
 				"requestType": {
 					"type": "string",
 					"enum": ["CORRIDOR"],
-					"description": "Enum specifying the type of edge the request relates to."
+					"description": "Enum specifying the type of request. Set to 'CORRIDOR' if requesting to deviate from the predefined trajectory within the defined work space."
 				},
 				"edgeId": {
 					"type": "string",
@@ -666,8 +668,8 @@
 				},
 				"requestStatus": {
 					"type": "string",
-					"enum": ["REQUESTED", "GRANTED", "REVOKED", "EXPIRED"],
-					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to GRANTED or REVOKED. If lease time expires set to EXPIRED."
+					"enum": ["REQUESTED", "QUEUED", "GRANTED", "REVOKED", "EXPIRED"],
+					"description": "When stating a request, this is set to REQUESTED. After response or update from fleet control set to QUEUED, GRANTED or REVOKED. If lease time expires set to EXPIRED."
 				}
 			}
 		},
@@ -696,7 +698,7 @@
                 },
                 "actionStatus": {
                     "type": "string",
-                    "description": "WAITING: waiting for the trigger (passing the mode, entering the edge); INITIALIZING: Action was triggered, preparatory measures are initiated; RUNNING: The action is running; RETRIABLE: Actions that failed, but can be retried; PAUSED: paused by instantAction or external trigger; FINISHED: The action is finished; FAILED: action could not be performed.",
+                    "description": "WAITING: waiting for the trigger (passing the node, entering the edge); INITIALIZING: Action was triggered, preparatory measures are initiated; RUNNING: The action is running; RETRIABLE: Actions that failed, but can be retried; PAUSED: paused by instantAction or external trigger; FINISHED: The action is finished; FAILED: action could not be performed.",
                     "enum": [
                         "WAITING",
                         "INITIALIZING",
@@ -719,11 +721,11 @@
                 "stateOfCharge",
                 "charging"
             ],
-            "description": "Contains all battery-related information.",
+            "description": "Contains all battery related information.",
             "properties": {
                 "stateOfCharge": {
                     "type": "number",
-                    "description": "State of Charge in %: If mobile robot only provides values for good or bad battery levels, these will be indicated as 20% (bad) and 80% (good).",
+                    "description": "State of charge of the mobile robot. For permanently powered mobile robots, this field shall be 100.",
                     "minimum":0,
                     "maximum":100
                 },
@@ -736,7 +738,7 @@
                     "description": "Battery current in Ampere (A)"
                 },
                 "batteryHealth": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "State of health in percent.",
                     "minimum":0,
                     "maximum":100
@@ -746,7 +748,7 @@
                     "description": "True: charging in progress. False: mobile robot is currently not charging."
                 },
                 "range": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "Estimated reach with current State of Charge in meter.",
                     "minimum": 0
                 }
@@ -762,7 +764,7 @@
 			"properties": {
 				"errorType": {
 					"type": "string",
-					"description": "Error type, extensible enumeration including the following predefined values."
+					"description": "Error type, extensible enumeration."
 				},
 				"errorReferences": {
 					"type": "array",
@@ -794,7 +796,7 @@
 					"type": "array",
 					"description": "Array of translations of the error description.",
 					"items": {
-						"$ref": "#/definitions/translation"
+						"$ref": "#/$defs/translation"
 					}
 				},
 				"errorHint": {
@@ -805,7 +807,7 @@
 					"type": "array",
 					"description": "Array of translations of the error hint.",
 					"items": {
-						"$ref": "#/definitions/translation"
+						"$ref": "#/$defs/translation"
 					}
 				},
 				"errorLevel": {

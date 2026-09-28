@@ -14,9 +14,9 @@
     "type": "object",
     "properties": {
         "headerId": {
-            "title": "headerId",
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message.",
+            "minimum": 0
         },
         "timestamp": {
             "title": "timestamp",
@@ -24,7 +24,7 @@
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -56,7 +56,7 @@
                 "properties": {
                     "actionType": {
                         "type": "string",
-                        "description": "Name of action. Identifies the function of the action."
+                        "description": "Type of the action. Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
@@ -121,6 +121,10 @@
                                 }
                             }
                         }
+                    },
+                    "retriable": {
+                        "type": "boolean",
+                        "description": "True: action can enter RETRIABLE state if it fails. False: action enters FAILED state directly after it fails. Default: false."
                     }
                 }
             }

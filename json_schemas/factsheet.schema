@@ -28,7 +28,7 @@
             "format": "date-time",
             "description": "Timestamp in ISO8601 format (YYYY-MM-DDTHH:mm:ss.fffZ).",
             "examples": [
-                "1991-03-11T11:40:03.123Z"
+                "2017-04-15T11:40:03.123Z"
             ]
         },
         "version": {
@@ -209,17 +209,17 @@
                         },
                         "maximumTopicSerialLength": {
                             "type": "integer",
-                            "description": "Maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.SerialNumber, visualization.serialNumber, connection.serialNumber",
+                            "description": "Maximum length of serial-number part in MQTT-topics. Affected Parameters: order.serialNumber, instantActions.serialNumber, state.serialNumber, visualization.serialNumber, connection.serialNumber, zoneSet.serialNumber, responses.serialNumber",
 							"minimum": 0
                         },
                         "maximumTopicElementLength": {
                             "type": "integer",
-                            "description": "Maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer",
+                            "description": "Maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp, order.version, order.manufacturer, instantActions.timestamp, instantActions.version, instantActions.manufacturer, state.timestamp, state.version, state.manufacturer, visualization.timestamp, visualization.version, visualization.manufacturer, connection.timestamp, connection.version, connection.manufacturer, zoneSet.timestamp, zoneSet.version, zoneSet.manufacturer, responses.timestamp, responses.version, responses.manufacturer",
 							"minimum": 0
                         },
                         "maximumIdLength": {
                             "type": "integer",
-                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId",
+                            "description": "Maximum length of ID-Strings. Affected parameters: order.orderId, node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, map.mapId, zoneSet.zoneSetId, zone.zoneId, zoneRequest.requestId, edgeRequest.requestId",
 							"minimum": 0
                         },
                         "idNumericalOnly": {
@@ -442,7 +442,7 @@
                             },
                             "actionParameters": {
                                 "type": "array",
-                                "description": "Kist of parameters. if not defined, the action has no parameters",
+                                "description": "List of parameters. if not defined, the action has no parameters",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -598,7 +598,7 @@
                             },
                             "vertices": {
                                 "type": "array",
-                                "description": "The envelope curve in defined as a polygon. It shall be assumed as closed. Only simple polygons shall be used.",
+                                "description": "The envelope curve is defined as a polygon. It shall be assumed as closed. Only simple polygons shall be used.",
                                 "items": {
                                     "type": "object",
                                     "required": [
@@ -667,7 +667,7 @@
             "properties": {
                 "loadPositions": {
                     "type": "array",
-                    "description": "List of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “lhd” of the actions pick and drop. If this list doesn’t exist or is empty, the mobile robot has no load handling device.",
+                    "description": "List of load positions / load handling devices. This lists contains the valid values for the parameter “state.loads[].loadPosition” and for the action parameter “loadHandlingDevice” of the actions pick and drop. If this list doesn’t exist or is empty, the mobile robot has no load handling device.",
                     "items": {
                         "type": "string"
                     }
@@ -785,7 +785,7 @@
                             },
                             "maximumSpeed": {
                                 "type": "number",
-                                "unit": "m/s^2",
+                                "unit": "m/s",
                                 "description": "Maximum allowed speed for this load-type and –weight",
 								"minimum": 0.0
                             },
@@ -911,10 +911,10 @@
                             "maximum": 100.0
                         },
                         "minimumChargingTime": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "Specifies the desired minimum charging time in seconds.",
                             "unit": "s",
-							"minimum": 0.0
+							"minimum": 0
                         }
                     }
                 }
