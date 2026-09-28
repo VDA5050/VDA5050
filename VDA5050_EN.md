@@ -1155,7 +1155,7 @@ Each translation consists of an ISO 639-1 language code and the corresponding tr
 
 #### 6.6.5.4 Predefined error types
 
-The mobile robot shall use predefined error types to report specific issues. The following table lists the predefined error types and their description.
+The mobile robot shall use predefined error types to report specific issues. The following table lists the predefined error types and their description. All mentioned reference parameters are required to be provided by the mobile robot.
 
 Error Type | Error level | Description | Reference | Report duration
 ---|---|---|---|---
@@ -1168,7 +1168,7 @@ Error Type | Error level | Description | Reference | Report duration
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate `order` message (same `orderId` and `orderUpdateId`) | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'OUTSIDE_OF_CORRIDOR' | 'CRITICAL' | Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
-'INSUFFICIENT_MEMORY' | 'URGENT' | Mobile robot does not have enough memory to process received order. | If possible, `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
+'INSUFFICIENT_MEMORY' | 'URGENT' | Mobile robot does not have enough memory to process received order. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'DUPLICATE_MAP' | 'WARNING' | Receival of a map with `mapId` and `mapVersion` already existing. | `mapId` and `mapVersion` of duplicate | Until a new map related `instantAction` was accepted.
 'BLOCKED_ZONE_VIOLATION' | 'CRITICAL' | Entering a 'BLOCKED' zone. | `zoneId` | Until the mobile robot is no longer violating the blocked zone.
 'DUPLICATE_ZONE_SET' | 'WARNING' | Receival of a zone set with `zoneSetId` already existing. | `zoneSetId` or `actionId` of `instantAction` | Reasonable amount of time for the fleet control to notice that the zone update failed.
