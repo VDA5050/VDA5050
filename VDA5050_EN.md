@@ -166,6 +166,8 @@ Mobile robots that follow predefined trajectories. Predefined trajectories are s
 ## 3.7 Freely navigating mobile robot
 Mobile robots that plan their own trajectories. If fleet control sends a trajectory within the order, the robot shall follow this trajectory.
 
+## 3.8 Kinematic center 
+Reference point rigidly fixed to the mobile robot and defined as the origin of the vehicle coordinate system. It is used to describe the pose of the mobile robot.
 
 # 4 Transport protocol
 
