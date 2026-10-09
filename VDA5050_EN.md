@@ -727,7 +727,7 @@ drop | pick<br><br>(if automated) | Request the mobile robot to drop a load. <br
 detectObject | - | Mobile robot detects object (e.g., load, charging spot, free parking position). | yes | objectType (string, optional) | - | no | yes | yes | yes
 finePositioning | - | On a node, mobile robot will position exactly on a target.<br>The mobile robot is allowed to deviate from its node position.<br>On an edge, the mobile robot will e.g., align on stationary equipment while traversing an edge. | yes | stationType (string, optional)<br>stationName (string, optional) | - | no | yes | yes | yes
 waitForTrigger | - | Mobile robot shall wait for a trigger of the type defined specified in the triggerType parameter, which is an array of strings. Two predefined values shall be used when semantically appropriate: 'FLEET_CONTROL' if the trigger originates from the fleet control, and 'LOCAL' if the trigger comes from an input on the mobile robot (e.g., button press, manual loading). If none of the predefined values meet the specific requirements, custom values can be defined. <br>Fleet control is responsible for handling the timeout and shall cancel the order if necessary. | yes | triggerType [string] (array) | - | no | yes | no | yes
-trigger | - | Fleet control system notifies the mobile robot that a waitForTrigger action has been released. Typically, this occurs when the fleet control system receives information from a third-party system indicating that the process the mobile robot was waiting for has completed. | yes | - | - | yes | no | no | no
+trigger | - | Fleet control releases `waitForTrigger` actions in state 'RUNNING' whose `triggerType` contains 'FLEET_CONTROL'. The optional `actionId` parameter selects one wait in the current order. If omitted, all eligible wait actions are released. See [6.2.3.2](#6232-action-states). | yes | actionId (string, optional) | - | yes | no | no | no
 retry | - | Mobile robot retries action defined via actionId that is currently in state RETRIABLE. | yes | actionId (string) | - | yes | no | no | no
 skipRetry | - | Mobile robot shall skip the action defined via actionId that is currently in state RETRIABLE, setting action to FAILED. | yes | actionId (string) | - | yes | no | no | no
 cancelOrder | - | Mobile robot stops as soon as possible. This could be immediately or on the next node. See Chapter 6.1.3 Order cancellation. | yes | orderId (string, optional) | - | yes | no | no | no
@@ -764,11 +764,20 @@ drop | Initializing of the drop process, e.g., outstanding lift operations. | Th
 detectObject | - | Object detection is running. | - | Object has been detected. | Could not detect the object. | Object detection failed, but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
 finePositioning | - | Mobile robot positions itself exactly on a target. | The fine positioning process is being paused, e.g., if a safety field is violated. <br> The fine positioning continues after e.g. the violation had been resolved. | Goal position in reference to the station has been reached. | Goal position in reference to the station could not be reached. | Fine positioning failed but is retriable. The mobile robot is waiting for intervention from fleet control or an operator.
 waitForTrigger | - | Mobile robot is waiting for the trigger | - | Trigger has been triggered. | waitForTrigger fails, if order has been canceled. | -
+trigger | - | - | - | The selected `waitForTrigger` actions report 'FINISHED'. | No eligible wait is selected, or the target reference is invalid or unsupported. No wait is released. | -
 cancelOrder | - | Mobile robot is stopping or driving, until it reaches the next node. | - | Mobile robot is not moving. Mobile robot has canceled executing the order and is in idle state. | <br>Mobile robot has no active order<br>The previous order has already been canceled.<br>Passed orderId does not match the currently active orderId. | -
 factsheetRequest | - | - | - | The factsheet has been communicated | - | -
 updateCertificate | - | Mobile robot is downloading and installing certificates | - | Certificates have been downloaded, installed and are active. | Download or installation failed. | -
 
 >Table 5 - Expected behavior in action states of predefined actions
+
+**Targeted trigger release**
+
+When provided, the `actionId` parameter shall occur once, contain a non-empty string and identify exactly one `waitForTrigger` in the current order's `actionStates`, in state 'RUNNING', whose `triggerType` contains 'FLEET_CONTROL'. The parameter refers to the wait, not to the `trigger` action's own `actionId`. The reference and eligibility shall be checked when the release is applied. Only the referenced wait shall be released.
+
+If these requirements are not met or targeting is unsupported, the `trigger` action shall report 'FAILED' without releasing any wait. Error reporting shall follow [6.2.1](#621-instant-actions), referencing the `trigger` action's own `actionId`.
+
+A supporting mobile robot shall declare this parameter in its `trigger` factsheet entry with `valueDataType` 'STRING' and `isOptional` true. Fleet control shall use targeting only with protocol version 3.1.0 or later within major version 3 and this declaration.
 
 #### 6.2.3.3 Update mobile robot certificate
 
