@@ -84,6 +84,7 @@ Version 3.0.0
     [6.6.9 Action states](#669-action-states)<br>
     [6.6.10 Request use of Corridors](#6610-request-use-of-corridors)<br>
   [6.7 Visualization](#67-visualization)<br>
+    [6.7.1 Position-only participants](#671-position-only-participants)<br>
   [6.8 Sharing of planned paths for freely navigating mobile robots](#68-sharing-of-planned-paths-for-freely-navigating-mobile-robots)<br>
   [6.9 Request/response mechanism](#69-requestresponse-mechanism)<br>
   [6.10 Factsheet](#610-factsheet)<br>
@@ -228,13 +229,15 @@ Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 order | fleet control | mobile robot | Communication of orders | mandatory | order.schema
 instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
-visualization | mobile robot | visualization systems | High frequency communication of position and planned path | optional | visualization.schema
-connection | broker / mobile robot | fleet control | Indicates when mobile robot connection is lost. Not to be used by fleet control for checking the mobile robot health, added for an MQTT protocol level check of connection | mandatory | connection.schema 
+visualization | mobile robot or position-only participant | visualization systems; fleet control for position-only participants | Position and planned path; position-only profile in [6.7.1](#671-position-only-participants) | optional | visualization.schema
+connection | broker / mobile robot / position-only participant | fleet control | MQTT connection status of mobile robots and position-only participants; does not report participant health | mandatory | connection.schema
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
 responses | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | responses.schema
 
 >Table 2 Topics for communication between fleet control and mobile robot
+
+The mandatory topics in Table 2 apply to mobile robots. Position-only participants publish `connection` and `visualization` as defined in [6.7.1](#671-position-only-participants).
 
 
 # 5 Process and content of communication
@@ -1306,6 +1309,40 @@ The fields of the visualization object use the same structure as the position, v
 For additional information see [Implementation of the visualization message](#79-implementation-of-the-visualization-message).
 The update rate for this topic is defined by the integrator.
 
+### 6.7.1 Position-only participants
+
+A participant controlled outside VDA 5050 may report its pose on `visualization` with `participantType` 'POSITION_ONLY'. Its role, `manufacturer` and `serialNumber` shall be agreed with the receiving systems before connection. The identity shall not also identify a VDA-controlled mobile robot. The role shall remain fixed during an MQTT connection.
+
+Each report shall contain `mobileRobotPosition` and may contain `velocity`. Pose, reference point and units shall follow [6.3](#63-maps); velocity uses the participant's body coordinates. Reports shall omit `referenceStateHeaderId`, `plannedPath` and `intermediatePath`. Consumers shall not use the pose for coordination when `localized` is false.
+
+The participant shall publish `connection` as specified in [6.5](#65-connection). Consumers shall stop using cached poses when the connection state is not 'ONLINE'; an 'ONLINE' notification does not make a cached pose current.
+
+Reporting interval, clock handling, report expiry and restart handling shall be agreed during integration. The integration shall define a maximum total pose measurement age, including upstream tracking delays and report expiry. If this limit cannot be met, the participant shall set `localized` to false. The header timestamp alone does not establish measurement age.
+
+The participant need not publish `state` or `factsheet`. Fleet control shall not send VDA 5050 commands to this identity, and the participant shall ignore any it receives.
+
+Receiving systems shall support this profile before it is used. If `participantType` is omitted or 'MOBILE_ROBOT', the existing robot requirements apply, including `referenceStateHeaderId`.
+
+Example visualization message from a position-only participant:
+
+```json
+{
+  "headerId": 1,
+  "timestamp": "2026-10-09T10:00:00.000Z",
+  "version": "3.1.0",
+  "manufacturer": "ExampleVehicles",
+  "serialNumber": "vehicle-1",
+  "participantType": "POSITION_ONLY",
+  "mobileRobotPosition": {
+    "x": 12.5,
+    "y": 4,
+    "theta": 0,
+    "mapId": "transfer-area",
+    "localized": true
+  }
+}
+```
+
 
 ## 6.8 Sharing of planned paths for freely navigating mobile robots
 
@@ -1940,10 +1977,11 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2). |
 | manufacturer | string | Manufacturer of the mobile robot. |
 | serialNumber | string | Serial number of the mobile robot. |
-| referenceStateHeaderId | uint32 | Header ID of the state message this visualization message refers to. |
+| *participantType* | string | Enum {'MOBILE_ROBOT', 'POSITION_ONLY'}. Default: 'MOBILE_ROBOT'. See [6.7.1](#671-position-only-participants). |
+| *referenceStateHeaderId* | uint32 | Header ID of the `state` message this `visualization` message refers to. Required when `participantType` is absent or 'MOBILE_ROBOT'; shall be omitted for 'POSITION_ONLY'. |
 | ***plannedPath*** | JSON object | Represents a path within the robot's currently active order as NURBS. |
 | ***intermediatePath*** | JSON object | Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
-| ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
+| ***mobileRobotPosition*** | JSON object | Current pose on the map. Required for 'POSITION_ONLY'; optional for 'MOBILE_ROBOT'. |
 | ***velocity*** | JSON object | The mobile robot velocity in mobile robot coordinates. |
 
 Objects `plannedPath`, `intermediatePath`, `mobileRobotPosition` and `velocity` are defined in [7.8 Implementation of the state message](#78-implementation-of-the-state-message).
