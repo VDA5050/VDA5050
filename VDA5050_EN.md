@@ -1313,7 +1313,7 @@ The update rate for this topic is defined by the integrator.
 
 A participant controlled outside VDA 5050 may report its pose on `visualization` with `participantType` 'POSITION_ONLY'. Its role, `manufacturer` and `serialNumber` shall be agreed with the receiving systems before connection. The identity shall not also identify a VDA-controlled mobile robot. The role shall remain fixed during an MQTT connection.
 
-Each report shall contain `mobileRobotPosition` and may contain `velocity`. Pose, reference point and units shall follow [6.3](#63-maps); velocity uses the participant's body coordinates. Reports shall omit `referenceStateHeaderId`, `plannedPath` and `intermediatePath`. Consumers shall not use the pose for coordination when `localized` is false.
+Each report shall contain `mobileRobotPosition` and may contain `velocity`. Pose, reference point and units shall follow [6.3](#63-maps); velocity uses the participant's body coordinates. Reports shall omit `referenceStateHeaderId`, `plannedPath` and `intermediatePath`. Consumers shall not use the pose for coordination when `localized` is false. The mobile robot error reporting and order execution rules for `localized` do not apply to this profile.
 
 The participant shall publish `connection` as specified in [6.5](#65-connection). Consumers shall stop using cached poses when the connection state is not 'ONLINE'; an 'ONLINE' notification does not make a cached pose current.
 
