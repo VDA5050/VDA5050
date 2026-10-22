@@ -84,10 +84,10 @@ Version 3.0.0
     [6.6.9 Action states](#669-action-states)<br>
     [6.6.10 Request use of Corridors](#6610-request-use-of-corridors)<br>
   [6.7 Visualization](#67-visualization)<br>
-    [6.7.1 Position-only participants](#671-position-only-participants)<br>
   [6.8 Sharing of planned paths for freely navigating mobile robots](#68-sharing-of-planned-paths-for-freely-navigating-mobile-robots)<br>
   [6.9 Request/response mechanism](#69-requestresponse-mechanism)<br>
   [6.10 Factsheet](#610-factsheet)<br>
+  [6.11 Observations of externally controlled vehicles](#611-observations-of-externally-controlled-vehicles)<br>
 [7 Message specification](#7-message-specification)<br>
   [7.1 Symbols of the tables and meaning of formatting](#71-symbols-of-the-tables-and-meaning-of-formatting)<br>
     [7.1.1 Optional fields](#711-optional-fields)<br>
@@ -104,6 +104,7 @@ Version 3.0.0
   [7.8 Implementation of the state message](#78-implementation-of-the-state-message)<br>
   [7.9 Implementation of the visualization message](#79-implementation-of-the-visualization-message)<br>
   [7.10 Implementation of the factsheet message](#710-implementation-of-the-factsheet-message)<br>
+  [7.11 Implementation of externalVehicleState](#711-implementation-of-externalvehiclestate)<br>
 
 
 # 0 Foreword
@@ -223,21 +224,21 @@ Wildcard characters `+` and `#` as well as the character `$` that is reserved fo
 ### 4.3 Topics for communication
 
 The protocol uses the following topics for information exchange between fleet control and mobile robots.
+External reporting endpoints use connection and the optional externalVehicleState topic as defined in Section 6.11; mandatory mobile-robot data topics do not apply to them.
 
 Topic name | Published by | Subscribed by | Used for | Implementation | Schema
 ---|---|---|---|---|---
 order | fleet control | mobile robot | Communication of orders | mandatory | order.schema
 instantActions | fleet control | mobile robot | Communication of the actions that are to be executed immediately | mandatory | instantActions.schema
 state | mobile robot | fleet control | Communication of the mobile robot state | mandatory | state.schema
-visualization | mobile robot or position-only participant | visualization systems; fleet control for position-only participants | Position and planned path; position-only profile in [6.7.1](#671-position-only-participants) | optional | visualization.schema
-connection | broker / mobile robot / position-only participant | fleet control | MQTT connection status of mobile robots and position-only participants; does not report participant health | mandatory | connection.schema
+visualization | mobile robot | visualization systems | High frequency communication of position and planned path | optional | visualization.schema
+connection | broker / mobile robot / external vehicle adapter | fleet control, visualization systems | MQTT connection status of mobile robots and external reporting endpoints; does not establish vehicle health | mandatory | connection.schema 
 factsheet | mobile robot | fleet control | Parameters or vendor-specific information to assist set-up of the mobile robot in fleet control | mandatory | factsheet.schema
 zoneSet | fleet control | mobile robot | Transfer of zone sets from fleet control to the mobile robot | optional | zoneSet.schema
 responses | fleet control | mobile robot | Fleet control's responses to requests from within the mobile robot's state | optional | responses.schema
+externalVehicleState | external vehicle adapter | fleet control, visualization systems | Observation of an independently controlled vehicle | optional, see Section 6.11 | externalVehicleState.schema
 
 >Table 2 Topics for communication between fleet control and mobile robot
-
-The mandatory topics in Table 2 apply to mobile robots. Position-only participants publish `connection` and `visualization` as defined in [6.7.1](#671-position-only-participants).
 
 
 # 5 Process and content of communication
@@ -1309,40 +1310,6 @@ The fields of the visualization object use the same structure as the position, v
 For additional information see [Implementation of the visualization message](#79-implementation-of-the-visualization-message).
 The update rate for this topic is defined by the integrator.
 
-### 6.7.1 Position-only participants
-
-A participant controlled outside VDA 5050 may report its pose on `visualization` with `participantType` 'POSITION_ONLY'. Its role, `manufacturer` and `serialNumber` shall be agreed with the receiving systems before connection. The identity shall not also identify a VDA-controlled mobile robot. The role shall remain fixed during an MQTT connection.
-
-Each report shall contain `mobileRobotPosition` and may contain `velocity`. Pose, reference point and units shall follow [6.3](#63-maps); velocity uses the participant's body coordinates. Reports shall omit `referenceStateHeaderId`, `plannedPath` and `intermediatePath`. Consumers shall not use the pose for coordination when `localized` is false. The mobile robot error reporting and order execution rules for `localized` do not apply to this profile.
-
-The participant shall publish `connection` as specified in [6.5](#65-connection). Consumers shall stop using cached poses when the connection state is not 'ONLINE'; an 'ONLINE' notification does not make a cached pose current.
-
-Reporting interval, clock handling, report expiry and restart handling shall be agreed during integration. The integration shall define a maximum total pose measurement age, including upstream tracking delays and report expiry. If this limit cannot be met, the participant shall set `localized` to false. The header timestamp alone does not establish measurement age.
-
-The participant need not publish `state` or `factsheet`. Fleet control shall not send VDA 5050 commands to this identity, and the participant shall ignore any it receives.
-
-Receiving systems shall support this profile before it is used. If `participantType` is omitted or 'MOBILE_ROBOT', the existing robot requirements apply, including `referenceStateHeaderId`.
-
-Example visualization message from a position-only participant:
-
-```json
-{
-  "headerId": 1,
-  "timestamp": "2026-10-09T10:00:00.000Z",
-  "version": "3.1.0",
-  "manufacturer": "ExampleVehicles",
-  "serialNumber": "vehicle-1",
-  "participantType": "POSITION_ONLY",
-  "mobileRobotPosition": {
-    "x": 12.5,
-    "y": 4,
-    "theta": 0,
-    "mapId": "transfer-area",
-    "localized": true
-  }
-}
-```
-
 
 ## 6.8 Sharing of planned paths for freely navigating mobile robots
 
@@ -1411,6 +1378,59 @@ The fleet control can request the factsheet from the mobile robot by sending the
 
 All messages on this topic shall be sent with a `retained` flag.
 
+
+## 6.11 Observations of externally controlled vehicles
+
+The optional `externalVehicleState` topic reports the pose of an independently
+controlled vehicle. Integration shall assign one authoritative reporting source
+per vehicle identity and agree the map frame, reference point, geometry,
+supported version, reporting interval and timing limits. The identity shall
+follow [4.2](#42-topic-levels), match the topic and not also identify a
+VDA-controlled mobile robot.
+
+The endpoint shall use `connection` according to [6.5](#65-connection), with
+QoS 1 and retained messages. It need not publish `state`, `visualization` or
+`factsheet`. Fleet control shall not send VDA orders or instant actions to this
+identity; the endpoint shall ignore any it receives.
+`externalVehicleState` shall use QoS 0 and shall not be retained.
+
+### Observation content
+
+Each report shall contain `measurementTimestamp` and `mobileRobotPosition`.
+The measurement timestamp identifies the observation underlying the pose;
+republishing cached data shall preserve it. For `localized=false`, it identifies
+when localization was observed unavailable, and coordinates and velocity shall
+be omitted. Robot localization-error and order-execution rules do not apply.
+
+A localized pose shall contain `x`, `y`, `theta` and `mapId`, using the coordinates,
+units and orientation convention in [6.3](#63-maps). The publisher shall transform
+source coordinates into the agreed map frame before publication. Optional velocity
+shall contain `vx`, `vy` and `omega` in the vehicle-local frame at the same
+observation time. Omitted velocity is unknown.
+
+### Use of observations
+
+Consumers shall validate schema, identity and supported version before updating
+observation order. Older measurement timestamps shall not replace newer ones;
+a duplicate shall not extend validity. For equal measurement timestamps,
+localization loss shall take precedence and conflicting observations shall remain
+unavailable until a later observation arrives. An unsupported map makes an
+observation unavailable; an older supported-map observation shall not restore it.
+Consumers shall reject observations delivered with the MQTT retained flag.
+
+For coordination, integration shall bound total measurement age, including source
+and transport delays, clock uncertainty and elapsed time before use. Consumers
+shall invalidate observations when that bound exceeds the agreed maximum or can
+no longer be established, including after a clock discontinuity.
+
+Subscriber disconnection and non-ONLINE `connection` messages shall invalidate
+cached observations. `ONLINE` alone shall not restore them. After a negative
+connection message, coordination shall require a measurement acquired after that
+message was received. Last Will headers shall not be used to date the loss of
+connection.
+
+Position reports provide no movement or transfer permission. An unavailable
+observation does not establish that the vehicle has left the area.
 
 # 7 Message specification
 
@@ -1977,11 +1997,10 @@ fieldViolation<br>} | | boolean | Protective field violation (e.g., by laser or 
 | version | string | Version of the protocol [Major].[Minor].[Patch] (e.g., 1.3.2). |
 | manufacturer | string | Manufacturer of the mobile robot. |
 | serialNumber | string | Serial number of the mobile robot. |
-| *participantType* | string | Enum {'MOBILE_ROBOT', 'POSITION_ONLY'}. Default: 'MOBILE_ROBOT'. See [6.7.1](#671-position-only-participants). |
-| *referenceStateHeaderId* | uint32 | Header ID of the `state` message this `visualization` message refers to. Required when `participantType` is absent or 'MOBILE_ROBOT'; shall be omitted for 'POSITION_ONLY'. |
+| referenceStateHeaderId | uint32 | Header ID of the state message this visualization message refers to. |
 | ***plannedPath*** | JSON object | Represents a path within the robot's currently active order as NURBS. |
 | ***intermediatePath*** | JSON object | Represents the estimated time of arrival at closer waypoints that the mobile robot is able to perceive with its sensors. |
-| ***mobileRobotPosition*** | JSON object | Current pose on the map. Required for 'POSITION_ONLY'; optional for 'MOBILE_ROBOT'. |
+| ***mobileRobotPosition*** | JSON object | Current position of the mobile robot on the map. |
 | ***velocity*** | JSON object | The mobile robot velocity in mobile robot coordinates. |
 
 Objects `plannedPath`, `intermediatePath`, `mobileRobotPosition` and `velocity` are defined in [7.8 Implementation of the state message](#78-implementation-of-the-state-message).
@@ -2201,6 +2220,67 @@ This JSON object details the software and hardware versions running on the mobil
 | *minimumDesiredChargingLevel* | float64 | Specifies the minimum desired charging level in percent. |
 | *minimumChargingTime* | uint32 | Specifies the desired minimum charging time in seconds. |
 | &emsp;} | | |
+
+## 7.11 Implementation of externalVehicleState
+
+Field | Data type | Description
+---|---|---
+headerId | uint32 | Per-topic counter, incremented by one for each publication.
+timestamp | string | Publication time in UTC, YYYY-MM-DDTHH:mm:ss.fffZ.
+version | string | Protocol version [Major].[Minor].[Patch].
+manufacturer | string | Registered vehicle identity, matching the topic.
+serialNumber | string | Registered vehicle identity, following Section 4.2 and matching the topic.
+measurementTimestamp | string | Observation time, or time localization was observed unavailable; same UTC format as timestamp.
+**mobileRobotPosition** | JSON object | `localized`; if true, also `x`, `y`, `theta` and `mapId`.
+***velocity*** | JSON object | Optional `vx`, `vy` in m/s and `omega` in rad/s; all three required when present.
+
+Reports shall contain only the fields listed here. Position and velocity values
+shall be finite float64 values; `theta` shall be in [-pi, pi]. Position units
+and map semantics follow Section 6.3.
+
+### Examples
+
+A localized observation with vehicle-local velocity:
+
+```json
+{
+    "headerId": 12,
+    "timestamp": "2026-10-22T12:00:00.500Z",
+    "version": "3.1.0",
+    "manufacturer": "ExampleVehicles",
+    "serialNumber": "vehicle-1",
+    "measurementTimestamp": "2026-10-22T12:00:00.400Z",
+    "mobileRobotPosition": {
+        "localized": true,
+        "x": 12.5,
+        "y": 4.2,
+        "theta": 0.25,
+        "mapId": "site-map"
+    },
+    "velocity": {
+        "vx": 0.4,
+        "vy": 0,
+        "omega": 0
+    }
+}
+```
+
+When localization is unavailable:
+
+```json
+{
+    "headerId": 13,
+    "timestamp": "2026-10-22T12:00:00.600Z",
+    "version": "3.1.0",
+    "manufacturer": "ExampleVehicles",
+    "serialNumber": "vehicle-1",
+    "measurementTimestamp": "2026-10-22T12:00:00.600Z",
+    "mobileRobotPosition": {
+        "localized": false
+    }
+}
+```
+
 
 # Bibliography
 

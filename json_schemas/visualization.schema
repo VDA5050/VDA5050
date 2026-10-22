@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "visualization",
-    "description": "Position and path reports from mobile robots or position-only participants.",
+    "description": "Mobile robot position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
     "subtopic": "/visualization",
     "type": "object",
     "required": [
@@ -9,40 +9,9 @@
         "timestamp", 
         "version", 
         "manufacturer", 
-        "serialNumber"
+        "serialNumber",
+        "referenceStateHeaderId"
     ],
-    "if": {
-        "properties": {
-            "participantType": { "const": "POSITION_ONLY" }
-        },
-        "required": ["participantType"]
-    },
-    "then": {
-        "required": ["mobileRobotPosition"],
-        "properties": {
-            "headerId": { "minimum": 0, "maximum": 4294967295 },
-            "mobileRobotPosition": {
-                "properties": {
-                    "x": { "$ref": "#/definitions/float64" },
-                    "y": { "$ref": "#/definitions/float64" },
-                    "deviationRange": { "$ref": "#/definitions/float64" }
-                }
-            },
-            "velocity": {
-                "properties": {
-                    "vx": { "$ref": "#/definitions/float64" },
-                    "vy": { "$ref": "#/definitions/float64" },
-                    "omega": { "$ref": "#/definitions/float64" }
-                }
-            },
-            "referenceStateHeaderId": false,
-            "plannedPath": false,
-            "intermediatePath": false
-        }
-    },
-    "else": {
-        "required": ["referenceStateHeaderId"]
-    },
     "properties": {
         "headerId": {
             "type": "integer",
@@ -71,12 +40,6 @@
             "type": "string",
             "description": "Serial number of the mobile robot."
         },
-        "participantType": {
-            "type": "string",
-            "enum": ["MOBILE_ROBOT", "POSITION_ONLY"],
-            "default": "MOBILE_ROBOT",
-            "description": "Reporting profile. POSITION_ONLY omits the state reference and order paths."
-        },
         "referenceStateHeaderId": {
             "type": "integer",
             "description": "Header ID of the state message this visualization message refers to."
@@ -95,11 +58,6 @@
         }
     },
     "definitions": {
-        "float64": {
-            "type": "number",
-            "minimum": -1.7976931348623157e308,
-            "maximum": 1.7976931348623157e308
-        },
 		"plannedPath": {
 			"type": "object",
             "description": "Represents a path within the robot's currently active order as NURBS.",
