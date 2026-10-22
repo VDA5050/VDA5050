@@ -257,7 +257,7 @@
                             "description": "Maximum number of actions per edge processable by the mobile robot",
 							"minimum": 0
                         },
-                        "actions.actionsParameters": {
+                        "action.actionParameters": {
                             "type": "integer",
                             "description": "Maximum number of parameters per action processable by the mobile robot",
 							"minimum": 0
