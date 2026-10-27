@@ -636,7 +636,7 @@ Depending on the internal state of the mobile robot, the selected trajectory may
 >Figure 10 - Edges with a `corridor` attribute that defines the left and right boundaries within which a mobile robot is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the mobile robot, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorReferencePoint` parameter.
 
 The area in which the mobile robot is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
-The optional `corridorReferencePoint` field specifies whether the mobile robot control point or the mobile robot contour should be inside the defined boundary.
+The optional `corridorReferencePoint` field specifies whether the mobile robot's kinematic center or the mobile robot contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the mobile robot is inside the boundaries of the new and now current edge as soon as it passes a node.
 Instead of setting the corridor boundaries to zero, fleet control shall not use the `corridor` attribute if the mobile robot shall not deviate from the trajectory.
 
@@ -1078,7 +1078,7 @@ The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the m
 ### 6.6.2 Traversal of nodes and edges
 
 The mobile robot decides on its own when a node should count as traversed.
-A requirement for the traversal is that the mobile robot's control point shall be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
+A requirement for the traversal is that the mobile robot's kinematic center shall be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
 The `allowedDeviationXY` defines at what point a line-guided mobile robot can deviate from its predefined trajectory, to cut the corner along a smoother path rather than reaching the node's exact position. When leaving the `allowedDeviationXY` the mobile robot shall be back on its predefined trajectory of the subsequent edge.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
@@ -1512,7 +1512,7 @@ mapId<br>} | | string | Unique identification of the map on which the position i
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
-**allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br> If `a` = `b`= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.
+**allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br> If `a` = `b` = 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot's kinematic center as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.
 a | m | float64 | Length of the ellipse semi-major axis	in meters.
 b | m | float64 | Length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | Rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
