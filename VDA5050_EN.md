@@ -60,15 +60,12 @@ Version 3.0.0
     [6.2.2 Action blocking types and sequence](#622-action-blocking-types-and-sequence)<br>
     [6.2.3 Predefined actions](#623-predefined-actions)<br>
   [6.3 Maps](#63-maps)<br>
-    [6.3.1 Map distribution](#631-map-distribution)<br>
-    [6.3.2 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
-    [6.3.3 Map download](#633-map-download)<br>
     [6.3.1 Kinematic center](#631-kinematic-center)<br>
     [6.3.2 Map distribution](#632-map-distribution)<br>
-    [6.3.3 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
-    [6.3.4 Map download](#633-map-download)<br>
-    [6.3.5 Enable downloaded maps](#634-enable-downloaded-maps)<br>
-    [6.3.6 Delete maps on the mobile robot](#635-delete-maps-on-the-mobile-robot)<br>
+    [6.3.3 Maps in the mobile robot state](#633-maps-in-the-mobile-robot-state)<br>
+    [6.3.4 Map download](#634-map-download)<br>
+    [6.3.5 Enable downloaded maps](#635-enable-downloaded-maps)<br>
+    [6.3.6 Delete maps on the mobile robot](#636-delete-maps-on-the-mobile-robot)<br>
   [6.4 Zones](#64-zones)<br>
     [6.4.1 Zone types](#641-zone-types)<br>
     [6.4.2 Zone set transfer](#642-zone-set-transfer)<br>
@@ -799,7 +796,7 @@ The mobile robot coordinate system is also specified as a right-handed coordinat
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within -Pi and +Pi.
 
-### 6.3.1 Kinematic center 
+### 6.3.1 Kinematic center
 Reference point rigidly defined in the mobile robot's coordinate system used to report its `mobileRobotPosition`.
 
 ![Figure 13 Kinematic center of a mobile robot and its reported `mobileRobotPosition`](./assets/kinematic_center_definition.png)
