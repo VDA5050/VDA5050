@@ -4,7 +4,7 @@
 
 ## VDA 5050
 
-## Version 3.0.0
+## Version 3.0.1
 
 ![Fleet control system and mobile robots](./assets/csagv.png)
 
@@ -1169,7 +1169,7 @@ Error Type | Error level | Description | Reference | Report duration
 'UNSUPPORTED_PARAMETER' | 'CRITICAL' | Receival of message with an unsupported optional parameter. | Name of parameter | Until new order is accepted.
 'NO_ORDER_TO_CANCEL' | 'WARNING'  | The mobile robot received a `cancelOrder` action, but it does not have an active order to cancel. | `actionId` of `cancelOrder` | Until new order is accepted.
 'VALIDATION_FAILURE'|'WARNING'| Receival of malformed order. | If possible, `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
-'INVALID_ORDER_ACTION' | 'WARNING' | Receival of an order containing unsupported actions. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
+'INVALID_ORDER_ACTION' | 'WARNING' | Receival of an order containing unsupported actions. | `actionId` of invalid action. | Until new order is accepted.
 'INVALID_INSTANT_ACTION' | 'WARNING' | Receival of an unsupported instant action. | `actionId` of `instantAction` | Until new instant action is accepted.
 'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate `order` message (same `orderId` and `orderUpdateId`) | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
@@ -1264,7 +1264,7 @@ When a mobile robot receives an `action` as part of the order (attached to a `no
 When a mobile robot receives an `instantAction`, it shall report this `action` with an `actionState` in its `instantActionStates` array.
 When a mobile robot executes a `zoneAction`, it shall report this `action` with an `actionState` in its `zoneActionStates` array. Optionally, a mobile robot can report any planned `zoneAction` here.
 
-The current stage of an action shall be reflected in the field `actionStatus` of the corresponding `actionState` (see Table 2).
+The current stage of an action shall be reflected in the field `actionStatus` of the corresponding `actionState` (see Table 12).
 
 actionStatus | Description
 ---|---
@@ -1590,11 +1590,13 @@ value <br><br><br>} | One of:<br>array,<br>boolean,<br>number,<br>integer,<br>st
 
 Examples for the `actionParameter` of an action "someAction" with key-value pairs for `stationType` and `loadType`:
 
+```
 "actionParameters":[
 {"key":"stationType", "value": "floor"},
 {"key":"weight", "value": 8.5},
 {"key": "loadType", "value": "pallet_eu"}
 ]
+```
 
 The reason for using the proposed scheme of "key": "actualKey", "value": "actualValue" is to keep the implementation generic. The "actualValue" can be of any possible JSON data type, such as array, boolean, integer, number, string or even an object.
 
