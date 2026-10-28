@@ -799,7 +799,7 @@ The orientation shall be in radians and shall be within -Pi and +Pi.
 ### 6.3.1 Kinematic center
 Reference point rigidly defined in the mobile robot's coordinate system used to report its `mobileRobotPosition`.
 
-![Figure 13 Kinematic center of a mobile robot and its reported `mobileRobotPosition`](./assets/kinematic_center_definition.png)
+![Figure 13 Kinematic center of a mobile robot positioned at the origin of the mobile robot's coordinate system and the resulting reported `mobileRobotPosition`](./assets/kinematic_center_definition.png)
 >Figure 13 - Kinematic center of a mobile robot positioned at the origin of the mobile robot's coordinate system and the resulting reported `mobileRobotPosition`
 
 
