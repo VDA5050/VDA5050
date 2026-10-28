@@ -1520,7 +1520,7 @@ Object structure | Unit | Data type | Description
 **allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br> If `a` = `b` = 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot's kinematic center as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.
 a | m | float64 | Length of the ellipse semi-major axis	in meters.
 b | m | float64 | Length of the ellipse semi-minor axis in meters.
-theta<br>} | rad | float64 | Range: [-Pi/2 ... Pi/2]<br>Rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
+theta<br>} | rad | float64 | Range: [-Pi ... Pi]<br>Rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
 
 Object structure | Unit | Data type | Description
 ---|---|---|---
