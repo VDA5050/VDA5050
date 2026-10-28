@@ -297,7 +297,7 @@
 				},
 				"nodeDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -349,7 +349,7 @@
 				},
 				"edgeDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -694,7 +694,7 @@
                 },
                 "actionDescriptor": {
                     "type": "string",
-                    "description": "A user-defined, human-readable name or descriptor."
+                    "description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
                 },
                 "actionStatus": {
                     "type": "string",

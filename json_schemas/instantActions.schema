@@ -64,7 +64,7 @@
                     },
                     "actionDescriptor": {
                         "type": "string",
-                        "description": "Additional information on the action."
+                        "description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
                     },
                     "blockingType": {
                         "type": "string",
