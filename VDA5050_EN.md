@@ -60,11 +60,12 @@ Version 3.0.0
     [6.2.2 Action blocking types and sequence](#622-action-blocking-types-and-sequence)<br>
     [6.2.3 Predefined actions](#623-predefined-actions)<br>
   [6.3 Maps](#63-maps)<br>
-    [6.3.1 Map distribution](#631-map-distribution)<br>
-    [6.3.2 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
-    [6.3.3 Map download](#633-map-download)<br>
-    [6.3.4 Enable downloaded maps](#634-enable-downloaded-maps)<br>
-    [6.3.5 Delete maps on the mobile robot](#635-delete-maps-on-the-mobile-robot)<br>
+    [6.3.1 Kinematic center](#631-kinematic-center)<br>
+    [6.3.2 Map distribution](#632-map-distribution)<br>
+    [6.3.3 Maps in the mobile robot state](#633-maps-in-the-mobile-robot-state)<br>
+    [6.3.4 Map download](#634-map-download)<br>
+    [6.3.5 Enable downloaded maps](#635-enable-downloaded-maps)<br>
+    [6.3.6 Delete maps on the mobile robot](#636-delete-maps-on-the-mobile-robot)<br>
   [6.4 Zones](#64-zones)<br>
     [6.4.1 Zone types](#641-zone-types)<br>
     [6.4.2 Zone set transfer](#642-zone-set-transfer)<br>
@@ -634,7 +635,7 @@ Depending on the internal state of the mobile robot, the selected trajectory may
 >Figure 10 - Edges with a `corridor` attribute that defines the left and right boundaries within which a mobile robot is allowed to deviate from its predefined trajectory to avoid obstacles. On the left, the kinematic center defines the allowed deviation, while on the right, the contour of the mobile robot, possibly extended by the load, defines the allowed deviation. This is defined by the `corridorReferencePoint` parameter.
 
 The area in which the mobile robot is allowed to navigate independently (and deviate from the original edge trajectory) is defined by a left and a right boundary.
-The optional `corridorReferencePoint` field specifies whether the mobile robot control point or the mobile robot contour should be inside the defined boundary.
+The optional `corridorReferencePoint` field specifies whether the mobile robot's kinematic center or the mobile robot contour should be inside the defined boundary.
 The boundaries of the edges shall be defined in such a way that the mobile robot is inside the boundaries of the new and now current edge as soon as it passes a node.
 Instead of setting the corridor boundaries to zero, fleet control shall not use the `corridor` attribute if the mobile robot shall not deviate from the trajectory.
 
@@ -667,7 +668,7 @@ Some examples for which instant actions could be relevant are:
 
 When a mobile robot receives an `instantAction`, an appropriate `actionState` shall be added to the `instantActionStates` array of the mobile robot's state.
 The `actionStatus` shall be updated according to the progress of the action.
-See also Figure 11 for the different transitions of an `actionStatus`.
+See also Figure 22 for the different transitions of an `actionStatus`.
 The `blockingType` of an instant action is always 'NONE'.
 
 When the mobile robot receives an `instantAction` it cannot execute, it shall report an 'INVALID_INSTANT_ACTION' error with level 'WARNING' and the `actionId` of the `instantAction` as `errorReference`.
@@ -787,7 +788,7 @@ To ensure consistent navigation among different types of mobile robots, the posi
 For the differentiation between different levels of a site or location, a unique `mapId` is used.
 The map coordinate system is to be specified as a right-handed coordinate system with the z-axis pointing skywards.
 A positive rotation therefore is to be understood as a counterclockwise rotation.
-The mobile robot coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the mobile robot and the z-axis pointing upward (ISO 9787 5.5). The mobile robot reference point is defined as (0,0,0) in the mobile robot reference frame, unless specified otherwise.
+The mobile robot coordinate system is also specified as a right-handed coordinate system (ISO 9787 4.1) with the x-axis pointing in the forward direction of the mobile robot and the z-axis pointing upward (ISO 9787 5.5).
 
 ![Figure 12 Coordinate system with sample mobile robot and orientation](./assets/coordinate_system_vehicle_orientation.png)
 >Figure 12 - Coordinate system with sample mobile robot and orientation
@@ -795,8 +796,14 @@ The mobile robot coordinate system is also specified as a right-handed coordinat
 The X, Y, and Z coordinates shall be given in meters. 
 The orientation shall be in radians and shall be within -Pi and +Pi.
 
+### 6.3.1 Kinematic center
+Reference point rigidly defined in the mobile robot's coordinate system used to report its `mobileRobotPosition`.
 
-### 6.3.1 Map distribution
+![Figure 13 Kinematic center of a mobile robot positioned at the origin of the mobile robot's coordinate system and the resulting reported `mobileRobotPosition`](./assets/kinematic_center_definition.png)
+>Figure 13 - Kinematic center of a mobile robot positioned at the origin of the mobile robot's coordinate system and the resulting reported `mobileRobotPosition`
+
+
+### 6.3.2 Map distribution
 
 To enable an automatic map distribution and intelligent management of restarting the mobile robots if necessary, fleet control can manage the maps on the mobile robot.
 
@@ -808,12 +815,12 @@ In order to minimize downtime and make it easier for the fleet control to synchr
 
 Deletion of maps can also be done by the fleet control via an instant action.
 
-The map distribution process is shown in Figure 13.
+The map distribution process is shown in Figure 14.
 
-![Figure 13 Map distribution process](./assets/map_distribution_process.png)
->Figure 13 - Communication required between fleet control, mobile robot and map server to download, enable, and delete a map.
+![Figure 14 Map distribution process](./assets/map_distribution_process.png)
+>Figure 14 - Communication required between fleet control, mobile robot and map server to download, enable, and delete a map.
 
-### 6.3.2 Maps in the mobile robot state
+### 6.3.3 Maps in the mobile robot state
 
 The `mapId` field in the `mobileRobotPosition` of the state represents the currently active map.
 
@@ -821,7 +828,7 @@ Information about the maps available on a mobile robot is presented in the `maps
 Note that multiple maps with different `mapId` can be enabled at the same time. There shall only be one version of maps with the same `mapId` enabled at a time. If the `maps` array is empty, no maps are currently available on the mobile robot.
 
 
-### 6.3.3 Map download
+### 6.3.4 Map download
 
 The map download shall be triggered by the `downloadMap` instant action from the fleet control. It shall contain the mandatory parameters `mapId`, `mapVersion` and `mapDownloadLink` under which the map is stored on the map server and which can be accessed by the mobile robot.
 
@@ -831,7 +838,7 @@ The process of downloading a map shall not modify, delete, enable, or disable an
 The mobile robot shall reject the download of a map with a `mapId` and `mapVersion` that is already on the mobile robot. An error of type 'DUPLICATE_MAP' and level 'WARNING' shall be reported, and the status of the instant action shall be set to 'FAILED'. The fleet control shall first delete the map on the mobile robot and then restart the download.
 
 
-### 6.3.4 Enable downloaded maps
+### 6.3.5 Enable downloaded maps
 
 There are two ways to enable a map on a mobile robot:
 
@@ -842,7 +849,7 @@ Fleet control shall ensure that the correct maps are activated on the mobile rob
 If the mobile robot is to be set to a specific position on a new map, the `initializePosition` instant action shall be used.
 
 
-### 6.3.5 Delete maps on the mobile robot
+### 6.3.6 Delete maps on the mobile robot
 
 The fleet control can request the deletion of a specific map from a mobile robot. This shall be done by using the instant action `deleteMap`. When a mobile robot runs out of memory, it should report this to the fleet control, which can then initiate the deletion of maps. The mobile robot itself shall not delete maps.
 After successfully deleting a map, the mobile robot shall remove the corresponding entry from its `maps` array in the `state` message.
@@ -864,8 +871,8 @@ Two categories of zones are distinguished: contour-based zones and kinematic cen
 
 For contour-based zones, the contour of the mobile robot (including its load) determines zone entry and exit. Any part of the contour entering the zone is a zone entry. As soon as no part of the mobile robot's contour remains within the zone, it is a zone exit.
 
-![Figure 14 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
->Figure 14 - Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)
+![Figure 15 Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)](./assets/contour_entry.png)
+>Figure 15 - Depiction of a mobile robot entering a zone based on its contour (left) and a loaded mobile robot with corresponding extended bounding box exiting a zone (right)
 
 The following contour-based zones are defined:
 
@@ -891,8 +898,8 @@ In kinematic center-based zones, the mobile robot's kinematic center determines 
 'PRIORITY' and 'PENALTY' zones are zones which only influence the path planning of mobile robots.
 'DIRECTED' zones define a preferred direction of travel within the zone. 'BIDIRECTED' zones define a travel direction and its opposite direction to be used. Other directions shall be avoided. The `directedLimitation` and `bidirectedLimitation` enums specify the limits within which the mobile robot may deviate from its direction of travel. The direction of travel is the velocity vector in the project-specific coordinate system.
 
-![Figure 15 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
->Figure 15 - Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)
+![Figure 16 Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)](./assets/kinematic_center_entry.png)
+>Figure 16 - Depiction of a mobile robot entering a zone based on its kinematic center (left) and a loaded mobile robot exiting a zone based on its kinematic center (right)
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
@@ -911,7 +918,7 @@ In kinematic center-based zones, the mobile robot's kinematic center determines 
 
 ### 6.4.2 Zone set transfer
 
-Zone sets shall only be changed and distributed by fleet control to keep consistency in the system. The preferred way to distribute zone sets is via the `zoneSet` topic. If the mobile robot supports zones, the update via the `zoneSet` topic shall be supported. Larger zone sets can also be shared through the `downloadZoneSet` instant action, following the map distribution concept in figure 13.
+Zone sets shall only be changed and distributed by fleet control to keep consistency in the system. The preferred way to distribute zone sets is via the `zoneSet` topic. If the mobile robot supports zones, the update via the `zoneSet` topic shall be supported. Larger zone sets can also be shared through the `downloadZoneSet` instant action, following the map distribution concept in Figure 14.
 
 A `zoneSet` is an array of `zone` objects with a globally unique identifier, `zoneSetId`. It is associated with a single map referenced through the `mapId`. The `mapVersion` shall not be referenced, as the same zone set might be intended to be used for several versions of one map. In general, several zone sets can be defined for a single map and it is upon fleet control to ensure that the right zone set is enabled for each map on the mobile robot. As with maps, the `zoneSetStatus` indicates which zone set is currently used by the mobile robot. Only a single zone set can be active at once for each `mapId` on the mobile robot. Zones shall not extend beyond the spatial boundaries of a map.
 The content of a zone set with a unique `zoneSetId` shall not change. If changes are required within a zone set, it shall be referenced with a new `zoneSetId`.
@@ -954,23 +961,23 @@ The `response` object can include a `leaseExpiry` which specifies until when a '
 
 The mobile robot shall acknowledge the fleet control's response by setting the `requestStatus` accordingly and keep the request for as long as it considers the information relevant. See also Section [6.9 Request/response mechanism](#69-requestresponse-mechanism).
 
-The interaction between the mobile robot and the fleet control for 'RELEASE' zones shall be according to Figure 16.
+The interaction between the mobile robot and the fleet control for 'RELEASE' zones shall be according to Figure 17.
 
 While the mobile robot remains in the 'RELEASE' zone, it keeps the `zoneRequest` object in its state and continues to report `requestStatus` as 'GRANTED' to inform fleet control that it is still inside the zone. After the mobile robot has exited the zone, it shall remove the corresponding `zoneRequest` entry from its `state` message.
 If the mobile robot has not yet entered the 'RELEASE' zone and either a response with `grantType` 'REVOKED' is received or the `leaseExpiry` has passed, it shall remove the request from its state and shall not enter the zone.
 If the mobile robot is already inside the 'RELEASE' zone when a response with `grantType` 'REVOKED' is received or the `leaseExpiry` has passed, it shall react according to the `releaseLossBehavior` defined in the zone definition. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly, until the zone has been left or a new release is granted. To re-enter the zone, the mobile robot shall issue a new request.
 
-![Figure 16 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
->Figure 16 - Zone request behavior for a 'RELEASE' zone.
+![Figure 17 Zone request behavior for a RELEASE zone.](./assets/request_release_zone_access.png)
+>Figure 17 - Zone request behavior for a 'RELEASE' zone.
 
-The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to Figure 17.
+The interaction between the mobile robot and the fleet control for 'COORDINATED_REPLANNING' zones shall be according to Figure 18.
 
 The mobile robot shall choose one of the trajectories of all 'GRANTED' requests to the zone and set the corresponding `requestStatus` to 'GRANTED' while removing all other requests from its state.
 If the mobile robot has not yet entered the 'COORDINATED_REPLANNING' zone and either a response with `grantType` 'REVOKED' is received or the `leaseExpiry` has passed, it shall remove the request from its state and shall not enter the zone.
 If the mobile robot is already inside the 'COORDINATED_REPLANNING' zone when a response with `grantType` 'REVOKED' is received or the `leaseExpiry` has passed, it shall stop driving and report an error of type 'ZONE_RELEASE_LOST' with error level 'CRITICAL'. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly, until the zone has been left or a new release is granted. To continue its path through the zone, the mobile robot shall issue a new request.
 
-![Figure 17 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
->Figure 17 - Zone request behavior for a 'COORDINATED_REPLANNING' zone.
+![Figure 18 Zone request behavior for a COORDINATED_REPLANNING zone.](./assets/request_coordinated_replanning_zone_replanning.png)
+>Figure 18 - Zone request behavior for a 'COORDINATED_REPLANNING' zone.
 
 
 ### 6.4.4 Interactions between zones
@@ -1069,14 +1076,14 @@ Additionally, if the mobile robot is capable of determining its current position
 
 The `nodeStates` and `edgeStates` include all upcoming nodes and edges for the mobile robot to traverse.
 
-![Figure 18 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
->Figure 18 - Order information provided by the `state` topic. Only the ID of the last node and the remaining nodes and edges are transmitted
+![Figure 19 Order information provided by the state topic. Only the ID of the last node and the remaining nodes and edges are transmitted](./assets/order_information_state_topic.png)
+>Figure 19 - Order information provided by the `state` topic. Only the ID of the last node and the remaining nodes and edges are transmitted
 
 
 ### 6.6.2 Traversal of nodes and edges
 
 The mobile robot decides on its own when a node should count as traversed.
-A requirement for the traversal is that the mobile robot's control point shall be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
+A requirement for the traversal is that the mobile robot's kinematic center shall be within the node's `allowedDeviationXY` and its orientation within `allowedDeviationTheta`.
 The `allowedDeviationXY` defines at what point a line-guided mobile robot can deviate from its predefined trajectory, to cut the corner along a smoother path rather than reaching the node's exact position. When leaving the `allowedDeviationXY` the mobile robot shall be back on its predefined trajectory of the subsequent edge.
 If the edge attribute `corridor` of the subsequent edge is set, these boundaries should be met additionally.
 
@@ -1094,15 +1101,15 @@ An exception to this rule is if the mobile robot shall stop on the node (because
 
 When an active order exists, the fields `lastNodeId` and `lastNodeSequenceId` shall be updated only when the mobile robot traverses a released node that is part of this order. For example if a physically line-guided mobile robot detects a physical marker/tag that is not part of the active order’s `nodes`, this detection shall not lead to a change of `lastNodeId` or `lastNodeSequenceId`.
 
-![Figure 19 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
->Figure 19 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
+![Figure 20 Depiction of nodeStates, edgeStates, and actionStates during order handling](./assets/states_during_order_handling.png)
+>Figure 20 - Depiction of `nodeStates`, `edgeStates`, and `actionStates` during order handling
 
 #### 6.6.2.1 Definition of allowedDeviationXY as an ellipse
 
 The `allowedDeviationXY` is defined as an ellipse around the node position to allow more flexible approaches to the node.
 
-![Figure 20 allowedDeviationXY ellipse](./assets/ellipse.png)
->Figure 20 - `allowedDeviationXY` ellipse
+![Figure 21 allowedDeviationXY ellipse](./assets/ellipse.png)
+>Figure 21 - `allowedDeviationXY` ellipse
 
 
 ### 6.6.3 Base request
@@ -1271,7 +1278,7 @@ actionStatus | Description
 
 >Table 12 - Feasible values for the `actionStatus` field
 
-All possible action state transitions are visualized in Figure 21 and examples are given in the following matrix:
+All possible action state transitions are visualized in Figure 22 and examples are given in the following matrix:
 
 
 | **from / to →** | **WAITING** | **INITIALIZING** | **PAUSED** | **RUNNING** | **RETRIABLE** | **FAILED** | **FINISHED** |
@@ -1285,8 +1292,8 @@ All possible action state transitions are visualized in Figure 21 and examples a
 
 >Table 13 Examples for possible action state transitions
 
-![Figure 21 All possible status transitions for actionStates](./assets/action_state_transition.png)
->Figure 21 - All possible status transitions for `actionStates`
+![Figure 22 All possible status transitions for actionStates](./assets/action_state_transition.png)
+>Figure 22 - All possible status transitions for `actionStates`
 
 
 #### 6.6.9.1 Reporting of horizon actions in the mobile robot's state
@@ -1331,10 +1338,10 @@ The parameters `plannedPath` and `intermediatePath` shall be used only for traje
 
 ## 6.9 Request/response mechanism
 
-Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in figure 22.
+Certain coordination tasks between mobile robots and the fleet control require explicit permission from the fleet control before the mobile robot is allowed to perform an operation. For these cases, a request/response mechanism is used. The lifecycle of a request is described in Figure 23.
 
-![Figure 22 Visualization of request state transitions](./assets/request_state_transitions.png)
->Figure 22 - Request lifecycle: request states and logic of possible transitions. 
+![Figure 23 Visualization of request state transitions](./assets/request_state_transitions.png)
+>Figure 23 - Request lifecycle: request states and logic of possible transitions. 
 
 A request is always initiated by the mobile robot and communicated as part of the `state` message. The fleet control shall evaluate the request and return its decision via the `responses` topic.
 
@@ -1510,7 +1517,7 @@ mapId<br>} | | string | Unique identification of the map on which the position i
 
 Object structure | Unit | Data type | Description
 ---| --- |--- | ---
-**allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br> If `a` = `b`= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.
+**allowedDeviationXY** { | | JSON object | Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed.<br> If `a` = `b` = 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot's kinematic center as precisely as is technically possible for the mobile robot. This applies also if `allowedDeviationXY` is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of `a` and `b` as 0.0.<br> The coordinates of the node defines the center of the ellipse.
 a | m | float64 | Length of the ellipse semi-major axis	in meters.
 b | m | float64 | Length of the ellipse semi-minor axis in meters.
 theta<br>} | rad | float64 | Rotation angle (the angle from the positive horizontal axis to the ellipse's major axis inside the project-specific coordinate system).
