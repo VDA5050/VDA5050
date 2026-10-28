@@ -1398,7 +1398,7 @@ All messages on this topic shall be sent with a `retained` flag.
 The different messages are presented in tables describing the contents of the fields of the JSON.
 
 In addition, JSON schemas are available for validation in the public git repository (<https://github.com/VDA5050/VDA5050>).
-The JSON schemas are updated with every release of the VDA5050. If there are differences between the JSON schemas and this document, the variant in this document applies.
+The JSON schemas are updated with every release of the VDA 5050. If there are differences between the JSON schemas and this document, the variant in this document applies.
 
 
 ## 7.1 Symbols of the tables and meaning of formatting
@@ -1981,7 +1981,7 @@ Objects `plannedPath`, `intermediatePath`, `mobileRobotPosition` and `velocity` 
 | **typeSpecification** | JSON object | These parameters generally specify the class and the capabilities of the mobile robot. |
 | **physicalParameters** | JSON object | These parameters specify the basic physical properties of the mobile robot. |
 | **protocolLimits** | JSON object | Limits for length of identifiers, arrays, strings, and similar in MQTT communication. |
-| **protocolFeatures** | JSON object | Supported features of VDA5050 protocol. |
+| **protocolFeatures** | JSON object | Supported features of VDA 5050 protocol. |
 | **mobileRobotGeometry** | JSON object | Detailed definition of mobile robot geometry. |
 | **loadSpecification** | JSON object | Abstract specification of load capabilities. |
 | ***mobileRobotConfiguration*** | JSON object | Summary of current software and hardware versions on the mobile robot and optional network information. |
@@ -2073,7 +2073,7 @@ This JSON object defines order handling processes, actions and parameters which 
 | &emsp;support | string | Type of support for the optional parameter, the following values are possible:<br>'SUPPORTED': optional parameter is supported like specified.<br>'REQUIRED': optional parameter is required for proper mobile robot operation. |
 | &emsp;*description*| string | Free-form text: description of optional parameter, e.g., <ul><li>Reason, why the optional parameter direction is necessary for this mobile robot type and which values it can contain.</li><li>The parameter nodeMarker shall contain unsigned integers only.</li><li>NURBS support is limited to straight lines and circle segments.</li></ul>|
 | } | | |
-| **mobileRobotActions** [**mobileRobotAction**] | array | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA5050 and manufacturer-specific actions. |
+| **mobileRobotActions** [**mobileRobotAction**] | array | Array of all actions with parameters supported by this mobile robot. This includes standard actions specified in VDA 5050 and manufacturer-specific actions. |
 | { | | |
 | &emsp;actionType | string | Unique type of action corresponding to action.actionType. |
 | &emsp;*actionDescription* | string | Free-form text: description of the action. |
