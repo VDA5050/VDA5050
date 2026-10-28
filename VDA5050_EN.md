@@ -64,7 +64,12 @@ Version 3.0.0
     [6.3.2 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
     [6.3.3 Map download](#633-map-download)<br>
     [6.3.4 Enable downloaded maps](#634-enable-downloaded-maps)<br>
-    [6.3.5 Delete maps on the mobile robot](#635-delete-maps-on-the-mobile-robot)<br>
+    [6.3.1 Kinematic center](#631-kinematic-center)<br>
+    [6.3.2 Map distribution](#632-map-distribution)<br>
+    [6.3.3 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
+    [6.3.4 Map download](#633-map-download)<br>
+    [6.3.5 Enable downloaded maps](#634-enable-downloaded-maps)<br>
+    [6.3.6 Delete maps on the mobile robot](#635-delete-maps-on-the-mobile-robot)<br>
   [6.4 Zones](#64-zones)<br>
     [6.4.1 Zone types](#641-zone-types)<br>
     [6.4.2 Zone set transfer](#642-zone-set-transfer)<br>
