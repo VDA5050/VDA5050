@@ -242,7 +242,7 @@
                             },
                             "directedLimitation": {
                                 "type": "string",
-                                "description": "SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., for obstacle avoidance, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall not deviate from the defined direction of travel (within its precision).",
+                                "description": "SOFT: Mobile robots may deviate from the defined direction of travel, but should avoid it, RESTRICTED: The mobile robot may deviate from the defined direction of travel, e.g., to avoid an obstacle, but shall never traverse opposite to the defined direction of travel, STRICT: The mobile robot shall maintain the defined direction of travel as precisely as its technical capabilities allow.",
                                 "enum": [
                                     "SOFT","RESTRICTED","STRICT"
                                 ]
@@ -268,7 +268,7 @@
                             },
                             "bidirectedLimitation": {
                                 "type": "string",
-                                "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot should not traverse in any other direction than the directions of travel, except for obstacle avoidance.",
+                                "description": "SOFT: Mobile robots may deviate from the defined directions of travel, but should avoid it, RESTRICTED: The mobile robot shall not traverse in any other direction than the directions of travel, except for obstacle avoidance.",
                                 "enum": [
                                     "SOFT","RESTRICTED"
                                 ]
