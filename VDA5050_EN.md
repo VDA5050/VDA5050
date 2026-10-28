@@ -304,7 +304,7 @@ The topic `order` is the MQTT topic via which the mobile robot receives an order
 
 ### 6.1.1 Concept and logic
 
-The core of a transport order is a node-edge-graph segment defining the route to be travelled.
+The core of a transport order is a node-edge-graph segment defining the route to be traveled.
 The mobile robot is expected to traverse the nodes and edges to fulfill the order.
 The full graph of all connected nodes and edges is held by fleet control. It may contain restrictions, e.g., which mobile robot is allowed to traverse which edge.
 These restrictions will not be communicated to the mobile robot.
@@ -444,7 +444,7 @@ Figure 8 describes the process of accepting an order or order update.
 
 6) **Is received order update deprecated?**: Is `orderUpdateId` less than the one currently on the mobile robot?
 
-7) **Is order update following `cancelOrder`?**: No further order updates to the cancelled order shall be sent by the fleet control or accepted by the mobile robot.
+7) **Is order update following `cancelOrder`?**: No further order updates to the canceled order shall be sent by the fleet control or accepted by the mobile robot.
 
 8) **Is received order update currently on mobile robot?**: Is `orderUpdateId` equal to the one currently on the mobile robot?
 
@@ -466,10 +466,10 @@ Fleet control can optionally pass an `orderId` to reference which order shall be
 After receiving the `cancelOrder` instant action, the mobile robot shall attempt to stop as soon as possible.
 For line-guided mobile robots, this could be the next feasible node. A freely navigating mobile robot shall stop as soon as possible, not merely at the next node.
 
-If there are actions in the `actionStates` scheduled, these actions shall be cancelled and report 'FAILED' in their `actionState`.
-If there are actions in the `actionStates` running, those actions should be cancelled and also be reported as 'FAILED'.
-If the action cannot be cancelled, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
-While there are running actions in the `actionStates`, the `cancelOrder` action shall report 'RUNNING' until all actions are cancelled/finished. Actions that cannot be cancelled (`cancelAllowed` = false) shall be allowed to complete and then report their actual terminal state ('FINISHED' or 'FAILED').
+If there are actions in the `actionStates` scheduled, these actions shall be canceled and report 'FAILED' in their `actionState`.
+If there are actions in the `actionStates` running, those actions should be canceled and also be reported as 'FAILED'.
+If the action cannot be canceled, the `actionState` of that action should reflect that by reporting 'RUNNING' while it is running, and after that the respective state ('FINISHED', if successful and 'FAILED', if not).
+While there are running actions in the `actionStates`, the `cancelOrder` action shall report 'RUNNING' until all actions are canceled/finished. Actions that cannot be canceled (`cancelAllowed` = false) shall be allowed to complete and then report their actual terminal state ('FINISHED' or 'FAILED').
 After all movement of the mobile robot and all of the actions in the `actionStates` are stopped, the `cancelOrder` action status shall report 'FINISHED'.
 The mobile robot shall then be idle and ready to receive new orders.
 
@@ -482,7 +482,7 @@ Figure 9 shows the expected behavior for different mobile robot capabilities.
 
 #### 6.1.3.1 Receiving a new order after cancellation
 
-After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the cancelled order shall be sent by the fleet control. If the mobile robot receives an order update it shall report an error of type 'ORDER_UPDATE_FOLLOWING_CANCEL' and level 'WARNING'.
+After the cancellation of an order, the mobile robot is idle and shall be ready to receive a new order. No further order updates to the canceled order shall be sent by the fleet control. If the mobile robot receives an order update it shall report an error of type 'ORDER_UPDATE_FOLLOWING_CANCEL' and level 'WARNING'.
 
 In the case of a mobile robot that can only localize itself on a node, the new order shall begin on the node the mobile robot is now standing on.
 
@@ -878,7 +878,7 @@ The following contour-based zones are defined:
 
 | **Zone Type**| **Zone Parameters** | **Data type** | **Description** | 
 | --- | --- | --- | --- |
-| BLOCKED | none | | Mobile robots shall not enter this zone. If a mobile robot has entered the zone or finds itself within one, it shall stop and throw a 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
+| BLOCKED | none | | Mobile robots shall not enter this zone. If a mobile robot has entered the zone or finds itself within one, it shall stop and report a 'BLOCKED_ZONE_VIOLATION' error with level set to 'CRITICAL'.| 
 | LINE_GUIDED | none | | No free navigation is allowed in this zone, mobile robots shall follow the predefined trajectories on edges. Mobile robots may only enter this zone if the route is explicitly specified by the fleet control in the form of a node-edge graph. Any movement of the mobile robot that requires it to enter this zone shall follow a predefined trajectory. When entering the zone, the mobile robot shall be on the trajectory of the edge that crosses the zone. The edges that enter and are inside the line-guided zone require a trajectory sent from the fleet control or a predefined trajectory on the mobile robot. A corridor can be sent to allow the mobile robot to deviate from the trajectory. | 
 | RELEASE | | - | Mobile robots are only allowed entering this zone once they have been granted access through fleet control. | 
 | | *releaseLossBehavior* | string | Enum {'STOP', 'CONTINUE', 'EVACUATE'}<br>Defines the behavior of the mobile robot when the release for this zone is revoked or expires while the mobile robot is inside the zone. If not defined, the mobile robot shall behave as if 'STOP' was defined.<br>'STOP': Mobile robot shall stop driving. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly and shall report a 'ZONE_RELEASE_LOST' error with level 'CRITICAL'.<br>'EVACUATE': Mobile robot shall execute its evacuation behavior to leave the zone. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly and shall report a 'ZONE_RELEASE_LOSS_HANDLING' error with level 'WARNING' until the zone has been left.<br>'CONTINUE': Mobile robot shall continue its path. It shall keep the request in its state with the `requestStatus` set to 'REVOKED' or 'EXPIRED' accordingly and shall report a 'ZONE_RELEASE_LOSS_HANDLING' error with level 'WARNING' until either the zone has been left or the order has ended inside the zone. If the order ends inside the zone, the mobile robot shall wait for a new order.|
@@ -1011,7 +1011,7 @@ In the following matrix possible interactions between zones are described. The m
 
 ### 6.4.5 Error handling within zones
 
-If at any point of the order execution, a mobile robot realizes, that it can not reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the fleet control. The fleet control shall then decide how to proceed. The mobile robot shall not try to reach the node again, but wait for further instructions from the fleet control.
+If at any point of the order execution, a mobile robot realizes, that it cannot reach a node in its order, it shall report a 'NODE_UNREACHABLE' error with level 'CRITICAL' to the fleet control. The fleet control shall then decide how to proceed. The mobile robot shall not try to reach the node again, but wait for further instructions from the fleet control.
 
 
 ## 6.5 Connection
@@ -1131,9 +1131,9 @@ The mobile robot reports any issues via the `errors` array.
 
 The issues can have four levels: 'WARNING', 'URGENT', 'CRITICAL', and 'FATAL'.
 
-- A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and is able to take new orders. The error might be self-resolving, e.g., a dirty LiDar-scanner.
+- A 'WARNING' level issue does not require immediate attention. The mobile robot can continue its current order and is able to take new orders. The error might be self-resolving, e.g., a dirty LiDAR-scanner.
 - An 'URGENT' level issue, e.g., a low battery level, requires immediate attention. The mobile robot can continue its current order and is able to take new orders.
-- A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot shall not continue driving since it can not continue its current order but is able to take new orders.
+- A 'CRITICAL' level issue requires immediate attention, e.g., trying to pick an object, that is not there. The mobile robot shall not continue driving since it cannot continue its current order but is able to take new orders.
 - A 'FATAL' level issue requires user intervention, e.g., losing localization. The mobile robot shall not continue driving since it can neither continue its currently active order nor take any new orders.
 
 The mobile robot can add references that help with finding the cause of the error via the `errorReferences` array.
@@ -1173,7 +1173,7 @@ Error Type | Error level | Description | Reference | Report duration
 'INVALID_INSTANT_ACTION' | 'WARNING' | Receival of an unsupported instant action. | `actionId` of `instantAction` | Until new instant action is accepted.
 'OUTDATED_ORDER_UPDATE'| 'WARNING' | Receival of an order with correct `orderId` but outdated `orderUpdateId`. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'SAME_ORDER_UPDATE_ID' | 'WARNING' | Receival of a duplicate `order` message (same `orderId` and `orderUpdateId`) | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
-'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been cancelled. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
+'ORDER_UPDATE_FOLLOWING_CANCEL' | 'WARNING' | Receival of an order update for an order that has already been canceled. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'OUTSIDE_OF_CORRIDOR' | 'CRITICAL' | Leaving the corridor defined for an edge. | `edgeId` | Until the mobile robot is no longer violating the corridor boundaries.
 'INSUFFICIENT_MEMORY' | 'URGENT' | Mobile robot does not have enough memory to process received order. | `orderId` and `orderUpdateId` of rejected message. | Until new order is accepted.
 'DUPLICATE_MAP' | 'WARNING' | Receival of a map with `mapId` and `mapVersion` already existing. | `mapId` and `mapVersion` of duplicate | Until a new map related `instantAction` was accepted.
@@ -1240,10 +1240,10 @@ In response to one of the following events, the mobile robot shall stop executin
 
 In these cases the mobile robot shall clear its current order which means that:
 
-- Any scheduled actions in the `actionStates` shall be cancelled and be reported as 'FAILED' in `actionStates`.
+- Any scheduled actions in the `actionStates` shall be canceled and be reported as 'FAILED' in `actionStates`.
 - Any running action in the `actionStates` that
-	- can be cancelled (`cancelAllowed` = true) shall be cancelled and be reported as 'FAILED' in `actionStates`.
-	- cannot be cancelled (`cancelAllowed` = false) shall be reflected by reporting 'RUNNING' while being executed, and afterwards as the respective state ('FINISHED' if successful, 'FAILED' otherwise).
+	- can be canceled (`cancelAllowed` = true) shall be canceled and be reported as 'FAILED' in `actionStates`.
+	- cannot be canceled (`cancelAllowed` = false) shall be reflected by reporting 'RUNNING' while being executed, and afterwards as the respective state ('FINISHED' if successful, 'FAILED' otherwise).
 - The values of `orderId`, `orderUpdateId`, `lastNodeId` and `lastNodeSequenceId` remain unchanged.
 - The arrays `nodeStates` and `edgeStates` are set to empty lists.
 - Any requests shall be removed from the state.
@@ -1287,7 +1287,7 @@ All possible action state transitions are visualized in Figure 22 and examples a
 | **WAITING** | - | preparation necessary (lifting, sensor power up) | - | no preparation necessary | - | aborted via cancel, switch to manual mode | action succeeds instantly, e.g., after reaching node/edge |
 | **INITIALIZING** | - | - | external trigger | initialization finished, action starting | - | initialization failed, aborted via cancel, switch to manual mode | - |
 | **PAUSED** | - | external trigger | - | external trigger | - | aborted via `cancelOrder`, switch to manual mode | - |
-| **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual mode, action finally failed due to not returning the desired results | action returned desired result, possible after abort via `cancelOrder`, if action can not be interrupted and has to finish. |
+| **RUNNING** | - | - | external trigger | - | action not completed successfully but is retriable | aborted via cancel, switch to manual mode, action finally failed due to not returning the desired results | action returned desired result, possible after abort via `cancelOrder`, if action cannot be interrupted and has to finish. |
 | **RETRIABLE** | - | retries action via `retry`, external trigger | - | retries action via `retry`, external trigger | - | failed via `skipRetry`, failed via `cancelOrder`, external trigger, switch to manual mode | fixed by operator via external input |
 
 >Table 13 Examples for possible action state transitions
@@ -1735,8 +1735,8 @@ driving | | boolean | "true": indicates, that the mobile robot is driving (manua
 ***edgeRequests [edgeRequest]*** | | array | Array of `edgeRequest` objects that are currently active on the mobile robot. <br>Empty array if no edge requests are active.
 *distanceSinceLastNode* | m | float64 | Used by line-guided mobile robots to indicate the distance it has been driving past the `lastNodeId`. <br>Distance in meters.
 **actionStates [actionState]** | | array | Contains action states of all actions from the current order. The action states are kept as long as the order remains active and cleared when accepting a new order. <br>This may include actions from previous nodes, that are still in progress.<br><br>When an action is completed, an updated `state` message is published with `actionStatus` set to 'FINISHED' and if applicable with the corresponding `actionResult`.
-**instantActionStates [actionState]** | | array | Contains action states of all instant actions that the mobile robot received. Instant actions are kept in the `state` message until action `clearInstantActions` is executed. The robot may throw an `errorType` 'INSTANT_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
-***zoneActionStates [actionState]*** | | array | Contains all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the `state` message until action `clearZoneActions` is executed. If action zones are supported, this field is required. The robot may throw an `errorType` 'ZONE_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
+**instantActionStates [actionState]** | | array | Contains action states of all instant actions that the mobile robot received. Instant actions are kept in the `state` message until action `clearInstantActions` is executed. The robot may report an `errorType` 'INSTANT_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
+***zoneActionStates [actionState]*** | | array | Contains all zone action states that are in an end state or are currently running; sharing upcoming actions is optional. Zone action states are kept in the `state` message until action `clearZoneActions` is executed. If action zones are supported, this field is required. The robot may report an `errorType` 'ZONE_ACTION_STATES_FULL' with `errorLevel` 'URGENT' if the list is becoming too long to manage. It is recommended that the fleet control always clears this list as soon as it practically can.
 **powerSupply** | | JSON object | Contains all power-supply related information.
 operatingMode | | string | Enum {'STARTUP', 'AUTOMATIC', 'SEMIAUTOMATIC', 'INTERVENED', 'MANUAL', 'SERVICE', 'TEACH_IN'}<br>For additional information, see Table in Section [6.6.6 Operating Mode](#666-operating-mode).
 **errors [error]** | | array | Array of error objects. <br>All active errors of the mobile robot shall be in the array.<br>An empty array indicates that the mobile robot has no active errors.
@@ -2088,7 +2088,7 @@ This JSON object defines order handling processes, actions and parameters which 
 |&emsp;*actionResult* | string | Free-form text: description of the result. |
 |&emsp;*blockingTypes* | array of string | Array of possible blocking types for defined action. <br> Enum {'NONE', 'SINGLE', 'SOFT', 'HARD'} |
 |&emsp;pauseAllowed | boolean | "true": action can be paused via `startPause`, "false": action cannot be paused. |
-|&emsp;cancelAllowed | boolean | "true": action can be cancelled via `cancelOrder`, "false": action cannot be cancelled. |
+|&emsp;cancelAllowed | boolean | "true": action can be canceled via `cancelOrder`, "false": action cannot be canceled. |
 |*}* | | |
 
 **mobileRobotGeometry**
