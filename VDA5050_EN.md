@@ -63,7 +63,6 @@ Version 3.0.0
     [6.3.1 Map distribution](#631-map-distribution)<br>
     [6.3.2 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
     [6.3.3 Map download](#633-map-download)<br>
-    [6.3.4 Enable downloaded maps](#634-enable-downloaded-maps)<br>
     [6.3.1 Kinematic center](#631-kinematic-center)<br>
     [6.3.2 Map distribution](#632-map-distribution)<br>
     [6.3.3 Maps in the mobile robot state](#632-maps-in-the-mobile-robot-state)<br>
