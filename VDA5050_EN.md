@@ -9,7 +9,7 @@
 ![Fleet control system and mobile robots](./assets/csagv.png)
 
 # Disclaimer
-The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet management system. They are intended to be freely accessible to all users and are non-binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
+The following explanations are intended to provide guidance for implementing an interface that enables communication between mobile robots and a fleet control system. They are intended to be freely accessible to all users and are non-binding. Any party choosing to apply these guidelines is responsible for ensuring their correct and appropriate use in each specific case.
 Users must consider the applicable state of the art at the time the guidelines are applied. The use of these proposals does not relieve any party of responsibility for its own actions. These statements do not claim to be exhaustive, nor do they constitute an authoritative interpretation of existing laws. They do not replace the need to review and comply with relevant policies, legislation, or regulations.
 In addition, the specific characteristics of the respective products and their various potential applications must be considered. All users act at their own risk. Any liability on the part of the VDA and VDMA or any individuals involved in the development or application of these proposals is excluded.
 If you identify any inaccuracies in the application of these proposals or potential risks of misinterpretation, please notify the VDA immediately so that any necessary corrections can be made.
@@ -244,7 +244,7 @@ responses | fleet control | mobile robot | Fleet control's responses to requests
 
 There are at least the following participants for the operation of a driverless transport system:
 
-- The operator of the DTS provides basic information
+- The operator of the mobile robot system provides basic information
 - The fleet control organizes and manages the operation
 - The mobile robot carries out the orders
 
@@ -777,7 +777,7 @@ updateCertificate | - | Mobile robot is downloading and installing certificates 
 
 #### 6.2.3.3 Update mobile robot certificate
 
-For security reasons, mobile robot communication (at least for fleet management) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a mobile robot-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `certificateAuthorityDownloadLink` specifies the URL for the root certificate(s). The parameters `certificateDownloadLink` and `keyDownloadLink` specify the URLs for the mobile robot-specific public and private keys.
+For security reasons, mobile robot communication (at least for fleet control) should be secured. Typically, communication to the MQTT broker is secured via TLS, which requires one or more root certificates and a mobile robot-specific key pair. The parameter `service` specifies the service (e.g., 'MQTT') for which the certificates are to be used. The parameter `certificateAuthorityDownloadLink` specifies the URL for the root certificate(s). The parameters `certificateDownloadLink` and `keyDownloadLink` specify the URLs for the mobile robot-specific public and private keys.
 
 The download shall be secured via TLS as well, since the sender of the `instantAction` cannot be verified. It is also advisable to validate the certificate chain before it is activated.
 
