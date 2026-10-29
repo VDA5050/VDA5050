@@ -495,11 +495,11 @@
                                 }
                             },
                             "pauseAllowed": {
-                                "type": "string",
+                                "type": "boolean",
                                 "description": "True: action can be paused via startPause. False: action cannot be paused."
                             },
                             "cancelAllowed": {
-                                "type": "string",
+                                "type": "boolean",
                                 "description": "True: action can be cancelled via cancelOrder. False: action cannot be cancelled."
                             }
                         }
