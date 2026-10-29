@@ -98,7 +98,7 @@
 				},
 				"nodeDescriptor": {
 					"type": "string",
-					"description": "Additional information on the node."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -125,14 +125,14 @@
 						},
 						"theta": {
 							"type": "number",
-							"description": "Absolute orientation of the mobile robot on the node. Optional: mobile robot can plan the path by itself. If defined, the mobile robot has to assume the theta angle on this node. If previous edge disallows rotation, the mobile robot must rotate on the node. If following edge has a differing orientation defined but disallows rotation, the mobile robot is to rotate on the node to the edges desired rotation before entering the edge.",
+							"description": "Absolute orientation a mobile robot shall match on a node for it to be considered traversed. If defined, the mobile robot shall match the orientation on this node. If previous edge disallows rotation, the mobile robot shall rotate on the node. If following edge has a differing orientation defined but disallows rotation, the mobile robot shall rotate on the node to the edges desired rotation before entering the edge. If not defined, the mobile robot shall not rotate to reach an orientation differing from the incoming trajectory for the node to be considered traversed.",
 							"unit": "rad",
 							"minimum": -3.1416,
 							"maximum": 3.1416
 						},
 						"allowedDeviationXY":{
 						  "type": "object",
-						  "description": "Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed. If a = b= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot control point as precisely as is technically possible for the mobile robot. This applies also if allowedDeviationXY is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of a and b as 0.0. The coordinates of the node defines the center of the ellipse.",
+						  "description": "Indicates how precisely a mobile robot shall match the position of a node for it to be considered traversed. If a = b= 0.0: no deviation is allowed, which means the mobile robot shall reach or pass the node position with the mobile robot's kinematic center as precisely as is technically possible for the mobile robot. This applies also if allowedDeviationXY is smaller than what is technically viable for the mobile robot. If the mobile robot supports this attribute, but it is not defined for this node by fleet control the mobile robot shall assume the value of a and b as 0.0. The coordinates of the node defines the center of the ellipse.",
 						  "required": [
 							"a",
 							"b",
@@ -203,7 +203,7 @@
 				},
 				"edgeDescriptor": {
 					"type": "string",
-					"description": "Additional information on the edge."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -343,7 +343,7 @@
                 },
                 "actionDescriptor": {
                     "type": "string",
-                    "description": "Additional information on the action."
+                    "description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
                 },
                 "blockingType": {
                     "type": "string",

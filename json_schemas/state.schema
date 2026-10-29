@@ -203,14 +203,14 @@
         },
         "errors": {
             "type": "array",
-            "description": "Array of error-objects. All active errors of the mobile robot should be in the list. An empty array indicates that the mobile robot has no active errors.",
+            "description": "Array of error objects. All active errors of the mobile robot shall be in the array. An empty array indicates that the mobile robot has no active errors.",
             "items": {
 				"$ref": "#/$defs/error"
             }
         },
         "information": {
             "type": "array",
-            "description": "Array of info-objects. An empty array indicates, that the mobile robot has no information. This should only be used for visualization or debugging – it must not be used for logic in fleet control.",
+            "description": "Array of info objects. An empty array indicates, that the mobile robot has no information. This should only be used for visualization or debugging – it shall not be used for logic in fleet control.",
             "items": {
 				"$ref": "#/$defs/info"
             }
@@ -239,7 +239,7 @@
 				},
 				"mapDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor"
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"mapStatus": {
 					"type": "string",
@@ -297,7 +297,7 @@
 				},
 				"nodeDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -349,7 +349,7 @@
 				},
 				"edgeDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"released": {
 					"type": "boolean",
@@ -694,7 +694,7 @@
                 },
                 "actionDescriptor": {
                     "type": "string",
-                    "description": "A user-defined, human-readable name or descriptor."
+                    "description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
                 },
                 "actionStatus": {
                     "type": "string",
@@ -876,7 +876,7 @@
 				},
 				"infoDescriptor": {
 					"type": "string",
-					"description": "A user-defined, human-readable name or descriptor."
+					"description": "A user-defined, human-readable name or descriptor. This shall not be used for logical purposes."
 				},
 				"infoLevel": {
 					"type": "string",
