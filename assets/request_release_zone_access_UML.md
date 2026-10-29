@@ -21,19 +21,20 @@ group Zone request
 "Fleet Control" -> "Fleet Control": Decide if zoneRequest\n can be granted
 group optional - queued request
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType QUEUED.
-"Mobile Robot" -> "Fleet Control": Continue to send status update containing corresponding zoneRequest \n with requestStatus REQUESTED.
+"Mobile Robot" -> "Fleet Control": Send status update containing corresponding zoneRequest \n with requestStatus QUEUED.
 end
 group Grant access
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType GRANTED.
 "Mobile Robot" -> "Fleet Control": Status Update containing corresponding zoneRequest \n with requestStatus GRANTED.
-group optional - revoke access
+group optional - revoke access while in the zone
 "Fleet Control" -> "Mobile Robot": Message on response topic containing\n requestId and grantType REVOKED.
 "Mobile Robot" -> "Fleet Control": Status Update containing corresponding zoneRequest \n with requestStatus REVOKED.
+"Mobile Robot" -> "Mobile Robot": Vehicle behaves according \n to releaseLossBehavior.
 end
 group optional - extend access (before expiration time)
 "Fleet Control" -> "Mobile Robot": Respond on the response topic containing\n requestId and grantType GRANTED and new leaseExpiry.
 end
-group optional - expired access (after expiration time)
+group optional - expired access while in the zone (after expiration time)
 "Mobile Robot" -> "Fleet Control": Status Update containing corresponding zoneRequest \n with requestStatus EXPIRED.
 "Mobile Robot" -> "Mobile Robot": Vehicle behaves according \n to releaseLossBehavior. 
 end
