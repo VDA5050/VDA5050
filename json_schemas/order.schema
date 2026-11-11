@@ -246,7 +246,7 @@
 					"type": "boolean",
 					"description": "True: Desired edge orientation shall be reached before entering the edge. False: Mobile robot can rotate into the desired orientation on the edge. Default: False."
 				},
-				"maxRotationSpeed": {
+				"maximumRotationSpeed": {
 					"type": "number",
 					"description": "Maximum rotation speed in rad/s. Optional: No limit, if not set.",
 					"unit": "rad/s"
