@@ -1,4 +1,4 @@
-# VDA5050 - Version 3.0.0
+# VDA5050 - Version 3.0.1
 
 An open standard for communication between mobile robot fleets and a central fleet control. Developed jointly by the German Association of the Automotive Industry (www.vda.de) and the VDMA (www.vdma.org), as well as the Institute for Material Handling and Logistics (IFL) at the Karlsruhe Institute of Technology (www.ifl.kit.edu) and many contributors from the mobile robot industry.
 
@@ -10,7 +10,7 @@ Everyone is free to raise issues or suggest new improvements to the protocol.
 
 Anyone is free to raise issues or suggest new improvements to the protocol using the Github issues. Github issues will be marked by the VDA/VDMA team as **VD(M)A in progress** if the issue is discussed in the monthly VDA 5050 meetings. If the issue has been accepted by the team, it will receive a milestone tag indicating when the change will be added to the document, according to
 
-- V3.0.1: Minor changes such as typos and fixes,
+- V3.0.2: Minor changes such as typos and fixes,
 - V3.1.0: Non-breaking, backward-compatible changes,
 - V4.0.0 (Currently not planned): Breaking changes, which would mean reworking structures or variable names.
 
@@ -23,11 +23,9 @@ This roadmap shows what the core team is working on. Comments and proposals are 
 ### Ongoing: JSON-schema fixes
 - Schema errors are fixed directly on `main` without waiting for a release. If the document and a schema differ, the document is leading.
 
-### V3.0.1: bugfix release
-- Fixes typos and content errors that were found in the document after the 3.0.0 release.
-- Following design decisions made in the core team for version 3 development.
-- No new features added.
-- Pull requests go against `dev/3.0.1`.
+### V3.0.2: Refinement (if necessary)
+- Additional fixes that were not included in Refinement release 3.0.1
+- Pull requests go against `dev/3.0.2`.
 
 ### V3.y: possible backward-compatible extensions (not yet determined)
 - **Semantic reporting:** robots report what they observe, e.g. a full storage location or debris on the path.
