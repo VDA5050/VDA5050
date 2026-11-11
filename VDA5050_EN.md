@@ -24,7 +24,7 @@ www.vda.de
 Association of the Automotive Industry (VDA)<br>
 Reprint and any other form of reproduction is only permitted with specification of the source.
 
-Version 3.0.0
+Version 3.0.1
 
 
 ## Table of contents
